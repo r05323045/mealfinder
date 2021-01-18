@@ -135,7 +135,7 @@
     <div class="find-more">
       <div class="title">尋找更多</div>
       <div class="item-group">
-        <div class="item">
+        <div class="item" @click="$router.push('/restaurants')">
           <div class="icon-list"></div>
           餐廳清單
         </div>
@@ -164,48 +164,33 @@ export default {
   mounted () {
     // eslint-disable-next-line no-unused-vars
     const swiper = new Swiper('.swiper-container', {
-      slidesPerView: 3,
-      spaceBetween: 3,
-      cssMode: true,
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
       },
       breakpoints: {
+        1200: {
+          slidesPerView: 4.5,
+          spaceBetween: '18%'
+        },
+        992: {
+          slidesPerView: 4.2,
+          spaceBetween: '18%'
+        },
+        768: {
+          slidesPerView: 3.2,
+          spaceBetween: '15%'
+        },
+        576: {
+          slidesPerView: 2.2,
+          spaceBetween: '15%'
+        },
         375: {
           slidesPerView: 1.1,
           spaceBetween: '15%',
           slidesPerGroup: 1
-        },
-        576: {
-          slidesPerView: 2.5,
-          spaceBetween: '15%',
-          slidesPerGroup: 1
-        },
-        768: {
-          slidesPerView: 3.1,
-          spaceBetween: '15%'
-        },
-        834: {
-          slidesPerView: 3.5,
-          spaceBetween: '15%'
-        },
-        900: {
-          slidesPerView: 4.8,
-          spaceBetween: '15%'
-        },
-        992: {
-          slidesPerView: 4.1,
-          spaceBetween: '15%'
-        },
-        1200: {
-          slidesPerView: 4.5,
-          spaceBetween: '18%',
-          slidesPerGroup: 5
         }
-      },
-      mousewheel: true,
-      keyboard: true
+      }
     })
   }
 }
@@ -217,13 +202,12 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 .home {
   width: 100%;
-  height: 100%;
   .top-banner {
     background: #000000;
     height: 50px;
   }
   .searchbar-wrapper {
-    z-index: 1;
+    z-index: 998;
     background: #000000;
     position: sticky;
     height: 60px;
