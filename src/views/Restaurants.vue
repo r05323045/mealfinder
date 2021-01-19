@@ -1,5 +1,5 @@
 <template>
-  <div class="restaurants">
+  <div class="restaurants" :class="{modalShow: showModal}">
     <div class="searchbar-wrapper">
       <div class="back-wrapper">
         <div class="icon back"></div>
@@ -10,14 +10,14 @@
           <div class="text">所有餐廳</div>
         </div>
       </div>
-      <div class="filter-wrapper">
+      <div class="filter-wrapper" @click="showModal = !showModal">
         <div class="icon filter"></div>
       </div>
     </div>
     <div class="restaurant-list">
       <div class="title">台北市各地的餐廳</div>
-      <div class="card-deck">
-        <div class="card" v-for="i in 10" :key="i">
+      <div class="restaurant-card-deck">
+        <div class="restaurant-card" v-for="i in 10" :key="i">
           <div class="card-image-wrapper">
             <div class="heart-wrapper">
               <img class="icon heart" src="../assets/black-heart.svg">
@@ -43,8 +43,8 @@
       </div>
     </div>
     <Footer></Footer>
-    <div style="height: 54px;"></div>
     <Navbar></Navbar>
+    <FilterModal :showModal="showModal" @closeModal="closeFilter"></FilterModal>
   </div>
 </template>
 
@@ -52,9 +52,24 @@
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import FilterModal from '@/components/Filter.vue'
 
 export default {
-  components: { Navbar, Footer }
+  data () {
+    return {
+      showModal: false
+    }
+  },
+  components: {
+    Navbar,
+    Footer,
+    FilterModal
+  },
+  methods: {
+    closeFilter () {
+      this.showModal = false
+    }
+  }
 }
 </script>
 
@@ -155,9 +170,9 @@ $red: rgb(255, 56, 92);
       text-align: left;
       line-height: 22px;
     }
-    .card-deck {
+    .restaurant-card-deck {
       width: 100%;
-      .card {
+      .restaurant-card {
         padding-top: 12px;
         margin-bottom: 28px;
         .card-image-wrapper {
@@ -257,5 +272,9 @@ $red: rgb(255, 56, 92);
       }
     }
   }
+}
+.restaurants.modalShow {
+  height: 100vh;
+  overflow: hidden;
 }
 </style>
