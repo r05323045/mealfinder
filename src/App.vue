@@ -11,6 +11,7 @@ html, body {
   height: 100%;
 }
 #app {
+  overflow: hidden;
   width: 100%;
   height: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;

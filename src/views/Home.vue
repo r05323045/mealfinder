@@ -202,6 +202,8 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 .home {
   width: 100%;
+  height: 100%;
+  overflow: scroll;
   .top-banner {
     background: #000000;
     height: 50px;
@@ -210,10 +212,9 @@ $divider: #E6ECF0;
     z-index: 998;
     background: #000000;
     position: sticky;
-    height: 60px;
+    height: 80px;
     width: 100%;
     top: 0;
-    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
