@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <div class="item-wrapper">
+    <div class="item-wrapper" :class="{ signIn: signIn}">
       <div class="nav-item">
         <div class="wrapper">
           <div class="icon search"></div>
@@ -13,10 +13,23 @@
           <div class="text">優惠</div>
         </div>
       </div>
+      <div class="nav-item" v-if="signIn">
+        <div class="wrapper">
+          <div class="icon restaurant"></div>
+          <div class="text">訂位</div>
+        </div>
+      </div>
+      <div class="nav-item" v-if="signIn">
+        <div class="wrapper">
+          <div class="icon noti"></div>
+          <div class="text">通知</div>
+        </div>
+      </div>
       <div class="nav-item">
         <div class="wrapper">
           <div class="icon user"></div>
-          <div class="text">登入</div>
+          <div class="text" v-if="signIn">會員</div>
+          <div class="text" v-if="!signIn">登入</div>
         </div>
       </div>
     </div>
@@ -25,6 +38,11 @@
 
 <script>
 export default {
+  data () {
+    return {
+      signIn: true
+    }
+  }
 
 }
 </script>
@@ -41,6 +59,9 @@ $divider: #E6ECF0;
   left: 0;
   height: 54px;
   width: 100%;
+  .item-wrapper.signIn {
+    width: 100%;
+  }
   .item-wrapper {
     margin: 0 auto;
     width: 225px;
@@ -71,6 +92,12 @@ $divider: #E6ECF0;
         }
         .icon.gift {
           mask: url(../assets/gift.svg) no-repeat center;
+        }
+        .icon.noti {
+          mask: url(../assets/notification.svg) no-repeat center;
+        }
+        .icon.restaurant {
+          mask: url(../assets/restaurant.svg) no-repeat center;
         }
         .text {
           font-size: 10px;

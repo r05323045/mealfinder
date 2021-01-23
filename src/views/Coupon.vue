@@ -31,6 +31,7 @@
           <div class="info-wrapper">
             <div class="price-wrapper">
               <div class="price">$299</div>
+              <div class="unit">/ 個</div>
               <div class="origin-price">原價 $359</div>
             </div>
             <div class="number-wrapper">
@@ -308,6 +309,13 @@ $primary-color: #222;
               text-align: left;
               font-weight: 800;
               font-size: 24px;
+              line-height: 24px;
+              margin-right: 8px;
+            }
+            .unit {
+              text-align: left;
+              font-weight: 400;
+              font-size: 14px;
               line-height: 24px;
               margin-right: 18px;
             }
