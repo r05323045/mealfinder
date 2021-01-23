@@ -19,6 +19,10 @@ const routes = [
   {
     path: '/booking',
     component: () => import('@/views/Booking.vue')
+  },
+  {
+    path: '/booking/success',
+    component: () => import('@/views/BookingSuccess.vue')
   }
 ]
 
