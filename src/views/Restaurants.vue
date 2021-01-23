@@ -47,7 +47,7 @@
         <Footer></Footer>
       </div>
     </div>
-    <div v-show="restaurantListHeight > footerHeight + scrollY">
+    <div v-show="scrollUp">
       <Navbar></Navbar>
     </div>
     <FilterModal :showModal="showModal" @closeModal="closeFilter"></FilterModal>
@@ -65,8 +65,7 @@ export default {
     return {
       showModal: false,
       scrollY: 0,
-      restaurantListHeight: 1,
-      footerHeight: 0
+      scrollUp: true
     }
   },
   components: {
@@ -82,9 +81,8 @@ export default {
       this.showModal = false
     },
     onScroll (e) {
+      this.scrollUp = this.scrollY > this.$refs['list-container'].scrollTop
       this.scrollY = this.$refs['list-container'].scrollTop
-      this.restaurantListHeight = this.$refs['restaurant-list'].offsetHeight
-      this.footerHeight = this.$refs.footer.offsetHeight
     }
   }
 }
@@ -97,21 +95,6 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .restaurants {
   width: 100%;
-  .back-wrapper {
-    padding-left: 8px;
-    width: 40px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .icon.back {
-      margin: auto;
-      height: 16px;
-      width: 16px;
-      background-color: #000000;
-      mask: url(../assets/back.svg) no-repeat center;
-    }
-  }
   .searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -124,6 +107,21 @@ $red: rgb(255, 56, 92);
     justify-content: center;
     align-items: center;
     background: #ffffff;
+    .back-wrapper {
+      padding-left: 8px;
+      width: 40px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .icon.back {
+        margin: auto;
+        height: 16px;
+        width: 16px;
+        background-color: #000000;
+        mask: url(../assets/back.svg) no-repeat center;
+      }
+    }
     .searchbar {
       background: #ffffff;
       width: 80%;
@@ -177,7 +175,7 @@ $red: rgb(255, 56, 92);
     }
   }
   .list-container {
-    height: calc(100vh - 80px);
+    height: calc(100vh - 60px);
     overflow: scroll;
     .restaurant-list {
       margin: 22px 0;

@@ -202,7 +202,7 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="filter-button-wrapper" v-show="restaurantInfoHeight > scrollY + footerHeight">
+    <div class="filter-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight + scrollBarHeight">
       <div class="filter-button">
         <div class="button">立即訂位</div>
       </div>
@@ -233,7 +233,8 @@ export default {
             return `${moment(date).format('M/DD')} ${moment(date).format('ddd')}`
           }
         }
-      }
+      },
+      scrollBarHeight: 0
     }
   },
   components: {
@@ -242,12 +243,13 @@ export default {
   },
   mounted () {
     this.$refs['info-container'].addEventListener('scroll', this.onScroll)
+    this.footerHeight = this.$refs.footer.offsetHeight
+    this.restaurantInfoHeight = this.$refs['restaurant-info'].scrollHeight
+    this.scrollBarHeight = Math.floor((window.innerHeight - 60) * ((window.innerHeight - 60) / this.restaurantInfoHeight) + 60)
   },
   methods: {
     onScroll (e) {
       this.scrollY = this.$refs['info-container'].scrollTop
-      this.restaurantInfoHeight = this.$refs['restaurant-info'].offsetHeight
-      this.footerHeight = this.$refs.footer.offsetHeight
     },
     closeFilter () {
       this.showModal = false
@@ -282,21 +284,6 @@ $primary-color: #222;
   overflow: hidden;
   width: 100%;
   padding-bottom: 81px;
-  .back-wrapper {
-    padding-left: 8px;
-    width: 40px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .icon.back {
-      margin: auto;
-      height: 16px;
-      width: 16px;
-      background-color: #000000;
-      mask: url(../assets/back.svg) no-repeat center;
-    }
-  }
   .searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -309,6 +296,21 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
+    .back-wrapper {
+      padding-left: 8px;
+      width: 40px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .icon.back {
+        margin: auto;
+        height: 16px;
+        width: 16px;
+        background-color: #000000;
+        mask: url(../assets/back.svg) no-repeat center;
+      }
+    }
     .searchbar {
       background: #ffffff;
       width: 80%;
@@ -381,7 +383,7 @@ $primary-color: #222;
     }
   }
   .info-container {
-    height: calc(100vh - 80px);
+    height: calc(100vh - 60px);
     overflow: scroll;
     margin-top: 60px;
     scroll-behavior: smooth;
