@@ -1,5 +1,5 @@
 <template>
-  <div class="restaurants" :class="{modalShow: showModal}">
+  <div class="coupons" :class="{modalShow: showModal}">
     <div class="searchbar-wrapper">
       <div class="back-wrapper">
         <div class="icon back"></div>
@@ -7,7 +7,7 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">所有餐廳</div>
+          <div class="text">所有餐券</div>
         </div>
       </div>
       <div class="filter-wrapper" @click="showModal = !showModal">
@@ -15,8 +15,8 @@
       </div>
     </div>
     <div class="list-container" ref="list-container">
-      <div class="restaurant-list" ref="restaurant-list">
-        <div class="title">台北市各地的餐廳</div>
+      <div class="coupon-list" ref="coupon-list">
+        <div class="title">餐券列表</div>
         <div class="restaurant-card-deck">
           <div class="restaurant-card" v-for="i in 10" :key="i">
             <div class="card-image-wrapper">
@@ -32,14 +32,17 @@
                 <span class="count">(20)</span>
               </div>
             </div>
-            <div class="name">711便利商店</div>
+            <div class="name">711便利商店 - 大亨堡</div>
             <div class="category-wrapper">
               <span class="category">台式餐廳</span>
               <span class="bullet">·</span>
               <span class="district">大安區</span>
             </div>
             <div class="description">全台最大連鎖餐廳，小資族下班聚餐好去處好去處好去處好去處</div>
-            <div class="expense">$300 / 人</div>
+            <div class="price-wrapper">
+              <div class="price">$299</div>
+              <div class="origin-price">$359</div>
+            </div>
           </div>
         </div>
       </div>
@@ -93,7 +96,7 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
-.restaurants {
+.coupons {
   width: 100%;
   .searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
@@ -177,7 +180,7 @@ $red: rgb(255, 56, 92);
   .list-container {
     height: calc(100vh - 60px);
     overflow: scroll;
-    .restaurant-list {
+    .coupon-list {
       margin: 22px 0;
       padding: 0 24px;
       .title {
@@ -270,7 +273,7 @@ $red: rgb(255, 56, 92);
             }
           }
           .description {
-            margin-bottom: 8px;
+            margin-bottom: 16px;
             text-align: left;
             font-size: 16px;
             line-height: 20px;
@@ -280,12 +283,26 @@ $red: rgb(255, 56, 92);
             -webkit-line-clamp: 1 !important;
             -webkit-box-orient: vertical !important;
           }
-          .expense {
-            margin-bottom: 4px;
-            text-align: left;
-            font-weight: 800;
-            font-size: 16px;
-            line-height: 20px;
+          .price-wrapper {
+            display: flex;
+            flex-direction: row;
+            .price{
+              margin-bottom: 4px;
+              text-align: left;
+              font-weight: 800;
+              font-size: 18px;
+              line-height: 20px;
+              margin-right: 12px;
+            }
+            .origin-price {
+              text-decoration: line-through;
+              color: #666;
+              margin-bottom: 4px;
+              text-align: left;
+              font-weight: 800;
+              font-size: 16px;
+              line-height: 20px;
+            }
           }
         }
       }
