@@ -27,6 +27,10 @@ const routes = [
   {
     path: '/coupons',
     component: () => import('@/views/Coupons.vue')
+  },
+  {
+    path: '/coupons/:id',
+    component: () => import('@/views/Coupon.vue')
   }
 ]
 

@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="booking-result">
-      <div class="title">訂位成功</div>
+      <div class="title">訂位成功！</div>
       <div class="booking-card">
         <div class="header">
           <img class="icon restaurant" src="../assets/restaurant.svg">
@@ -36,8 +36,10 @@
           </div>
         </div>
       </div>
-      <div class="result-image">
-        <img class="image" src="../assets/bookingSuccess.svg">
+      <div class="illustration-wrapper">
+        <div class="cover">
+          <!--<div class="button">感謝你的使用！</div>-->
+        </div>
       </div>
       <div class="result-button-wrapper">
         <button class="result-button" type="submit" @click.prevent="">
@@ -257,16 +259,32 @@ $primary-color: #222;
       }
     }
   }
-  .result-image {
-    margin-top: 24px;
-    .image {
-      width: 100%;
-    }
-    .text {
-      text-align: left;
-      font-size: 16px;
-      font-weight: 600;
-      margin: 24px 0;
+  .illustration-wrapper {
+    margin: 36px 0;
+    width: 100%;
+    padding-top: 66.7%;
+    position: relative;
+    background: url(../assets/bookingSuccess.svg) no-repeat center;
+    background-size: cover;
+    .cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .button {
+        padding: 12px 36px;
+        border-radius: 30px;
+        background: #000000;
+        color: #ffffff;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 20px;
+      }
     }
   }
 }
