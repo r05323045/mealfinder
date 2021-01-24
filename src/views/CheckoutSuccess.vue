@@ -1,7 +1,7 @@
 <template>
   <div class="checkout-page">
     <div class="checkout-container">
-      <div class="main-title">確認訂位與選擇付款方式</div>
+      <div class="main-title">付款成功！</div>
       <div class="order-card">
         <div class="header">
           <div class="title">訂單摘要</div>
@@ -23,30 +23,17 @@
           </div>
         </div>
       </div>
-      <div class="contact-card">
-        <div class="all-wrapper">
-          <label for="name" class="all-text">購買人姓名</label>
-          <input id="name" class="all-input">
-        </div>
-        <div class="all-wrapper">
-          <label for="email" class="all-text">購買人 Email</label>
-          <input id="email" class="all-input">
-        </div>
-        <div class="all-wrapper">
-          <label for="purpose" class="all-text">付款方式</label>
-          <div class="button-wrapper">
-            <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" @click.prevent="submitPayby = el" :class="{select: submitPayby === el}">
-              <span class="text">{{ el }}</span>
-            </button>
-          </div>
+      <div class="illustration-wrapper">
+        <div class="cover">
+          <!--<div class="button">感謝你的使用！</div>-->
         </div>
       </div>
       <div class="submit-button-wrapper">
         <button class="submit-button" type="submit" @click.prevent="">
-          <div class="button">確認訂位</div>
+          <div class="button">查看更多商品</div>
         </button>
         <div class="back-button" @click.prevent="">
-          <div class="button">回上一步</div>
+          <div class="button">回首頁看更多</div>
         </div>
       </div>
     </div>
@@ -145,66 +132,31 @@ $red: rgb(255, 56, 92);
         }
       }
     }
-    .contact-card {
-      padding: 15px;
-      margin-bottom: 24px;
-      border: 1px solid $divider;
-      border-radius: 8px;
-      text-align: left;
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-      .all-wrapper {
-        margin-bottom: 24px;
-        width: 100%;
-        .all-text {
-          width: 100%;
+    .illustration-wrapper {
+      margin: 36px 0;
+      width: 100%;
+      padding-top: 66.7%;
+      position: relative;
+      background: url(../assets/bookingSuccess.svg) no-repeat center;
+      background-size: cover;
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .button {
+          padding: 12px 36px;
+          border-radius: 30px;
+          background: #000000;
+          color: #ffffff;
+          cursor: pointer;
+          font-weight: 700;
           font-size: 16px;
-          font-weight: 400;
-          line-height: 1.5;
-        }
-        .all-input {
-          margin-top: 8px;
-          outline: none;
-          font-size: 16px;
-          line-height: 1.5;
-          font-weight: 400;
-          padding: 8px 12px;
-          border: 1px solid $divider;
-          border-radius: 8px;
-          width: calc(100% - 24px);
-        }
-        .button-wrapper {
-          text-align: left;
-          margin-top: 16px;
-          .button {
-            margin: 0 4px 16px;
-            height: 44px;
-            padding: 8px 12px;
-            appearance: none;
-            width: calc(50% - 10px);
-            border-radius: 8px;
-            border: 1px solid $divider;
-            background: none;
-            text-align: left;
-            .text {
-              color: #666;
-              font-weight: 400;
-              font-size: 14px;
-              line-height: 1.5;
-              width: 100%;
-              text-align: center;
-            }
-          }
-          .button.select {
-            border: none;
-            background: #000000;
-            .text {
-              font-weight: 600;
-              color: #ffffff;
-            }
-          }
-          .button:focus {
-            outline: none;
-          }
+          line-height: 20px;
         }
       }
     }
