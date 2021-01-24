@@ -41,16 +41,20 @@ const routes = [
     component: () => import('@/views/Profile.vue')
   },
   {
-    path: '/users/record',
-    component: () => import('@/views/Record.vue')
+    path: '/users/history',
+    component: () => import('@/views/History.vue')
   },
   {
-    path: '/users/record/:id',
+    path: '/users/history/:id',
     component: () => import('@/views/Reservation.vue')
   },
   {
     path: '/users/purchase',
     component: () => import('@/views/Purchase.vue')
+  },
+  {
+    path: '/users/record',
+    component: () => import('@/views/Record.vue')
   },
   {
     path: '/checkout',
