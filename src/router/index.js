@@ -33,8 +33,12 @@ const routes = [
     component: () => import('@/views/Coupon.vue')
   },
   {
-    path: '/users/show/:id',
+    path: '/users/center',
     component: () => import('@/views/Member.vue')
+  },
+  {
+    path: '/users/profile',
+    component: () => import('@/views/Profile.vue')
   }
 ]
 

@@ -141,7 +141,7 @@
             <div class="item-wrapper">
               <div class="top-wrapper">
                 <img class="icon map" src="../assets/map.svg">
-                <div class="title">地圖</div>
+                <div class="title">地址</div>
               </div>
               <div class="content">台北市敦化南路一段的巷59號</div>
             </div>

@@ -1,27 +1,24 @@
 <template>
   <div class="modal" v-show="showModal" :class="{ show: showModal, innerShow: modalContentShow }">
-    <div class="modal-content" v-show="showModal" :class="{ show: modalContentShow }">
+    <div class="modal-content" v-show="showModal" :class="{show: modalContentShow }">
       <div v-show="modalContentShow">
         <div class="top-wrapper">
           <div class="close-wrapper" @click="closeModal">
             <div class="icon close"></div>
           </div>
-          <div class="title">篩選條件</div>
-          <div class="clear-wrapper">
-            <div class="text">清除</div>
-          </div>
+          <div class="title">經常用餐地區</div>
         </div>
         <div class="filter-container">
           <div class="category">
-            <div class="title">餐廳類型</div>
+            <div class="title">台北市</div>
             <div class="item-group">
-              <label class="item" v-for="i in 8" :key="i">
+              <label class="item" v-for="(el, idx) in districts" :key="idx">
                 <div class="text-wrapper">
-                  <div class="text">日式料理</div>
+                  <div class="text">{{ el }}</div>
                 </div>
-                <div class="input-container" :for="`checkbox-${i}`">
+                <div class="input-container" :for="`checkbox-${idx}`">
                   <div class="input-wrapper">
-                    <input class="input" type="checkbox" :id="`checkbox-${i}`">
+                    <input class="input" name="district" type="checkbox" :id="`checkbox-${idx}`">
                     <span>
                       <span class="icon check"></span>
                     </span>
@@ -33,7 +30,7 @@
         </div>
         <div class="filter-button-wrapper">
           <div class="filter-button">
-            <div class="button">顯示結果</div>
+            <div class="button">完成</div>
           </div>
         </div>
       </div>
@@ -45,7 +42,8 @@
 export default {
   data () {
     return {
-      modalContentShow: false
+      modalContentShow: false,
+      districts: ['大安區', '信義區', '士林區', '中正區', '松山區', '中山區', '萬華區', '文山區']
     }
   },
   props: {
@@ -62,7 +60,8 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$emit('closeModal')
+      console.log('hi')
+      this.$emit('closeChangeModal')
     }
   }
 }
@@ -84,8 +83,8 @@ $divider: #E6ECF0;
   flex-direction: column;
   align-items: flex-start;
   background: #666;
-  transition: 0.1s;
   transform: translateY(0);
+  transition: 0.1s;
 }
 .modal-content.show {
   height: 100%;
@@ -110,7 +109,6 @@ $divider: #E6ECF0;
       justify-content: center;
       align-items: center;
       .icon.close {
-        line-height: 32px;
         height: 16px;
         width: 16px;
         background-color: #222222;
@@ -119,23 +117,9 @@ $divider: #E6ECF0;
     }
     .title {
       line-height: 32px;
+      flex: 1;
       font-size: 16px;
       font-weight: 600;
-    }
-    .clear-wrapper {
-      position: absolute;
-      top: 12px;
-      right: 26px;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .text {
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 20px;
-        text-decoration: underline;
-      }
     }
   }
   .filter-container {
@@ -231,11 +215,10 @@ $divider: #E6ECF0;
   transition: 0.3;
   opacity: 100%;
 }
-.modal {
+.modal{
   transform: translateY(100%);
 }
 .modal-content {
   transform: translateY(100%);
 }
-
 </style>

@@ -1,15 +1,12 @@
 <template>
   <div class="modal" v-show="showModal" :class="{ show: showModal, innerShow: modalContentShow }">
-    <div class="modal-content" v-show="showModal" :class="{ show: modalContentShow }">
+    <div class="modal-content" v-show="showModal" :class="{show: modalContentShow }">
       <div v-show="modalContentShow">
         <div class="top-wrapper">
           <div class="close-wrapper" @click="closeModal">
             <div class="icon close"></div>
           </div>
-          <div class="title">篩選條件</div>
-          <div class="clear-wrapper">
-            <div class="text">清除</div>
-          </div>
+          <div class="title">偏好的餐廳類型</div>
         </div>
         <div class="filter-container">
           <div class="category">
@@ -33,7 +30,7 @@
         </div>
         <div class="filter-button-wrapper">
           <div class="filter-button">
-            <div class="button">顯示結果</div>
+            <div class="button">完成</div>
           </div>
         </div>
       </div>
@@ -62,7 +59,7 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$emit('closeModal')
+      this.$emit('closeAddModal')
     }
   }
 }
@@ -84,8 +81,8 @@ $divider: #E6ECF0;
   flex-direction: column;
   align-items: flex-start;
   background: #666;
-  transition: 0.1s;
   transform: translateY(0);
+  transition: 0.1s;
 }
 .modal-content.show {
   height: 100%;
@@ -110,7 +107,6 @@ $divider: #E6ECF0;
       justify-content: center;
       align-items: center;
       .icon.close {
-        line-height: 32px;
         height: 16px;
         width: 16px;
         background-color: #222222;
@@ -119,23 +115,9 @@ $divider: #E6ECF0;
     }
     .title {
       line-height: 32px;
+      flex: 1;
       font-size: 16px;
       font-weight: 600;
-    }
-    .clear-wrapper {
-      position: absolute;
-      top: 12px;
-      right: 26px;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .text {
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 20px;
-        text-decoration: underline;
-      }
     }
   }
   .filter-container {
@@ -231,11 +213,10 @@ $divider: #E6ECF0;
   transition: 0.3;
   opacity: 100%;
 }
-.modal {
+.modal{
   transform: translateY(100%);
 }
 .modal-content {
   transform: translateY(100%);
 }
-
 </style>
