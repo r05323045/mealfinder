@@ -1,22 +1,22 @@
 <template>
-  <div class="record-page">
-    <div class="record-container">
-      <div class="title">訂位</div>
-      <div class="record-wrapper">
+  <div class="purchase-page">
+    <div class="purchase-container">
+      <div class="title">我的購買</div>
+      <div class="purchase-wrapper">
         <div class="tab-container">
-          <div class="tab " :class="{ active: tabFuture }" @click="tabFuture = true">
-            即將前往
-            <div class="active-line" v-show="tabFuture"></div>
+          <div class="tab " :class="{ active: tabCart }" @click="tabCart = true">
+            購物車
+            <div class="active-line" v-show="tabCart"></div>
           </div>
-          <div class="tab" :class="{ active: !tabFuture }" @click="tabFuture = false">
-            過去紀錄
-            <div class="active-line" v-show="!tabFuture"></div>
+          <div class="tab" :class="{ active: !tabCart }" @click="tabCart = false">
+            購買紀錄
+            <div class="active-line" v-show="!tabCart"></div>
           </div>
           <div class="divider"></div>
         </div>
         <div class="reservation-container">
-          <FutureReservation v-if="tabFuture"></FutureReservation>
-          <PastReservation v-if="!tabFuture"></PastReservation>
+          <Cart v-if="tabCart"></Cart>
+          <PastPurchase v-if="!tabCart"></PastPurchase>
         </div>
       </div>
     </div>
@@ -33,20 +33,20 @@
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import FutureReservation from '@/components/FutureReservation.vue'
-import PastReservation from '@/components/PastReservation.vue'
+import Cart from '@/components/Cart.vue'
+import PastPurchase from '@/components/PastPurchase.vue'
 
 export default {
   data () {
     return {
-      tabFuture: true
+      tabCart: true
     }
   },
   components: {
     Navbar,
     Footer,
-    FutureReservation,
-    PastReservation
+    Cart,
+    PastPurchase
   },
   mounted () {
   }
@@ -58,10 +58,10 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
-.record-page {
+.purchase-page {
   height: 100vh;
   overflow: scroll;
-  .record-container {
+  .purchase-container {
     margin: 36px 24px;
     text-align: left;
     position: relative;
@@ -72,7 +72,7 @@ $red: rgb(255, 56, 92);
     }
     .tab-container {
       position: relative;
-      margin: 16px -16px;
+      margin: 16px -16px 32px -16px;
       display: flex;
       flex-direction: row;
       .divider {
