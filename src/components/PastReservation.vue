@@ -125,6 +125,7 @@ $red: rgb(255, 56, 92);
         justify-content: center;
         line-height: 1.5;
         .button {
+          text-decoration: underline;
           color: #222222;
         }
       }

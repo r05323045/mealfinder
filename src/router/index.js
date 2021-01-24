@@ -43,6 +43,14 @@ const routes = [
   {
     path: '/users/record',
     component: () => import('@/views/Record.vue')
+  },
+  {
+    path: '/users/record/:id',
+    component: () => import('@/views/Reservation.vue')
+  },
+  {
+    path: '/users/purchase',
+    component: () => import('@/views/Purchase.vue')
   }
 ]
 

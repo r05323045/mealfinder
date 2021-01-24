@@ -11,7 +11,7 @@
     <div class="information-container">
       <div class="title">
         個人資料
-        <div class="edit">編輯</div>
+        <div class="edit" @click="editing = true">編輯</div>
       </div>
       <div class="information-body" :class="{ editing: editing }">
         <div class="item-wrapper">
@@ -91,8 +91,8 @@
           </div>
         </div>
         <div class="button-wrapper" v-if="editing">
-          <div class="cancel">取消</div>
-          <div class="save">儲存</div>
+          <div class="cancel" @click="editing = false">取消</div>
+          <div class="save" @click="editing = false">儲存</div>
         </div>
       </div>
     </div>
@@ -125,7 +125,7 @@ import ChangeDistrict from '@/components/ChangeDistrict.vue'
 export default {
   data () {
     return {
-      editing: true,
+      editing: false,
       showAddModal: false,
       showChangeModal: false
     }
