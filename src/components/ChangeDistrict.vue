@@ -60,7 +60,6 @@ export default {
   },
   methods: {
     closeModal () {
-      console.log('hi')
       this.$emit('closeChangeModal')
     }
   }

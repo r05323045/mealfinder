@@ -16,6 +16,9 @@
     <form class="booking-form">
       <div class="title">確認訂位與填寫聯絡資訊</div>
       <div class="booking-card">
+        <div class="picture-wrapper">
+          <div class="picture"></div>
+        </div>
         <div class="header">
           <img class="icon restaurant" src="../assets/restaurant.svg">
           <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
@@ -224,18 +227,35 @@ $primary-color: #222;
       margin-bottom: 20px;
       border: 1px solid $divider;
       border-radius: 8px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+      .picture-wrapper {
+        width: 100%;
+        padding-top: 50%;
+        position: relative;
+        .picture {
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
+          background-size: cover;
+        }
+      }
       .header {
         padding: 15px;
         display: flex;
         flex-direction: row;
+        justify-content: flex-start;
         .icon.restaurant {
-          margin: auto;
-          min-height: 20px;
-          min-width: 20px;
-          margin-right: 20px;
+          min-height: 16px;
+          min-width: 16px;
+          margin-right: 16px;
         }
         .name {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 400;
           line-height: 1.5;
           text-align: left;
@@ -248,15 +268,18 @@ $primary-color: #222;
       .info {
         padding: 5px 15px;
         .item-wrapper {
-          padding: 10px 0;
+          font-size: 15px;
+          font-weight: 400;
+          padding: 8px 0;
           display: flex;
           flex-direction: row;
-          line-height: 22px;
+          align-items: center;
+          line-height: 1.5;
           .icon {
             color: #222222;
-            height: 20px;
-            width: 20px;
-            margin-right: 20px;
+            height: 16px;
+            width: 16px;
+            margin-right: 16px;
           }
         }
       }
@@ -267,6 +290,7 @@ $primary-color: #222;
       border: 1px solid $divider;
       border-radius: 8px;
       text-align: left;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
       .all-wrapper {
         margin-bottom: 24px;
         width: 100%;
