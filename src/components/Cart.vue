@@ -1,5 +1,5 @@
 <template>
-  <div class="card-page">
+  <div class="cart-page">
     <div class="purchase-card">
       <div class="card-content">
         <div class="item-wrapper" v-for="i in 5" :key="i">
@@ -74,7 +74,7 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
-.card-page {
+.cart-page {
   .purchase-card {
     margin-bottom: 24px;
     border: 1px solid $divider;
