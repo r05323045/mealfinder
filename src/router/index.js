@@ -67,6 +67,10 @@ const routes = [
   {
     path: '/users/favorite',
     component: () => import('@/views/Favorite.vue')
+  },
+  {
+    path: '/users/notification',
+    component: () => import('@/views/Notification.vue')
   }
 ]
 
