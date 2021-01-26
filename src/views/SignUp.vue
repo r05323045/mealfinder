@@ -1,41 +1,53 @@
 <template>
-  <div class="signin">
-    <div class="signin-form">
+  <div class="signup">
+    <div class="signup-form">
       <div class="logo-wrapper">
         <div class="logo"></div>
       </div>
-      <div class="signin-card">
-        <form class="signin-content">
+      <div class="signup-card">
+        <form class="signup-content">
           <div class="all-wrapper">
             <label for="account" class="all-text">帳號</label>
             <input id="account" class="all-input">
           </div>
           <div class="all-wrapper">
+            <label for="name" class="all-text">名稱</label>
+            <input id="name" class="all-input">
+          </div>
+          <div class="all-wrapper">
+            <label for="email" class="all-text">Email</label>
+            <input id="email" class="all-input">
+          </div>
+          <div class="all-wrapper">
             <label for="password" class="all-text">密碼</label>
             <input id="password" class="all-input">
           </div>
+          <div class="all-wrapper">
+            <label for="password-comfirm" class="all-text">密碼確認</label>
+            <input id="password-comfirm" class="all-input">
+          </div>
           <div class="submit-button-wrapper">
             <button class="submit-button" type="submit" @click.prevent="">
-              <div class="button">登入</div>
+              <div class="button">註冊</div>
             </button>
           </div>
           <div class="text-wrapper">
-            <span class="text">還沒有帳號嗎？</span>
-            <span class="text register" @click="$router.push('/signup')">立即註冊</span>
+            <span class="text">已經有帳號？</span>
+            <span class="text register" @click="$router.push('/signup')">立即登入</span>
           </div>
         </form>
-        <div class="social-media-signin">
-          <div class="text">使用社群帳號快速登入</div>
+        <div class="social-media-signup">
+          <div class="text">使用社群帳號快速註冊</div>
           <div class="social-button google" @click.prevent="">
             <img src="../assets/google-signin.svg">
             <div class="button">
-              <span>使用 Google 帳號登入</span>
+              <span>使用 Google 帳號註冊</span>
             </div>
           </div>
           <div class="social-button google" @click.prevent="">
             <img src="../assets/facebook-signin.svg">
             <div class="button">
-              <span>使用 Facebook 帳號登入</span>
+              <span>使用 Facebook 帳號註冊</span>
             </div>
           </div>
         </div>
@@ -85,12 +97,12 @@ $red: rgb(255, 56, 92);
 $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
-.signin {
+.signup {
   height: 100%;
   overflow: scroll;
   position: relative;
   width: 100%;
-  .signin-form {
+  .signup-form {
     margin-top: 60px;
     scroll-behavior: smooth;
     padding: 22px 24px;
@@ -108,14 +120,14 @@ $primary-color: #222;
         background-size: cover;
       }
     }
-    .signin-card {
+    .signup-card {
       padding: 24px 24px 0 24px;
       margin-bottom: 24px;
       border: 1px solid $divider;
       border-radius: 8px;
       text-align: left;
       box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-      .signin-content {
+      .signup-content {
         .all-wrapper {
           margin-bottom: 24px;
           width: 100%;
@@ -176,7 +188,7 @@ $primary-color: #222;
           }
         }
       }
-      .social-media-signin {
+      .social-media-signup {
         border-top: 1px solid $divider;
         margin-top: 24px;
         margin-left: -24px;
