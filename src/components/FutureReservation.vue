@@ -4,7 +4,7 @@
       <div class="title">還沒想好要吃什麼？</div>
       <div class="illustration-wrapper">
         <div class="cover">
-          <div class="button">現在就去找餐廳</div>
+          <div class="button" @click="$router.push('/restaurants')">現在就去找餐廳</div>
         </div>
       </div>
     </div>

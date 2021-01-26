@@ -100,7 +100,7 @@
       <div class="title">專屬你的推薦餐廳</div>
       <div class="illustration-wrapper">
         <div class="cover">
-          <div class="button">現在就去看看</div>
+          <div class="button" @click="$router.push('/restaurants')">現在就去看看</div>
         </div>
       </div>
     </div>

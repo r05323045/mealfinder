@@ -5,6 +5,7 @@
       <div class="title">404 Page Not Found</div>
       <div class="illustration-wrapper">
         <div class="cover">
+          <div class="button" @click="$router.push('/')">回首頁</div>
         </div>
       </div>
     </div>
@@ -33,6 +34,8 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .not-found {
+  height: 100vh;
+  overflow: scroll;
   .main-title {
     text-align: left;
     padding: 36px 36px 0px;
@@ -69,6 +72,16 @@ $red: rgb(255, 56, 92);
         display: flex;
         align-items: center;
         justify-content: center;
+        .button {
+          padding: 12px 36px;
+          border-radius: 30px;
+          background: #000000;
+          color: #ffffff;
+          cursor: pointer;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 20px;
+        }
       }
     }
   }

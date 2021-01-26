@@ -1,7 +1,7 @@
 <template>
   <div class="coupon">
     <div class="searchbar-wrapper">
-      <div class="back-wrapper">
+      <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">

@@ -1,6 +1,6 @@
 <template>
   <div class="past-reservation">
-    <div class="booking-card" v-for="i in 5" :key="i">
+    <div class="booking-card" v-for="i in 5" :key="i" @click="$router.push(`/users/history/${i}`)">
       <div class="picture-wrapper">
         <div class="picture"></div>
       </div>

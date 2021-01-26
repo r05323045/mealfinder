@@ -6,60 +6,56 @@
         <div class="name">Jim Lin</div>
         <div class="account">@jimlin</div>
       </div>
-      <div class="link">前往個人資料</div>
+      <div class="link" @click="$router.push('/users/profile')">前往個人資料</div>
     </div>
     <div class="card-deck-container">
       <div class="link-card-deck">
-        <div class="link-card-wrapper">
+        <div class="link-card-wrapper" @click="$router.push('/users/profile')">
           <div class="link-card">
             <div class="icon-wrapper">
-              <img src="../assets/personalData.svg" class="icon">
+              <img src="../assets/flat_profile.svg" class="icon">
               <div class="text">個人資料</div>
             </div>
           </div>
         </div>
-        <div class="link-card-wrapper">
+        <div class="link-card-wrapper" @click="$router.push('/users/favorite')">
           <div class="link-card">
             <div class="icon-wrapper">
-              <img src="../assets/personalData.svg" class="icon">
-              <div class="text">個人資料</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="link-card-deck">
-        <div class="link-card-wrapper">
-          <div class="link-card">
-            <div class="icon-wrapper">
-              <img src="../assets/personalData.svg" class="icon">
-              <div class="text">個人資料</div>
-            </div>
-          </div>
-        </div>
-        <div class="link-card-wrapper">
-          <div class="link-card">
-            <div class="icon-wrapper">
-              <img src="../assets/personalData.svg" class="icon">
-              <div class="text">個人資料</div>
+              <img src="../assets/flat_plate.svg" class="icon">
+              <div class="text">我的收藏</div>
             </div>
           </div>
         </div>
       </div>
       <div class="link-card-deck">
-        <div class="link-card-wrapper">
+        <div class="link-card-wrapper" @click="$router.push('/users/history')">
           <div class="link-card">
             <div class="icon-wrapper">
-              <img src="../assets/personalData.svg" class="icon">
-              <div class="text">個人資料</div>
+              <img src="../assets/flat_reserved.svg" class="icon">
+              <div class="text">用餐</div>
             </div>
           </div>
         </div>
-        <div class="link-card-wrapper">
+        <div class="link-card-wrapper" @click="$router.push('/users/purchase')">
           <div class="link-card">
             <div class="icon-wrapper">
-              <img src="../assets/personalData.svg" class="icon">
-              <div class="text">個人資料</div>
+              <img src="../assets/flat_shopping-cart.svg" class="icon">
+              <div class="text">購買</div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="link-card-deck">
+        <div class="link-card-wrapper" @click="$router.push('/users/notification')">
+          <div class="link-card">
+            <div class="icon-wrapper">
+              <img src="../assets/flat_notification.svg" class="icon">
+              <div class="text">我的通知</div>
+            </div>
+          </div>
+        </div>
+        <div class="link-card-wrapper" @click="$router.push('/users/record')">
+          <div class="link-card">
           </div>
         </div>
       </div>
@@ -68,7 +64,7 @@
       <div class="title">專屬你的推薦餐廳</div>
       <div class="illustration-wrapper">
         <div class="cover">
-          <div class="button">現在就去看看</div>
+          <div class="button" @click="$router.push('/restaurants')">現在就去看看</div>
         </div>
       </div>
     </div>
