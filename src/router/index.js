@@ -33,30 +33,6 @@ const routes = [
     component: () => import('@/views/Coupon.vue')
   },
   {
-    path: '/users/center',
-    component: () => import('@/views/Member.vue')
-  },
-  {
-    path: '/users/profile',
-    component: () => import('@/views/Profile.vue')
-  },
-  {
-    path: '/users/history',
-    component: () => import('@/views/History.vue')
-  },
-  {
-    path: '/users/history/:id',
-    component: () => import('@/views/Reservation.vue')
-  },
-  {
-    path: '/users/purchase',
-    component: () => import('@/views/Purchase.vue')
-  },
-  {
-    path: '/users/record',
-    component: () => import('@/views/Record.vue')
-  },
-  {
     path: '/checkout',
     component: () => import('@/views/Checkout.vue')
   },
@@ -65,12 +41,51 @@ const routes = [
     component: () => import('@/views/CheckoutSuccess.vue')
   },
   {
-    path: '/users/favorite',
-    component: () => import('@/views/Favorite.vue')
+    path: '/signin',
+    component: () => import('@/views/SignIn.vue')
   },
   {
-    path: '/users/notification',
-    component: () => import('@/views/Notification.vue')
+    path: '/users',
+    component: () => import('@/views/Users.vue'),
+    children: [
+      {
+        path: '/users/center',
+        component: () => import('@/views/Member.vue')
+      },
+      {
+        path: '/users/profile',
+        component: () => import('@/views/Profile.vue')
+      },
+      {
+        path: '/users/history',
+        component: () => import('@/views/History.vue')
+      },
+      {
+        path: '/users/history/:id',
+        component: () => import('@/views/Reservation.vue')
+      },
+      {
+        path: '/users/purchase',
+        component: () => import('@/views/Purchase.vue')
+      },
+      {
+        path: '/users/record',
+        component: () => import('@/views/Record.vue')
+      },
+      {
+        path: '/users/favorite',
+        component: () => import('@/views/Favorite.vue')
+      },
+      {
+        path: '/users/notification',
+        component: () => import('@/views/Notification.vue')
+      }
+    ]
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: () => import('@/views/NotFound.vue')
   }
 ]
 
