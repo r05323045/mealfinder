@@ -200,6 +200,7 @@ export default {
 $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
+$red: rgb(255, 56, 92);
 .home {
   width: 100%;
   height: 100%;
@@ -240,7 +241,7 @@ $divider: #E6ECF0;
         .icon {
           margin: auto 0;
           padding-right: 8px;
-          background-color: $ultimategray;
+          background-color: $red;
           height: 16px;
           width: 16px;
         }

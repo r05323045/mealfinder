@@ -202,7 +202,7 @@ $primary-color: #222;
     }
     .searchbar {
       background: #ffffff;
-      width: 80%;
+      width: 100%;
       border-radius: 100px;
       height: 48px;
       display: flex;
