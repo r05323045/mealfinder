@@ -75,8 +75,8 @@
             <div class="title">用餐人數</div>
             <div class="select-container">
               <div class="select-wrapper">
-                <select class="select adult">
-                  <option>請選擇用餐人數</option>
+                <select class="select adult" v-model="adultNum">
+                  <option value="0">請選擇用餐人數</option>
                   <option value="1">1位大人</option>
                   <option value="2">2位大人</option>
                   <option value="3">3位大人</option>
@@ -84,7 +84,7 @@
                 </select>
               </div>
               <div class="select-wrapper children">
-                <select class="select children">
+                <select class="select children" v-model="childrenNum">
                   <option value="0">0位小孩</option>
                   <option value="1">1位小孩</option>
                   <option value="2">2位小孩</option>
@@ -99,7 +99,7 @@
               v-model="pickDate"
               type="date"
               :formatter="momentFormat"
-              :placeholder="pickDate ? pickDate : Date.now() | pickDateFormate"
+              :placeholder="pickDate | pickDateFormate"
               :disabled-date="notBeforeToday"
               :editable="false"
               :clearable="false"
@@ -114,8 +114,17 @@
                 <div class="divider"></div>
               </div>
               <div class="button-wrapper">
-                <button class="button" v-for="i in 4" :key="`noon-${i}`">
-                  <span class="text">12:00</span>
+                <button class="button" v-for="(el, idx) in noon" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <span class="text">{{ el }}</span>
+                </button>
+              </div>
+              <div class="divider-wrapper">
+                <div class="text">下午</div>
+                <div class="divider"></div>
+              </div>
+              <div class="button-wrapper">
+                <button class="button" v-for="(el, idx) in afternoon" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <span class="text">{{ el }}</span>
                 </button>
               </div>
               <div class="divider-wrapper">
@@ -123,8 +132,8 @@
                 <div class="divider"></div>
               </div>
               <div class="button-wrapper">
-                <button class="button" v-for="i in 6" :key="`night-${i}`">
-                  <span class="text">13:00</span>
+                <button class="button" v-for="(el, idx) in night" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <span class="text">{{ el }}</span>
                 </button>
               </div>
             </div>
@@ -202,9 +211,19 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="filter-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight + scrollBarHeight">
-      <div class="filter-button">
-        <div class="button">立即訂位</div>
+    <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight + scrollBarHeight">
+      <div class="booking-info-wrapper">
+        <div class="booking-info">{{ pickDate | pickDateFormate }}</div>
+        <div class="booking-info">
+          <span>{{ adultNum }}大</span>
+          <span v-if="childrenNum > 0">{{ childrenNum }}小</span>
+        </div>
+        <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
+      </div>
+      <div class="divider"></div>
+      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime">
+        <div class="text" v-if="bookingTime">下一步，填寫聯絡資訊</div>
+        <div class="text" v-if="!bookingTime">選擇用餐時間</div>
       </div>
     </div>
   </div>
@@ -234,7 +253,13 @@ export default {
           }
         }
       },
-      scrollBarHeight: 0
+      scrollBarHeight: 0,
+      adultNum: 2,
+      childrenNum: 0,
+      bookingTime: '',
+      noon: ['11:00', '11:30', '12:00', '12:30', '13:00', '13:30'],
+      afternoon: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30'],
+      night: ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00']
     }
   },
   components: {
@@ -700,6 +725,12 @@ $primary-color: #222;
               .button:focus {
                 outline: none;
               }
+              .button.active {
+                background: #000000;
+                .text {
+                  color: #ffffff
+                }
+              }
             }
           }
           .note {
@@ -882,29 +913,49 @@ $primary-color: #222;
       }
     }
   }
-  .filter-button-wrapper {
+  .booking-button-wrapper {
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
     border-top: 1px solid $divider;
     position: fixed;
     bottom: 0;
     width: calc(100vw - 48px);
-    height: 48px;
-    padding: 16px 24px;
+    padding: 8px 24px;
     background: #ffffff;
-    .filter-button {
-      height: 100%;
+    .booking-info-wrapper {
+      display: flex;
+      flex-direction: row;
+      .booking-info {
+        margin-right: 8px;
+        font-size: 14px;
+        background: $divider;
+        padding: 8px 12px;
+        border-radius: 8px;
+      }
+    }
+    .divider {
+      background: $divider;
+      height: 1px;
+      width: 100%;
+      margin: 8px 0;
+    }
+    .booking-button {
+      height: 48px;
       width: calc(100vw - 48px);
       background: #000000;
       border-radius: 8px;
       display: flex;
       justify-content: center;
       align-items: center;
-      .button {
+      .text {
         color: #ffffff;
         cursor: pointer;
         font-weight: 700;
         font-size: 16px;
         line-height: 20px;
       }
+    }
+    .booking-button.invalid {
+      background: $ultimategray;
     }
   }
 }

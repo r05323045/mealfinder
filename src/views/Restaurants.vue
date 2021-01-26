@@ -18,7 +18,7 @@
       <div class="restaurant-list" ref="restaurant-list">
         <div class="title">台北市各地的餐廳</div>
         <div class="restaurant-card-deck">
-          <div class="restaurant-card" v-for="i in 10" :key="i">
+          <div class="restaurant-card" v-for="i in 10" :key="i" @click="$router.push(`/restaurants/${i}`)">
             <div class="card-image-wrapper">
               <div class="heart-wrapper">
                 <img class="icon heart" src="../assets/black-heart.svg">

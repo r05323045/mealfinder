@@ -88,8 +88,8 @@
             <div class="text">點擊評分</div>
           </div>
           <div class="text-container">
-            <textarea class="all-input text-area" placeholder="填寫你最真實的感受"></textarea>
-            <div class="note-count">(0/140)</div>
+            <textarea v-model="commentText" class="all-input text-area" placeholder="填寫你最真實的感受"></textarea>
+            <div class="note-count">({{ commentText.length }}/140)</div>
           </div>
         </div>
         <div class="write-comment">
@@ -117,7 +117,8 @@ export default {
   data () {
     return {
       tabFuture: true,
-      rated: -1
+      rated: -1,
+      commentText: ''
     }
   },
   components: {
@@ -128,7 +129,6 @@ export default {
   },
   methods: {
     rating (num) {
-      console.log(num)
       this.rated = num
     }
   }
