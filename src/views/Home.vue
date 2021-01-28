@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <div class="home" ref="home">
+    <Navbar v-show="scrollY > 50"></Navbar>
     <div class="top-banner"></div>
     <div class="searchbar-wrapper">
       <div class="searchbar">
@@ -11,6 +12,7 @@
       </div>
     </div>
     <div class="banner">
+      <NavbarHome v-show="scrollY <= 50"></NavbarHome>
       <div class="background-image"></div>
       <div class="wrapper">
         <div class="text">
@@ -72,6 +74,50 @@
             <div class="image"></div>
             <div class="text-wrapper">
               <span class="text">查看更多地區</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="district-deck-desktop">
+        <div class="district">
+          <div class="background top">
+            <div class="image"></div>
+            <div class="text-wrapper">
+              <span class="text">大安區</span>
+            </div>
+          </div>
+        </div>
+        <div class="district">
+          <div class="background top">
+            <div class="image"></div>
+            <div class="text-wrapper">
+              <span class="text">士林區</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="district-deck-desktop">
+        <div class="district">
+          <div class="background bottom">
+            <div class="image"></div>
+            <div class="text-wrapper">
+              <span class="text">信義區</span>
+            </div>
+          </div>
+        </div>
+        <div class="district">
+          <div class="background bottom">
+            <div class="image"></div>
+            <div class="text-wrapper">
+              <span class="text">中山區</span>
+            </div>
+          </div>
+        </div>
+        <div class="district">
+          <div class="background bottom">
+            <div class="image"></div>
+            <div class="text-wrapper">
+              <span class="text">更多地區</span>
             </div>
           </div>
         </div>
@@ -146,8 +192,7 @@
       </div>
     </div>
     <Footer></Footer>
-    <div style="height: 54px;"></div>
-    <Navbar></Navbar>
+    <div class="space-for-nav-mobile" style="height: 54px;"></div>
   </div>
 </template>
 
@@ -156,11 +201,17 @@
 import Swiper from 'swiper/swiper-bundle.js'
 import 'swiper/swiper-bundle.css'
 import Navbar from '@/components/Navbar.vue'
+import NavbarHome from '@/components/NavbarHome.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
-  components: { Navbar, Footer },
+  components: { Navbar, Footer, NavbarHome },
   name: 'Home',
+  data () {
+    return {
+      scrollY: 0
+    }
+  },
   mounted () {
     // eslint-disable-next-line no-unused-vars
     const swiper = new Swiper('.swiper-container', {
@@ -170,19 +221,19 @@ export default {
       },
       breakpoints: {
         1200: {
-          slidesPerView: 4.5,
+          slidesPerView: 3.1,
           spaceBetween: '18%'
         },
         992: {
-          slidesPerView: 4.2,
+          slidesPerView: 2.5,
           spaceBetween: '18%'
         },
         768: {
-          slidesPerView: 3.2,
+          slidesPerView: 2.1,
           spaceBetween: '15%'
         },
         576: {
-          slidesPerView: 2.2,
+          slidesPerView: 1.5,
           spaceBetween: '15%'
         },
         375: {
@@ -192,22 +243,33 @@ export default {
         }
       }
     })
+    this.$refs.home.addEventListener('scroll', this.onScroll)
+  },
+  methods: {
+    onScroll (e) {
+      this.scrollY = this.$refs.home.scrollTop
+    }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .home {
-  width: 100%;
+  width: 100vw;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   .top-banner {
+    display: block;
     background: #000000;
     height: 50px;
+    @media (min-width: 768px) {
+      display: none;
+    }
   }
   .searchbar-wrapper {
     z-index: 998;
@@ -259,6 +321,9 @@ $red: rgb(255, 56, 92);
     height: 408px;
     width: 100%;
     position: relative;
+    @media (min-width: 768px) {
+      height: calc(80vh + 50px);
+    }
     .background-image {
       z-index: -1;
       height: 100%;
@@ -266,6 +331,10 @@ $red: rgb(255, 56, 92);
       background: url(https://images.unsplash.com/photo-1573080519806-93cec30f99c4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80) no-repeat center;
       background-size: cover;
       filter: brightness(.4);
+      @media (min-width: 768px) {
+        background: url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80) no-repeat center;
+        background-size: cover;
+      }
     }
     .wrapper {
       position: absolute;
@@ -273,6 +342,13 @@ $red: rgb(255, 56, 92);
       left: 0;
       right: 0;
       bottom: 0;
+      @media (min-width: 768px) {
+        padding: 196px 80px 40px 80px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        flex-direction: column;
+      }
       .text {
         text-align: left;
         margin: 24px 0 0 24px;
@@ -280,6 +356,10 @@ $red: rgb(255, 56, 92);
         font-size: 32px;
         line-height: 48px;
         font-weight: 600;
+        @media (min-width: 768px) {
+          font-size: 52px;
+          line-height: 58px;
+        }
       }
       .button {
         margin: 24px 0 0 24px;
@@ -296,17 +376,29 @@ $red: rgb(255, 56, 92);
   .area {
     margin-top: 40px;
     padding: 0 24px;
+    @media (min-width: 768px) {
+      padding: 0 80px;
+      margin-top: 64px;
+    }
     .title {
       height: 40px;
       font-size: 22px;
       font-weight: 700;
       text-align: left;
       line-height: 22px;
+      @media (min-width: 768px) {
+        font-size: 32px;
+        line-height: 36px;
+        padding-bottom: 16px;
+      }
     }
     .district-deck {
       display: flex;
       flex-direction: row;
       margin: 10px 0;
+      @media (min-width: 768px) {
+        display: none;
+      }
       .district {
         margin: 0 5px;
         flex: 1;
@@ -346,18 +438,76 @@ $red: rgb(255, 56, 92);
         }
       }
     }
+    .district-deck-desktop {
+      display: none;
+      @media (min-width: 768px) {
+        display: flex;
+        flex-direction: row;
+        margin: 10px 0;
+      }
+      .district {
+        margin: 5px 10px;
+        flex: 1;
+        width: 50%;
+        .background {
+          padding-bottom: 66.7%;
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .image {
+            background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
+            background-size: cover;
+            border-radius: 8px;
+            filter: brightness(.4);
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left:0;
+          }
+          .text-wrapper {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left:0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .text {
+              color: #ffffff;
+              font-weight: 600;
+              font-size: 18px;
+            }
+          }
+        }
+        .background.bottom {
+          padding-bottom: 100%;
+        }
+      }
+    }
   }
   .category {
     background: #000000;
     color: #ffffff;
     margin-top: 40px;
     padding: 24px 0 32px 24px;
+    @media (min-width: 768px) {
+      margin-top: 64px;
+      padding: 40px 0 40px 80px;
+    }
     .title {
       height: 40px;
       font-size: 22px;
       font-weight: 700;
       text-align: left;
       line-height: 22px;
+      @media (min-width: 768px) {
+        font-size: 32px;
+        line-height: 36px;
+        margin-bottom: 8px;
+      }
     }
     .description {
       text-align: left;
@@ -439,26 +589,42 @@ $red: rgb(255, 56, 92);
   .find-more {
     margin: 40px 0;
     padding: 0 24px;
+    @media (min-width: 768px) {
+      padding: 0 80px;
+    }
     .title {
       height: 40px;
       font-size: 22px;
       font-weight: 700;
       text-align: left;
       line-height: 22px;
+      @media (min-width: 768px) {
+        font-size: 32px;
+        line-height: 36px;
+        margin-bottom: 8px;
+      }
     }
     .item-group {
       display: flex;
       flex-direction: column;
-      width: 100%;
+      @media (min-width: 768px) {
+        margin: 32px auto 64px;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
       .item {
         margin: 16px auto;
-        width: 80%;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         font-size: 18px;
         font-weight: 700;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 24px;
+          line-height: 28px;
+        }
         .icon-list {
           margin-right: 16px;
           border-radius: 8px;
@@ -466,6 +632,9 @@ $red: rgb(255, 56, 92);
           height: 48px;
           background: url(https://a0.muscache.com/im/pictures/52e8083e-2de2-446d-a860-534eab250541.jpg?im_q=medq&im_w=720) no-repeat center;
           background-size: cover;
+          @media (min-width: 768px) {
+            margin-right: 32px;
+          }
         }
         .icon-map {
           margin-right: 16px;
@@ -474,8 +643,19 @@ $red: rgb(255, 56, 92);
           height: 48px;
           background: url(https://a0.muscache.com/im/pictures/fc42dde0-36a7-460e-af89-10b5e44e48d8.jpg?im_w=240&im_q=lowq) no-repeat center;
           background-size: cover;
+          @media (min-width: 768px) {
+            margin-right: 32px;
+          }
         }
       }
+    }
+  }
+  @media (min-width: 768px) {
+    .searchbar-wrapper {
+      display: none;
+    }
+    .space-for-nav-mobile {
+      display: none;
     }
   }
 }
