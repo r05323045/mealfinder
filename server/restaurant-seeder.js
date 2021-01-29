@@ -104,10 +104,10 @@ function createSeeder() {
             "CityId": 1,
             "DistrictId": district[response.data.result.address_components[response.data.result.address_components.length - 4].short_name],
             "address": addressData,
-            "coordinates": [{
-              "lat": response.data.result.geometry.location.lat,
-              "lng": response.data.result.geometry.location.lng
-            }]
+            "coordinates": [
+              response.data.result.geometry.location.lat,
+              response.data.result.geometry.location.lng
+            ]
           }
           seedersData.push(seeder)
         }
