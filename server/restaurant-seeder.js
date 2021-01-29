@@ -4,17 +4,17 @@ const key = 'AIzaSyAInMt_uuH0jJp7zTIbKumQpW3bXaJSliA'
 const seedersData = []
 const district = {
   "中正區": 1,
-  "大同區": 2,
-  "中山區": 3,
-  "松山區": 4,
-  "大安區": 5,
-  "萬華區": 6,
-  "信義區": 7,
-  "士林區": 8,
-  "北投區": 9,
-  "內湖區": 10,
-  "南港區": 11,
-  "文山區": 12
+  "大同區": 11,
+  "中山區": 21,
+  "松山區": 31,
+  "大安區": 41,
+  "萬華區": 51,
+  "信義區": 61,
+  "士林區": 71,
+  "北投區": 81,
+  "內湖區": 91,
+  "南港區": 101,
+  "文山區": 111
 }
 
 //Get 60 restaurants and their place_id near Taipei using Place Search(Google Map API)
@@ -119,7 +119,7 @@ function createSeeder() {
       .then(function () {
         let data = JSON.stringify(seedersData, null, 2);
 
-        fs.writeFile('restaurantSeeders.json', data, (err) => {
+        fs.writeFile('restaurant-data.json', data, (err) => {
           if (err) throw err;
           console.log('Data written to file');
         });
