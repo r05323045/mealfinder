@@ -180,14 +180,21 @@
     </div>
     <div class="find-more">
       <div class="title">尋找更多</div>
-      <div class="item-group">
-        <div class="item" @click="$router.push('/restaurants')">
-          <div class="icon-list"></div>
-          餐廳清單
+      <div class="container">
+        <div class="illustration-wrapper">
+          <div class="cover"></div>
         </div>
-        <div class="item">
-          <div class="icon-map"></div>
-          地圖探索
+        <div class="item-group">
+          <div class="item-wrapper">
+            <div class="item" @click="$router.push('/restaurants')">
+              <div class="background"></div>
+              <span class="text">餐廳清單</span>
+            </div>
+            <div class="item" @click="$router.push('/restaurants')">
+              <div class="background"></div>
+              <span class="text">地圖探索</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -563,26 +570,31 @@ $red: rgb(255, 56, 92);
       .swiper-button-next,
       .swiper-button-prev {
         display: none;
-        @media (min-width: 200px) {
+        @media (min-width: 768px) {
+          display: block;
           position: absolute;
           right: 0;
+          top: calc(50% - 1.5rem);
           background: #ffffff;
           border-radius: 50%;
           box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.2);
-          width: 24px;
-          height: 24px;
+          width: 3rem;
+          height: 3rem;
           &:focus {
             outline: none;
           }
           &::after {
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            font-size: 1rem;
+            width: 3rem;
+            height: 3rem;
+            line-height: 3rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: $ultimategray;
           }
         }
+      }
+      .swiper-button-prev {
+        left: -32px;
       }
     }
   }
@@ -604,47 +616,88 @@ $red: rgb(255, 56, 92);
         margin-bottom: 8px;
       }
     }
-    .item-group {
+    .container {
       display: flex;
-      flex-direction: column;
-      @media (min-width: 768px) {
-        margin: 32px auto 64px;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-      }
-      .item {
-        margin: 16px auto;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        font-size: 18px;
-        font-weight: 700;
-        line-height: 22px;
+      flex-direction: row;
+      .illustration-wrapper {
+        display: none;
         @media (min-width: 768px) {
-          font-size: 24px;
-          line-height: 28px;
-        }
-        .icon-list {
-          margin-right: 16px;
-          border-radius: 8px;
-          width: 48px;
-          height: 48px;
-          background: url(https://a0.muscache.com/im/pictures/52e8083e-2de2-446d-a860-534eab250541.jpg?im_q=medq&im_w=720) no-repeat center;
+          display: block;
+          flex: 1.5;
+          padding-top: 33.33%;
+          position: relative;
+          background: url(../assets/food-landscape.svg) no-repeat center;
           background-size: cover;
-          @media (min-width: 768px) {
-            margin-right: 32px;
+        }
+        .cover {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .button {
+            padding: 12px 36px;
+            border-radius: 30px;
+            background: #000000;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 20px;
           }
         }
-        .icon-map {
-          margin-right: 16px;
-          border-radius: 8px;
-          width: 48px;
-          height: 48px;
-          background: url(https://a0.muscache.com/im/pictures/fc42dde0-36a7-460e-af89-10b5e44e48d8.jpg?im_w=240&im_q=lowq) no-repeat center;
-          background-size: cover;
-          @media (min-width: 768px) {
-            margin-right: 32px;
+      }
+      .item-group {
+        width: 100%;
+        padding-top: 66.7%;
+        position: relative;
+        @media (min-width: 768px) {
+          padding-top: 0;
+          flex: 1;
+          justify-content: center;
+          align-items: center;
+        }
+        .item-wrapper {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          flex-direction: column;
+          .item {
+            margin: 16px 0;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 22px;
+            position: relative;
+            .background {
+              border-radius: 32px;
+              background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
+              background-size: cover;
+              position: absolute;
+              filter: brightness(0.3);
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+            }
+            .text {
+              color: #ffffff;
+              z-index: 1;
+            }
+            @media (min-width: 768px) {
+              font-size: 24px;
+              line-height: 28px;
+            }
           }
         }
       }
