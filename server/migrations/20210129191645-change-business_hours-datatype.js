@@ -2,14 +2,14 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.changeColumn('Restaurants', 'coordinates', {
+    await queryInterface.changeColumn('Restaurants', 'business_hours', {
       type: Sequelize.JSON,
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.changeColumn('Restaurants', 'coordinates', {
-      type: Sequelize.DECIMAL,
+    await queryInterface.changeColumn('Restaurants', 'business_hours', {
+      type: Sequelize.STRING,
     });
   }
 };

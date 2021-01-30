@@ -91,10 +91,11 @@ function createSeeder() {
             "name": response.data.result.name,
             "tel": response.data.result.formatted_phone_number,
             "pictures": response.data.result.photos,
-            "business_hours": [{
-              "periods": response.data.result.opening_hours.periods || null,
-              "weekday_text": response.data.result.opening_hours.weekday_text
-            }],
+            "business_hours": 
+              // "periods": response.data.result.opening_hours.periods || null,
+              // "weekday_text": response.data.result.opening_hours.weekday_text
+              response.data.result.opening_hours.weekday_text
+            ,
             // "day_off": "",
             "google_map_url": response.data.result.url,
             "coupon": true,

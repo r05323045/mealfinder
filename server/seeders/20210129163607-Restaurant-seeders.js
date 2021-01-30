@@ -11,17 +11,19 @@ module.exports = {
         name: data[i].name,
         tel: data[i].tel,
         address: data[i].address,
-        coordinates: data[i].coordinates,
+        coordinates: JSON.stringify(data[i].coordinates),
         picture:`https://loremflickr.com/320/240/restaurant,food/?lock=${Math.random() * 100}`,
-        business_hours: data[i].business_hours,
+        business_hours: JSON.stringify(data[i].business_hours), 
         google_map_url: data[i].google_map_url,
-        day_off: 'N/A',
+        day_off: "N/A",
         coupon: true,
         deposit: false,
         rating: data[i].rating.toString(),
-        CategoryId: Math.floor(Math.random() * 16) * 10 + 1,
+        CategoryId: (Math.floor(Math.random() * 16) * 10 + 1),
         CityId: data[i].CityId,
-        DistrictId: data[i].DistrictId
+        DistrictId: data[i].DistrictId,
+        createdAt: new Date(),
+        updatedAt: new Date()
       })
     }
     await queryInterface.bulkInsert('Restaurants', restaurants, {});
