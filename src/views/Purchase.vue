@@ -1,5 +1,6 @@
 <template>
   <div class="purchase-page">
+    <Navbar></Navbar>
     <div class="purchase-container">
       <div class="title">我的購買</div>
       <div class="purchase-wrapper">
@@ -22,9 +23,6 @@
     </div>
     <div ref="footer">
       <Footer></Footer>
-    </div>
-    <div>
-      <Navbar></Navbar>
     </div>
   </div>
 </template>
@@ -62,13 +60,19 @@ $red: rgb(255, 56, 92);
   height: 100vh;
   overflow: scroll;
   .purchase-container {
-    margin: 36px 24px;
+    padding: 36px 24px;
     text-align: left;
     position: relative;
+    @media (min-width: 992px) {
+      padding: 36px 80px;
+    }
     .title {
       font-size: 24px;
       font-weight: 800;
       line-height: 1.5;
+      @media (min-width: 992px) {
+        font-size: 32px;
+      }
     }
     .tab-container {
       position: relative;
@@ -85,14 +89,28 @@ $red: rgb(255, 56, 92);
         background: $divider;
       }
       .tab {
+        color: #666;
+        cursor: pointer;
         padding: 16px;
         font-size: 14px;
         line-height: 18px;
         font-weight: 600;
         position: relative;
+        &:hover {
+          background: $divider;
+        }
+        @media (min-width: 992px) {
+          font-size: 16px;
+          line-height: 20px;
+        }
       }
       .tab.active {
         position: relative;
+        color: #222222;
+        position: relative;
+        &:hover {
+          background: #ffffff;
+        }
         .active-line {
           z-index: 2;
           position: absolute;

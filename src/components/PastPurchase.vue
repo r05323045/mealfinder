@@ -8,6 +8,11 @@
       <div class="card-content">
         <div class="item-wrapper" v-for="i in 5" :key="i">
           <div class="count-wrapper">
+            <div class="image-container">
+              <div class="image-wrapper">
+                <div class="image"></div>
+              </div>
+            </div>
             <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
             <div class="count">
               <div class="text">x1</div>
@@ -62,10 +67,16 @@ $red: rgb(255, 56, 92);
       font-weight: 600;
       .title {
         font-size: 16px;
+        @media (min-width: 992px) {
+          font-size: 18px;
+        }
       }
       .text {
         text-decoration: underline;
         font-size: 14px;
+        @media (min-width: 992px) {
+          font-size: 16px;
+        }
       }
     }
     .card-content {
@@ -78,13 +89,39 @@ $red: rgb(255, 56, 92);
         .count-wrapper {
           display: flex;
           flex-direction: row;
+          .image-container {
+            display: none;
+            @media (min-width: 992px) {
+              display: block;
+              flex: 1;
+              margin-right: 24px;
+            }
+            .image-wrapper {
+              width: 100%;
+              padding-top: 100%;
+              position: relative;
+              .image {
+                border-radius: 8px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
+                background-size: cover;
+              }
+            }
+          }
           .name {
-            flex: 1;
+            flex: 7;
             margin: 12px 24px 12px 0;
             font-size: 16px;
             font-weight: 400;
             line-height: 1.5;
             text-align: left;
+            @media (min-width: 992px) {
+              font-size: 18px;
+            }
           }
           .count {
             line-height: 1.5;
@@ -94,6 +131,9 @@ $red: rgb(255, 56, 92);
             display: flex;
             justify-content: center;
             align-items: center;
+            @media (min-width: 992px) {
+              font-size: 22px;
+            }
           }
         }
       }
@@ -131,6 +171,9 @@ $red: rgb(255, 56, 92);
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      @media (min-width: 992px) {
+        font-size: 22px;
+      }
     }
   }
   .order-card {
