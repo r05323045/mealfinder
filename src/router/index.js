@@ -33,14 +33,6 @@ const routes = [
     component: () => import('@/views/Coupon.vue')
   },
   {
-    path: '/checkout',
-    component: () => import('@/views/Checkout.vue')
-  },
-  {
-    path: '/checkout/success',
-    component: () => import('@/views/CheckoutSuccess.vue')
-  },
-  {
     path: '/signin',
     component: () => import('@/views/SignIn.vue')
   },
@@ -73,8 +65,16 @@ const routes = [
         component: () => import('@/views/Purchase.vue')
       },
       {
-        path: '/users/record',
+        path: '/users/purchase/:1',
         component: () => import('@/views/Record.vue')
+      },
+      {
+        path: '/users/checkout',
+        component: () => import('@/views/Checkout.vue')
+      },
+      {
+        path: '/users/checkout/success',
+        component: () => import('@/views/CheckoutSuccess.vue')
       },
       {
         path: '/users/favorite',
