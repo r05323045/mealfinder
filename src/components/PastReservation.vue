@@ -2,34 +2,34 @@
   <div class="past-reservation">
     <div class="card-deck" v-for="i in 3" :key="`card-deck-${i}`">
       <div class="booking-card" v-for="i in 3" :key="i" :class="{ 'last-card': i === 3 }" @click="$router.push(`/users/history/${i}`)">
-      <div class="picture-wrapper">
-        <div class="picture"></div>
-      </div>
-      <div class="header">
-        <img class="icon restaurant" src="../assets/restaurant.svg">
-        <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
-      </div>
-      <div class="divider"></div>
-      <div class="info">
-        <div class="item-wrapper">
-          <img class="icon profile" src="../assets/profile.svg">
-          <div class="number">2大</div>
+        <div class="picture-wrapper">
+          <div class="picture"></div>
         </div>
-        <div class="item-wrapper">
-          <img class="icon time" src="../assets/calendar.svg">
-          <div class="date">2021/01/23 (週六)</div>
+        <div class="header">
+          <img class="icon restaurant" src="../assets/restaurant.svg">
+          <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
         </div>
-        <div class="item-wrapper">
-          <img class="icon time" src="../assets/clock.svg">
-          <div class="time">11:30</div>
+        <div class="divider"></div>
+        <div class="info">
+          <div class="item-wrapper">
+            <img class="icon profile" src="../assets/profile.svg">
+            <div class="number">2大</div>
+          </div>
+          <div class="item-wrapper">
+            <img class="icon time" src="../assets/calendar.svg">
+            <div class="date">2021/01/23 (週六)</div>
+          </div>
+          <div class="item-wrapper">
+            <img class="icon time" src="../assets/clock.svg">
+            <div class="time">11:30</div>
+          </div>
         </div>
-      </div>
-      <div class="divider"></div>
-      <div class="write-comment">
-        <div class="button-wrapper">
-          <div class="button">填寫評論</div>
+        <div class="divider"></div>
+        <div class="write-comment">
+          <div class="button-wrapper">
+            <div class="button">填寫評論</div>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>

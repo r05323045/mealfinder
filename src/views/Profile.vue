@@ -40,110 +40,110 @@
         </div>
       </div>
       <div class="right-side">
-      <div class="basic-info-container">
-        <div class="avatar-wrapper">
-          <div class="avatar"></div>
-          <div class="text">更新大頭照</div>
+        <div class="basic-info-container">
+          <div class="avatar-wrapper">
+            <div class="avatar"></div>
+            <div class="text">更新大頭照</div>
+          </div>
+          <div class="title">嗨！我是 Jim Lin</div>
+          <div class="join">加入時間 2019</div>
         </div>
-        <div class="title">嗨！我是 Jim Lin</div>
-        <div class="join">加入時間 2019</div>
-      </div>
-      <div class="information-container">
-        <div class="title">
-          個人資料
-          <div class="edit" @click="editing = true">編輯</div>
-        </div>
-        <div class="information-body" :class="{ editing: editing }">
-          <div class="item-wrapper">
-            <div class="top-wrapper">
-              <img class="icon profile" src="../assets/profile.svg">
-              <div class="title">我的姓名</div>
-            </div>
-            <input class="content" value="XXX" type="text">
+        <div class="information-container">
+          <div class="title">
+            個人資料
+            <div class="edit" @click="editing = true">編輯</div>
           </div>
-          <div class="item-wrapper item-gender">
-            <div class="top-wrapper">
-              <img class="icon lgbt" src="../assets/lgbt.svg">
-              <div class="title">我的性別</div>
+          <div class="information-body" :class="{ editing: editing }">
+            <div class="item-wrapper">
+              <div class="top-wrapper">
+                <img class="icon profile" src="../assets/profile.svg">
+                <div class="title">我的姓名</div>
+              </div>
+              <input class="content" value="XXX" type="text">
             </div>
-            <div class="gender">
-              <span class="inner-wrapper">
-                <label for="gender-female" class="item">
-                  <span class="radio-input">
-                    <input name="gender" id="gender-female" role="radio" value="1" type="radio" checked :disabled="!editing">
-                    <span class="radio-control"></span>
-                  </span>
-                  <span class="text">小姐</span>
-                </label>
-              </span>
-              <span class="inner-wrapper">
-                <label for="gender-male" class="item">
-                  <span class="radio-input">
-                    <input name="gender" id="gender-male" role="radio" value="1" type="radio" :disabled="!editing">
-                    <span class="radio-control"></span>
-                  </span>
-                  <span class="text">先生</span>
-                </label>
-              </span>
-              <span class="inner-wrapper">
-                <label for="gender-other" class="item">
-                  <span class="radio-input">
-                    <input name="gender" id="gender-other" role="radio" value="1" type="radio" :disabled="!editing">
-                    <span class="radio-control"></span>
-                  </span>
-                  <span class="text">其他</span>
-                </label>
-              </span>
+            <div class="item-wrapper item-gender">
+              <div class="top-wrapper">
+                <img class="icon lgbt" src="../assets/lgbt.svg">
+                <div class="title">我的性別</div>
+              </div>
+              <div class="gender">
+                <span class="inner-wrapper">
+                  <label for="gender-female" class="item">
+                    <span class="radio-input">
+                      <input name="gender" id="gender-female" role="radio" value="1" type="radio" checked :disabled="!editing">
+                      <span class="radio-control"></span>
+                    </span>
+                    <span class="text">小姐</span>
+                  </label>
+                </span>
+                <span class="inner-wrapper">
+                  <label for="gender-male" class="item">
+                    <span class="radio-input">
+                      <input name="gender" id="gender-male" role="radio" value="1" type="radio" :disabled="!editing">
+                      <span class="radio-control"></span>
+                    </span>
+                    <span class="text">先生</span>
+                  </label>
+                </span>
+                <span class="inner-wrapper">
+                  <label for="gender-other" class="item">
+                    <span class="radio-input">
+                      <input name="gender" id="gender-other" role="radio" value="1" type="radio" :disabled="!editing">
+                      <span class="radio-control"></span>
+                    </span>
+                    <span class="text">其他</span>
+                  </label>
+                </span>
+              </div>
             </div>
-          </div>
-          <div class="item-wrapper">
-            <div class="top-wrapper">
-              <img class="icon email" src="../assets/email.svg">
-              <div class="title">我的Email</div>
+            <div class="item-wrapper">
+              <div class="top-wrapper">
+                <img class="icon email" src="../assets/email.svg">
+                <div class="title">我的Email</div>
+              </div>
+              <input class="content" value="user1@example.com" type="email">
             </div>
-            <input class="content" value="user1@example.com" type="email">
-          </div>
-          <div class="item-wrapper">
-            <div class="top-wrapper">
-              <img class="icon phone" src="../assets/phone.svg">
-              <div class="title">我的手機</div>
+            <div class="item-wrapper">
+              <div class="top-wrapper">
+                <img class="icon phone" src="../assets/phone.svg">
+                <div class="title">我的手機</div>
+              </div>
+              <input class="content" value="09000000000" type="number">
             </div>
-            <input class="content" value="09000000000" type="number">
-          </div>
-          <div class="item-wrapper">
-            <div class="top-wrapper">
-              <img class="icon map" src="../assets/map.svg">
-              <div class="title">經常用餐地區</div>
+            <div class="item-wrapper">
+              <div class="top-wrapper">
+                <img class="icon map" src="../assets/map.svg">
+                <div class="title">經常用餐地區</div>
+              </div>
+              <div class="content">大安區</div>
+              <div class="add" v-if="editing">
+                <span class="text" @click="showChangeModal = !showChangeModal">變更</span>
+              </div>
             </div>
-            <div class="content">大安區</div>
-            <div class="add" v-if="editing">
-              <span class="text" @click="showChangeModal = !showChangeModal">變更</span>
+            <div class="item-wrapper last">
+              <div class="top-wrapper">
+                <img class="icon restaurant" src="../assets/restaurant.svg">
+                <div class="title">偏好的餐廳類型</div>
+              </div>
+              <div class="content">日式料理、餐酒館</div>
+              <div class="add" v-if="editing">
+                <span class="text" @click="showAddModal = !showAddModal">新增更多</span>
+              </div>
             </div>
-          </div>
-          <div class="item-wrapper last">
-            <div class="top-wrapper">
-              <img class="icon restaurant" src="../assets/restaurant.svg">
-              <div class="title">偏好的餐廳類型</div>
+            <div class="button-wrapper" v-if="editing">
+              <div class="cancel" @click="editing = false">取消</div>
+              <div class="save" @click="editing = false">儲存</div>
             </div>
-            <div class="content">日式料理、餐酒館</div>
-            <div class="add" v-if="editing">
-              <span class="text" @click="showAddModal = !showAddModal">新增更多</span>
-            </div>
-          </div>
-          <div class="button-wrapper" v-if="editing">
-            <div class="cancel" @click="editing = false">取消</div>
-            <div class="save" @click="editing = false">儲存</div>
-          </div>
-        </div>
-      </div>
-      <div class="more-container">
-        <div class="title">專屬你的推薦餐廳</div>
-        <div class="illustration-wrapper">
-          <div class="cover">
-            <div class="button" @click="$router.push('/restaurants')">現在就去看看</div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="more-container">
+      <div class="title">專屬你的推薦餐廳</div>
+      <div class="illustration-wrapper">
+        <div class="cover">
+          <div class="button" @click="$router.push('/restaurants')">現在就去看看</div>
+        </div>
       </div>
     </div>
     <div ref="footer">
@@ -211,7 +211,7 @@ $red: rgb(255, 56, 92);
       @media (min-width: 992px) {
         display: block;
         flex: 1;
-        padding: 64px 40px 36px 40px;
+        padding: 64px 40px 36px 0;
       }
       .profile-card {
         margin-bottom: 20px;
@@ -520,46 +520,60 @@ $red: rgb(255, 56, 92);
           }
         }
       }
-      .more-container {
-        padding: 40px;
-        .divider {
-          background: $divider;
-          height: 1px;
-        }
-        .title {
-          margin-top: 24px;
-          margin-bottom: 24px;
-          font-size: 22px;
+    }
+  }
+  .more-container {
+    padding: 40px;
+    margin: auto;
+    max-width: 1040px;
+    @media (min-width: 992px) {
+      padding: 40px 80px;
+    }
+    .divider {
+      background: $divider;
+      height: 1px;
+    }
+    .title {
+      margin-top: 24px;
+      margin-bottom: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: left;
+      line-height: 22px;
+      @media (min-width: 992px) {
+        font-size: 24px;
+        line-height: 1.5;
+      }
+    }
+    .illustration-wrapper {
+      width: 100%;
+      padding-top: 66.7%;
+      position: relative;
+      background: url(../assets/eatNow.svg) no-repeat center;
+      background-size: cover;
+      @media (min-width: 992px) {
+        padding-top: 25%;
+        background: url(../assets/people-eating-food.svg) no-repeat center;
+        background-size: cover;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .button {
+          padding: 12px 36px;
+          border-radius: 30px;
+          background: #000000;
+          color: #ffffff;
+          cursor: pointer;
           font-weight: 700;
-          text-align: left;
-          line-height: 22px;
-        }
-        .illustration-wrapper {
-          width: 100%;
-          padding-top: 66.7%;
-          position: relative;
-          background: url(../assets/eatNow.svg) no-repeat center;
-          background-size: cover;
-          .cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .button {
-              padding: 12px 36px;
-              border-radius: 30px;
-              background: #000000;
-              color: #ffffff;
-              cursor: pointer;
-              font-weight: 700;
-              font-size: 16px;
-              line-height: 20px;
-            }
-          }
+          font-size: 16px;
+          line-height: 20px;
         }
       }
     }
