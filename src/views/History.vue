@@ -1,5 +1,6 @@
 <template>
   <div class="history-page">
+    <Navbar></Navbar>
     <div class="history-container">
       <div class="title">用餐紀錄</div>
       <div class="history-wrapper">
@@ -22,9 +23,6 @@
     </div>
     <div ref="footer">
       <Footer></Footer>
-    </div>
-    <div>
-      <Navbar></Navbar>
     </div>
   </div>
 </template>
@@ -62,13 +60,24 @@ $red: rgb(255, 56, 92);
   height: 100vh;
   overflow: scroll;
   .history-container {
-    margin: 36px 24px;
+    padding: 36px 24px;
     text-align: left;
     position: relative;
+    @media (min-width: 992px) {
+      padding: 36px 80px;
+    }
     .title {
       font-size: 24px;
       font-weight: 800;
       line-height: 1.5;
+      @media (min-width: 992px) {
+        font-size: 32px;
+      }
+    }
+    .history-wrapper {
+      .reservation-container {
+        padding-top: 8px;
+      }
     }
     .tab-container {
       position: relative;
@@ -85,14 +94,27 @@ $red: rgb(255, 56, 92);
         background: $divider;
       }
       .tab {
+        color: #666;
+        cursor: pointer;
         padding: 16px;
         font-size: 14px;
         line-height: 18px;
         font-weight: 600;
         position: relative;
+        &:hover {
+          background: $divider;
+        }
+        @media (min-width: 992px) {
+          font-size: 16px;
+          line-height: 20px;
+        }
       }
       .tab.active {
+        color: #222222;
         position: relative;
+        &:hover {
+          background: #ffffff;
+        }
         .active-line {
           z-index: 2;
           position: absolute;

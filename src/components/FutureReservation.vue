@@ -1,7 +1,7 @@
 <template>
   <div class="future-reservation">
     <div class="more-container">
-      <div class="title">還沒想好要吃什麼？</div>
+      <div class="more-title">還沒想好要吃什麼？</div>
       <div class="illustration-wrapper">
         <div class="cover">
           <div class="button" @click="$router.push('/restaurants')">現在就去找餐廳</div>
@@ -32,13 +32,12 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .future-reservation {
   .more-container {
-    padding: 12px;
+    padding: 12px 0;
     .divider {
       background: $divider;
       height: 1px;
     }
-    .title {
-      margin-top: 24px;
+    .more-title {
       margin-bottom: 24px;
       font-size: 22px;
       font-weight: 700;
@@ -51,6 +50,11 @@ $red: rgb(255, 56, 92);
       position: relative;
       background: url(../assets/eatNow.svg) no-repeat center;
       background-size: cover;
+      @media (min-width: 992px) {
+        padding-top: 25%;
+        background: url(../assets/people-eating-food.svg) no-repeat center;
+        background-size: cover;
+      }
       .cover {
         position: absolute;
         top: 0;

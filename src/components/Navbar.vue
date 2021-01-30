@@ -50,7 +50,7 @@
             <div class="divider"></div>
           </div>
         </div>
-        <div class="searchbar-wrapper" v-show="!openSearch" @click="openSearch = true">
+        <div class="searchbar-wrapper" v-if="!$route.path.includes('users')" v-show="!openSearch" @click="openSearch = true">
           <div class="searchbar">
             <div class="searchbar-button">
               <input v-if="false" class="search-input">
