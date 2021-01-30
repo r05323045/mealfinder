@@ -1,6 +1,6 @@
 <template>
   <div class="restaurants" :class="{modalShow: showModal}">
-    <Navbar></Navbar>
+    <Navbar class="restaurant-navbar"></Navbar>
     <div class="searchbar-wrapper-mobile">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
@@ -101,6 +101,12 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .restaurants {
   width: 100%;
+  .restaurant-navbar {
+    display: none;
+    @media (min-width: 992px) {
+      display: block;
+    }
+  }
   .searchbar-wrapper-mobile {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -113,7 +119,7 @@ $red: rgb(255, 56, 92);
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       display: none;
     }
     .back-wrapper {
@@ -189,7 +195,7 @@ $red: rgb(255, 56, 92);
     .restaurant-list {
       margin: 22px 0;
       padding: 0 24px;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         margin: 32px 0;
         padding: 0 80px;
       }
@@ -200,12 +206,12 @@ $red: rgb(255, 56, 92);
         font-weight: 700;
         text-align: left;
         line-height: 22px;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
         }
       }
       .filter-button-wrapper {
         display: none;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           display: flex;
           flex-direction: row;
           margin: 24px 0;
@@ -221,14 +227,14 @@ $red: rgb(255, 56, 92);
       }
       .restaurant-card-deck {
         width: 100%;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           display: flex;
           flex-direction: row;
         }
         .restaurant-card {
           padding-top: 12px;
           margin-bottom: 28px;
-          @media (min-width: 768px) {
+          @media (min-width: 992px) {
             margin-right: 16px;
           }
           .card-image-wrapper {
@@ -327,7 +333,7 @@ $red: rgb(255, 56, 92);
           }
         }
         .restaurant-card.last-card {
-          @media (min-width: 768px) {
+          @media (min-width: 992px) {
               margin-right: 0;
             }
         }

@@ -191,7 +191,7 @@ $red: rgb(255, 56, 92);
       }
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     position: sticky;
     top: 0;
     left: 0;

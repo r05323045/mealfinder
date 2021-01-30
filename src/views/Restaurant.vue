@@ -345,7 +345,7 @@ $primary-color: #222;
   padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       display: block;
     }
   }
@@ -361,7 +361,7 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       display: none;
     }
     .back-wrapper {
@@ -456,18 +456,18 @@ $primary-color: #222;
     margin-top: 60px;
     scroll-behavior: smooth;
     width: 100%;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       margin-top: 24px;
     }
     .restaurant-info {
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         padding: 0 80px;
       }
       .picture-wrapper {
         width: 100%;
         padding-top: 66.7%;
         position: relative;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           padding-top: 50%;
         }
         .picture {
@@ -478,7 +478,7 @@ $primary-color: #222;
           bottom: 0;
           background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
           background-size: cover;
-          @media (min-width: 768px) {
+          @media (min-width: 992px) {
             border-radius: 12px;
           }
         }
@@ -644,7 +644,7 @@ $primary-color: #222;
             .select-wrapper {
               padding: 0 4px;
               flex: 1;
-              @media (min-width: 768px) {
+              @media (min-width: 992px) {
                 padding: 0 8px;
               }
               .select {
@@ -680,7 +680,7 @@ $primary-color: #222;
             .mx-input-wrapper {
               padding: 0 4px;
               flex: 1;
-              @media (min-width: 768px) {
+              @media (min-width: 992px) {
                 padding: 0 8px;
               }
               .mx-input {
@@ -701,7 +701,7 @@ $primary-color: #222;
               }
               .mx-icon-calendar {
                 right: 12px;
-                @media (min-width: 768px) {
+                @media (min-width: 992px) {
                   right: 16px;
                 }
               }
@@ -806,14 +806,14 @@ $primary-color: #222;
         .info-and-map {
           display: flex;
           flex-direction: column;
-          @media (min-width: 768px) {
+          @media (min-width: 992px) {
             flex-direction: row;
           }
           .map-wrapper {
             flex: 1.5;
             margin-bottom: 24px;
             width: 100%;
-            @media (min-width: 768px) {
+            @media (min-width: 992px) {
               margin-bottom: 0;
             }
             .google-map {
@@ -825,7 +825,7 @@ $primary-color: #222;
           }
           .information-body {
             flex: 1;
-            @media (min-width: 768px) {
+            @media (min-width: 992px) {
               margin-left: 32px;
             }
             .item-wrapper {
@@ -880,7 +880,7 @@ $primary-color: #222;
           margin-bottom: 24px;
           padding-top: 66.7%;
           position: relative;
-          @media (min-width: 768px) {
+          @media (min-width: 992px) {
             padding-top: 33.3%;
           }
           .menu-img {
@@ -891,7 +891,7 @@ $primary-color: #222;
             right: 50%;
             background: url(https://inline.imgix.net/menus/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-abf54248-3e5f-4faa-8367-5a6f171277f9_201912-01.jpg) no-repeat center;
             background-size: cover;
-            @media (min-width: 768px) {
+            @media (min-width: 992px) {
               right: 75%;
             }
           }
@@ -927,14 +927,14 @@ $primary-color: #222;
         .comment-container-deck {
           display: flex;
           flex-direction: column;
-          @media (min-width: 768px) {
+          @media (min-width: 992px) {
             flex-direction: row;
           }
           .comment-container {
             padding: 0px;
             flex: 1;
             margin-bottom: 40px;
-            @media (min-width: 768px) {
+            @media (min-width: 992px) {
               padding: 24px;
             }
             .comment-user {
@@ -1018,7 +1018,7 @@ $primary-color: #222;
     width: calc(100vw - 48px);
     padding: 8px 24px;
     background: #ffffff;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       width: calc(100vw - 160px);
       padding: 16px 80px;
     }
@@ -1047,7 +1047,7 @@ $primary-color: #222;
       display: flex;
       justify-content: center;
       align-items: center;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         width: calc(100vw - 160px);
       }
       .text {

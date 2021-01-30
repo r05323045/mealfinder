@@ -274,7 +274,7 @@ $red: rgb(255, 56, 92);
     display: block;
     background: #000000;
     height: 50px;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       display: none;
     }
   }
@@ -328,7 +328,7 @@ $red: rgb(255, 56, 92);
     height: 408px;
     width: 100%;
     position: relative;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       height: calc(80vh + 50px);
     }
     .background-image {
@@ -338,7 +338,7 @@ $red: rgb(255, 56, 92);
       background: url(https://images.unsplash.com/photo-1573080519806-93cec30f99c4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80) no-repeat center;
       background-size: cover;
       filter: brightness(.4);
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         background: url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80) no-repeat center;
         background-size: cover;
       }
@@ -349,7 +349,7 @@ $red: rgb(255, 56, 92);
       left: 0;
       right: 0;
       bottom: 0;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         padding: 196px 80px 40px 80px;
         display: flex;
         align-items: flex-start;
@@ -363,7 +363,7 @@ $red: rgb(255, 56, 92);
         font-size: 32px;
         line-height: 48px;
         font-weight: 600;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           font-size: 52px;
           line-height: 58px;
         }
@@ -383,7 +383,7 @@ $red: rgb(255, 56, 92);
   .area {
     margin-top: 40px;
     padding: 0 24px;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       padding: 0 80px;
       margin-top: 64px;
     }
@@ -393,7 +393,7 @@ $red: rgb(255, 56, 92);
       font-weight: 700;
       text-align: left;
       line-height: 22px;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         font-size: 32px;
         line-height: 36px;
         padding-bottom: 16px;
@@ -403,7 +403,7 @@ $red: rgb(255, 56, 92);
       display: flex;
       flex-direction: row;
       margin: 10px 0;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         display: none;
       }
       .district {
@@ -447,7 +447,7 @@ $red: rgb(255, 56, 92);
     }
     .district-deck-desktop {
       display: none;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         display: flex;
         flex-direction: row;
         margin: 10px 0;
@@ -500,7 +500,7 @@ $red: rgb(255, 56, 92);
     color: #ffffff;
     margin-top: 40px;
     padding: 24px 0 32px 24px;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       margin-top: 64px;
       padding: 40px 0 40px 80px;
     }
@@ -510,7 +510,7 @@ $red: rgb(255, 56, 92);
       font-weight: 700;
       text-align: left;
       line-height: 22px;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         font-size: 32px;
         line-height: 36px;
         margin-bottom: 8px;
@@ -570,7 +570,7 @@ $red: rgb(255, 56, 92);
       .swiper-button-next,
       .swiper-button-prev {
         display: none;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           display: block;
           position: absolute;
           right: 0;
@@ -601,7 +601,7 @@ $red: rgb(255, 56, 92);
   .find-more {
     margin: 40px 0;
     padding: 0 24px;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       padding: 0 80px;
     }
     .title {
@@ -610,7 +610,7 @@ $red: rgb(255, 56, 92);
       font-weight: 700;
       text-align: left;
       line-height: 22px;
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         font-size: 32px;
         line-height: 36px;
         margin-bottom: 8px;
@@ -621,7 +621,7 @@ $red: rgb(255, 56, 92);
       flex-direction: row;
       .illustration-wrapper {
         display: none;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           display: block;
           flex: 1.5;
           padding-top: 33.33%;
@@ -654,7 +654,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         padding-top: 66.7%;
         position: relative;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           padding-top: 0;
           flex: 1;
           justify-content: center;
@@ -694,7 +694,7 @@ $red: rgb(255, 56, 92);
               color: #ffffff;
               z-index: 1;
             }
-            @media (min-width: 768px) {
+            @media (min-width: 992px) {
               font-size: 24px;
               line-height: 28px;
             }
@@ -703,7 +703,7 @@ $red: rgb(255, 56, 92);
       }
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     .searchbar-wrapper {
       display: none;
     }

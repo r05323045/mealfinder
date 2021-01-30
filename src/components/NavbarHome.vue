@@ -92,7 +92,7 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .navbar-home {
   display: none;
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     display: block;
     position: absolute;
     top: 50px;

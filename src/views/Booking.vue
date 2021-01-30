@@ -166,6 +166,12 @@ $primary-color: #222;
   overflow: scroll;
   position: relative;
   width: 100%;
+  .restaurant-navbar {
+    display: none;
+    @media (min-width: 992px) {
+      display: block;
+    }
+  }
   .booking-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -178,7 +184,7 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
       display: none;
     }
     .back-wrapper {
@@ -255,7 +261,7 @@ $primary-color: #222;
       .booking-card-wrapper {
         min-width: 300px;
         flex: 1;
-         @media (min-width: 992px) {
+        @media (min-width: 992px) {
           padding-top: 60px;
         }
         .booking-card {
