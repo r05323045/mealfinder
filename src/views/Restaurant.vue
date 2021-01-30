@@ -342,6 +342,7 @@ $primary-color: #222;
   position: relative;
   overflow: hidden;
   width: 100%;
+  height: 100%;
   padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
@@ -451,17 +452,14 @@ $primary-color: #222;
     }
   }
   .info-container {
-    height: calc(100vh - 60px);
+    height: 100%;
     overflow: scroll;
-    margin-top: 60px;
     scroll-behavior: smooth;
-    width: 100%;
-    @media (min-width: 992px) {
-      margin-top: 24px;
-    }
+    position: absolute;
+    top: 0;
     .restaurant-info {
       @media (min-width: 992px) {
-        padding: 0 80px;
+        padding: 105px 80px 0;
       }
       .picture-wrapper {
         width: 100%;

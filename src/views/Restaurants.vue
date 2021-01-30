@@ -101,6 +101,7 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .restaurants {
   width: 100%;
+  position: relative;
   .restaurant-navbar {
     display: none;
     @media (min-width: 992px) {
@@ -190,8 +191,15 @@ $red: rgb(255, 56, 92);
     }
   }
   .list-container {
+    position: absolute;
+    top: 60px;
+    width: 100%;
     height: calc(100vh - 60px);
     overflow: scroll;
+    @media (min-width: 992px) {
+      top: 81px;
+      height: calc(100vh - 81px);
+    }
     .restaurant-list {
       margin: 22px 0;
       padding: 0 24px;
@@ -334,8 +342,8 @@ $red: rgb(255, 56, 92);
         }
         .restaurant-card.last-card {
           @media (min-width: 992px) {
-              margin-right: 0;
-            }
+            margin-right: 0;
+          }
         }
       }
       .load-more {

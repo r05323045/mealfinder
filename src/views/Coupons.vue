@@ -1,6 +1,7 @@
 <template>
   <div class="coupons" :class="{modalShow: showModal}">
-    <div class="searchbar-wrapper">
+    <Navbar class="restaurant-navbar"></Navbar>
+    <div class="coupons-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
@@ -17,8 +18,13 @@
     <div class="list-container" ref="list-container">
       <div class="coupon-list" ref="coupon-list">
         <div class="title">餐券列表</div>
-        <div class="restaurant-card-deck">
-          <div class="restaurant-card" v-for="i in 10" :key="i">
+        <div class="filter-button-wrapper">
+          <div class="filter-button">地區</div>
+          <div class="filter-button">類型</div>
+          <div class="filter-button">預算</div>
+        </div>
+        <div class="restaurant-card-deck" v-for="i in 4" :key="`card-deck-${i}`">
+          <div class="restaurant-card" v-for="i in 4" :key="i" :class="{ 'last-card': i === 4}" @click="$router.push(`/coupons/${i}`)">
             <div class="card-image-wrapper">
               <div class="heart-wrapper">
                 <img class="icon heart" src="../assets/black-heart.svg">
@@ -45,13 +51,13 @@
             </div>
           </div>
         </div>
+        <div class="load-more">
+          <div class="load-more-button">載入更多結果</div>
+        </div>
       </div>
       <div ref="footer">
         <Footer></Footer>
       </div>
-    </div>
-    <div v-show="scrollUp">
-      <Navbar></Navbar>
     </div>
     <FilterModal :showModal="showModal" @closeModal="closeFilter"></FilterModal>
   </div>
@@ -98,7 +104,14 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .coupons {
   width: 100%;
-  .searchbar-wrapper {
+  position: relative;
+  .restaurant-navbar {
+    display: none;
+    @media (min-width: 992px) {
+      display: block;
+    }
+  }
+  .coupons-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
     background: none;
@@ -110,6 +123,9 @@ $red: rgb(255, 56, 92);
     justify-content: center;
     align-items: center;
     background: #ffffff;
+    @media (min-width: 992px) {
+      display: none;
+    }
     .back-wrapper {
       padding-left: 8px;
       width: 40px;
@@ -161,28 +177,39 @@ $red: rgb(255, 56, 92);
         }
       }
     }
-  }
-  .filter-wrapper {
-    padding-right: 8px;
-    width: 40px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .icon.filter {
-      margin: auto;
-      height: 16px;
-      width: 16px;
-      background-color: #000000;
-      mask: url(../assets/filter.svg) no-repeat center;
+    .filter-wrapper {
+      padding-right: 8px;
+      width: 40px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .icon.filter {
+        margin: auto;
+        height: 16px;
+        width: 16px;
+        background-color: #000000;
+        mask: url(../assets/filter.svg) no-repeat center;
+      }
     }
   }
   .list-container {
+    position: absolute;
+    top: 60px;
+    width: 100%;
     height: calc(100vh - 60px);
     overflow: scroll;
+    @media (min-width: 992px) {
+      top: 81px;
+      height: calc(100vh - 81px);
+    }
     .coupon-list {
       margin: 22px 0;
       padding: 0 24px;
+      @media (min-width: 992px) {
+        margin: 32px 0;
+        padding: 0 80px;
+      }
       .title {
         margin-bottom: 24px;
         height: 22px;
@@ -191,11 +218,34 @@ $red: rgb(255, 56, 92);
         text-align: left;
         line-height: 22px;
       }
+      .filter-button-wrapper {
+        display: none;
+        @media (min-width: 992px) {
+          display: flex;
+          flex-direction: row;
+          margin: 24px 0;
+        }
+        .filter-button {
+          margin-right: 16px;
+          border: 1px solid $divider;
+          font-size: 14px;
+          font-weight: 400;
+          padding: 8px 16px;
+          border-radius: 30px;
+        }
+      }
       .restaurant-card-deck {
         width: 100%;
+        @media (min-width: 992px) {
+          display: flex;
+          flex-direction: row;
+        }
         .restaurant-card {
           padding-top: 12px;
           margin-bottom: 28px;
+          @media (min-width: 992px) {
+            margin-right: 16px;
+          }
           .card-image-wrapper {
             .heart-wrapper {
               z-index: 1;
@@ -304,6 +354,27 @@ $red: rgb(255, 56, 92);
               line-height: 20px;
             }
           }
+        }
+        .restaurant-card.last-card {
+          @media (min-width: 992px) {
+            margin-right: 0;
+          }
+        }
+      }
+      .load-more {
+        width: 100%;
+        margin: 80px 0 80px;
+        .load-more-button {
+          width: auto;
+          margin: auto;
+          padding: 14px 24px;
+          border-radius: 8px;
+          background: #000000;
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: 600;
+          color: #ffffff;
+          display: inline-block;
         }
       }
     }

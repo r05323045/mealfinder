@@ -472,6 +472,8 @@ $red: rgb(255, 56, 92);
   }
 }
 .navbar.openSearch {
+  position: fixed;
+  width: 100%;
   .navbar-desktop {
     height: 180px;
   }
