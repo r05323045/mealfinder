@@ -1,6 +1,7 @@
 <template>
   <div class="restaurant">
-    <div class="searchbar-wrapper">
+    <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
+    <div class="restaurant-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
@@ -114,7 +115,12 @@
                 <div class="divider"></div>
               </div>
               <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in noon" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                <button class="button" v-for="(el, idx) in noon[0]" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <span class="text">{{ el }}</span>
+                </button>
+              </div>
+              <div class="button-wrapper">
+                <button class="button" v-for="(el, idx) in noon[1]" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
                   <span class="text">{{ el }}</span>
                 </button>
               </div>
@@ -123,7 +129,12 @@
                 <div class="divider"></div>
               </div>
               <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in afternoon" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                <button class="button" v-for="(el, idx) in afternoon[0]" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <span class="text">{{ el }}</span>
+                </button>
+              </div>
+              <div class="button-wrapper">
+                <button class="button" v-for="(el, idx) in afternoon[1]" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
                   <span class="text">{{ el }}</span>
                 </button>
               </div>
@@ -132,9 +143,21 @@
                 <div class="divider"></div>
               </div>
               <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in night" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                <button class="button" v-for="(el, idx) in night[0]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
                   <span class="text">{{ el }}</span>
                 </button>
+              </div>
+              <div class="button-wrapper">
+                <button class="button" v-for="(el, idx) in night[1]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <span class="text">{{ el }}</span>
+                </button>
+              </div>
+              <div class="button-wrapper">
+                <button class="button" v-for="(el, idx) in night[2]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <span class="text">{{ el }}</span>
+                </button>
+                <div style="flex: 1; margin: 0 4px 16px"></div>
+                <div style="flex: 1; margin: 0 4px 16px"></div>
               </div>
             </div>
             <div class="note">如有訂位以外的需求，請在下一步訂位資訊填寫</div>
@@ -143,37 +166,39 @@
         <div ref="information-wrapper" class="information-wrapper">
           <div class="divider"></div>
           <div class="title">餐廳資訊</div>
-          <div class="map-wrapper">
-            <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
-          </div>
-          <div class="information-body">
-            <div class="item-wrapper">
-              <div class="top-wrapper">
-                <img class="icon map" src="../assets/map.svg">
-                <div class="title">地址</div>
-              </div>
-              <div class="content">台北市敦化南路一段的巷59號</div>
+          <div class="info-and-map">
+            <div class="map-wrapper">
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
             </div>
-            <div class="item-wrapper">
-              <div class="top-wrapper">
-                <img class="icon phone" src="../assets/phone.svg">
-                <div class="title">電話</div>
+            <div class="information-body">
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon map" src="../assets/map.svg">
+                  <div class="title">地址</div>
+                </div>
+                <div class="content">台北市敦化南路一段的巷59號</div>
               </div>
-              <div class="content">02-0000-0000</div>
-            </div>
-            <div class="item-wrapper">
-              <div class="top-wrapper">
-                <img class="icon time" src="../assets/clock.svg">
-                <div class="title">營業時間</div>
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon phone" src="../assets/phone.svg">
+                  <div class="title">電話</div>
+                </div>
+                <div class="content">02-0000-0000</div>
               </div>
-              <div class="content">11:00 - 21:00</div>
-            </div>
-            <div class="item-wrapper last">
-              <div class="top-wrapper">
-                <img class="icon map" src="../assets/restaurant.svg">
-                <div class="title">餐廳類型</div>
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon time" src="../assets/clock.svg">
+                  <div class="title">營業時間</div>
+                </div>
+                <div class="content">11:00 - 21:00</div>
               </div>
-              <div class="content">牛排</div>
+              <div class="item-wrapper last">
+                <div class="top-wrapper">
+                  <img class="icon map" src="../assets/restaurant.svg">
+                  <div class="title">餐廳類型</div>
+                </div>
+                <div class="content">牛排</div>
+              </div>
             </div>
           </div>
         </div>
@@ -191,19 +216,24 @@
             <div class="icon star"></div>
             <div class="text">4.47（49則評價）</div>
           </div>
-          <div class="comment-container"  v-for="i in 10" :key="`comment-${i}`">
-            <div class="comment-user">
-              <div class="avatar"></div>
-              <div class="name-wrapper">
-                <div class="name">Jim</div>
-                <div class="time">2018年4月</div>
+          <div class="comment-container-deck" v-for="i in 5" :key="`comment-deck-${i}`">
+            <div class="comment-container"  v-for="i in 2" :key="`comment-${i}`">
+              <div class="comment-user">
+                <div class="avatar"></div>
+                <div class="name-wrapper">
+                  <div class="name">Jim</div>
+                  <div class="time">2018年4月</div>
+                </div>
+              </div>
+              <div class="content">很好吃</div>
+              <div class="like-wrapper">
+                <div class="icon like"></div>
+                <div class="count">3</div>
               </div>
             </div>
-            <div class="content">很好吃</div>
-            <div class="like-wrapper">
-              <div class="icon like"></div>
-              <div class="count">3</div>
-            </div>
+          </div>
+          <div class="load-more">
+            <div class="load-more-button">載入更多評論</div>
           </div>
         </div>
       </div>
@@ -231,6 +261,7 @@
 
 <script>
 
+import Navbar from '@/components/Navbar.vue'
 import moment from 'moment'
 import Footer from '@/components/Footer.vue'
 import DatePicker from 'vue2-datepicker'
@@ -239,6 +270,7 @@ export default {
     return {
       showModal: false,
       scrollY: 0,
+      scrollUp: true,
       restaurantInfoHeight: 1,
       footerHeight: 0,
       today: `${moment().format('M/DD')} ${moment().format('ddd')} (今日)`,
@@ -257,14 +289,15 @@ export default {
       adultNum: 2,
       childrenNum: 0,
       bookingTime: '',
-      noon: ['11:00', '11:30', '12:00', '12:30', '13:00', '13:30'],
-      afternoon: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30'],
-      night: ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00']
+      noon: [['11:00', '11:30', '12:00'], ['12:30', '13:00', '13:30']],
+      afternoon: [['14:00', '14:30', '15:00'], ['15:30', '16:00', '16:30']],
+      night: [['17:00', '17:30', '18:00'], ['18:30', '19:00', '19:30'], ['20:00']]
     }
   },
   components: {
     DatePicker,
-    Footer
+    Footer,
+    Navbar
   },
   mounted () {
     this.$refs['info-container'].addEventListener('scroll', this.onScroll)
@@ -274,6 +307,7 @@ export default {
   },
   methods: {
     onScroll (e) {
+      this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
       this.scrollY = this.$refs['info-container'].scrollTop
     },
     closeFilter () {
@@ -309,7 +343,13 @@ $primary-color: #222;
   overflow: hidden;
   width: 100%;
   padding-bottom: 81px;
-  .searchbar-wrapper {
+  .restaurant-navbar {
+    display: none;
+    @media (min-width: 768px) {
+      display: block;
+    }
+  }
+  .restaurant-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
     background: none;
@@ -321,6 +361,9 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
+    @media (min-width: 768px) {
+      display: none;
+    }
     .back-wrapper {
       padding-left: 8px;
       width: 40px;
@@ -413,11 +456,20 @@ $primary-color: #222;
     margin-top: 60px;
     scroll-behavior: smooth;
     width: 100%;
+    @media (min-width: 768px) {
+      margin-top: 24px;
+    }
     .restaurant-info {
+      @media (min-width: 768px) {
+        padding: 0 80px;
+      }
       .picture-wrapper {
         width: 100%;
         padding-top: 66.7%;
         position: relative;
+        @media (min-width: 768px) {
+          padding-top: 50%;
+        }
         .picture {
           position: absolute;
           top: 0;
@@ -426,6 +478,9 @@ $primary-color: #222;
           bottom: 0;
           background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
           background-size: cover;
+          @media (min-width: 768px) {
+            border-radius: 12px;
+          }
         }
       }
       .title-wrapper {
@@ -587,7 +642,11 @@ $primary-color: #222;
           .select-container {
             display: flex;
             .select-wrapper {
+              padding: 0 4px;
               flex: 1;
+              @media (min-width: 768px) {
+                padding: 0 8px;
+              }
               .select {
                 width: 100%;
                 padding: 0 1.4rem 0 0.8rem;
@@ -605,9 +664,6 @@ $primary-color: #222;
                 background-size: 12px;
               }
             }
-            .select-wrapper.children {
-              margin-left: 8px;
-            }
           }
         }
         .date-wrapper {
@@ -619,31 +675,14 @@ $primary-color: #222;
             text-align: left;
             line-height: 18px;
           }
-          .select-wrapper {
-            flex: 1;
-            .select {
-              text-align: left;
-              padding: 0 1.4rem 0 0.8rem;
-              appearance: none;
-              border: 1px solid $ultimategray;
-              line-height: 40px;
-              border-radius: 8px;
-              font-size: 16px;
-              font-weight: 400;
-              outline: none;
-              background: transparent;
-              background-image: url("../assets/down-arrow.svg");
-              background-repeat: no-repeat;
-              background-position: right 0.5em top 50%, 0px 0px;
-              background-size: 12px;
-            }
-            .select.choose {
-              background-image: url("../assets/up-arrow.svg");
-            }
-          }
           .mx-datepicker {
             width: 100%;
             .mx-input-wrapper {
+              padding: 0 4px;
+              flex: 1;
+              @media (min-width: 768px) {
+                padding: 0 8px;
+              }
               .mx-input {
                 height: 40px;
                 padding: 0 1.4rem 0 0.8rem;
@@ -660,9 +699,15 @@ $primary-color: #222;
               .mx-input::placeholder {
                 color: #222222;
               }
+              .mx-icon-calendar {
+                right: 12px;
+                @media (min-width: 768px) {
+                  right: 16px;
+                }
+              }
             }
             svg {
-              fill: #000000;
+              fill: #222222;
             }
           }
         }
@@ -705,12 +750,13 @@ $primary-color: #222;
             }
             .button-wrapper {
               text-align: left;
+              display: flex;
               .button {
                 margin: 0 4px 16px;
                 height: 44px;
                 padding: 8px 0;
                 appearance: none;
-                width: calc(33% - 10px);
+                flex: 1;
                 border-radius: 8px;
                 border: 1px solid $ultimategray;
                 background: none;
@@ -757,46 +803,62 @@ $primary-color: #222;
           text-align: left;
           line-height: 22px;
         }
-        .map-wrapper {
-          margin-bottom: 24px;
-          width: 100%;
-          .google-map {
+        .info-and-map {
+          display: flex;
+          flex-direction: column;
+          @media (min-width: 768px) {
+            flex-direction: row;
+          }
+          .map-wrapper {
+            flex: 1.5;
+            margin-bottom: 24px;
             width: 100%;
-            border: none;
-            min-height: 233px;
+            @media (min-width: 768px) {
+              margin-bottom: 0;
+            }
+            .google-map {
+              height: 100%;
+              width: 100%;
+              border: none;
+              min-height: 233px;
+            }
           }
-        }
-        .information-body {
-          .item-wrapper {
-            border-bottom: 1px solid $divider;
-            .top-wrapper {
-              display: flex;
-              flex-direction: row;
-              .title {
-                margin: 12px 0;
+          .information-body {
+            flex: 1;
+            @media (min-width: 768px) {
+              margin-left: 32px;
+            }
+            .item-wrapper {
+              border-bottom: 1px solid $divider;
+              .top-wrapper {
+                display: flex;
+                flex-direction: row;
+                .title {
+                  margin: 12px 0;
+                  font-size: 16px;
+                  font-weight: 600;
+                  line-height: 1.5;
+                }
+                .icon {
+                  fill: $ultimategray;
+                  margin: auto 0;
+                  margin-right: 10px;
+                  height: 14px;
+                  width: 14px;
+                }
+              }
+              .content {
+                text-align: left;
+                margin-left: 24px;
                 font-size: 16px;
-                font-weight: 600;
+                font-weight: 00;
                 line-height: 1.5;
-              }
-              .icon {
-                fill: $ultimategray;
-                margin: auto 0;
-                margin-right: 10px;
-                height: 14px;
-                width: 14px;
+                margin-bottom: 12px;
               }
             }
-            .content {
-              text-align: left;
-              margin-left: 24px;
-              font-size: 16px;
-              font-weight: 00;
-              line-height: 1.5;
-              margin-bottom: 12px;
+            .item-wrapper.last {
+              border: none;
             }
-          }
-          .item-wrapper.last {
-            border: none;
           }
         }
       }
@@ -818,6 +880,9 @@ $primary-color: #222;
           margin-bottom: 24px;
           padding-top: 66.7%;
           position: relative;
+          @media (min-width: 768px) {
+            padding-top: 33.3%;
+          }
           .menu-img {
             position: absolute;
             top: 0;
@@ -826,6 +891,9 @@ $primary-color: #222;
             right: 50%;
             background: url(https://inline.imgix.net/menus/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-abf54248-3e5f-4faa-8367-5a6f171277f9_201912-01.jpg) no-repeat center;
             background-size: cover;
+            @media (min-width: 768px) {
+              right: 75%;
+            }
           }
         }
       }
@@ -856,58 +924,87 @@ $primary-color: #222;
             line-height: 22px;
           }
         }
-        .comment-container {
-          margin-bottom: 40px;
-          .comment-user {
-            display: flex;
+        .comment-container-deck {
+          display: flex;
+          flex-direction: column;
+          @media (min-width: 768px) {
             flex-direction: row;
-            margin-bottom: 12px;
-            align-items: center;
-            .avatar {
-              height: 40px;
-              width: 40px;
-              border-radius: 50%;
-              background: $ultimategray;
+          }
+          .comment-container {
+            padding: 0px;
+            flex: 1;
+            margin-bottom: 40px;
+            @media (min-width: 768px) {
+              padding: 24px;
             }
-            .name-wrapper {
-              margin-left: 12px;
+            .comment-user {
+              display: flex;
+              flex-direction: row;
+              margin-bottom: 12px;
+              align-items: center;
+              .avatar {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                background: $ultimategray;
+              }
+              .name-wrapper {
+                margin-left: 12px;
+                text-align: left;
+                .name {
+                  font-size: 16px;
+                  line-height: 20px;
+                  font-weight: 600;
+                }
+                .time {
+                  font-size: 14px;
+                  line-height: 20px;
+                  font-weight: 400;
+                  color: $ultimategray;
+                }
+              }
+            }
+            .content {
               text-align: left;
-              .name {
-                font-size: 16px;
-                line-height: 20px;
-                font-weight: 600;
-              }
-              .time {
-                font-size: 14px;
-                line-height: 20px;
-                font-weight: 400;
-                color: $ultimategray;
-              }
-            }
-          }
-          .content {
-            text-align: left;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            margin-bottom: 12px;
-          }
-          .like-wrapper {
-            display: flex;
-            flex-direction: row;
-            line-height: 18px;
-            .icon.like {
-              margin: auto 0;
-              margin-right: 8px;
-              background-color: #222222;
-              height: 14px;
-              width: 14px;
-              mask: url(../assets/like.svg) no-repeat center;
-            }
-            .count {
-              font-size: 14px;
+              font-size: 16px;
+              line-height: 24px;
               font-weight: 400;
+              margin-bottom: 12px;
+              min-height: 72px;
             }
+            .like-wrapper {
+              display: flex;
+              flex-direction: row;
+              line-height: 18px;
+              .icon.like {
+                margin: auto 0;
+                margin-right: 8px;
+                background-color: #222222;
+                height: 14px;
+                width: 14px;
+                mask: url(../assets/like.svg) no-repeat center;
+              }
+              .count {
+                font-size: 14px;
+                font-weight: 400;
+              }
+            }
+          }
+        }
+        .load-more {
+          width: 100%;
+          margin: 40px 0;
+          .load-more-button {
+            width: auto;
+            margin: auto;
+            padding: 14px 24px;
+            border-radius: 8px;
+            background: #000000;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            display: inline-block;
           }
         }
       }
@@ -921,6 +1018,10 @@ $primary-color: #222;
     width: calc(100vw - 48px);
     padding: 8px 24px;
     background: #ffffff;
+    @media (min-width: 768px) {
+      width: calc(100vw - 160px);
+      padding: 16px 80px;
+    }
     .booking-info-wrapper {
       display: flex;
       flex-direction: row;
@@ -946,6 +1047,9 @@ $primary-color: #222;
       display: flex;
       justify-content: center;
       align-items: center;
+      @media (min-width: 768px) {
+        width: calc(100vw - 160px);
+      }
       .text {
         color: #ffffff;
         cursor: pointer;
