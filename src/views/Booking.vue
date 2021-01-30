@@ -1,6 +1,7 @@
 <template>
-  <div class="booking">
-    <div class="searchbar-wrapper">
+  <div class="booking" ref="booking">
+    <Navbar class="restaurant-navbar" v-show="scrollY === 0"></Navbar>
+    <div class="booking-searchbar-wrapper">
       <div class="back-wrapper">
         <div class="icon back"></div>
       </div>
@@ -14,93 +15,100 @@
       </div>
     </div>
     <form class="booking-form">
-      <div class="title">確認訂位與填寫聯絡資訊</div>
-      <div class="booking-card">
-        <div class="picture-wrapper">
-          <div class="picture"></div>
-        </div>
-        <div class="header">
-          <img class="icon restaurant" src="../assets/restaurant.svg">
-          <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
-        </div>
-        <div class="divider"></div>
-        <div class="info">
-          <div class="item-wrapper">
-            <img class="icon profile" src="../assets/profile.svg">
-            <div class="number">2大</div>
+      <div class="card-container">
+        <div class="card-container-title">確認訂位與填寫聯絡資訊</div>
+        <div class="booking-card-wrapper">
+          <div class="booking-card">
+            <div class="picture-wrapper">
+              <div class="picture"></div>
+            </div>
+            <div class="header">
+              <img class="icon-restaurant" src="../assets/restaurant.svg">
+              <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+            </div>
+            <div class="divider"></div>
+            <div class="info">
+              <div class="item-wrapper">
+                <img class="icon profile" src="../assets/profile.svg">
+                <div class="number">2大</div>
+              </div>
+              <div class="item-wrapper">
+                <img class="icon time" src="../assets/calendar.svg">
+                <div class="date">2021/01/23 (週六)</div>
+              </div>
+              <div class="item-wrapper">
+                <img class="icon time" src="../assets/clock.svg">
+                <div class="time">11:30</div>
+              </div>
+            </div>
           </div>
-          <div class="item-wrapper">
-            <img class="icon time" src="../assets/calendar.svg">
-            <div class="date">2021/01/23 (週六)</div>
-          </div>
-          <div class="item-wrapper">
-            <img class="icon time" src="../assets/clock.svg">
-            <div class="time">11:30</div>
-          </div>
         </div>
-      </div>
-      <div class="contact-card">
-        <div class="all-wrapper">
-          <label for="name" class="all-text">訂位人姓名</label>
-          <input id="name" class="all-input">
-          <div class="gender">
-            <span class="item-wrapper">
-              <label for="gender-female" class="item">
-                <span class="radio-input">
-                  <input name="gender" id="gender-female" role="radio" value="1" type="radio" checked>
-                  <span class="radio-control"></span>
+        <div class="contact-card-wrapper">
+          <div class="title">確認訂位與填寫聯絡資訊</div>
+          <div class="contact-card">
+            <div class="all-wrapper">
+              <label for="name" class="all-text">訂位人姓名</label>
+              <input id="name" class="all-input">
+              <div class="gender">
+                <span class="item-wrapper">
+                  <label for="gender-female" class="item">
+                    <span class="radio-input">
+                      <input name="gender" id="gender-female" role="radio" value="1" type="radio" checked>
+                      <span class="radio-control"></span>
+                    </span>
+                    <span class="text">小姐</span>
+                  </label>
                 </span>
-                <span class="text">小姐</span>
-              </label>
-            </span>
-            <span class="item-wrapper">
-              <label for="gender-male" class="item">
-                <span class="radio-input">
-                  <input name="gender" id="gender-male" role="radio" value="1" type="radio">
-                  <span class="radio-control"></span>
+                <span class="item-wrapper">
+                  <label for="gender-male" class="item">
+                    <span class="radio-input">
+                      <input name="gender" id="gender-male" role="radio" value="1" type="radio">
+                      <span class="radio-control"></span>
+                    </span>
+                    <span class="text">先生</span>
+                  </label>
                 </span>
-                <span class="text">先生</span>
-              </label>
-            </span>
-            <span class="item-wrapper">
-              <label for="gender-other" class="item">
-                <span class="radio-input">
-                  <input name="gender" id="gender-other" role="radio" value="1" type="radio">
-                  <span class="radio-control"></span>
+                <span class="item-wrapper">
+                  <label for="gender-other" class="item">
+                    <span class="radio-input">
+                      <input name="gender" id="gender-other" role="radio" value="1" type="radio">
+                      <span class="radio-control"></span>
+                    </span>
+                    <span class="text">其他</span>
+                  </label>
                 </span>
-                <span class="text">其他</span>
-              </label>
-            </span>
+              </div>
+            </div>
+            <div class="all-wrapper">
+              <label for="phone" class="all-text">訂位人手機號碼</label>
+              <input id="phone" class="all-input">
+            </div>
+            <div class="all-wrapper">
+              <label for="email" class="all-text">訂位人 Email</label>
+              <input id="email" class="all-input">
+            </div>
+            <div class="all-wrapper">
+              <label for="purpose" class="all-text">用餐目的</label>
+              <div class="button-wrapper">
+                <button class="button" v-for="(el, idx) in purpose" :key="`purpose-${idx}`" @click.prevent="changePurpose(el)" :class="{select: submitPurpose.includes(el)}">
+                  <span class="text">{{ el }}</span>
+                </button>
+              </div>
+            </div>
+            <div class="all-wrapper">
+              <label for="note" class="all-text">其他備註</label>
+              <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！（例如：行動不便、過敏）"></textarea>
+              <div class="note-count">(0/140)</div>
+            </div>
           </div>
-        </div>
-        <div class="all-wrapper">
-          <label for="phone" class="all-text">訂位人手機號碼</label>
-          <input id="phone" class="all-input">
-        </div>
-        <div class="all-wrapper">
-          <label for="email" class="all-text">訂位人 Email</label>
-          <input id="email" class="all-input">
-        </div>
-        <div class="all-wrapper">
-          <label for="purpose" class="all-text">用餐目的</label>
-          <div class="button-wrapper">
-            <button class="button" v-for="(el, idx) in purpose" :key="`purpose-${idx}`" @click.prevent="changePurpose(el)" :class="{select: submitPurpose.includes(el)}">
-              <span class="text">{{ el }}</span>
+          <div class="submit-button-wrapper">
+            <button class="submit-button" type="submit" @click.prevent="">
+              <div class="button">確認訂位</div>
             </button>
+            <div class="back-button" @click.prevent="">
+              <div class="button">回上一步</div>
+            </div>
           </div>
-        </div>
-        <div class="all-wrapper">
-          <label for="note" class="all-text">其他備註</label>
-          <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！（例如：行動不便、過敏）"></textarea>
-          <div class="note-count">(0/140)</div>
-        </div>
-      </div>
-      <div class="submit-button-wrapper">
-        <button class="submit-button" type="submit" @click.prevent="">
-          <div class="button">確認訂位</div>
-        </button>
-        <div class="back-button" @click.prevent="">
-          <div class="button">回上一步</div>
         </div>
       </div>
     </form>
@@ -112,22 +120,27 @@
 
 <script>
 
+import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   data () {
     return {
       purpose: ['慶生', '約會', '週年慶', '家庭聚餐', '朋友聚餐', '商務聚餐'],
-      submitPurpose: []
+      submitPurpose: [],
+      scrollY: 0,
+      scrollUp: true
     }
   },
   components: {
-    Footer
+    Footer,
+    Navbar
   },
   mounted () {
+    this.$refs.booking.addEventListener('scroll', this.onScroll)
   },
   methods: {
     onScroll (e) {
-
+      this.scrollY = this.$refs.booking.scrollTop
     },
     changePurpose (purpose) {
       if (this.submitPurpose.includes(purpose)) {
@@ -153,7 +166,7 @@ $primary-color: #222;
   overflow: scroll;
   position: relative;
   width: 100%;
-  .searchbar-wrapper {
+  .booking-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
     background: none;
@@ -165,6 +178,9 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
+    @media (min-width: 768px) {
+      display: none;
+    }
     .back-wrapper {
       padding-left: 8px;
       width: 40px;
@@ -215,233 +231,274 @@ $primary-color: #222;
     margin-top: 60px;
     scroll-behavior: smooth;
     padding: 22px 24px;
-    .title {
-      margin: 12px 0;
-      height: 40px;
-      font-size: 22px;
-      font-weight: 700;
-      text-align: left;
-      line-height: 22px;
+    @media (min-width: 992px) {
+      margin-top: 0px;
+      padding: 48px 80px;
     }
-    .booking-card {
-      margin-bottom: 20px;
-      border: 1px solid $divider;
-      border-radius: 8px;
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-      .picture-wrapper {
-        width: 100%;
-        padding-top: 50%;
-        position: relative;
-        .picture {
-          border-top-left-radius: 8px;
-          border-top-right-radius: 8px;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
-          background-size: cover;
-        }
-      }
-      .header {
-        padding: 15px;
-        display: flex;
+    .card-container {
+      display: flex;
+      flex-direction: column;
+      @media (min-width: 992px) {
         flex-direction: row;
-        justify-content: flex-start;
-        .icon.restaurant {
-          min-height: 16px;
-          min-width: 16px;
-          margin-right: 16px;
-        }
-        .name {
-          font-size: 16px;
-          font-weight: 400;
-          line-height: 1.5;
-          text-align: left;
+      }
+      .card-container-title {
+        margin: 12px 0;
+        height: 40px;
+        font-size: 22px;
+        font-weight: 700;
+        text-align: left;
+        line-height: 22px;
+        @media (min-width: 992px) {
+          display: none;
         }
       }
-      .divider {
-        height: 1px;
-        background: $divider;
-      }
-      .info {
-        padding: 5px 15px;
-        .item-wrapper {
-          font-size: 15px;
-          font-weight: 400;
-          padding: 8px 0;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          line-height: 1.5;
-          .icon {
-            color: #222222;
-            height: 16px;
-            width: 16px;
-            margin-right: 16px;
-          }
+      .booking-card-wrapper {
+        min-width: 300px;
+        flex: 1;
+         @media (min-width: 992px) {
+          padding-top: 60px;
         }
-      }
-    }
-    .contact-card {
-      padding: 15px;
-      margin-bottom: 24px;
-      border: 1px solid $divider;
-      border-radius: 8px;
-      text-align: left;
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-      .all-wrapper {
-        margin-bottom: 24px;
-        width: 100%;
-        .all-text {
-          width: 100%;
-          font-size: 16px;
-          font-weight: 400;
-          line-height: 1.5;
-        }
-        .all-input {
-          margin-top: 8px;
-          outline: none;
-          font-size: 16px;
-          line-height: 1.5;
-          font-weight: 400;
-          padding: 8px 12px;
+        .booking-card {
+          margin-bottom: 20px;
           border: 1px solid $divider;
           border-radius: 8px;
-          width: calc(100% - 24px);
-        }
-        .gender {
-          display: flex;
-          flex-direction: row;
-          margin-top: 12px;
-          .item-wrapper {
-            .item {
-              display: flex;
-              flex-direction: row;
+          box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+          .picture-wrapper {
+            width: 100%;
+            padding-top: 50%;
+            position: relative;
+            .picture {
+              border-top-left-radius: 8px;
+              border-top-right-radius: 8px;
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
+              background-size: cover;
             }
-            margin-right: 12px;
-            *:before,
-            *:after {
-              box-sizing: border-box;
+          }
+          .header {
+            padding: 15px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            .icon-restaurant {
+              height: 16px;
+              width: 16px;
+              margin-right: 16px;
             }
-            line-height: 1.5;
-            transition: 180ms all ease-in-out;
-            opacity: 0.8;
-            .radio-input {
-              width: 1.5rem;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              input {
-                margin: 0;
-                opacity: 0;
-                width: 0;
-                height: 0;
-                &:focus + .radio-control {
-                  box-shadow: 0 0 0 0.05rem #fff, 0 0 0.15em 0.1em currentColor;
-                }
-              }
-              input:focus {
-                outline: none;
-              }
-              .radio-control {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              }
-              input + .radio-control::before {
-                content: "";
-                display: block;
-                background: $red;
-                width: 0.6em;
-                height: 0.6em;
-                box-shadow: inset 0.6em 0.6em currentColor;
-                border-radius: 50%;
-                transition: 180ms transform ease-in-out;
-                transform: scale(0);
-              }
-              .radio-control {
-                width: 1rem;
-                height: 1rem;
-                border-radius: 50%;
-                border: 0.1em solid $divider;
-              }
-              input:checked + .radio-control::before {
-                background: $red;
-                transform: scale(1);
-              }
-            }
-            .text {
-              color: #222222;
-              line-height: 1.5;
-              transition: 180ms all ease-in-out;
-              opacity: 0.8;
-              padding: 0 12px;
+            .name {
               font-size: 16px;
               font-weight: 400;
+              line-height: 1.5;
+              text-align: left;
+            }
+          }
+          .divider {
+            height: 1px;
+            background: $divider;
+          }
+          .info {
+            padding: 5px 15px;
+            .item-wrapper {
+              font-size: 15px;
+              font-weight: 400;
+              padding: 8px 0;
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              line-height: 1.5;
+              .icon {
+                color: #222222;
+                height: 16px;
+                width: 16px;
+                margin-right: 16px;
+              }
             }
           }
         }
-        .text-area {
-          font-size: 14px;
-          min-height: 100px;
-          &::placeholder {
-            font-size: 14px;
+      }
+      .contact-card-wrapper {
+        flex: 3;
+        @media (min-width: 992px) {
+          padding: 0 36px;
+        }
+        .title {
+          display: none;
+          @media (min-width: 992px) {
+            display: block;
+            margin-bottom: 24px;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 36px;
           }
         }
-        .note-count {
-          font-size: 12px;
-          color: #666;
-          font-weight: 400;
-          text-align: right;
-        }
-        .button-wrapper {
+        .contact-card {
+          padding: 15px;
+          margin-bottom: 24px;
+          border: 1px solid $divider;
+          border-radius: 8px;
           text-align: left;
-          margin-top: 16px;
-          .button {
-            margin: 0 4px 16px;
-            height: 44px;
-            padding: 8px 12px;
-            appearance: none;
-            width: calc(50% - 10px);
-            border-radius: 8px;
-            border: 1px solid $divider;
-            background: none;
-            text-align: left;
-            .text {
+          box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+          @media (min-width: 992px) {
+            padding: 30px;
+          }
+          .all-wrapper {
+            margin-bottom: 24px;
+            width: 100%;
+            .all-text {
+              width: 100%;
+              font-size: 16px;
+              font-weight: 400;
+              line-height: 1.5;
+            }
+            .all-input {
+              margin-top: 8px;
+              outline: none;
+              font-size: 16px;
+              line-height: 1.5;
+              font-weight: 400;
+              padding: 8px 12px;
+              border: 1px solid $divider;
+              border-radius: 8px;
+              width: calc(100% - 24px);
+            }
+            .gender {
+              display: flex;
+              flex-direction: row;
+              margin-top: 12px;
+              .item-wrapper {
+                .item {
+                  display: flex;
+                  flex-direction: row;
+                }
+                margin-right: 12px;
+                *:before,
+                *:after {
+                  box-sizing: border-box;
+                }
+                line-height: 1.5;
+                transition: 180ms all ease-in-out;
+                opacity: 0.8;
+                .radio-input {
+                  width: 1.5rem;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  input {
+                    margin: 0;
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                    &:focus + .radio-control {
+                      box-shadow: 0 0 0 0.05rem #fff, 0 0 0.15em 0.1em currentColor;
+                    }
+                  }
+                  input:focus {
+                    outline: none;
+                  }
+                  .radio-control {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                  input + .radio-control::before {
+                    content: "";
+                    display: block;
+                    background: $red;
+                    width: 0.6em;
+                    height: 0.6em;
+                    box-shadow: inset 0.6em 0.6em currentColor;
+                    border-radius: 50%;
+                    transition: 180ms transform ease-in-out;
+                    transform: scale(0);
+                  }
+                  .radio-control {
+                    width: 1rem;
+                    height: 1rem;
+                    border-radius: 50%;
+                    border: 0.1em solid $divider;
+                  }
+                  input:checked + .radio-control::before {
+                    background: $red;
+                    transform: scale(1);
+                  }
+                }
+                .text {
+                  color: #222222;
+                  line-height: 1.5;
+                  transition: 180ms all ease-in-out;
+                  opacity: 0.8;
+                  padding: 0 12px;
+                  font-size: 16px;
+                  font-weight: 400;
+                }
+              }
+            }
+            .text-area {
+              font-size: 14px;
+              min-height: 100px;
+              &::placeholder {
+                font-size: 14px;
+              }
+            }
+            .note-count {
+              font-size: 12px;
               color: #666;
               font-weight: 400;
-              font-size: 14px;
-              line-height: 1.5;
-              width: 100%;
-              text-align: center;
+              text-align: right;
             }
-          }
-          .button.select {
-            border: none;
-            background: #000000;
-            .text {
-              font-weight: 600;
-              color: #ffffff;
+            .button-wrapper {
+              text-align: left;
+              margin-top: 16px;
+              .button {
+                margin: 0 4px 16px;
+                height: 44px;
+                padding: 8px 12px;
+                appearance: none;
+                width: calc(50% - 10px);
+                border-radius: 8px;
+                border: 1px solid $divider;
+                background: none;
+                text-align: left;
+                .text {
+                  color: #666;
+                  font-weight: 400;
+                  font-size: 14px;
+                  line-height: 1.5;
+                  width: 100%;
+                  text-align: center;
+                }
+              }
+              .button.select {
+                border: none;
+                background: #000000;
+                .text {
+                  font-weight: 600;
+                  color: #ffffff;
+                }
+              }
+              .button:focus {
+                outline: none;
+              }
             }
-          }
-          .button:focus {
-            outline: none;
           }
         }
       }
     }
     .submit-button-wrapper {
       border-top: 1px solid $divider;
-      width: calc(100vw - 48px);
+      width: 100%;
       background: #ffffff;
       .submit-button {
         border: none;
         appearance: none;
         margin-bottom: 20px;
         height: 48px;
-        width: calc(100vw - 48px);
+        width: 100%;
         background: $red;
         border-radius: 8px;
         display: flex;
@@ -462,7 +519,7 @@ $primary-color: #222;
         border: 1px solid #222222;
         margin-bottom: 12px;
         height: 46px;
-        width: calc(100vw - 48px);
+        width: 100%;
         background: #ffffff;
         border-radius: 8px;
         display: flex;
