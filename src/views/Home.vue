@@ -182,7 +182,14 @@
       <div class="title">尋找更多</div>
       <div class="container">
         <div class="illustration-wrapper">
-          <div class="cover"></div>
+          <div class="cover">
+            <div class="button-wrapper">
+              <div class="button">餐廳清單</div>
+            </div>
+            <div class="button-wrapper">
+              <div class="button map">地圖探索</div>
+            </div>
+          </div>
         </div>
         <div class="item-group">
           <div class="item-wrapper">
@@ -626,7 +633,7 @@ $red: rgb(255, 56, 92);
           flex: 1.5;
           padding-top: 33.33%;
           position: relative;
-          background: url(../assets/food-landscape.svg) no-repeat center;
+          background: url(../assets/people-eating-food.svg) no-repeat center;
           background-size: cover;
         }
         .cover {
@@ -638,15 +645,24 @@ $red: rgb(255, 56, 92);
           display: flex;
           align-items: center;
           justify-content: center;
-          .button {
-            padding: 12px 36px;
-            border-radius: 30px;
-            background: #000000;
-            color: #ffffff;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 16px;
-            line-height: 20px;
+          .button-wrapper {
+            flex: 1;
+            .button {
+              display: inline-block;
+              padding: 12px 36px;
+              border-radius: 30px;
+              background: #000000;
+              color: #ffffff;
+              cursor: pointer;
+              font-weight: 700;
+              font-size: 16px;
+              line-height: 20px;
+            }
+            .button.map {
+              border: 1px solid #000000;
+              color: #000000;
+              background: #ffffff;
+            }
           }
         }
       }
@@ -655,10 +671,7 @@ $red: rgb(255, 56, 92);
         padding-top: 66.7%;
         position: relative;
         @media (min-width: 992px) {
-          padding-top: 0;
-          flex: 1;
-          justify-content: center;
-          align-items: center;
+          display: none;
         }
         .item-wrapper {
           position: absolute;

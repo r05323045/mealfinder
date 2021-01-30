@@ -1,6 +1,7 @@
 <template>
   <div class="coupon">
-    <div class="searchbar-wrapper">
+    <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
+    <div class="coupon-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
@@ -63,37 +64,39 @@
         <div ref="information-wrapper" class="information-wrapper">
           <div class="divider"></div>
           <div class="title">餐廳資訊</div>
-          <div class="map-wrapper">
-            <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
-          </div>
-          <div class="information-body">
-            <div class="item-wrapper">
-              <div class="top-wrapper">
-                <img class="icon map" src="../assets/map.svg">
-                <div class="title">地圖</div>
-              </div>
-              <div class="content">台北市敦化南路一段的巷59號</div>
+          <div class="info-and-map">
+            <div class="map-wrapper">
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
             </div>
-            <div class="item-wrapper">
-              <div class="top-wrapper">
-                <img class="icon phone" src="../assets/phone.svg">
-                <div class="title">電話</div>
+            <div class="information-body">
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon map" src="../assets/map.svg">
+                  <div class="title">地圖</div>
+                </div>
+                <div class="content">台北市敦化南路一段的巷59號</div>
               </div>
-              <div class="content">02-0000-0000</div>
-            </div>
-            <div class="item-wrapper">
-              <div class="top-wrapper">
-                <img class="icon time" src="../assets/clock.svg">
-                <div class="title">營業時間</div>
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon phone" src="../assets/phone.svg">
+                  <div class="title">電話</div>
+                </div>
+                <div class="content">02-0000-0000</div>
               </div>
-              <div class="content">11:00 - 21:00</div>
-            </div>
-            <div class="item-wrapper last">
-              <div class="top-wrapper">
-                <img class="icon map" src="../assets/restaurant.svg">
-                <div class="title">餐廳類型</div>
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon time" src="../assets/clock.svg">
+                  <div class="title">營業時間</div>
+                </div>
+                <div class="content">11:00 - 21:00</div>
               </div>
-              <div class="content">牛排</div>
+              <div class="item-wrapper last">
+                <div class="top-wrapper">
+                  <img class="icon map" src="../assets/restaurant.svg">
+                  <div class="title">餐廳類型</div>
+                </div>
+                <div class="content">牛排</div>
+              </div>
             </div>
           </div>
         </div>
@@ -111,7 +114,7 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollY + footerHeight">
+    <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollBarHeight + scrollY + footerHeight">
       <div class="filter-button">
         <div class="button">加入購物車</div>
       </div>
@@ -121,24 +124,29 @@
 
 <script>
 
+import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   data () {
     return {
       showModal: false,
       scrollY: 0,
+      scrollUp: true,
       couponInfoHeight: 1,
       footerHeight: 0,
+      scrollBarHeight: 0,
       productNum: 0
     }
   },
   components: {
-    Footer
+    Footer,
+    Navbar
   },
   mounted () {
     this.$refs['info-container'].addEventListener('scroll', this.onScroll)
     this.footerHeight = this.$refs.footer.offsetHeight
-    this.couponInfoHeight = this.$refs['coupon-info'].scrollHeight
+    this.couponInfoHeight = this.$refs['info-container'].scrollHeight
+    this.scrollBarHeight = this.$refs['info-container'].clientHeight
   },
   watch: {
     productNum () {
@@ -147,6 +155,7 @@ export default {
   },
   methods: {
     onScroll (e) {
+      this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
       this.scrollY = this.$refs['info-container'].scrollTop
     },
     scrollToMap () {
@@ -169,11 +178,18 @@ $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .coupon {
+  height: 100%;
   position: relative;
   overflow: hidden;
   width: 100%;
   padding-bottom: 81px;
-  .searchbar-wrapper {
+  .restaurant-navbar {
+    display: none;
+    @media (min-width: 992px) {
+      display: block;
+    }
+  }
+  .coupon-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
     background: none;
@@ -272,16 +288,23 @@ $primary-color: #222;
     }
   }
   .info-container {
-    height: calc(100vh - 60px);
-    overflow: scroll;
-    margin-top: 60px;
-    scroll-behavior: smooth;
     width: 100%;
+    height: 100%;
+    overflow: scroll;
+    scroll-behavior: smooth;
+    position: absolute;
+    top: 0;
     .coupon-info {
+      @media (min-width: 992px) {
+        padding: 105px 80px 0;
+      }
       .picture-wrapper {
         width: 100%;
         padding-top: 66.7%;
         position: relative;
+         @media (min-width: 992px) {
+          padding-top: 50%;
+        }
         .picture {
           position: absolute;
           top: 0;
@@ -290,6 +313,9 @@ $primary-color: #222;
           bottom: 0;
           background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
           background-size: cover;
+          @media (min-width: 992px) {
+            border-radius: 12px;
+          }
         }
       }
       .title-wrapper {
@@ -402,46 +428,62 @@ $primary-color: #222;
           text-align: left;
           line-height: 22px;
         }
-        .map-wrapper {
-          margin-bottom: 24px;
-          width: 100%;
-          .google-map {
+        .info-and-map {
+          display: flex;
+          flex-direction: column;
+          @media (min-width: 992px) {
+            flex-direction: row;
+          }
+          .map-wrapper {
+            flex: 1.5;
+            margin-bottom: 24px;
             width: 100%;
-            border: none;
-            min-height: 233px;
+            @media (min-width: 992px) {
+              margin-bottom: 0;
+            }
+            .google-map {
+              height: 100%;
+              width: 100%;
+              border: none;
+              min-height: 233px;
+            }
           }
-        }
-        .information-body {
-          .item-wrapper {
-            border-bottom: 1px solid $divider;
-            .top-wrapper {
-              display: flex;
-              flex-direction: row;
-              .title {
-                margin: 12px 0;
+          .information-body {
+            flex: 1;
+            @media (min-width: 992px) {
+              margin-left: 32px;
+            }
+            .item-wrapper {
+              border-bottom: 1px solid $divider;
+              .top-wrapper {
+                display: flex;
+                flex-direction: row;
+                .title {
+                  margin: 12px 0;
+                  font-size: 16px;
+                  font-weight: 600;
+                  line-height: 1.5;
+                }
+                .icon {
+                  fill: $ultimategray;
+                  margin: auto 0;
+                  margin-right: 10px;
+                  height: 14px;
+                  width: 14px;
+                }
+              }
+              .content {
+                text-align: left;
+                margin-left: 24px;
                 font-size: 16px;
-                font-weight: 600;
+                font-weight: 00;
                 line-height: 1.5;
-              }
-              .icon {
-                fill: $ultimategray;
-                margin: auto 0;
-                margin-right: 10px;
-                height: 14px;
-                width: 14px;
+                margin-bottom: 12px;
               }
             }
-            .content {
-              text-align: left;
-              margin-left: 24px;
-              font-size: 16px;
-              font-weight: 00;
-              line-height: 1.5;
-              margin-bottom: 12px;
+            .item-wrapper.last {
+              border: none;
             }
-          }
-          .item-wrapper.last {
-            border: none;
           }
         }
       }
@@ -465,6 +507,11 @@ $primary-color: #222;
           position: relative;
           background: url(../assets/eatNow.svg) no-repeat center;
           background-size: cover;
+          @media (min-width: 992px) {
+            padding-top: 25%;
+            background: url(../assets/people-eating-food.svg) no-repeat center;
+          background-size: cover;
+          }
           .cover {
             position: absolute;
             top: 0;
@@ -497,6 +544,10 @@ $primary-color: #222;
     height: 48px;
     padding: 16px 24px;
     background: #ffffff;
+    @media (min-width: 992px) {
+      width: calc(100vw - 160px);
+      padding: 16px 80px;
+    }
     .filter-button {
       height: 100%;
       width: calc(100vw - 48px);
@@ -505,6 +556,9 @@ $primary-color: #222;
       display: flex;
       justify-content: center;
       align-items: center;
+      @media (min-width: 992px) {
+        width: calc(100vw - 160px);
+      }
       .button {
         color: #ffffff;
         cursor: pointer;

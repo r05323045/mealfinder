@@ -291,10 +291,10 @@ $primary-color: #222;
         .illustration-wrapper {
           margin: 36px 0;
           width: 100%;
-          padding-top: 66.7%;
+          padding-top: 50%;
           position: relative;
-          background: url(../assets/bookingSuccess.svg) no-repeat center;
-          background-size: cover;
+          background: url(../assets/people-eating-food.svg) no-repeat center;
+          background-size: contain;
           .cover {
             position: absolute;
             top: 0;

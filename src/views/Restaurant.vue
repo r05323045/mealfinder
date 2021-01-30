@@ -302,8 +302,8 @@ export default {
   mounted () {
     this.$refs['info-container'].addEventListener('scroll', this.onScroll)
     this.footerHeight = this.$refs.footer.offsetHeight
-    this.restaurantInfoHeight = this.$refs['restaurant-info'].scrollHeight
-    this.scrollBarHeight = Math.floor((window.innerHeight - 60) * ((window.innerHeight - 60) / this.restaurantInfoHeight) + 60)
+    this.restaurantInfoHeight = this.$refs['info-container'].scrollHeight
+    this.scrollBarHeight = this.$refs['info-container'].clientHeight
   },
   methods: {
     onScroll (e) {
