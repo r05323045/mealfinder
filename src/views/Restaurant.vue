@@ -220,7 +220,7 @@
             <div class="text">4.47（49則評價）</div>
           </div>
           <div class="comment-container-deck" v-for="i in 5" :key="`comment-deck-${i}`">
-            <div class="comment-container"  v-for="i in 2" :key="`comment-${i}`">
+            <div class="comment-container"  v-for="i in 2" :key="`comment-${i}`" :class="{ 'last-comment-container': i === 2 }">
               <div class="comment-user">
                 <div class="avatar"></div>
                 <div class="name-wrapper">
@@ -776,6 +776,7 @@ $primary-color: #222;
               text-align: left;
               display: flex;
               .button {
+                cursor: pointer;
                 margin: 0 4px 16px;
                 height: 44px;
                 padding: 8px 0;
@@ -790,6 +791,12 @@ $primary-color: #222;
                   line-height: 1.5;
                   width: 100%;
                   text-align: center;
+                }
+                &:hover {
+                  background: #666;
+                  .text {
+                    color: #ffffff
+                  }
                 }
               }
               .button:focus {
@@ -960,6 +967,9 @@ $primary-color: #222;
             margin-bottom: 40px;
             @media (min-width: 992px) {
               padding: 24px;
+              border: 1px solid $divider;
+              border-radius: 32px;
+              margin-right: 24px;
             }
             .comment-user {
               display: flex;
@@ -1012,6 +1022,11 @@ $primary-color: #222;
                 font-size: 14px;
                 font-weight: 400;
               }
+            }
+          }
+          .comment-container.last-comment-container {
+            @media (min-width: 992px) {
+              margin-right: 0;
             }
           }
         }
