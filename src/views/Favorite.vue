@@ -1,6 +1,7 @@
 <template>
   <div class="restaurants" :class="{modalShow: showModal}">
-    <div class="searchbar-wrapper">
+    <Navbar class="restaurant-navbar" v-show="scrollUp && scrollY + scrollBarHeight < divHeight"></Navbar>
+    <div class="searchbar-wrapper-mobile">
       <div class="back-wrapper">
         <div class="icon back"></div>
       </div>
@@ -17,8 +18,13 @@
     <div class="list-container" ref="list-container">
       <div class="restaurant-list" ref="restaurant-list">
         <div class="title">我收藏的餐廳</div>
-        <div class="restaurant-card-deck">
-          <div class="restaurant-card" v-for="i in 10" :key="i">
+        <div class="filter-button-wrapper">
+          <div class="filter-button">地區</div>
+          <div class="filter-button">類型</div>
+          <div class="filter-button">預算</div>
+        </div>
+        <div class="restaurant-card-deck" v-for="i in 4" :key="`card-deck-${i}`">
+          <div class="restaurant-card" v-for="i in 4" :key="i" :class="{ 'last-card': i === 4}">
             <div class="card-image-wrapper">
               <div class="heart-wrapper">
                 <img class="icon heart" src="../assets/black-heart.svg">
@@ -42,13 +48,13 @@
             <div class="expense">$300 / 人</div>
           </div>
         </div>
+        <div class="load-more">
+          <div class="load-more-button">載入更多結果</div>
+        </div>
       </div>
       <div ref="footer">
         <Footer></Footer>
       </div>
-    </div>
-    <div v-show="scrollUp">
-      <Navbar></Navbar>
     </div>
     <FilterModal :showModal="showModal" @closeModal="closeFilter"></FilterModal>
   </div>
@@ -65,7 +71,9 @@ export default {
     return {
       showModal: false,
       scrollY: 0,
-      scrollUp: true
+      scrollUp: true,
+      divHeight: 0,
+      scrollBarHeight: 0
     }
   },
   components: {
@@ -75,6 +83,8 @@ export default {
   },
   mounted () {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll)
+    this.divHeight = this.$refs['list-container'].scrollHeight
+    this.scrollBarHeight = this.$refs['list-container'].clientHeight
   },
   methods: {
     closeFilter () {
@@ -95,7 +105,7 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .restaurants {
   width: 100%;
-  .searchbar-wrapper {
+  .searchbar-wrapper-mobile {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
     background: none;
@@ -107,6 +117,9 @@ $red: rgb(255, 56, 92);
     justify-content: center;
     align-items: center;
     background: #ffffff;
+    @media (min-width: 992px) {
+      display: none;
+    }
     .back-wrapper {
       padding-left: 8px;
       width: 40px;
@@ -175,11 +188,22 @@ $red: rgb(255, 56, 92);
     }
   }
   .list-container {
+    position: absolute;
+    top: 60px;
+    width: 100%;
     height: calc(100vh - 60px);
     overflow: scroll;
+    @media (min-width: 992px) {
+      top: 81px;
+      height: calc(100vh - 81px);
+    }
     .restaurant-list {
       margin: 22px 0;
       padding: 0 24px;
+       @media (min-width: 992px) {
+        margin: 32px 0;
+        padding: 0 80px;
+      }
       .title {
         margin-bottom: 24px;
         height: 22px;
@@ -188,11 +212,34 @@ $red: rgb(255, 56, 92);
         text-align: left;
         line-height: 22px;
       }
+      .filter-button-wrapper {
+        display: none;
+        @media (min-width: 992px) {
+          display: flex;
+          flex-direction: row;
+          margin: 24px 0;
+        }
+        .filter-button {
+          margin-right: 16px;
+          border: 1px solid $divider;
+          font-size: 14px;
+          font-weight: 400;
+          padding: 8px 16px;
+          border-radius: 30px;
+        }
+      }
       .restaurant-card-deck {
         width: 100%;
+        @media (min-width: 992px) {
+          display: flex;
+          flex-direction: row;
+        }
         .restaurant-card {
           padding-top: 12px;
           margin-bottom: 28px;
+          @media (min-width: 992px) {
+            margin-right: 16px;
+          }
           .card-image-wrapper {
             .heart-wrapper {
               z-index: 1;
@@ -287,6 +334,27 @@ $red: rgb(255, 56, 92);
             font-size: 16px;
             line-height: 20px;
           }
+        }
+        .restaurant-card.last-card {
+          @media (min-width: 992px) {
+            margin-right: 0;
+          }
+        }
+      }
+      .load-more {
+        width: 100%;
+        margin: 80px 0 80px;
+        .load-more-button {
+          width: auto;
+          margin: auto;
+          padding: 14px 24px;
+          border-radius: 8px;
+          background: #000000;
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: 600;
+          color: #ffffff;
+          display: inline-block;
         }
       }
     }
