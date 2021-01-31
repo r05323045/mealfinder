@@ -37,7 +37,7 @@
     </div>
     <div class="navbar-desktop" :class="{ openSearch: openSearch }">
       <div class="navbar-desktop-inner">
-        <div class="logo-wrapper">
+        <div class="logo-wrapper" @click="$router.push('/').catch(()=>{})">
           <div class="logo"></div>
         </div>
         <div class="tab-wrapper" v-show="openSearch">
@@ -254,6 +254,7 @@ $red: rgb(255, 56, 92);
           }
         }
         .logo-wrapper {
+          cursor: pointer;
           width: 30px;
           height: 100%;
           display: flex;
