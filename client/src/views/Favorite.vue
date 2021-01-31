@@ -198,8 +198,6 @@ $red: rgb(255, 56, 92);
       height: calc(100vh - 81px);
     }
     .restaurant-list {
-      margin: auto;
-      max-width: 1040px;
       padding: 22px 24px;
        @media (min-width: 992px) {
         padding: 32px 80px;
