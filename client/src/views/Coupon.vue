@@ -1,0 +1,603 @@
+<template>
+  <div class="coupon">
+    <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
+    <div class="coupon-searchbar-wrapper">
+      <div class="back-wrapper" @click="$router.go(-1)">
+        <div class="icon back"></div>
+      </div>
+      <div class="searchbar">
+        <input v-if="false" class="search-input">
+        <div class="wrapper">
+          <div class="text"></div>
+        </div>
+      </div>
+      <div class="icon-container">
+        <div class="share-wrapper">
+          <div class="icon share"></div>
+        </div>
+        <div class="favorite-wrapper">
+          <div class="icon favorite"></div>
+        </div>
+      </div>
+    </div>
+    <div class="info-container" ref="info-container">
+      <div class="mobile-picture-wrapper">
+        <div class="picture"></div>
+      </div>
+      <div class="coupon-info" ref="coupon-info">
+        <div class="picture-wrapper">
+          <div class="picture"></div>
+        </div>
+        <div class="title-wrapper">
+          <h1 class="title">
+            ToTsuZen Steak - 安格斯牛排即享券
+          </h1>
+          <div class="info-wrapper">
+            <div class="price-wrapper">
+              <div class="price">$299</div>
+              <div class="unit">/ 個</div>
+              <div class="origin-price">原價 $359</div>
+            </div>
+            <div class="number-wrapper">
+              <div class="text">數量</div>
+              <div class="select-wrapper">
+                <select class="select" v-model="productNum" v-if="productNum < 5">
+                  <option value="0">請選擇購買數量</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5+</option>
+                </select>
+                <input class="select input" type="number" v-if="productNum > 4" v-model.lazy="productNum">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rule-wrapper">
+          <div class="divider"></div>
+          <div class="title">使用說明</div>
+          <ul class="description">
+            <li>本餐券使用期限為1年，請在使用期限內用餐完成，超過使用期限後無法退款</li>
+            <li>本餐券僅能兌換單一餐點，如需加購品項請依餐廳規定補差額</li>
+            <li>本餐券僅供兌換餐點，用餐座位請依餐廳現場安排</li>
+            <li>若餐廳已不提供兌換本餐券所贈送之餐點，請來信 support@mealfinder.com</li>
+          </ul>
+        </div>
+        <div ref="information-wrapper" class="information-wrapper">
+          <div class="divider"></div>
+          <div class="title">餐廳資訊</div>
+          <div class="info-and-map">
+            <div class="map-wrapper">
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
+            </div>
+            <div class="information-body">
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon map" src="../assets/map.svg">
+                  <div class="title">地圖</div>
+                </div>
+                <div class="content">台北市敦化南路一段的巷59號</div>
+              </div>
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon phone" src="../assets/phone.svg">
+                  <div class="title">電話</div>
+                </div>
+                <div class="content">02-0000-0000</div>
+              </div>
+              <div class="item-wrapper">
+                <div class="top-wrapper">
+                  <img class="icon time" src="../assets/clock.svg">
+                  <div class="title">營業時間</div>
+                </div>
+                <div class="content">11:00 - 21:00</div>
+              </div>
+              <div class="item-wrapper last">
+                <div class="top-wrapper">
+                  <img class="icon map" src="../assets/restaurant.svg">
+                  <div class="title">餐廳類型</div>
+                </div>
+                <div class="content">牛排</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="eat-now-wrapper">
+          <div class="divider"></div>
+          <div class="title">擔心沒位子用餐？</div>
+          <div class="illustration-wrapper">
+            <div class="cover">
+              <div class="button">現在訂位</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ref="footer">
+        <Footer></Footer>
+      </div>
+    </div>
+    <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollBarHeight + scrollY + footerHeight">
+      <div class="filter-button">
+        <div class="button">加入購物車</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
+export default {
+  data () {
+    return {
+      showModal: false,
+      scrollY: 0,
+      scrollUp: true,
+      couponInfoHeight: 1,
+      footerHeight: 0,
+      scrollBarHeight: 0,
+      productNum: 0
+    }
+  },
+  components: {
+    Footer,
+    Navbar
+  },
+  mounted () {
+    this.$refs['info-container'].addEventListener('scroll', this.onScroll)
+    this.footerHeight = this.$refs.footer.offsetHeight
+    this.couponInfoHeight = this.$refs['info-container'].scrollHeight
+    this.scrollBarHeight = this.$refs['info-container'].clientHeight
+  },
+  watch: {
+    productNum () {
+      this.productNum = this.productNum < 0 ? 0 : this.productNum
+    }
+  },
+  methods: {
+    onScroll (e) {
+      this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
+      this.scrollY = this.$refs['info-container'].scrollTop
+    },
+    scrollToMap () {
+      this.$refs['information-wrapper'].scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+        inline: 'center'
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+$yellow: #F5DF4D;
+$ultimategray: #939597;
+$divider: #E6ECF0;
+$red: rgb(255, 56, 92);
+$default-color: #000000;
+$primary-color: #222;
+@import '~vue2-datepicker/scss/index.scss';
+.coupon {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-bottom: 81px;
+  .restaurant-navbar {
+    display: none;
+    @media (min-width: 992px) {
+      display: block;
+    }
+  }
+  .coupon-searchbar-wrapper {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
+    z-index: 998;
+    background: none;
+    position: fixed;
+    height: 60px;
+    width: 100%;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    @media (min-width: 992px) {
+      display: none;
+    }
+    .back-wrapper {
+      padding-left: 8px;
+      width: 40px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .icon.back {
+        margin: auto;
+        height: 16px;
+        width: 16px;
+        background-color: #000000;
+        mask: url(../assets/back.svg) no-repeat center;
+      }
+    }
+    .searchbar {
+      background: #ffffff;
+      width: 100%;
+      border-radius: 100px;
+      height: 48px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      .search-input {
+        border: none;
+        &:focus {
+          outline: none;
+        }
+      }
+      .wrapper {
+        border-right: 1px solid $divider;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        line-height: 18px;
+        .icon {
+          margin: auto 0;
+          padding-right: 8px;
+          background-color: $ultimategray;
+          height: 16px;
+          width: 16px;
+        }
+        .icon.search {
+          mask: url(../assets/search.svg) no-repeat center;
+        }
+        .text {
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+    }
+    .icon-container {
+      display: flex;
+      flex-direction: row;
+      padding: 6px 24px 0 8px;
+      .favorite-wrapper {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .icon.favorite {
+          margin: auto;
+          height: 16px;
+          width: 16px;
+          background-color: #000000;
+          mask: url(../assets/favorite.svg) no-repeat center;
+        }
+      }
+      .share-wrapper {
+        margin-right: 20px;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .icon.share {
+          margin: auto;
+          height: 16px;
+          width: 16px;
+          background-color: #000000;
+          mask: url(../assets/share.svg) no-repeat center;
+        }
+      }
+    }
+  }
+  .info-container {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    scroll-behavior: smooth;
+    position: absolute;
+    top: 60px;
+    @media (min-width: 992px) {
+      top: 0px;
+    }
+    .mobile-picture-wrapper {
+      width: 100%;
+      padding-top: 66.7%;
+      position: relative;
+      @media (min-width: 992px) {
+        display: none;
+      }
+      .picture {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
+        background-size: cover;
+      }
+    }
+    .coupon-info {
+      margin: auto;
+      max-width: 1040px;
+      padding: 0 24px;
+      @media (min-width: 992px) {
+        padding: 105px 80px 0;
+      }
+      .picture-wrapper {
+        display: none;
+         @media (min-width: 992px) {
+          display: block;
+          width: 100%;
+          padding-top: 50%;
+          position: relative;
+        }
+        .picture {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
+          background-size: cover;
+          border-radius: 12px;
+        }
+      }
+      .title-wrapper {
+        padding: 32px 0px 24px 0px;
+        .title {
+          text-align: left;
+          margin: 0;
+        }
+        .info-wrapper {
+          margin-top: 24px;
+          margin-bottom: 12px;
+          .price-wrapper {
+            display: flex;
+            flex-direction: row;
+            .price{
+              margin-bottom: 4px;
+              text-align: left;
+              font-weight: 800;
+              font-size: 24px;
+              line-height: 24px;
+              margin-right: 8px;
+            }
+            .unit {
+              text-align: left;
+              font-weight: 400;
+              font-size: 14px;
+              line-height: 24px;
+              margin-right: 18px;
+            }
+            .origin-price {
+              text-decoration: line-through;
+              color: #666;
+              text-align: left;
+              font-weight: 800;
+              font-size: 18px;
+              line-height: 24px;
+            }
+          }
+          .number-wrapper {
+            margin-top: 24px;
+            text-align: left;
+            .text {
+              font-size: 16px;
+              font-weight: 400;
+            }
+            .select-wrapper {
+              margin-top: 12px;
+              flex: 1;
+              .select {
+                width: 100%;
+                padding: 0 1.4rem 0 0.8rem;
+                appearance: none;
+                border: 1px solid $ultimategray;
+                line-height: 40px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 400;
+                outline: none;
+                background: transparent;
+                background-image: url("../assets/down-arrow.svg");
+                background-repeat: no-repeat;
+                background-position: right 0.5em top 50%, 0px 0px;
+                background-size: 12px;
+              }
+              .select.input {
+                background: none;
+                width: calc(100% - 2.2rem);
+              }
+            }
+          }
+        }
+      }
+      .rule-wrapper {
+        padding: 0px 0px 24px 0px;
+        .divider {
+          background: $divider;
+          height: 1px;
+        }
+        .title {
+          margin-top: 24px;
+          margin-bottom: 24px;
+          font-size: 22px;
+          font-weight: 700;
+          text-align: left;
+          line-height: 22px;
+        }
+        .description {
+          list-style-type: decimal;
+          text-align: left;
+          font-weight: 400;
+          line-height: 1.5;
+          font-size: 16px;
+          padding-inline-start: 24px;
+          li {
+            word-wrap: break-word;
+          }
+        }
+      }
+      .information-wrapper {
+        padding: 0px 0px 24px 0px;
+        .divider {
+          background: $divider;
+          height: 1px;
+        }
+        .title {
+          margin-top: 24px;
+          margin-bottom: 24px;
+          font-size: 22px;
+          font-weight: 700;
+          text-align: left;
+          line-height: 22px;
+        }
+        .info-and-map {
+          display: flex;
+          flex-direction: column;
+          @media (min-width: 992px) {
+            flex-direction: row;
+          }
+          .map-wrapper {
+            flex: 1.5;
+            margin-bottom: 24px;
+            width: 100%;
+            @media (min-width: 992px) {
+              margin-bottom: 0;
+            }
+            .google-map {
+              height: 100%;
+              width: 100%;
+              border: none;
+              min-height: 233px;
+            }
+          }
+          .information-body {
+            flex: 1;
+            @media (min-width: 992px) {
+              margin-left: 32px;
+            }
+            .item-wrapper {
+              border-bottom: 1px solid $divider;
+              .top-wrapper {
+                display: flex;
+                flex-direction: row;
+                .title {
+                  margin: 12px 0;
+                  font-size: 16px;
+                  font-weight: 600;
+                  line-height: 1.5;
+                }
+                .icon {
+                  fill: $ultimategray;
+                  margin: auto 0;
+                  margin-right: 10px;
+                  height: 14px;
+                  width: 14px;
+                }
+              }
+              .content {
+                text-align: left;
+                margin-left: 24px;
+                font-size: 16px;
+                font-weight: 00;
+                line-height: 1.5;
+                margin-bottom: 12px;
+              }
+            }
+            .item-wrapper.last {
+              border: none;
+            }
+          }
+        }
+      }
+      .eat-now-wrapper {
+        padding: 0px 0px 24px 0px;
+        .divider {
+          background: $divider;
+          height: 1px;
+        }
+        .title {
+          margin-top: 24px;
+          margin-bottom: 24px;
+          font-size: 22px;
+          font-weight: 700;
+          text-align: left;
+          line-height: 22px;
+        }
+        .illustration-wrapper {
+          width: 100%;
+          padding-top: 66.7%;
+          position: relative;
+          background: url(../assets/eatNow.svg) no-repeat center;
+          background-size: cover;
+          @media (min-width: 992px) {
+            padding-top: 25%;
+            background: url(../assets/people-eating-food.svg) no-repeat center;
+            background-size: cover;
+          }
+          .cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .button {
+              padding: 12px 36px;
+              border-radius: 30px;
+              background: #000000;
+              color: #ffffff;
+              cursor: pointer;
+              font-weight: 700;
+              font-size: 16px;
+              line-height: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .filter-button-wrapper {
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+    border-top: 1px solid $divider;
+    position: fixed;
+    bottom: 0;
+    width: calc(100vw - 48px);
+    height: 48px;
+    padding: 16px 24px;
+    background: #ffffff;
+    @media (min-width: 992px) {
+      width: calc(100vw - 160px);
+      padding: 16px 80px;
+    }
+    .filter-button {
+      margin: auto;
+      max-width: 1040px;
+      height: 100%;
+      width: calc(100vw - 48px);
+      background: #000000;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      @media (min-width: 992px) {
+        width: calc(100vw - 160px);
+      }
+      .button {
+        color: #ffffff;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 20px;
+      }
+    }
+  }
+}
+</style>
