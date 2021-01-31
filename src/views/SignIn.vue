@@ -77,9 +77,6 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
-$default-color: #000000;
-$primary-color: #222;
-@import '~vue2-datepicker/scss/index.scss';
 .signin {
   height: 100%;
   overflow: hidden;
@@ -142,6 +139,7 @@ $primary-color: #222;
             width: 100%;
             background: #ffffff;
             .submit-button {
+              cursor: pointer;
               width: 100%;
               border: none;
               appearance: none;
@@ -173,6 +171,7 @@ $primary-color: #222;
               color: #666;
             }
             .text.register {
+              cursor: pointer;
               text-decoration: underline;
             }
           }
