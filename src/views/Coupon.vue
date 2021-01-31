@@ -321,6 +321,8 @@ $primary-color: #222;
       }
     }
     .coupon-info {
+      margin: auto;
+      max-width: 1040px;
       padding: 0 24px;
       @media (min-width: 992px) {
         padding: 105px 80px 0;
@@ -536,7 +538,7 @@ $primary-color: #222;
           @media (min-width: 992px) {
             padding-top: 25%;
             background: url(../assets/people-eating-food.svg) no-repeat center;
-          background-size: cover;
+            background-size: cover;
           }
           .cover {
             position: absolute;
@@ -563,6 +565,7 @@ $primary-color: #222;
     }
   }
   .filter-button-wrapper {
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
     border-top: 1px solid $divider;
     position: fixed;
     bottom: 0;
@@ -575,6 +578,8 @@ $primary-color: #222;
       padding: 16px 80px;
     }
     .filter-button {
+      margin: auto;
+      max-width: 1040px;
       height: 100%;
       width: calc(100vw - 48px);
       background: #000000;

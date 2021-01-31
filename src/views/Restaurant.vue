@@ -456,6 +456,7 @@ $primary-color: #222;
   }
   .info-container {
     height: 100%;
+    width: 100%;
     overflow: scroll;
     scroll-behavior: smooth;
     position: absolute;
@@ -481,6 +482,8 @@ $primary-color: #222;
       }
     }
     .restaurant-info {
+      margin: auto;
+      max-width: 1040px;
       padding: 0 24px;
       @media (min-width: 992px) {
         padding: 105px 80px 0;
@@ -1044,6 +1047,8 @@ $primary-color: #222;
       padding: 16px 80px;
     }
     .booking-info-wrapper {
+      margin: auto;
+      max-width: 1040px;
       display: flex;
       flex-direction: row;
       .booking-info {
@@ -1055,12 +1060,15 @@ $primary-color: #222;
       }
     }
     .divider {
+      max-width: 1040px;
       background: $divider;
       height: 1px;
       width: 100%;
-      margin: 8px 0;
+      margin: 8px auto;
     }
     .booking-button {
+      margin: auto;
+      max-width: 1040px;
       height: 48px;
       width: calc(100vw - 48px);
       background: #000000;

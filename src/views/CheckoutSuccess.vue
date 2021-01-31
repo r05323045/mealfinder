@@ -87,6 +87,8 @@ $red: rgb(255, 56, 92);
   height: 100vh;
   overflow: scroll;
   .checkout-result {
+    margin: auto;
+    max-width: 1040px;
     scroll-behavior: smooth;
     padding: 22px 24px;
     @media (min-width: 992px) {

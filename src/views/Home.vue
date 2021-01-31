@@ -1,6 +1,6 @@
 <template>
   <div class="home" ref="home">
-    <Navbar v-show="scrollUp && scrollY + scrollBarHeight < homeHeight"></Navbar>
+    <Navbar v-show="scrollY > 50"></Navbar>
     <div class="top-banner"></div>
     <div class="searchbar-wrapper">
       <div class="searchbar">
@@ -184,10 +184,10 @@
         <div class="illustration-wrapper">
           <div class="cover">
             <div class="button-wrapper">
-              <div class="button">餐廳清單</div>
+              <div class="button" @click="$router.push('/restaurants')">餐廳清單</div>
             </div>
             <div class="button-wrapper">
-              <div class="button map">地圖探索</div>
+              <div class="button map" @click="$router.push('/restaurants')">地圖探索</div>
             </div>
           </div>
         </div>

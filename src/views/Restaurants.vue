@@ -1,6 +1,6 @@
 <template>
   <div class="restaurants" :class="{modalShow: showModal}">
-    <Navbar class="restaurant-navbar" v-show="scrollUp && scrollY + scrollBarHeight < divHeight"></Navbar>
+    <Navbar class="restaurant-navbar"></Navbar>
     <div class="searchbar-wrapper-mobile">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
@@ -207,11 +207,14 @@ $red: rgb(255, 56, 92);
       }
       .title {
         margin-bottom: 24px;
-        height: 22px;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 992px) {
+          font-size: 32px;
+          line-height: 36px;
+        }
       }
       .filter-button-wrapper {
         display: none;

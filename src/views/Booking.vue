@@ -234,9 +234,10 @@ $primary-color: #222;
     }
   }
   .booking-form {
-    margin-top: 60px;
     scroll-behavior: smooth;
     padding: 22px 24px;
+    margin: 60px auto 0;
+    max-width: 1040px;
     @media (min-width: 992px) {
       margin-top: 0px;
       padding: 48px 80px;

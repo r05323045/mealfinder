@@ -108,6 +108,8 @@ $red: rgb(255, 56, 92);
     padding: 36px 24px 60px 24px;
     text-align: left;
     position: relative;
+    margin: auto;
+    max-width: 1040px;
     @media (min-width: 992px) {
       padding: 36px 80px 60px;
     }

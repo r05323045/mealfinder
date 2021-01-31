@@ -1,6 +1,6 @@
 <template>
   <div class="coupons" :class="{modalShow: showModal}">
-    <Navbar class="restaurant-navbar" v-show="scrollUp && scrollY + scrollBarHeight < divHeight"></Navbar>
+    <Navbar class="restaurant-navbar"></Navbar>
     <div class="coupons-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>

@@ -146,6 +146,8 @@ $red: rgb(255, 56, 92);
   height: 100vh;
   overflow: scroll;
   .reservation-container {
+    margin: auto;
+    max-width: 1040px;
     padding: 36px 24px 60px 24px;
     text-align: left;
     position: relative;

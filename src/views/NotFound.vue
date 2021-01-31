@@ -1,5 +1,6 @@
 <template>
   <div class="not-found">
+    <Navbar class="restaurant-navbar"></Navbar>
     <div class="main-title">Oops...</div>
     <div class="not-found-container">
       <div class="title">404 Page Not Found</div>
@@ -17,11 +18,13 @@
 
 <script>
 
+import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
   components: {
-    Footer
+    Footer,
+    Navbar
   },
   mounted () {
   }
@@ -37,6 +40,8 @@ $red: rgb(255, 56, 92);
   height: 100vh;
   overflow: scroll;
   .main-title {
+    margin: auto;
+    max-width: 1040px;
     text-align: left;
     padding: 36px 36px 0px;
     font-size: 24px;
@@ -44,6 +49,8 @@ $red: rgb(255, 56, 92);
     line-height: 1.5;
   }
   .not-found-container {
+    margin: auto;
+    max-width: 1040px;
     padding: 36px;
     .divider {
       background: $divider;
@@ -63,6 +70,11 @@ $red: rgb(255, 56, 92);
       position: relative;
       background: url(../assets/eatNow.svg) no-repeat center;
       background-size: cover;
+      @media (min-width: 992px) {
+        padding-top: 25%;
+        background: url(../assets/people-eating-food.svg) no-repeat center;
+        background-size: cover;
+      }
       .cover {
         position: absolute;
         top: 0;

@@ -60,6 +60,8 @@ $red: rgb(255, 56, 92);
   height: 100vh;
   overflow: scroll;
   .purchase-container {
+    margin: auto;
+    max-width: 1040px;
     padding: 36px 24px;
     text-align: left;
     position: relative;

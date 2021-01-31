@@ -198,19 +198,22 @@ $red: rgb(255, 56, 92);
       height: calc(100vh - 81px);
     }
     .restaurant-list {
-      margin: 22px 0;
-      padding: 0 24px;
+      margin: auto;
+      max-width: 1040px;
+      padding: 22px 24px;
        @media (min-width: 992px) {
-        margin: 32px 0;
-        padding: 0 80px;
+        padding: 32px 80px;
       }
       .title {
         margin-bottom: 24px;
-        height: 22px;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 992px) {
+          font-size: 32px;
+          line-height: 36px;
+        }
       }
       .filter-button-wrapper {
         display: none;
