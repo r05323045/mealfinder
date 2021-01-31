@@ -1,5 +1,6 @@
 <template>
   <div class="notification-page">
+    <Navbar></Navbar>
     <div class="notification-container">
       <div class="title">我的通知</div>
       <div class="notification-card">
@@ -17,9 +18,6 @@
     </div>
     <div ref="footer">
       <Footer></Footer>
-    </div>
-    <div>
-      <Navbar></Navbar>
     </div>
   </div>
 </template>
@@ -53,9 +51,14 @@ $red: rgb(255, 56, 92);
   height: 100vh;
   overflow: scroll;
   .notification-container {
-    margin: 36px 24px;
+    margin: auto;
+    max-width: 1040px;
+    padding: 36px 24px;
     text-align: left;
     position: relative;
+    @media (min-width: 992px) {
+      padding: 36px 80px;
+    }
     .title {
       font-size: 24px;
       font-weight: 800;
