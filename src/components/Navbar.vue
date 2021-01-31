@@ -64,9 +64,22 @@
           </div>
         </div>
         <div class="side-nav">
-          <div class="side-nav-button">
+          <div class="side-nav-button" @click="showMenu = !showMenu">
             <img class="icon hamburger" src="../assets/hamburger.svg">
             <img class="icon profile" src="../assets/default-profile.svg">
+          </div>
+          <div ref="menu-wrapper" class="menu-wrapper" v-show="showMenu">
+            <div class="menu">
+              <div class="item">會員中心</div>
+              <div class="item">訂位紀錄</div>
+              <div class="item">我的收藏</div>
+              <div class="item">購物車</div>
+              <div class="item">通知</div>
+              <div class="divider-wrapper">
+                <div class="divider"></div>
+              </div>
+              <div class="item">登出</div>
+            </div>
           </div>
         </div>
       </div>
@@ -107,8 +120,22 @@ export default {
   data () {
     return {
       signIn: true,
-      openSearch: false
+      openSearch: false,
+      showMenu: false
     }
+  },
+  mounted () {
+    document.body.addEventListener('click', (e) => {
+      const clickButton = e.target.parentElement.classList.contains('side-nav-button') || e.target.classList.contains('side-nav-button')
+      const clickOtherSide = !(e.target.classList.contains('menu-wrapper') || e.target.parentElement.classList.contains('menu'))
+      if (this.showMenu && clickOtherSide && !clickButton) {
+        if (this.$refs['menu-wrapper']) {
+          this.$refs['menu-wrapper'].style.display = 'none'
+          this.showMenu = false
+        }
+      }
+      e.stopPropagation()
+    })
   }
 }
 </script>
@@ -223,6 +250,13 @@ $red: rgb(255, 56, 92);
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
+            &:hover {
+              color: #666;
+              .divider {
+                background: #666;
+              }
+            }
             .condition {
               font-size: 16px;
               line-height: 20px;
@@ -240,6 +274,13 @@ $red: rgb(255, 56, 92);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            cursor: pointer;
+            &:hover {
+              color: #666;
+              .divider {
+                background: #666;
+              }
+            }
             .name {
               font-size: 16px;
               line-height: 20px;
@@ -248,7 +289,7 @@ $red: rgb(255, 56, 92);
               white-space: nowrap;
             }
             .divider {
-              width: 50%;
+              width: 0%;
               height: 2px
             }
           }
@@ -340,6 +381,7 @@ $red: rgb(255, 56, 92);
           height: 100%;
           flex: 1;
           .side-nav-button {
+            cursor: pointer;
             display: flex;
             align-items: center;
             padding: 5px 5px 5px 12px;
@@ -353,6 +395,46 @@ $red: rgb(255, 56, 92);
               height: 30px;
               width: 30px;
               margin-left: 12px;
+            }
+          }
+          .menu-wrapper {
+            z-index: 999;
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+            position: absolute;
+            top: 72px;
+            width: 240px;
+            background: #ffffff;
+            border-radius: 15px;
+            .menu {
+              margin: 12px 16px;
+              width: calc(100% - 32px);
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              align-items: center;
+              .item {
+                cursor: pointer;
+                width: 100%;
+                flex: 1;
+                font-size: 14px;
+                font-weight: 600;
+                text-align: left;
+                padding: 12px 16px;
+                line-height: 18px;
+                &:hover {
+                  background: $divider;
+                }
+              }
+              .divider-wrapper {
+                width: 100%;
+                .divider {
+                  position: absolute;
+                  left: 0;
+                  right: 0;
+                  height: 1px;
+                  background: $divider;
+                }
+              }
             }
           }
         }
@@ -373,9 +455,16 @@ $red: rgb(255, 56, 92);
           border-radius: 32px;
           border: 1px solid $divider;
           height: 64px;
+          position: relative;
           .district-wrapper {
+            border-top-left-radius: 32px;
+            border-bottom-left-radius: 32px;
             height: 100%;
             width: 33.33%;
+            cursor: pointer;
+            &:hover {
+              background: $divider;
+            }
             .search-input {
               text-align: left;
               padding: 14px 24px;
@@ -391,11 +480,17 @@ $red: rgb(255, 56, 92);
             }
           }
           .category-wrapper {
+            height: 100%;
+            width: 33.33%;
+            cursor: pointer;
             display: flex;
             flex-direction: row;
             align-items: center;
             height: 100%;
             width: 33.33%;
+            &:hover {
+              background: $divider;
+            }
             .divider {
               height: calc(100% - 28px);
               width: 1px;
@@ -416,12 +511,20 @@ $red: rgb(255, 56, 92);
             }
           }
           .budget-wrapper {
+            border-top-right-radius: 32px;
+            border-bottom-right-radius: 32px;
+            height: 100%;
+            width: 33.33%;
             display: flex;
             flex-direction: row;
             height: 100%;
             width: 33.334%;
             justify-content: flex-start;
             align-items: center;
+            cursor: pointer;
+            &:hover {
+              background: $divider;
+            }
             .divider {
               height: calc(100% - 28px);
               width: 1px;
@@ -442,7 +545,9 @@ $red: rgb(255, 56, 92);
             }
           }
           .icon-wrapper {
-            margin: 7px 7px 7px 0;
+            position: absolute;
+            top: 7px;
+            right: 7px;
             min-width: 48px;
             height: 48px;
             width: 48px;
@@ -451,6 +556,10 @@ $red: rgb(255, 56, 92);
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.8)
+            }
             .icon.search {
               background: #ffffff;
               mask: url(../assets/search.svg) no-repeat center;
