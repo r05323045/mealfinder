@@ -1,6 +1,6 @@
 <template>
   <div class="home" ref="home">
-    <Navbar v-show="scrollY > 50"></Navbar>
+    <Navbar v-show="scrollUp && scrollY + scrollBarHeight < homeHeight"></Navbar>
     <div class="top-banner"></div>
     <div class="searchbar-wrapper">
       <div class="searchbar">
@@ -206,7 +206,6 @@
       </div>
     </div>
     <Footer></Footer>
-    <div class="space-for-nav-mobile" style="height: 54px;"></div>
   </div>
 </template>
 
@@ -223,7 +222,10 @@ export default {
   name: 'Home',
   data () {
     return {
-      scrollY: 0
+      scrollY: 0,
+      scrollUp: false,
+      homeHeight: 0,
+      scrollBarHeight: 0
     }
   },
   mounted () {
@@ -258,9 +260,12 @@ export default {
       }
     })
     this.$refs.home.addEventListener('scroll', this.onScroll)
+    this.homeHeight = this.$refs.home.scrollHeight
+    this.scrollBarHeight = this.$refs.home.clientHeight
   },
   methods: {
     onScroll (e) {
+      this.scrollUp = this.scrollY > this.$refs.home.scrollTop
       this.scrollY = this.$refs.home.scrollTop
     }
   }
@@ -718,9 +723,6 @@ $red: rgb(255, 56, 92);
   }
   @media (min-width: 992px) {
     .searchbar-wrapper {
-      display: none;
-    }
-    .space-for-nav-mobile {
       display: none;
     }
   }

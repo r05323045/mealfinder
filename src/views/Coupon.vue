@@ -21,6 +21,9 @@
       </div>
     </div>
     <div class="info-container" ref="info-container">
+      <div class="mobile-picture-wrapper">
+        <div class="picture"></div>
+      </div>
       <div class="coupon-info" ref="coupon-info">
         <div class="picture-wrapper">
           <div class="picture"></div>
@@ -201,6 +204,9 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
+    @media (min-width: 992px) {
+      display: none;
+    }
     .back-wrapper {
       padding-left: 8px;
       width: 40px;
@@ -293,17 +299,39 @@ $primary-color: #222;
     overflow: scroll;
     scroll-behavior: smooth;
     position: absolute;
-    top: 0;
+    top: 60px;
+    @media (min-width: 992px) {
+      top: 0px;
+    }
+    .mobile-picture-wrapper {
+      width: 100%;
+      padding-top: 66.7%;
+      position: relative;
+      @media (min-width: 992px) {
+        display: none;
+      }
+      .picture {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
+        background-size: cover;
+      }
+    }
     .coupon-info {
+      padding: 0 24px;
       @media (min-width: 992px) {
         padding: 105px 80px 0;
       }
       .picture-wrapper {
-        width: 100%;
-        padding-top: 66.7%;
-        position: relative;
+        display: none;
          @media (min-width: 992px) {
+          display: block;
+          width: 100%;
           padding-top: 50%;
+          position: relative;
         }
         .picture {
           position: absolute;
@@ -313,13 +341,11 @@ $primary-color: #222;
           bottom: 0;
           background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
           background-size: cover;
-          @media (min-width: 992px) {
-            border-radius: 12px;
-          }
+          border-radius: 12px;
         }
       }
       .title-wrapper {
-        padding: 32px 24px 24px 24px;
+        padding: 32px 0px 24px 0px;
         .title {
           text-align: left;
           margin: 0;
@@ -389,7 +415,7 @@ $primary-color: #222;
         }
       }
       .rule-wrapper {
-        padding: 0px 24px 24px 24px;
+        padding: 0px 0px 24px 0px;
         .divider {
           background: $divider;
           height: 1px;
@@ -415,7 +441,7 @@ $primary-color: #222;
         }
       }
       .information-wrapper {
-        padding: 0px 24px 24px 24px;
+        padding: 0px 0px 24px 0px;
         .divider {
           background: $divider;
           height: 1px;
@@ -488,7 +514,7 @@ $primary-color: #222;
         }
       }
       .eat-now-wrapper {
-        padding: 0px 24px 24px 24px;
+        padding: 0px 0px 24px 0px;
         .divider {
           background: $divider;
           height: 1px;

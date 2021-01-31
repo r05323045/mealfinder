@@ -197,7 +197,8 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .profile-page {
   height: 100vh;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   .page-container {
     margin: auto;
     max-width: 1040px;
@@ -299,8 +300,9 @@ $red: rgb(255, 56, 92);
     }
     .right-side {
       flex: 2;
+      padding: 0 24px;
       .basic-info-container {
-        margin: 64px 40px 36px 40px;
+        margin: 36px 0px;
         text-align: left;
         position: relative;
         .avatar-wrapper {
@@ -342,7 +344,7 @@ $red: rgb(255, 56, 92);
         }
       }
       .information-container {
-        padding: 12px 40px;
+        padding: 12px 0px;
         .title {
           position: relative;
           margin-top: 24px;
@@ -523,7 +525,7 @@ $red: rgb(255, 56, 92);
     }
   }
   .more-container {
-    padding: 40px;
+    padding: 24px;
     margin: auto;
     max-width: 1040px;
     @media (min-width: 992px) {

@@ -104,8 +104,8 @@ $red: rgb(255, 56, 92);
       .divider {
         position: absolute;
         bottom: 0;
-        right: -15px;
-        left: -15px;
+        right: 0;
+        left: 0;
         height: 1px;
         background: $divider;
       }

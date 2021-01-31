@@ -42,6 +42,7 @@ const routes = [
   },
   {
     path: '/users',
+    redirect: '/users/center',
     component: () => import('@/views/Users.vue'),
     children: [
       {

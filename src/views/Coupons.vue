@@ -1,6 +1,6 @@
 <template>
   <div class="coupons" :class="{modalShow: showModal}">
-    <Navbar class="restaurant-navbar"></Navbar>
+    <Navbar class="restaurant-navbar" v-show="scrollUp && scrollY + scrollBarHeight < divHeight"></Navbar>
     <div class="coupons-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
@@ -74,7 +74,9 @@ export default {
     return {
       showModal: false,
       scrollY: 0,
-      scrollUp: true
+      scrollUp: true,
+      divHeight: 0,
+      scrollBarHeight: 0
     }
   },
   components: {
@@ -84,6 +86,8 @@ export default {
   },
   mounted () {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll)
+    this.divHeight = this.$refs['list-container'].scrollHeight
+    this.scrollBarHeight = this.$refs['list-container'].clientHeight
   },
   methods: {
     closeFilter () {
@@ -105,12 +109,6 @@ $red: rgb(255, 56, 92);
 .coupons {
   width: 100%;
   position: relative;
-  .restaurant-navbar {
-    display: none;
-    @media (min-width: 992px) {
-      display: block;
-    }
-  }
   .coupons-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;

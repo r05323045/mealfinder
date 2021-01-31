@@ -23,7 +23,7 @@
               <div class="picture"></div>
             </div>
             <div class="header">
-              <img class="icon restaurant" src="../assets/restaurant.svg">
+              <img class="icon-restaurant" src="../assets/restaurant.svg">
               <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
             </div>
             <div class="divider"></div>
@@ -236,7 +236,7 @@ $primary-color: #222;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
-            .icon.restaurant {
+            .icon-restaurant {
               height: 16px;
               width: 16px;
               margin-right: 16px;
