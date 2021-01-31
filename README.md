@@ -1,15 +1,9 @@
-# mealfinder
+# restaurant_reservation
 
 ## Project setup
 ```
 git clone https://github.com/iamy8000/restaurant_reservation.git
-```
-
-```
 cd client
-```
-
-```
 npm install
 ```
 
