@@ -13,6 +13,12 @@ const couponController = {
       .then(coupons => {
         return res.json(coupons)
       })
+  },
+  getCoupon: (req, res)=> {
+    return Coupon.findByPk(req.params.couponId, {include: [Restaurant]})
+    .then(coupon => {
+      return res.json(coupon)
+    })
   }
 }
 
