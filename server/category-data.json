@@ -1,0 +1,78 @@
+[
+  {
+    "name_EN":"Chinese Restaurant",
+    "name_TW":"中式料理"
+  },
+  {
+    "name_EN": "Western Restaurant",
+    "name_TW": "西式料理"
+  },
+  {
+    "name_EN": "Japanese Restaurant",
+    "name_TW": "日式料理"
+  },
+  {
+    "name_EN": "Middle Eastern Restaurant",
+    "name_TW": "中東料理"
+  },
+  {
+    "name_EN": "Indian Restaurant",
+    "name_TW": "印度料理"
+  },
+  {
+    "name_EN": "Asian Restaurant",
+    "name_TW": "亞洲料理"
+  },
+  {
+    "name_EN": "American Restaurant",
+    "name_TW": "美式料理"
+  },
+  {
+    "name_EN": "Bar",
+    "name_TW": "酒吧"
+  },
+  {
+    "name_EN": "Seafood Restaurant",
+    "name_TW": "海鮮"
+  },
+  {
+    "name_EN": "Vegan Restaurant",
+    "name_TW": "素食料理"
+  },
+  {
+    "name_EN": "Pizza",
+    "name_TW": "比薩餐廳"
+  },
+  {
+    "name_EN": "Italian Restaurant",
+    "name_TW": "義大利料理"
+  },
+  {
+    "name_EN": "Mexican Restaurant",
+    "name_TW": "墨西哥料理"
+  },
+  {
+    "name_EN": "Taiwanese Restaurant",
+    "name_TW": "台式料理"
+  },
+  {
+    "name_EN": "Yakiniku Restaurant",
+    "name_TW": "日式燒肉"
+  },
+  {
+    "name_EN": "Barbecue Restaurant",
+    "name_TW": "燒烤料理"
+  },
+  {
+    "name_EN": "Brunch Restaurant",
+    "name_TW": "早午餐"
+  },
+  {
+    "name_EN": "Buffet Restaurant",
+    "name_TW": "自助餐"
+  },
+  {
+    "name_EN": "Spanish Restaurant",
+    "name_TW": "西班牙料理"
+  }
+]
