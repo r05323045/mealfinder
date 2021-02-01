@@ -127,7 +127,9 @@ export default {
   },
   mounted () {
     document.body.addEventListener('click', (e) => {
-      const clickButton = e.target.parentElement.classList.contains('side-nav-button') || e.target.classList.contains('side-nav-button')
+      const parentIsSideNav = e.target.parentElement ? e.target.parentElement.classList.contains('side-nav-button') : false
+      const elementIsSideNav = e.target ? e.target.classList.contains('side-nav-button') : false
+      const clickButton = parentIsSideNav || elementIsSideNav
       const clickOtherSide = !(e.target.classList.contains('menu-wrapper') || e.target.parentElement.classList.contains('menu'))
       if (this.showMenu && clickOtherSide && !clickButton) {
         if (this.$refs['menu-wrapper']) {
@@ -146,11 +148,12 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .navbar {
+  background: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
   .navbar-desktop {
     display: none;
   }
   .navbar-mobile {
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
     z-index: 999;
     background: #ffffff;
     border-top: 1px solid $divider;
@@ -229,12 +232,15 @@ $red: rgb(255, 56, 92);
     }
     .navbar-desktop {
       display: block;
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
       border-bottom: 1px solid $divider;
-      width: 100%;
       background: #ffffff;
       width: calc(100% - 160px);
+      margin: auto;
+      max-width: 1440px;
       padding: 0 80px;
+      @media (min-width: 1440px) {
+
+      }
       .navbar-desktop-inner {
         display: flex;
         flex-direction: row;

@@ -38,6 +38,7 @@
               <div class="item" @click="$router.push('/users/center').catch(()=>{})">會員中心</div>
               <div class="item" @click="$router.push('/users/history').catch(()=>{})">訂位紀錄</div>
               <div class="item" @click="$router.push('/users/favorite').catch(()=>{})">我的收藏</div>
+              <div class="item" @click="$router.push('/coupons').catch(()=>{})">優惠</div>
               <div class="item" @click="$router.push('/users/purchase').catch(()=>{})">購物車</div>
               <div class="item" @click="$router.push('/users/notification').catch(()=>{})">通知</div>
               <div class="divider-wrapper">
@@ -93,7 +94,9 @@ export default {
   },
   mounted () {
     document.body.addEventListener('click', (e) => {
-      const clickButton = e.target.parentElement.classList.contains('side-nav-button') || e.target.classList.contains('side-nav-button')
+      const parentIsSideNav = e.target.parentElement ? e.target.parentElement.classList.contains('side-nav-button') : false
+      const elementIsSideNav = e.target ? e.target.classList.contains('side-nav-button') : false
+      const clickButton = parentIsSideNav || elementIsSideNav
       const clickOtherSide = !(e.target.classList.contains('menu-wrapper') || e.target.parentElement.classList.contains('menu'))
       if (this.showMenu && clickOtherSide && !clickButton) {
         if (this.$refs['menu-wrapper']) {
@@ -131,6 +134,8 @@ $red: rgb(255, 56, 92);
       width: 100%;
       background: transparent;
       width: calc(100% - 160px);
+      margin: auto;
+      max-width: 1440px;
       padding: 0 80px;
       .navbar-desktop-inner {
         display: flex;

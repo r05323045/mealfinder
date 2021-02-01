@@ -28,8 +28,11 @@
 $ultimategray: #939597;
 $divider: #E6ECF0;
 .footer {
-  @media (min-width: 768px) {
-    padding: 54px 80px 80px 80px;
+  @media (min-width: 992px) {
+    max-width: 1440px;
+    margin: auto;
+    padding: 54px calc((100vw - 1440px)/2) 80px;
+    width: 100%;
   }
   padding: 54px 16px 80px 16px;
   background: rgb(247, 247, 247);
