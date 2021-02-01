@@ -349,6 +349,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         margin: 80px 0 80px;
         .load-more-button {
+          cursor: pointer;
           width: auto;
           margin: auto;
           padding: 14px 24px;

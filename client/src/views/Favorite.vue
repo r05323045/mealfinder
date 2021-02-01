@@ -1,6 +1,6 @@
 <template>
   <div class="restaurants" :class="{modalShow: showModal}">
-    <Navbar class="restaurant-navbar" v-show="scrollUp && scrollY + scrollBarHeight < divHeight"></Navbar>
+    <Navbar class="restaurant-navbar"></Navbar>
     <div class="searchbar-wrapper-mobile">
       <div class="back-wrapper">
         <div class="icon back"></div>
@@ -24,7 +24,7 @@
           <div class="filter-button">預算</div>
         </div>
         <div class="restaurant-card-deck" v-for="i in 4" :key="`card-deck-${i}`">
-          <div class="restaurant-card" v-for="i in 4" :key="i" :class="{ 'last-card': i === 4}">
+          <div class="restaurant-card" v-for="i in 4" :key="i" :class="{ 'last-card': i === 4}" @click="$router.push(`/restaurants/${i}`)">
             <div class="card-image-wrapper">
               <div class="heart-wrapper">
                 <img class="icon heart" src="../assets/black-heart.svg">
@@ -236,6 +236,7 @@ $red: rgb(255, 56, 92);
           flex-direction: row;
         }
         .restaurant-card {
+          cursor: pointer;
           padding-top: 12px;
           margin-bottom: 28px;
           @media (min-width: 992px) {
@@ -346,6 +347,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         margin: 80px 0 80px;
         .load-more-button {
+          cursor: pointer;
           width: auto;
           margin: auto;
           padding: 14px 24px;

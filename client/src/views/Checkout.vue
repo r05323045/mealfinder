@@ -53,10 +53,10 @@
             </div>
           </div>
           <div class="submit-button-wrapper">
-            <button class="submit-button" type="submit" @click.prevent="">
+            <button class="submit-button" type="submit" @click="$router.push('/users/checkout/success')">
               <div class="button">確認購買</div>
             </button>
-            <div class="back-button" @click.prevent="">
+            <div class="back-button" @click="$router.push('/users/purchase')">
               <div class="button">回上一步</div>
             </div>
           </div>
@@ -296,6 +296,7 @@ $red: rgb(255, 56, 92);
             }
           }
           .back-button {
+            cursor: pointer;
             border: 1px solid #222222;
             margin-bottom: 12px;
             height: 46px;

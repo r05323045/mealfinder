@@ -51,7 +51,7 @@
         <div class="information-container">
           <div class="title">
             個人資料
-            <div class="edit" @click="editing = true">編輯</div>
+            <div class="edit" @click="editing = !editing"><span v-if="editing">取消</span>編輯</div>
           </div>
           <div class="information-body" :class="{ editing: editing }">
             <div class="item-wrapper">
@@ -122,7 +122,7 @@
             </div>
             <div class="item-wrapper last">
               <div class="top-wrapper">
-                <img class="icon restaurant" src="../assets/restaurant.svg">
+                <img class="icon" src="../assets/restaurant.svg">
                 <div class="title">偏好的餐廳類型</div>
               </div>
               <div class="content">日式料理、餐酒館</div>
@@ -243,6 +243,7 @@ $red: rgb(255, 56, 92);
                 background: $ultimategray;
               }
               .text {
+                cursor: pointer;
                 text-decoration: underline;
                 margin-top: 12px;
                 font-size: 14px;
@@ -354,6 +355,7 @@ $red: rgb(255, 56, 92);
           text-align: left;
           line-height: 22px;
           .edit {
+            cursor: pointer;
             text-decoration: underline;
             position: absolute;
             font-size: 14px;
@@ -498,6 +500,7 @@ $red: rgb(255, 56, 92);
               width: auto;
               text-align: left;
               .text {
+                cursor: pointer;
                 text-decoration: underline;
                 font-size: 14px;
                 font-weight: 600;
@@ -508,12 +511,14 @@ $red: rgb(255, 56, 92);
             display: flex;
             justify-content: flex-end;
             .cancel {
+              cursor: pointer;
               padding: 8px 24px;
               border-radius: 8px;
               text-decoration: underline;
               margin-right: 8px;
             }
             .save {
+              cursor: pointer;
               background: #000000;
               padding: 8px 24px;
               border-radius: 8px;

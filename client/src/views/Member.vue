@@ -157,6 +157,7 @@ $red: rgb(255, 56, 92);
         }
       }
       .link {
+        cursor: pointer;
         margin-top: 8px;
         color: #008489;
         font-weight: 600;
@@ -167,6 +168,7 @@ $red: rgb(255, 56, 92);
         display: flex;
         flex-direction: row;
         .link-card-wrapper {
+          cursor: pointer;
           width: 100%;
           flex: 1;
           padding: 4px;

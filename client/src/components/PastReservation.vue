@@ -128,6 +128,7 @@ $red: rgb(255, 56, 92);
       .write-comment {
         padding: 12px;
         .button-wrapper {
+          cursor: pointer;
           font-size: 14px;
           font-weight: 600;
           padding: 8px 0;
