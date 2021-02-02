@@ -37,6 +37,48 @@ const userController = {
         })
       })
   },
+
+  signUp: (req, res) => {
+    const { email, password, passwordConfirm, name } = req.body
+    if (!email || !password || !passwordConfirm || !name) {
+      return res.json({
+        status: 'error',
+        message: '所有欄位皆為必填',
+        email,
+        name
+      })
+    }
+    if (password !== passwordConfirm) {
+      return res.json({
+        status: 'error',
+        message: '兩次密碼輸入不同',
+        email,
+        name,
+      })
+    } else {
+      User.findOne({ where: { email } })
+        .then(user => {
+          if (user) {
+            return res.json({
+              status: 'error',
+              message: '此信箱已被使用，請直接登入使用',
+              name, email, password, passwordConfirm
+            })
+          } else {
+            User.create({
+              name, email, password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),
+              avatar: 'https://cdn.pixabay.com/photo/2018/04/18/18/56/user-3331256__340.png'
+            })
+              .then(() => {
+                return res.json({
+                  status: 'success',
+                  message: '帳號註冊成功！'
+                })
+              })
+          }
+        })
+    }
+  },
 }
 
 module.exports = userController
