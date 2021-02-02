@@ -36,9 +36,15 @@ const adminController = {
       limit: pageLimit
     })
       .then(restaurants => {
-        return res.json({
-          restaurants: restaurants
+        const data = restaurants.map(restaurant => {
+          if (restaurant.description === null) {
+            return restaurant
+          } else {
+            restaurant.description = restaurant.description.substring(0, 50)
+            return restaurant
+          }
         })
+        return res.json({ data })
       })
   }
 }
