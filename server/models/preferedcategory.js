@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       PreferedCategory.belongsTo(models.Category)
     }
   };
-  preferedCategory.init({
+  PreferedCategory.init({
     UserId: DataTypes.INTEGER,
     CategoryId: DataTypes.INTEGER
   }, {

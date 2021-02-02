@@ -7,12 +7,14 @@ const Restaurant = db.Restaurant
 const City = db.City
 const District = db.District
 const Coupon = db.Coupon
+const PreferedCategory = db.PreferedCategory
 
 const adminController = {
   getUsers: (req, res) => {
     User.findAll({
       raw: true,
       nest: true,
+      include: [PreferedCategory]
     })
       .then(users => {
         return res.json({ users })

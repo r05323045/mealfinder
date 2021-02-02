@@ -12,7 +12,9 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('Users', 'CategoryId')
+    await queryInterface.addColumn('Users', 'CategoryId', {
+      type: Sequelize.INTEGER
+    })
     /**
      * Add reverting commands here.
      *
