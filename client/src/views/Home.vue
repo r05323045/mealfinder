@@ -250,12 +250,8 @@ export default {
         prevEl: '.swiper-button-prev'
       },
       breakpoints: {
-        1200: {
-          slidesPerView: 3.1,
-          spaceBetween: '18%'
-        },
         992: {
-          slidesPerView: 2.5,
+          slidesPerView: 3.0,
           spaceBetween: '18%'
         },
         768: {
@@ -700,6 +696,8 @@ $red: rgb(255, 56, 92);
       padding: 0 24px;
       @media (min-width: 992px) {
         padding: 0 80px;
+      }
+      @media (min-width: 1600px) {
         width: 100%;
         max-width: 1440px;
         margin: 40px auto;

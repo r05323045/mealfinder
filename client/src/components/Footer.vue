@@ -29,6 +29,9 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 .footer {
   @media (min-width: 992px) {
+    padding: 54px 80px 80px;
+  }
+  @media (min-width: 1600px) {
     max-width: 1440px;
     margin: auto;
     padding: 54px calc((100vw - 1440px)/2) 80px;

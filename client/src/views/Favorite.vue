@@ -201,6 +201,8 @@ $red: rgb(255, 56, 92);
       padding: 22px 24px;
        @media (min-width: 992px) {
         padding: 32px 80px;
+        margin: auto;
+        max-width: 1440px;
       }
       .title {
         margin-bottom: 24px;
