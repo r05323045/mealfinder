@@ -6,7 +6,7 @@ const userController = require('../controllers/userController')
 
 //login,logout,signup
 router.post('/signin', userController.signIn)
-
+router.post('/signup', userController.signUp)
 
 //coupon
 router.get('/coupons/:couponId', couponController.getCoupon)
