@@ -4,7 +4,6 @@
 - A description of the changes proposed in the pull request.
 # Additional information
 - Something should be noticed
-
 # Checklist
 - [ ] Function testing
 - [ ] Update Trello
