@@ -32,7 +32,9 @@ module.exports = (sequelize, DataTypes) => {
     rating: DataTypes.STRING,
     CategoryId: DataTypes.INTEGER,
     CityId: DataTypes.INTEGER,
-    DistrictId: DataTypes.INTEGER
+    DistrictId: DataTypes.INTEGER,
+    description: DataTypes.TEXT,
+    average_consumption: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Restaurant',
