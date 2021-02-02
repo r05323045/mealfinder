@@ -79,6 +79,13 @@ const userController = {
         })
     }
   },
+
+  getProfile: (req, res) => {
+    User.findOne({ where: { id: req.params.id } })
+      .then(user => {
+        return res.json(user)
+      })
+  }
 }
 
 module.exports = userController

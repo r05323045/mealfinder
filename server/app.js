@@ -6,10 +6,11 @@ const session = require('express-session')
 
 const app = express()
 const port = 3000
-const passport = require('./config/passport')
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+const passport = require('./config/passport')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())

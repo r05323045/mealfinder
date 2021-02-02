@@ -8,6 +8,9 @@ const userController = require('../controllers/userController')
 router.post('/signin', userController.signIn)
 router.post('/signup', userController.signUp)
 
+//userController_UserModel
+router.get('/user/:id/profile', userController.getProfile)
+
 //coupon
 router.get('/coupons/:couponId', couponController.getCoupon)
 router.get('/coupons', couponController.getCoupons)
