@@ -19,14 +19,25 @@ const adminController = {
       })
   },
   getRestaurants: (req, res) => {
+    let offset = 0
+    const pageLimit = 24
+
+    if (req.query.page) {
+      offset = (req.query.page - 1) * pageLimit
+    }
+
     Restaurant.findAll({
       raw: true,
       nest: true,
-      include: [Category, City, District, Coupon]
+      include: [Category, City, District, Coupon],
+      offset: offset,
+      limit: pageLimit
     })
-    .then(restaurants => {
-      return res.json({restaurants})
-    })
+      .then(restaurants => {
+        return res.json({
+          restaurants: restaurants
+        })
+      })
   }
 }
 
