@@ -1,6 +1,6 @@
 <template>
   <div class="home" ref="home">
-    <Navbar v-show="scrollY > 50"></Navbar>
+    <Navbar v-show="scrollY > 58"></Navbar>
     <div class="page-container">
       <div class="searchbar-wrapper-outside" v-show="scrollY > 50">
         <div class="searchbar">
@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-        <NavbarHome v-show="scrollY <= 50"></NavbarHome>
+        <NavbarHome v-show="scrollY <= 58"></NavbarHome>
         <div class="background-image"></div>
         <div class="banner-container">
           <div class="wrapper">
@@ -295,7 +295,7 @@ $red: rgb(255, 56, 92);
   position: relative;
   .page-container {
     .searchbar-wrapper-outside {
-      z-index: 998;
+      z-index: 997;
       background: #ffffff;
       position: sticky;
       padding: 16px 24px;
@@ -303,7 +303,7 @@ $red: rgb(255, 56, 92);
       display: flex;
       justify-content: center;
       align-items: center;
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         display: none;
       }
       .searchbar {
@@ -353,12 +353,15 @@ $red: rgb(255, 56, 92);
       height: 538px;
       width: 100%;
       position: relative;
+      @media (min-width: 768px) {
+        height: calc(588/744 * 100vw + 50px);
+      }
       @media (min-width: 992px) {
-        height: calc(80vh + 50px);
+        height: calc(563/1128 * 100vw + 58px);
       }
       .searchbar-wrapper-inner {
         width: calc(100% - 48px);
-        z-index: 998;
+        z-index: 997;
         background: transparent;
         position: absolute;
         padding: 16px 24px;
@@ -366,7 +369,7 @@ $red: rgb(255, 56, 92);
         display: flex;
         justify-content: center;
         align-items: center;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: none;
         }
         .searchbar {
@@ -416,7 +419,7 @@ $red: rgb(255, 56, 92);
         background: url(https://images.unsplash.com/photo-1515668236457-83c3b8764839?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80) no-repeat center;
         background-size: cover;
         filter: brightness(0.6);
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           background: url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80) no-repeat center;
           background-size: cover;
         }
@@ -427,20 +430,24 @@ $red: rgb(255, 56, 92);
         left: 0;
         right: 0;
         bottom: 0;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           top: 0;
         }
         .wrapper {
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             width: 100%;
-            height: calc(100% - 236px);
-            max-width: 1440px;
-            margin: auto;
-            padding: 196px 80px 40px 80px;
+            height: calc(100% - 348px);
+            padding: 308px 40px 40px 40px;
             display: flex;
             align-items: flex-start;
             justify-content: center;
             flex-direction: column;
+          }
+          @media (min-width: 992px) {
+            padding: 204px 80px 40px 80px;
+            height: calc(100% - 244px);
+            max-width: 1440px;
+            margin: auto;
           }
           .text {
             text-align: left;
@@ -449,7 +456,13 @@ $red: rgb(255, 56, 92);
             font-size: 32px;
             line-height: 48px;
             font-weight: 600;
+            @media (min-width: 768px) {
+              margin: 0;
+              font-size: 42px;
+              line-height: 48px;
+            }
             @media (min-width: 992px) {
+              margin: 0;
               font-size: 52px;
               line-height: 58px;
             }
@@ -463,6 +476,9 @@ $red: rgb(255, 56, 92);
             line-height: 18px;
             font-size: 14px;
             font-weight: 600;
+            @media (min-width: 768px) {
+              margin: 24px 0 0 0;
+            }
           }
         }
       }
@@ -470,10 +486,13 @@ $red: rgb(255, 56, 92);
     .area {
       margin-top: 40px;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 0 40px;
+        margin: 64px auto 0;
+      }
       @media (min-width: 992px) {
         padding: 0 80px;
         max-width: 1440px;
-        margin: 64px auto 0;
       }
       .title {
         height: 40px;
@@ -481,6 +500,11 @@ $red: rgb(255, 56, 92);
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 26px;
+          line-height: 30px;
+          padding-bottom: 16px;
+        }
         @media (min-width: 992px) {
           font-size: 32px;
           line-height: 36px;
@@ -491,7 +515,7 @@ $red: rgb(255, 56, 92);
         display: flex;
         flex-direction: row;
         margin: 10px 0;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: none;
         }
         .district {
@@ -535,7 +559,7 @@ $red: rgb(255, 56, 92);
       }
       .district-deck-desktop {
         display: none;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: flex;
           flex-direction: row;
           margin: 10px 0;
@@ -588,8 +612,11 @@ $red: rgb(255, 56, 92);
       color: #ffffff;
       margin-top: 40px;
       padding: 24px 0 32px 24px;
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         margin-top: 64px;
+        padding: 40px;
+      }
+      @media (min-width: 992px) {
         padding: 40px 80px 40px 80px;
       }
       .category-container {
@@ -662,7 +689,7 @@ $red: rgb(255, 56, 92);
           .swiper-button-next,
           .swiper-button-prev {
             display: none;
-            @media (min-width: 992px) {
+            @media (min-width: 768px) {
               display: block;
               position: absolute;
               right: 0rem;
@@ -694,6 +721,9 @@ $red: rgb(255, 56, 92);
     .find-more {
       margin: 40px 0;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 0 40px;
+      }
       @media (min-width: 992px) {
         padding: 0 80px;
       }
@@ -708,6 +738,11 @@ $red: rgb(255, 56, 92);
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 26px;
+          line-height: 30px;
+          margin-bottom: 8px;
+        }
         @media (min-width: 992px) {
           font-size: 32px;
           line-height: 36px;
@@ -719,7 +754,7 @@ $red: rgb(255, 56, 92);
         flex-direction: row;
         .illustration-wrapper {
           display: none;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             display: block;
             flex: 1.5;
             padding-top: 33.33%;
@@ -761,7 +796,7 @@ $red: rgb(255, 56, 92);
           width: 100%;
           padding-top: 66.7%;
           position: relative;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             display: none;
           }
           .item-wrapper {
@@ -798,16 +833,12 @@ $red: rgb(255, 56, 92);
                 color: #ffffff;
                 z-index: 1;
               }
-              @media (min-width: 992px) {
-                font-size: 24px;
-                line-height: 28px;
-              }
             }
           }
         }
       }
     }
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       position: absolute;
       width: 100%;
       height: 100%;

@@ -222,7 +222,7 @@ $red: rgb(255, 56, 92);
       }
     }
   }
-  @media (min-width: 992px) {
+  @media (min-width: 768px) {
     position: sticky;
     top: 0;
     left: 0;
@@ -234,12 +234,13 @@ $red: rgb(255, 56, 92);
       display: block;
       border-bottom: 1px solid $divider;
       background: #ffffff;
-      width: calc(100% - 160px);
+      width: calc(100% - 80px);
       margin: auto;
       max-width: 1440px;
-      padding: 0 80px;
-      @media (min-width: 1440px) {
-
+      padding: 0 40px;
+      @media (min-width: 992px) {
+        width: calc(100% - 160px);
+        padding: 0 80px;
       }
       .navbar-desktop-inner {
         display: flex;

@@ -49,6 +49,18 @@
           </div>
         </div>
       </div>
+      <div class="navbar-desktop-middle">
+        <div class="tab-wrapper" v-show="openSearch">
+          <div class="condition-wrapper">
+            <div class="condition">條件</div>
+            <div class="divider"></div>
+          </div>
+          <div class="name-wrapper">
+            <div class="name">名稱</div>
+            <div class="divider"></div>
+          </div>
+        </div>
+      </div>
       <div class="navbar-desktop-outer" v-show="openSearch">
         <div class="searchbar-wrapper">
           <div class="district-wrapper">
@@ -122,21 +134,25 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .navbar-home {
   display: none;
-  @media (min-width: 992px) {
+  @media (min-width: 768px) {
     display: block;
     position: absolute;
-    top: 50px;
+    top: 58px;
     left: 0;
-    z-index: 999;
+    z-index: 998;
     width: 100%;
     .navbar-desktop {
       display: block;
       width: 100%;
       background: transparent;
-      width: calc(100% - 160px);
+      width: calc(100% - 80px);
       margin: auto;
       max-width: 1440px;
-      padding: 0 80px;
+      padding: 0 40px;
+      @media (min-width: 992px) {
+        width: calc(100% - 160px);
+        padding: 0 80px;
+      }
       .navbar-desktop-inner {
         display: flex;
         flex-direction: row;
@@ -144,10 +160,13 @@ $red: rgb(255, 56, 92);
         align-items: center;
         height: 80px;
         .tab-wrapper {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: center;
+          display: none;
+          @media (min-width: 992px) {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+          }
           .condition-wrapper {
             display: flex;
             flex-direction: column;
@@ -198,7 +217,7 @@ $red: rgb(255, 56, 92);
           height: 100%;
           display: flex;
           align-items: center;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             width: 100%;
             flex: 1;
           }
@@ -335,6 +354,69 @@ $red: rgb(255, 56, 92);
                   background: $divider;
                 }
               }
+            }
+          }
+        }
+      }
+      .navbar-desktop-middle {
+        display: none;
+        @media (min-width: 768px) {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 80px;
+        }
+        @media (min-width: 992px) {
+          display: none;
+        }
+        .tab-wrapper {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          .condition-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.8)
+            }
+            .condition {
+              font-size: 16px;
+              line-height: 20px;
+              font-weight: 400;
+              padding: 10px 16px;
+              white-space: nowrap;
+              color: #ffffff;
+            }
+            .divider {
+              width: 25%;
+              height: 2px;
+              background: #ffffff;
+            }
+          }
+          .name-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.8)
+            }
+            .name {
+              font-size: 16px;
+              line-height: 20px;
+              font-weight: 400;
+              padding: 10px 16px;
+              white-space: nowrap;
+              color: #ffffff;
+            }
+            .divider {
+              width: 50%;
+              height: 2px;
             }
           }
         }
