@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Restaurant.belongsTo(models.Category)
       Restaurant.belongsTo(models.City)
       Restaurant.belongsTo(models.District)
+      Restaurant.hasMany(models.Coupon)
     }
   };
   Restaurant.init({
