@@ -1,26 +1,35 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('PreferedCategories', {
+    await queryInterface.createTable('orderItems', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      UserId: {
+      OrderId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users',
+          model: 'Orders',
           key: 'id'
         }
       },
-      CategoryId: {
+      CouponId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Categories',
-          key: 'id'
+          model: 'Coupons',
+          key:'id'
         }
+      },
+      purchased_price: {
+        type: Sequelize.INTEGER
+      },
+      uniqueId: {
+        type: Sequelize.STRING
+      },
+      isUsed: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -33,6 +42,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('PreferedCategories');
+    await queryInterface.dropTable('orderItems');
   }
 };
