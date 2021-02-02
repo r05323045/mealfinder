@@ -27,10 +27,11 @@ app.use((req, res, next) => {
   next()
 })
 
-require('./routes')(app)
 
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`)
 })
+
+require('./routes')(app)
 
 module.exports = app
