@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Restaurant.belongsTo(models.Category)
+      Restaurant.belongsTo(models.City)
     }
   };
   Restaurant.init({
