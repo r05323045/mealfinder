@@ -10,5 +10,6 @@ router.get('/coupons', couponController.getCoupons)
 
 //admin
 router.get('/admin/users', adminController.getUsers)
+router.get('/admin/restaurants', adminController.getRestaurants)
 
 module.exports = router
