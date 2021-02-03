@@ -13,6 +13,7 @@ router.get('/admin/users', adminController.getUsers)
 router.get('/admin/restaurants', adminController.getRestaurants)
 router.get('/admin/categories', adminController.getCategories)
 router.post('/admin/category', adminController.addCategory)
+router.put('/admin/categories/:categoryId', adminController.updateCategory)
 router.get('/admin/orders', adminController.getOrders)
 
 module.exports = router

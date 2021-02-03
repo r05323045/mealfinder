@@ -58,12 +58,27 @@ const adminController = {
     Category.create({
       name: req.body.name,
       picture: req.body.picture
-    }).then((category)=> {
+    }).then((category) => {
       return res.json({
         status: "success",
         message: ""
       })
     })
+  },
+  updateCategory: (req, res) => {
+    Category.findByPk(req.params.categoryId)
+      .then(category => {
+        return category.update({
+          name: req.body.name,
+          picture: req.body.picture
+        }).then((category) => {
+          return res.json({
+            status: "success",
+            message: ""
+          })
+        })
+
+      })
   },
   getOrders: (req, res) => {
     Order.findAll({
