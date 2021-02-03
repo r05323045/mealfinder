@@ -1,4 +1,5 @@
 const db = require('../models')
+const coupon = require('../models/coupon')
 const User = db.User
 const Category = db.Category
 const Restaurant = db.Restaurant
@@ -96,6 +97,23 @@ const adminController = {
       include: [Restaurant]
     }).then(coupons => {
       return res.json({ coupons })
+    })
+  },
+  updateCoupon: (req, res)=> {
+    Coupon.findByPk(req.params.couponId)
+    .then(coupon => {
+      coupon.update({
+        // NO: req.body.NO, 編號產生後就不得更改
+        RestaurantId: req.body.RestarantId,
+        price: req.body.price,
+        description: req.body.description
+      })
+      .then((coupon)=> {
+        return res.json({
+          status: "success",
+          message: ""
+        })
+      })
     })
   }
 }
