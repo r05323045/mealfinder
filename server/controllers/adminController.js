@@ -46,6 +46,14 @@ const adminController = {
         })
         return res.json({ data })
       })
+  },
+  getCategories: (req, res) => {
+    Category.findAll({
+      raw: true,
+      nest: true,
+    }).then(categories => {
+      return res.json({categories})
+    })
   }
 }
 
