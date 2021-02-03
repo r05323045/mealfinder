@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Coupon.belongsTo(models.Restaurant)
+      Coupon.hasMany(models.orderItem)
     }
   };
   Coupon.init({

@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Restaurant.belongsTo(models.Category, { foreignKey: 'CategoryId' })
+      Restaurant.belongsTo(models.City)
+      Restaurant.belongsTo(models.District)
+      Restaurant.hasMany(models.Coupon)
+      Restaurant.hasMany(models.Reservation, {foreignKey: 'RestaurantId'})
     }
   };
   Restaurant.init({
@@ -28,7 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     rating: DataTypes.STRING,
     CategoryId: DataTypes.INTEGER,
     CityId: DataTypes.INTEGER,
-    DistrictId: DataTypes.INTEGER
+    DistrictId: DataTypes.INTEGER,
+    description: DataTypes.TEXT,
+    average_consumption: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Restaurant',
