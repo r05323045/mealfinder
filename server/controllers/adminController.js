@@ -89,6 +89,15 @@ const adminController = {
       return res.json({ orders })
     })
   },
+  getCoupons: (req, res) => {
+    Coupon.findAll({
+      raw: true,
+      nest: true,
+      include: [Restaurant]
+    }).then(coupons => {
+      return res.json({ coupons })
+    })
+  }
 }
 
 module.exports = adminController
