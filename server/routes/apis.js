@@ -17,5 +17,6 @@ router.put('/admin/categories/:categoryId', adminController.updateCategory)
 router.get('/admin/orders', adminController.getOrders)
 router.get('/admin/coupons', adminController.getCoupons)
 router.put('/admin/coupons/:couponId', adminController.updateCoupon)
+router.get('/admin/reservations', adminController.getReservations)
 
 module.exports = router

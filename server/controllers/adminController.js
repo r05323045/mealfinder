@@ -1,5 +1,4 @@
 const db = require('../models')
-const coupon = require('../models/coupon')
 const User = db.User
 const Category = db.Category
 const Restaurant = db.Restaurant
@@ -8,6 +7,7 @@ const District = db.District
 const Coupon = db.Coupon
 const PreferedCategory = db.PreferedCategory
 const Order = db.Order
+const Reservation = db.Reservation
 
 const adminController = {
   getUsers: (req, res) => {
@@ -99,21 +99,30 @@ const adminController = {
       return res.json({ coupons })
     })
   },
-  updateCoupon: (req, res)=> {
+  updateCoupon: (req, res) => {
     Coupon.findByPk(req.params.couponId)
-    .then(coupon => {
-      coupon.update({
-        // NO: req.body.NO, 編號產生後就不得更改
-        RestaurantId: req.body.RestarantId,
-        price: req.body.price,
-        description: req.body.description
-      })
-      .then((coupon)=> {
-        return res.json({
-          status: "success",
-          message: ""
+      .then(coupon => {
+        coupon.update({
+          // NO: req.body.NO, 編號產生後就不得更改
+          RestaurantId: req.body.RestarantId,
+          price: req.body.price,
+          description: req.body.description
         })
+          .then((coupon) => {
+            return res.json({
+              status: "success",
+              message: ""
+            })
+          })
       })
+  },
+  getReservations: (req, res) => {
+    Reservation.findAll({
+      raw: true,
+      nest: true,
+      include: [User, Restaurant]
+    }).then(reservations => {
+      return res.json({ reservations })
     })
   }
 }

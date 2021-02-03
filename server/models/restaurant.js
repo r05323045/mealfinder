@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       Restaurant.belongsTo(models.City)
       Restaurant.belongsTo(models.District)
       Restaurant.hasMany(models.Coupon)
+      Restaurant.hasMany(models.Reservation, {foreignKey: 'RestaurantId'})
     }
   };
   Restaurant.init({
