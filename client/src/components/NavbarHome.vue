@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="navbar-desktop-middle">
-        <div class="tab-wrapper" v-show="openSearch">
+        <div class="tab-wrapper">
           <div class="condition-wrapper">
             <div class="condition">條件</div>
             <div class="divider"></div>
