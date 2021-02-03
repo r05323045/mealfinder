@@ -26,7 +26,7 @@ const userController = {
           return res.status(401).json({ status: 'error', message: 'EMAIL OR PASSWORD ERROR' })
 
         var paylod = { id: user.id }
-        var token = jwt.sign(paylod, 'thisissecret')
+        var token = jwt.sign(paylod, process.env.JWT_SECRET)
         return res.json({
           status: 'success',
           message: 'ok',
