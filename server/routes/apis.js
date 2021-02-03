@@ -12,6 +12,7 @@ router.get('/coupons', couponController.getCoupons)
 router.get('/admin/users', adminController.getUsers)
 router.get('/admin/restaurants', adminController.getRestaurants)
 router.get('/admin/categories', adminController.getCategories)
+router.post('/admin/category', adminController.addCategory)
 router.get('/admin/orders', adminController.getOrders)
 
 module.exports = router

@@ -54,6 +54,17 @@ const adminController = {
       return res.json({ categories })
     })
   },
+  addCategory: (req, res) => {
+    Category.create({
+      name: req.body.name,
+      picture: req.body.picture
+    }).then((category)=> {
+      return res.json({
+        status: "success",
+        message: ""
+      })
+    })
+  },
   getOrders: (req, res) => {
     Order.findAll({
       raw: true,
