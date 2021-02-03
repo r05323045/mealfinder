@@ -6,10 +6,11 @@ const session = require('express-session')
 
 const app = express()
 const port = 3000
-const passport = require('./config/passport')
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+const passport = require('./config/passport')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -26,10 +27,11 @@ app.use((req, res, next) => {
   next()
 })
 
-require('./routes')(app)
 
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`)
 })
+
+require('./routes')(app)
 
 module.exports = app
