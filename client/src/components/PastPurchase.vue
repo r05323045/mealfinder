@@ -3,7 +3,7 @@
     <div class="purchase-card" v-for="i in 3" :key="i">
       <div class="header">
         <div class="title">在2021/01/01的購買</div>
-        <div class="text">看詳細</div>
+        <div class="text" @click="$router.push(`/users/purchase/${i}`)">看詳細</div>
       </div>
       <div class="card-content">
         <div class="item-wrapper" v-for="i in 5" :key="i">
@@ -72,6 +72,7 @@ $red: rgb(255, 56, 92);
         }
       }
       .text {
+        cursor: pointer;
         text-decoration: underline;
         font-size: 14px;
         @media (min-width: 992px) {

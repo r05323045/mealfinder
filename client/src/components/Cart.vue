@@ -58,7 +58,7 @@
             </div>
           </div>
           <div class="go-check">
-            <div class="button-wrapper">
+            <div class="button-wrapper" @click="$router.push('/users/checkout')">
               <div class="button">前往結帳</div>
             </div>
           </div>
@@ -301,6 +301,7 @@ $red: rgb(255, 56, 92);
         .go-check {
           padding: 12px 12px 36px 12px;
           .button-wrapper {
+            cursor: pointer;
             border: 1px solid #666666;
             border-radius: 15px;
             background: #ffffff;
