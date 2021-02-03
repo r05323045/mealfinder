@@ -349,7 +349,7 @@ $primary-color: #222;
   padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: block;
     }
   }
@@ -365,7 +365,7 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: none;
     }
     .back-wrapper {
@@ -461,14 +461,14 @@ $primary-color: #222;
     scroll-behavior: smooth;
     position: absolute;
     top: 60px;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       top: 0px;
     }
     .mobile-picture-wrapper {
       width: 100%;
       padding-top: 66.7%;
       position: relative;
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         display: none;
       }
       .picture {
@@ -485,12 +485,15 @@ $primary-color: #222;
       margin: auto;
       max-width: 1040px;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 105px 40px 0;
+      }
       @media (min-width: 992px) {
         padding: 105px 80px 0;
       }
       .picture-wrapper {
         display: none;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: block;
           padding-top: 50%;
           width: 100%;
@@ -668,6 +671,9 @@ $primary-color: #222;
             .select-wrapper {
               padding: 0 4px;
               flex: 1;
+              @media (min-width: 768px) {
+                padding: 0 6px;
+              }
               @media (min-width: 992px) {
                 padding: 0 8px;
               }
@@ -704,6 +710,9 @@ $primary-color: #222;
             .mx-input-wrapper {
               padding: 0 4px;
               flex: 1;
+              @media (min-width: 768px) {
+                padding: 0 8px;
+              }
               @media (min-width: 992px) {
                 padding: 0 8px;
               }
@@ -725,6 +734,9 @@ $primary-color: #222;
               }
               .mx-icon-calendar {
                 right: 12px;
+                @media (min-width: 768px) {
+                  right: 14px;
+                }
                 @media (min-width: 992px) {
                   right: 16px;
                 }
@@ -911,6 +923,9 @@ $primary-color: #222;
           margin-bottom: 24px;
           padding-top: 66.7%;
           position: relative;
+          @media (min-width: 768px) {
+            padding-top: 50%;
+          }
           @media (min-width: 992px) {
             padding-top: 33.3%;
           }
@@ -922,6 +937,9 @@ $primary-color: #222;
             right: 50%;
             background: url(https://inline.imgix.net/menus/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-abf54248-3e5f-4faa-8367-5a6f171277f9_201912-01.jpg) no-repeat center;
             background-size: cover;
+            @media (min-width: 768px) {
+              right: 66.7%;
+            }
             @media (min-width: 992px) {
               right: 75%;
             }
@@ -958,17 +976,22 @@ $primary-color: #222;
         .comment-container-deck {
           display: flex;
           flex-direction: column;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             flex-direction: row;
           }
           .comment-container {
             padding: 0px;
             flex: 1;
             margin-bottom: 40px;
-            @media (min-width: 992px) {
-              padding: 24px;
+            @media (min-width: 768px) {
+              padding: 16px;
+              margin-right: 16px;
               border: 1px solid $divider;
               border-radius: 32px;
+            }
+
+            @media (min-width: 992px) {
+              padding: 24px;
               margin-right: 24px;
             }
             .comment-user {
@@ -1025,7 +1048,7 @@ $primary-color: #222;
             }
           }
           .comment-container.last-comment-container {
-            @media (min-width: 992px) {
+            @media (min-width: 768px) {
               margin-right: 0;
             }
           }
@@ -1057,6 +1080,10 @@ $primary-color: #222;
     width: calc(100vw - 48px);
     padding: 8px 24px;
     background: #ffffff;
+    @media (min-width: 768px) {
+      width: calc(100vw - 80px);
+      padding: 12px 40px;
+    }
     @media (min-width: 992px) {
       width: calc(100vw - 160px);
       padding: 16px 80px;
@@ -1091,6 +1118,9 @@ $primary-color: #222;
       display: flex;
       justify-content: center;
       align-items: center;
+      @media (min-width: 768px) {
+        width: calc(100vw - 80px);
+      }
       @media (min-width: 992px) {
         width: calc(100vw - 160px);
       }
