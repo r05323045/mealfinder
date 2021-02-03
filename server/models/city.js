@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      City.hasMany(models.Restaurant)
     }
   };
   City.init({

@@ -205,16 +205,20 @@ $red: rgb(255, 56, 92);
       margin: 22px 0;
       padding: 0 24px;
       @media (min-width: 992px) {
-        margin: 32px 0;
         padding: 0 80px;
+        margin: 32px auto;
+        max-width: 1440px;
       }
       .title {
         margin-bottom: 24px;
-        height: 22px;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 992px) {
+          font-size: 32px;
+          line-height: 36px;
+        }
       }
       .filter-button-wrapper {
         display: none;

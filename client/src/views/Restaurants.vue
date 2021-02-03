@@ -202,8 +202,9 @@ $red: rgb(255, 56, 92);
       margin: 22px 0;
       padding: 0 24px;
       @media (min-width: 992px) {
-        margin: 32px 0;
         padding: 0 80px;
+        margin: 32px auto;
+        max-width: 1440px;
       }
       .title {
         margin-bottom: 24px;
@@ -349,6 +350,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         margin: 80px 0 80px;
         .load-more-button {
+          cursor: pointer;
           width: auto;
           margin: auto;
           padding: 14px 24px;
