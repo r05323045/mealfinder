@@ -1,6 +1,10 @@
 const bcrypt = require('bcrypt')
+const imgur = require('imgur-node-api')
+
 const db = require('../models')
 const User = db.User
+
+const IMGUR_CLIENT_ID = '8576719394d1cf6'
 
 //JWT
 const jwt = require('jsonwebtoken')
@@ -85,7 +89,59 @@ const userController = {
       .then(user => {
         return res.json(user)
       })
-  }
+  },
+
+  putProfile: (req, res) => {
+    const UserId = req.user.id
+    const { file } = req
+    const { name, gender, phone_number, location, birthday } = req.body
+
+    if (file) {
+      console.log('file', file)
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        if (err) {
+          console.log(err)
+          return
+        }
+        return User.findByPk(UserId)
+          .then(user => {
+            if (user.id === UserId) {
+              user.update({
+                name,
+                gender,
+                phone_number,
+                location,
+                birthday,
+                avatar: file ? img.data.link : user.avatar
+              }).then((user) => {
+                res.json({ status: 'success', message: 'user was successfully to update' })
+              })
+            }
+          })
+      })
+    } else {
+      console.log('NO FILE')
+      User.findByPk(UserId)
+        .then(user => {
+          if (user.id === UserId) {
+            user.update({
+              name,
+              gender,
+              phone_number,
+              location,
+              birthday
+            }).then((user) => {
+              res.json({ status: 'success', message: 'user was successfully to update' })
+            })
+          }
+        })
+    }
+
+
+
+
+  },
 }
 
 module.exports = userController

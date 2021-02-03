@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const passport = require('../config/passport')
 
-//驗證觸發不了config strategy
 const authenticated = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
@@ -30,6 +29,7 @@ router.post('/signup', userController.signUp)
 
 //userController_UserModel
 router.get('/user/:id/profile', authenticated, userController.getProfile)
+router.put('/user/:id/profile', authenticated, userController.putProfile)
 
 //coupon
 router.get('/coupons/:couponId', couponController.getCoupon)
