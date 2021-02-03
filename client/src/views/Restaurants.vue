@@ -370,7 +370,7 @@ $red: rgb(255, 56, 92);
           }
         }
         .restaurant-card.last-card {
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             margin-right: 0;
           }
         }
