@@ -2,8 +2,11 @@ const express = require('express')
 const router = express.Router()
 const passport = require('../config/passport')
 
-const authenticated = (req, res, next) => {
-  console.log('apis start')
+const couponController = require('../controllers/couponController')
+const userController = require('../controllers/userController')
+
+//驗證觸發不了config strategy
+const authenticated = function (req, res, next) {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
       console.log(err)
@@ -19,12 +22,10 @@ const authenticated = (req, res, next) => {
 }
 
 
-const couponController = require('../controllers/couponController')
-const userController = require('../controllers/userController')
-
 //login,logout,signup
 router.post('/signin', userController.signIn)
 router.post('/signup', userController.signUp)
+
 
 //userController_UserModel
 router.get('/user/:id/profile', authenticated, userController.getProfile)
