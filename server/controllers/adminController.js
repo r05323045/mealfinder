@@ -1,6 +1,4 @@
-const sequelize = require('sequelize')
 const db = require('../models')
-const coupon = require('../models/coupon')
 const User = db.User
 const Category = db.Category
 const Restaurant = db.Restaurant
@@ -8,6 +6,7 @@ const City = db.City
 const District = db.District
 const Coupon = db.Coupon
 const PreferedCategory = db.PreferedCategory
+const Order = db.Order
 
 const adminController = {
   getUsers: (req, res) => {
@@ -52,9 +51,18 @@ const adminController = {
       raw: true,
       nest: true,
     }).then(categories => {
-      return res.json({categories})
+      return res.json({ categories })
     })
-  }
+  },
+  getOrders: (req, res) => {
+    Order.findAll({
+      raw: true,
+      nest: true,
+      include: [User]
+    }).then(orders => {
+      return res.json({ orders })
+    })
+  },
 }
 
 module.exports = adminController
