@@ -50,10 +50,13 @@ $red: rgb(255, 56, 92);
       position: relative;
       background: url(../assets/eatNow.svg) no-repeat center;
       background-size: cover;
-      @media (min-width: 992px) {
-        padding-top: 25%;
+      @media (min-width: 768px) {
+        padding-top: 33.3%;
         background: url(../assets/people-eating-food.svg) no-repeat center;
         background-size: cover;
+      }
+      @media (min-width: 992px) {
+        padding-top: 25%;
       }
       .cover {
         position: absolute;

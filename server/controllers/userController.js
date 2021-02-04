@@ -1,6 +1,10 @@
 const bcrypt = require('bcrypt')
+const imgur = require('imgur-node-api')
 const db = require('../models')
 const User = db.User
+const Favorite = db.Favorite
+const Restaurant = db.Restaurant
+const Like = db.Like
 
 //JWT
 const jwt = require('jsonwebtoken')
@@ -26,7 +30,7 @@ const userController = {
           return res.status(401).json({ status: 'error', message: 'EMAIL OR PASSWORD ERROR' })
 
         var paylod = { id: user.id }
-        var token = jwt.sign(paylod, 'thisissecret')
+        var token = jwt.sign(paylod, process.env.JWT_SECRET)
         return res.json({
           status: 'success',
           message: 'ok',
@@ -39,6 +43,7 @@ const userController = {
   },
 
   signUp: (req, res) => {
+
     const { email, password, passwordConfirm, name } = req.body
     if (!email || !password || !passwordConfirm || !name) {
       return res.json({
@@ -79,6 +84,109 @@ const userController = {
         })
     }
   },
+
+  getProfile: (req, res) => {
+    User.findOne({ where: { id: req.params.id } })
+      .then(user => {
+        return res.json(user)
+      })
+  },
+
+  putProfile: (req, res) => {
+    const UserId = req.user.id
+    const { body: { name, gender, phone_number, location, birthday }, file } = req
+
+    if (file) {
+      imgur.setClientID(process.env.IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        if (err) {
+          console.log(err)
+          return
+        }
+        return User.findByPk(UserId)
+          .then(user => {
+            if (user.id === UserId) {
+              user.update({
+                name,
+                gender,
+                phone_number,
+                location,
+                birthday,
+                avatar: file ? img.data.link : user.avatar
+              }).then((user) => {
+                res.json({ status: 'success', message: '[HAS FILE] user was successfully to update' })
+              })
+            }
+          })
+      })
+    } else {
+      User.findByPk(UserId)
+        .then(user => {
+          if (user.id === UserId) {
+            user.update({
+              name,
+              gender,
+              phone_number,
+              location,
+              birthday
+            }).then((user) => {
+              res.json({ status: 'success', message: '[NO file update] user was successfully to update' })
+            })
+          }
+        })
+    }
+
+
+
+
+  },
+
+  getFavorites: (req, res) => {
+    const UserId = req.user.id
+    Favorite.findAll({ where: { UserId }, include: [{ model: Restaurant }] })
+      .then(favorite => {
+        return res.json(favorite)
+      })
+  },
+
+  addFavorite: (req, res) => {
+    const UserId = req.user.id
+    const restaurantId = req.params.restaurantId
+    Favorite.create({
+      UserId,
+      RestaurantId: restaurantId
+    }).then(favorite => { res.json({ status: 'success', message: "Restaurant was successfully to add in your favorite list" }) })
+  },
+
+  deleteFavorite: (req, res) => {
+    const UserId = req.user.id
+    const restaurantId = req.params.restaurantId
+    Favorite.findOne({ where: { RestaurantId: restaurantId } })
+      .then(favorite => {
+        favorite.destroy()
+          .then(() => { res.json({ status: 'success', message: "Restaurant was successfully to remove from your favorite list" }) })
+      })
+  },
+
+  likeComment: (req, res) => {
+    const UserId = req.user.id
+    const commentId = req.params.commentId
+    Like.create({
+      UserId,
+      CommentId: commentId
+    }).then(like => { return res.json({ status: 'success', message: "Liked comment" }) })
+  },
+
+  disLikeComment: (req, res) => {
+    const commentId = req.params.commentId
+    Like.findOne({ where: { CommentId: commentId } })
+      .then(dislike => {
+        console.log('dislike', dislike)
+        dislike.destroy()
+          .then(() => { return res.json({ status: 'success', message: "Disliked comment" }) })
+      })
+  }
+
 }
 
 module.exports = userController

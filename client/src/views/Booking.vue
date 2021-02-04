@@ -168,7 +168,7 @@ $primary-color: #222;
   width: 100%;
   .restaurant-navbar {
     display: none;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: block;
     }
   }
@@ -184,7 +184,7 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: none;
     }
     .back-wrapper {
@@ -235,9 +235,13 @@ $primary-color: #222;
   }
   .booking-form {
     scroll-behavior: smooth;
-    padding: 22px 24px;
+    padding: 0px 24px 22px 24px;
     margin: 60px auto 0;
     max-width: 1040px;
+    @media (min-width: 768px) {
+      margin-top: 0px;
+      padding: 0px 40px 35px 40px;
+    }
     @media (min-width: 992px) {
       margin-top: 0px;
       padding: 48px 80px;
@@ -249,12 +253,15 @@ $primary-color: #222;
         flex-direction: row;
       }
       .card-container-title {
-        margin: 12px 0;
-        height: 40px;
+        margin: 24px 0;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 26px;
+          line-height: 30px;
+        }
         @media (min-width: 992px) {
           display: none;
         }
@@ -291,6 +298,12 @@ $primary-color: #222;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
+            @media (min-width: 768px) {
+              padding: 30px;
+            }
+            @media (min-width: 992px) {
+              padding: 15px;
+            }
             .icon-restaurant {
               height: 16px;
               width: 16px;
@@ -309,6 +322,12 @@ $primary-color: #222;
           }
           .info {
             padding: 5px 15px;
+            @media (min-width: 768px) {
+              padding: 10px 30px;
+            }
+            @media (min-width: 992px) {
+              padding: 5px 15px;
+            }
             .item-wrapper {
               font-size: 15px;
               font-weight: 400;
@@ -350,7 +369,7 @@ $primary-color: #222;
           border-radius: 8px;
           text-align: left;
           box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             padding: 30px;
           }
           .all-wrapper {

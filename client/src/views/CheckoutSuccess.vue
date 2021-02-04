@@ -35,10 +35,10 @@
             </div>
           </div>
           <div class="submit-button-wrapper">
-            <button class="submit-button" type="submit" @click.prevent="">
+            <button class="submit-button" type="submit" @click="$router.push('/coupons')">
               <div class="button">查看更多商品</div>
             </button>
-            <div class="back-button" @click.prevent="">
+            <div class="back-button" @click="$router.push('/')">
               <div class="button">回首頁看更多</div>
             </div>
           </div>
@@ -90,7 +90,11 @@ $red: rgb(255, 56, 92);
     margin: auto;
     max-width: 1040px;
     scroll-behavior: smooth;
-    padding: 22px 24px;
+    padding: 0px 24px 22px 24px;
+    @media (min-width: 768px) {
+      margin-top: 0px;
+      padding: 0px 40px 35px 40px;
+    }
     @media (min-width: 992px) {
       margin-top: 0px;
       padding: 48px 80px;
@@ -102,20 +106,23 @@ $red: rgb(255, 56, 92);
         flex-direction: row;
       }
       .main-title {
-        margin: 12px 0;
-        height: 40px;
+        margin: 24px 0;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 26px;
+          line-height: 30px;
+        }
         @media (min-width: 992px) {
           display: none;
         }
       }
       .order-card-wrapper {
-        min-width: 300px;
         flex: 1;
         @media (min-width: 992px) {
+          min-width: 300px;
           padding-top: 60px;
         }
         .order-card {

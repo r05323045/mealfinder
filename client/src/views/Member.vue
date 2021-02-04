@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper" v-show="windowWidth >= 992" @click="$router.push('/users/record')">
+          <div class="link-card-wrapper" v-show="windowWidth >= 992">
             <div class="link-card">
             </div>
           </div>
@@ -68,7 +68,7 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper" @click="$router.push('/users/purchase')">
+          <div class="link-card-wrapper">
             <div class="link-card">
             </div>
           </div>
@@ -130,6 +130,9 @@ $red: rgb(255, 56, 92);
     padding: 0 24px;
     margin: auto;
     max-width: 1040px;
+    @media (min-width: 768px) {
+      padding: 0 40px;
+    }
     @media (min-width: 992px) {
       padding: 0 80px;
     }
@@ -157,6 +160,7 @@ $red: rgb(255, 56, 92);
         }
       }
       .link {
+        cursor: pointer;
         margin-top: 8px;
         color: #008489;
         font-weight: 600;
@@ -167,6 +171,7 @@ $red: rgb(255, 56, 92);
         display: flex;
         flex-direction: row;
         .link-card-wrapper {
+          cursor: pointer;
           width: 100%;
           flex: 1;
           padding: 4px;
@@ -179,6 +184,10 @@ $red: rgb(255, 56, 92);
                 margin: 8px auto;
                 height: 32px;
                 width: 32px;
+                @media (min-width: 768px) {
+                  height: 40px;
+                  width: 40px;
+                }
                 @media (min-width: 992px) {
                   height: 48px;
                   width: 48px;
@@ -187,6 +196,9 @@ $red: rgb(255, 56, 92);
               .text {
                 font-size: 14px;
                 font-weight: 600;
+                @media (min-width: 768px) {
+                  font-size: 16px;
+                }
                 @media (min-width: 992px) {
                   font-size: 18px;
                 }
@@ -209,7 +221,7 @@ $red: rgb(255, 56, 92);
         font-weight: 700;
         text-align: left;
         line-height: 22px;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           font-size: 24px;
           line-height: 1.5;
         }
@@ -220,10 +232,13 @@ $red: rgb(255, 56, 92);
         position: relative;
         background: url(../assets/eatNow.svg) no-repeat center;
         background-size: cover;
-        @media (min-width: 992px) {
-          padding-top: 25%;
+        @media (min-width: 768px) {
+          padding-top: 33.3%;
           background: url(../assets/people-eating-food.svg) no-repeat center;
           background-size: cover;
+        }
+        @media (min-width: 992px) {
+          padding-top: 25%;
         }
         .cover {
           position: absolute;

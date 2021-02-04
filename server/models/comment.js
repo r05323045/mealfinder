@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Comment.belongsTo(models.Restaurant, {foreignKey: 'RestaurantId'})
       Comment.belongsTo(models.User, {foreignKey: 'UserId'})
-      Comment.hasMany(models.Like, {foreignKey: 'CommentId'})
+      Comment.hasMany(models.Like, { foreignKey: 'CommentId' })
     }
   };
   Comment.init({

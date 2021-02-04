@@ -1,14 +1,14 @@
 <template>
   <div class="home" ref="home">
-    <Navbar v-show="scrollY > 50"></Navbar>
+    <Navbar v-show="scrollY > 58"></Navbar>
     <div class="page-container">
       <div class="searchbar-wrapper-outside" v-show="scrollY > 50">
         <div class="searchbar">
           <input v-if="false" class="search-input">
-          <div class="wrapper">
-            <div class="icon search"></div>
-            <div class="text">想吃什麼？</div>
-          </div>
+            <div class="wrapper">
+              <div class="icon search"></div>
+              <div class="text">想吃什麼？</div>
+            </div>
         </div>
       </div>
       <div class="banner">
@@ -21,14 +21,16 @@
             </div>
           </div>
         </div>
-        <NavbarHome v-show="scrollY <= 50"></NavbarHome>
+        <NavbarHome v-show="scrollY <= 58"></NavbarHome>
         <div class="background-image"></div>
-        <div class="wrapper">
-          <div class="text">
-            <span>今晚...</span><br>
-            <span>我想來點</span>
+        <div class="banner-container">
+          <div class="wrapper">
+            <div class="text">
+              <span>今晚...</span><br>
+              <span>我想來點</span>
+            </div>
+            <div class="button">瀏覽周邊餐廳</div>
           </div>
-          <div class="button">瀏覽周邊餐廳</div>
         </div>
       </div>
       <div class="area">
@@ -133,58 +135,60 @@
         </div>
       </div>
       <div class="category">
-        <div class="title">探索更多美食</div>
-        <div class="description">對於某些料理情有獨鍾嗎？我們都幫你整理好了</div>
-        <div class="swiper-container">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <div class="inner-wrapper">
-                <div class="background">
-                  <div class="image"></div>
+        <div class="category-container">
+          <div class="title">探索更多美食</div>
+          <div class="description">對於某些料理情有獨鍾嗎？我們都幫你整理好了</div>
+          <div class="swiper-container">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image"></div>
+                  </div>
                 </div>
+                <div class="category-name">日式料理</div>
+                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
               </div>
-              <div class="category-name">日式料理</div>
-              <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
-            </div>
-            <div class="swiper-slide">
-              <div class="inner-wrapper">
-                <div class="background">
-                  <div class="image"></div>
+              <div class="swiper-slide">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image"></div>
+                  </div>
                 </div>
+                <div class="category-name">日式料理</div>
+                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
               </div>
-              <div class="category-name">日式料理</div>
-              <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
-            </div>
-            <div class="swiper-slide">
-              <div class="inner-wrapper">
-                <div class="background">
-                  <div class="image"></div>
+              <div class="swiper-slide">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image"></div>
+                  </div>
                 </div>
+                <div class="category-name">日式料理</div>
+                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
               </div>
-              <div class="category-name">日式料理</div>
-              <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
-            </div>
-            <div class="swiper-slide">
-              <div class="inner-wrapper">
-                <div class="background">
-                  <div class="image"></div>
+              <div class="swiper-slide">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image"></div>
+                  </div>
                 </div>
+                <div class="category-name">日式料理</div>
+                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
               </div>
-              <div class="category-name">日式料理</div>
-              <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
-            </div>
-            <div class="swiper-slide">
-              <div class="inner-wrapper">
-                <div class="background">
-                  <div class="image"></div>
+              <div class="swiper-slide">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image"></div>
+                  </div>
                 </div>
+                <div class="category-name">日式料理</div>
+                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
               </div>
-              <div class="category-name">日式料理</div>
-              <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
             </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
           </div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
         </div>
       </div>
       <div class="find-more">
@@ -246,12 +250,8 @@ export default {
         prevEl: '.swiper-button-prev'
       },
       breakpoints: {
-        1200: {
-          slidesPerView: 3.1,
-          spaceBetween: '18%'
-        },
         992: {
-          slidesPerView: 2.5,
+          slidesPerView: 3.0,
           spaceBetween: '18%'
         },
         768: {
@@ -295,7 +295,7 @@ $red: rgb(255, 56, 92);
   position: relative;
   .page-container {
     .searchbar-wrapper-outside {
-      z-index: 998;
+      z-index: 997;
       background: #ffffff;
       position: sticky;
       padding: 16px 24px;
@@ -303,6 +303,9 @@ $red: rgb(255, 56, 92);
       display: flex;
       justify-content: center;
       align-items: center;
+      @media (min-width: 768px) {
+        display: none;
+      }
       .searchbar {
         box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
         padding: 0 4px 0 12px;
@@ -350,12 +353,15 @@ $red: rgb(255, 56, 92);
       height: 538px;
       width: 100%;
       position: relative;
+      @media (min-width: 768px) {
+        height: calc(min(588/744 * 100vw, 85vh) + 50px);
+      }
       @media (min-width: 992px) {
-        height: calc(80vh + 50px);
+        height: calc(min(563/1128 * 100vw, 85vh) + 58px);
       }
       .searchbar-wrapper-inner {
         width: calc(100% - 48px);
-        z-index: 998;
+        z-index: 997;
         background: transparent;
         position: absolute;
         padding: 16px 24px;
@@ -363,7 +369,7 @@ $red: rgb(255, 56, 92);
         display: flex;
         justify-content: center;
         align-items: center;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: none;
         }
         .searchbar {
@@ -413,55 +419,80 @@ $red: rgb(255, 56, 92);
         background: url(https://images.unsplash.com/photo-1515668236457-83c3b8764839?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80) no-repeat center;
         background-size: cover;
         filter: brightness(0.6);
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           background: url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80) no-repeat center;
           background-size: cover;
         }
       }
-      .wrapper {
+      .banner-container {
         position: absolute;
         top: 50%;
         left: 0;
         right: 0;
         bottom: 0;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           top: 0;
-          padding: 196px 80px 40px 80px;
-          display: flex;
-          align-items: flex-start;
-          justify-content: center;
-          flex-direction: column;
         }
-        .text {
-          text-align: left;
-          margin: 24px 0 0 24px;
-          color: #ffffff;
-          font-size: 32px;
-          line-height: 48px;
-          font-weight: 600;
-          @media (min-width: 992px) {
-            font-size: 52px;
-            line-height: 58px;
+        .wrapper {
+          @media (min-width: 768px) {
+            width: 100%;
+            height: calc(100% - 348px);
+            padding: 308px 40px 40px 40px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            flex-direction: column;
           }
-        }
-        .button {
-          margin: 24px 0 0 24px;
-          float: left;
-          background: #ffffff;
-          padding: 7px 15px;
-          border-radius: 8px;
-          line-height: 18px;
-          font-size: 14px;
-          font-weight: 600;
+          @media (min-width: 992px) {
+            padding: 204px 80px 40px 80px;
+            height: calc(100% - 244px);
+            max-width: 1440px;
+            margin: auto;
+          }
+          .text {
+            text-align: left;
+            margin: 24px 0 0 24px;
+            color: #ffffff;
+            font-size: 32px;
+            line-height: 48px;
+            font-weight: 600;
+            @media (min-width: 768px) {
+              margin: 0;
+              font-size: 42px;
+              line-height: 48px;
+            }
+            @media (min-width: 992px) {
+              margin: 0;
+              font-size: 52px;
+              line-height: 58px;
+            }
+          }
+          .button {
+            margin: 24px 0 0 24px;
+            float: left;
+            background: #ffffff;
+            padding: 7px 15px;
+            border-radius: 8px;
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 600;
+            @media (min-width: 768px) {
+              margin: 24px 0 0 0;
+            }
+          }
         }
       }
     }
     .area {
       margin-top: 40px;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 0 40px;
+        margin: 64px auto 0;
+      }
       @media (min-width: 992px) {
         padding: 0 80px;
-        margin-top: 64px;
+        max-width: 1440px;
       }
       .title {
         height: 40px;
@@ -469,6 +500,11 @@ $red: rgb(255, 56, 92);
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 26px;
+          line-height: 30px;
+          padding-bottom: 16px;
+        }
         @media (min-width: 992px) {
           font-size: 32px;
           line-height: 36px;
@@ -479,7 +515,7 @@ $red: rgb(255, 56, 92);
         display: flex;
         flex-direction: row;
         margin: 10px 0;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: none;
         }
         .district {
@@ -523,7 +559,7 @@ $red: rgb(255, 56, 92);
       }
       .district-deck-desktop {
         display: none;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: flex;
           flex-direction: row;
           margin: 10px 0;
@@ -576,109 +612,125 @@ $red: rgb(255, 56, 92);
       color: #ffffff;
       margin-top: 40px;
       padding: 24px 0 32px 24px;
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         margin-top: 64px;
-        padding: 40px 0 40px 80px;
+        padding: 40px;
       }
-      .title {
-        height: 40px;
-        font-size: 22px;
-        font-weight: 700;
-        text-align: left;
-        line-height: 22px;
-        @media (min-width: 992px) {
-          font-size: 32px;
-          line-height: 36px;
+      @media (min-width: 992px) {
+        padding: 40px 80px 40px 80px;
+      }
+      .category-container {
+        width: 100%;
+        max-width: 1440px;
+        margin: auto;
+        .title {
+          height: 40px;
+          font-size: 22px;
+          font-weight: 700;
+          text-align: left;
+          line-height: 22px;
+          @media (min-width: 992px) {
+            font-size: 32px;
+            line-height: 36px;
+            margin-bottom: 8px;
+          }
+        }
+        .description {
+          text-align: left;
+          height: 34px;
+          line-height: 18px;
+          font-size: 14px;
+          font-weight: 700;
           margin-bottom: 8px;
         }
-      }
-      .description {
-        text-align: left;
-        height: 34px;
-        line-height: 18px;
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 8px;
-      }
-      .swiper-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        overflow: visible;
-        .swiper-wrapper {
+        .swiper-container {
+          width: 100%;
           height: 100%;
-          .swiper-slide {
-            text-align: center;
-            font-size: 18px;
-            width: 50%;
-            .inner-wrapper {
-              width: 100%;
-              .background {
-                padding-bottom: 100%;
-                position: relative;
-                .image {
-                  background: url(https://images.unsplash.com/photo-1496113912021-34ed23aad177?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80) no-repeat center;
-                  background-size: cover;
-                  border-radius: 8px;
-                  position: absolute;
-                  top: 0;
-                  bottom: 0;
-                  right: 0;
-                  left:0;
+          position: relative;
+          overflow: hidden;
+          .swiper-wrapper {
+            height: 100%;
+            .swiper-slide {
+              text-align: center;
+              font-size: 18px;
+              width: 50%;
+              .inner-wrapper {
+                width: 100%;
+                .background {
+                  padding-bottom: 100%;
+                  position: relative;
+                  .image {
+                    background: url(https://images.unsplash.com/photo-1496113912021-34ed23aad177?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80) no-repeat center;
+                    background-size: cover;
+                    border-radius: 8px;
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                    left:0;
+                  }
                 }
               }
-            }
-            .category-name {
-              margin-top: 8px;
-              text-align: left;
-              font-size: 18px;
-              font-weight: 700;
-              line-height: 22px;
-            }
-            .category-intro {
-              margin-top: 4px;
-              text-align: left;
-              font-size: 14px;
-              line-height: 18px;
+              .category-name {
+                margin-top: 8px;
+                text-align: left;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 22px;
+              }
+              .category-intro {
+                margin-top: 4px;
+                text-align: left;
+                font-size: 14px;
+                line-height: 18px;
+              }
             }
           }
-        }
-        .swiper-button-next,
-        .swiper-button-prev {
-          display: none;
-          @media (min-width: 992px) {
-            display: block;
-            position: absolute;
-            right: 0;
-            top: calc(50% - 1.5rem);
-            background: #ffffff;
-            border-radius: 50%;
-            box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.2);
-            width: 3rem;
-            height: 3rem;
-            &:focus {
-              outline: none;
-            }
-            &::after {
+          .swiper-button-next,
+          .swiper-button-prev {
+            display: none;
+            @media (min-width: 768px) {
+              display: block;
+              position: absolute;
+              right: 0rem;
+              top: calc(50% - 1.5rem);
+              background: #ffffff;
+              border-radius: 50%;
+              box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.2);
               width: 3rem;
               height: 3rem;
-              line-height: 3rem;
-              font-size: 1.5rem;
-              font-weight: 700;
-              color: $ultimategray;
+              &:focus {
+                outline: none;
+              }
+              &::after {
+                width: 3rem;
+                height: 3rem;
+                line-height: 3rem;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: $ultimategray;
+              }
             }
           }
-        }
-        .swiper-button-prev {
-          left: -32px;
+          .swiper-button-prev {
+            left: 0;
+          }
         }
       }
     }
     .find-more {
       margin: 40px 0;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 0 40px;
+      }
       @media (min-width: 992px) {
         padding: 0 80px;
+      }
+      @media (min-width: 1600px) {
+        width: 100%;
+        max-width: 1440px;
+        margin: 40px auto;
       }
       .title {
         height: 40px;
@@ -686,6 +738,11 @@ $red: rgb(255, 56, 92);
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 26px;
+          line-height: 30px;
+          margin-bottom: 8px;
+        }
         @media (min-width: 992px) {
           font-size: 32px;
           line-height: 36px;
@@ -697,7 +754,7 @@ $red: rgb(255, 56, 92);
         flex-direction: row;
         .illustration-wrapper {
           display: none;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             display: block;
             flex: 1.5;
             padding-top: 33.33%;
@@ -739,7 +796,7 @@ $red: rgb(255, 56, 92);
           width: 100%;
           padding-top: 66.7%;
           position: relative;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             display: none;
           }
           .item-wrapper {
@@ -776,16 +833,12 @@ $red: rgb(255, 56, 92);
                 color: #ffffff;
                 z-index: 1;
               }
-              @media (min-width: 992px) {
-                font-size: 24px;
-                line-height: 28px;
-              }
             }
           }
         }
       }
     }
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       position: absolute;
       width: 100%;
       height: 100%;

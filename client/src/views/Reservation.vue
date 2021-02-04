@@ -151,6 +151,9 @@ $red: rgb(255, 56, 92);
     padding: 36px 24px 60px 24px;
     text-align: left;
     position: relative;
+    @media (min-width: 768px) {
+      padding: 36px 40px 60px;
+    }
     @media (min-width: 992px) {
       padding: 36px 80px 60px;
     }
@@ -159,6 +162,9 @@ $red: rgb(255, 56, 92);
       font-weight: 800;
       line-height: 1.5;
       margin-bottom: 24px;
+      @media (min-width: 992px) {
+        font-size: 26px;
+      }
       @media (min-width: 992px) {
         font-size: 32px;
       }
@@ -191,7 +197,7 @@ $red: rgb(255, 56, 92);
                 font-size: 14px;
                 font-weight: 600;
                 line-height: 1.5;
-                @media (min-width: 992px) {
+                @media (min-width: 768px) {
                   font-size: 16px;
                 }
               }
@@ -213,7 +219,7 @@ $red: rgb(255, 56, 92);
               position: relative;
               display: flex;
               flex-direction: row;
-              @media (min-width: 992px) {
+              @media (min-width: 768px) {
                 font-size: 14px;
               }
               .name {

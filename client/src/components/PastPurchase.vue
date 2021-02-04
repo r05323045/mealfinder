@@ -3,7 +3,7 @@
     <div class="purchase-card" v-for="i in 3" :key="i">
       <div class="header">
         <div class="title">在2021/01/01的購買</div>
-        <div class="text">看詳細</div>
+        <div class="text" @click="$router.push(`/users/purchase/${i}`)">看詳細</div>
       </div>
       <div class="card-content">
         <div class="item-wrapper" v-for="i in 5" :key="i">
@@ -67,14 +67,15 @@ $red: rgb(255, 56, 92);
       font-weight: 600;
       .title {
         font-size: 16px;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           font-size: 18px;
         }
       }
       .text {
+        cursor: pointer;
         text-decoration: underline;
         font-size: 14px;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           font-size: 16px;
         }
       }
@@ -119,7 +120,7 @@ $red: rgb(255, 56, 92);
             font-weight: 400;
             line-height: 1.5;
             text-align: left;
-            @media (min-width: 992px) {
+            @media (min-width: 768px) {
               font-size: 18px;
             }
           }
@@ -131,6 +132,9 @@ $red: rgb(255, 56, 92);
             display: flex;
             justify-content: center;
             align-items: center;
+            @media (min-width: 768px) {
+              font-size: 19px;
+            }
             @media (min-width: 992px) {
               font-size: 22px;
             }
@@ -171,6 +175,9 @@ $red: rgb(255, 56, 92);
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      @media (min-width: 768px) {
+        font-size: 19px;
+      }
       @media (min-width: 992px) {
         font-size: 22px;
       }

@@ -53,10 +53,10 @@
             </div>
           </div>
           <div class="submit-button-wrapper">
-            <button class="submit-button" type="submit" @click.prevent="">
+            <button class="submit-button" type="submit" @click="$router.push('/users/checkout/success')">
               <div class="button">確認購買</div>
             </button>
-            <div class="back-button" @click.prevent="">
+            <div class="back-button" @click="$router.push('/users/purchase')">
               <div class="button">回上一步</div>
             </div>
           </div>
@@ -110,6 +110,9 @@ $red: rgb(255, 56, 92);
     position: relative;
     margin: auto;
     max-width: 1040px;
+    @media (min-width: 768px) {
+      padding: 36px 40px 60px;
+    }
     @media (min-width: 992px) {
       padding: 36px 80px 60px;
     }
@@ -118,6 +121,9 @@ $red: rgb(255, 56, 92);
       font-weight: 800;
       line-height: 1.5;
       margin-bottom: 24px;
+      @media (min-width: 768px) {
+        font-size: 26px;
+      }
       @media (min-width: 992px) {
         display: none;
       }
@@ -130,9 +136,9 @@ $red: rgb(255, 56, 92);
         flex-direction: row;
       }
       .order-card-wrapper {
-        max-width: 300px;
         flex: 1;
         @media (min-width: 992px) {
+          max-width: 300px;
           margin: 60px 36px 0 0;
         }
         .order-card {
@@ -296,6 +302,7 @@ $red: rgb(255, 56, 92);
             }
           }
           .back-button {
+            cursor: pointer;
             border: 1px solid #222222;
             margin-bottom: 12px;
             height: 46px;

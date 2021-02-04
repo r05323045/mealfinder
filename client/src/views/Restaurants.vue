@@ -23,8 +23,8 @@
           <div class="filter-button">類型</div>
           <div class="filter-button">預算</div>
         </div>
-        <div class="restaurant-card-deck" v-for="i in 4" :key="`card-deck-${i}`">
-          <div class="restaurant-card" v-for="i in 4" :key="i" :class="{ 'last-card': i === 4}" @click="$router.push(`/restaurants/${i}`)">
+        <div class="restaurant-card-deck" v-for="i in Math.floor(24/cardPerDeck)" :key="`card-deck-${i}`">
+          <div class="restaurant-card" v-for="i in cardPerDeck" :key="i" :class="{ 'last-card': i === 4}" @click="$router.push(`/restaurants/${i}`)">
             <div class="card-image-wrapper">
               <div class="heart-wrapper">
                 <img class="icon heart" src="../assets/black-heart.svg">
@@ -73,7 +73,9 @@ export default {
       scrollY: 0,
       scrollUp: true,
       divHeight: 0,
-      scrollBarHeight: 0
+      scrollBarHeight: 0,
+      windowWidth: window.innerWidth,
+      cardPerDeck: 1
     }
   },
   components: {
@@ -85,6 +87,15 @@ export default {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll)
     this.divHeight = this.$refs['list-container'].scrollHeight
     this.scrollBarHeight = this.$refs['list-container'].clientHeight
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+    })
+    this.defineCardDeck()
+  },
+  watch: {
+    windowWidth () {
+      this.defineCardDeck()
+    }
   },
   methods: {
     closeFilter () {
@@ -93,6 +104,17 @@ export default {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs['list-container'].scrollTop
       this.scrollY = this.$refs['list-container'].scrollTop
+    },
+    defineCardDeck () {
+      if (this.windowWidth < 768) {
+        this.cardPerDeck = 1
+      } else if (this.windowWidth < 992) {
+        this.cardPerDeck = 2
+      } else if (this.windowWidth < 1200) {
+        this.cardPerDeck = 3
+      } else {
+        this.cardPerDeck = 4
+      }
     }
   }
 }
@@ -118,7 +140,7 @@ $red: rgb(255, 56, 92);
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: none;
     }
     .back-wrapper {
@@ -194,16 +216,20 @@ $red: rgb(255, 56, 92);
     width: 100%;
     height: calc(100vh - 60px);
     overflow: scroll;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       top: 81px;
       height: calc(100vh - 81px);
     }
     .restaurant-list {
       margin: 22px 0;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 0 40px;
+        margin: 32px auto;
+      }
       @media (min-width: 992px) {
-        margin: 32px 0;
         padding: 0 80px;
+        max-width: 1440px;
       }
       .title {
         margin-bottom: 24px;
@@ -211,6 +237,10 @@ $red: rgb(255, 56, 92);
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        @media (min-width: 768px) {
+          font-size: 26px;
+          line-height: 30px;
+        }
         @media (min-width: 992px) {
           font-size: 32px;
           line-height: 36px;
@@ -218,7 +248,7 @@ $red: rgb(255, 56, 92);
       }
       .filter-button-wrapper {
         display: none;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: flex;
           flex-direction: row;
           margin: 24px 0;
@@ -234,14 +264,14 @@ $red: rgb(255, 56, 92);
       }
       .restaurant-card-deck {
         width: 100%;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: flex;
           flex-direction: row;
         }
         .restaurant-card {
           padding-top: 12px;
           margin-bottom: 28px;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             margin-right: 16px;
           }
           .card-image-wrapper {
@@ -340,7 +370,7 @@ $red: rgb(255, 56, 92);
           }
         }
         .restaurant-card.last-card {
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             margin-right: 0;
           }
         }
@@ -349,6 +379,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         margin: 80px 0 80px;
         .load-more-button {
+          cursor: pointer;
           width: auto;
           margin: auto;
           padding: 14px 24px;

@@ -38,13 +38,26 @@
               <div class="item" @click="$router.push('/users/center').catch(()=>{})">會員中心</div>
               <div class="item" @click="$router.push('/users/history').catch(()=>{})">訂位紀錄</div>
               <div class="item" @click="$router.push('/users/favorite').catch(()=>{})">我的收藏</div>
+              <div class="item" @click="$router.push('/coupons').catch(()=>{})">優惠</div>
               <div class="item" @click="$router.push('/users/purchase').catch(()=>{})">購物車</div>
               <div class="item" @click="$router.push('/users/notification').catch(()=>{})">通知</div>
               <div class="divider-wrapper">
                 <div class="divider"></div>
               </div>
-              <div class="item">登出</div>
+              <div class="item" @click="$router.push('/signin').catch(()=>{})">登出</div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar-desktop-middle">
+        <div class="tab-wrapper">
+          <div class="condition-wrapper">
+            <div class="condition">條件</div>
+            <div class="divider"></div>
+          </div>
+          <div class="name-wrapper">
+            <div class="name">名稱</div>
+            <div class="divider"></div>
           </div>
         </div>
       </div>
@@ -93,7 +106,9 @@ export default {
   },
   mounted () {
     document.body.addEventListener('click', (e) => {
-      const clickButton = e.target.parentElement.classList.contains('side-nav-button') || e.target.classList.contains('side-nav-button')
+      const parentIsSideNav = e.target.parentElement ? e.target.parentElement.classList.contains('side-nav-button') : false
+      const elementIsSideNav = e.target ? e.target.classList.contains('side-nav-button') : false
+      const clickButton = parentIsSideNav || elementIsSideNav
       const clickOtherSide = !(e.target.classList.contains('menu-wrapper') || e.target.parentElement.classList.contains('menu'))
       if (this.showMenu && clickOtherSide && !clickButton) {
         if (this.$refs['menu-wrapper']) {
@@ -119,19 +134,25 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .navbar-home {
   display: none;
-  @media (min-width: 992px) {
+  @media (min-width: 768px) {
     display: block;
     position: absolute;
-    top: 50px;
+    top: 58px;
     left: 0;
-    z-index: 999;
+    z-index: 998;
     width: 100%;
     .navbar-desktop {
       display: block;
       width: 100%;
       background: transparent;
-      width: calc(100% - 160px);
-      padding: 0 80px;
+      width: calc(100% - 80px);
+      margin: auto;
+      max-width: 1440px;
+      padding: 0 40px;
+      @media (min-width: 992px) {
+        width: calc(100% - 160px);
+        padding: 0 80px;
+      }
       .navbar-desktop-inner {
         display: flex;
         flex-direction: row;
@@ -139,10 +160,13 @@ $red: rgb(255, 56, 92);
         align-items: center;
         height: 80px;
         .tab-wrapper {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: center;
+          display: none;
+          @media (min-width: 992px) {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+          }
           .condition-wrapper {
             display: flex;
             flex-direction: column;
@@ -193,7 +217,7 @@ $red: rgb(255, 56, 92);
           height: 100%;
           display: flex;
           align-items: center;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             width: 100%;
             flex: 1;
           }
@@ -330,6 +354,69 @@ $red: rgb(255, 56, 92);
                   background: $divider;
                 }
               }
+            }
+          }
+        }
+      }
+      .navbar-desktop-middle {
+        display: none;
+        @media (min-width: 768px) {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 80px;
+        }
+        @media (min-width: 992px) {
+          display: none;
+        }
+        .tab-wrapper {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          .condition-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.8)
+            }
+            .condition {
+              font-size: 16px;
+              line-height: 20px;
+              font-weight: 400;
+              padding: 10px 16px;
+              white-space: nowrap;
+              color: #ffffff;
+            }
+            .divider {
+              width: 25%;
+              height: 2px;
+              background: #ffffff;
+            }
+          }
+          .name-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.8)
+            }
+            .name {
+              font-size: 16px;
+              line-height: 20px;
+              font-weight: 400;
+              padding: 10px 16px;
+              white-space: nowrap;
+              color: #ffffff;
+            }
+            .divider {
+              width: 50%;
+              height: 2px;
             }
           }
         }
