@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 const passport = require('../config/passport')
 
+const multer = require('multer')
+const upload = multer({ dest: 'temp/' })
+
 const authenticated = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
@@ -26,8 +29,10 @@ const userController = require('../controllers/userController')
 router.post('/signin', userController.signIn)
 router.post('/signup', userController.signUp)
 
+
 //userController_UserModel
 router.get('/user/:id/profile', authenticated, userController.getProfile)
+router.put('/user/:id/profile', authenticated, upload.single('avatar'), userController.putProfile)
 
 //coupon
 router.get('/coupons/:couponId', couponController.getCoupon)
