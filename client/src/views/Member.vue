@@ -68,7 +68,7 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper" @click="$router.push('/users/purchase')">
+          <div class="link-card-wrapper">
             <div class="link-card">
             </div>
           </div>
