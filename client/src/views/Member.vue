@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper" v-show="windowWidth >= 992" @click="$router.push('/users/record')">
+          <div class="link-card-wrapper" v-show="windowWidth >= 992">
             <div class="link-card">
             </div>
           </div>
