@@ -4,6 +4,7 @@ const Category = db.Category
 const City = db.City
 const District = db.District
 const Coupon = db.Coupon
+const Comment = db.Comment
 
 const restaurantController = {
   getRestaurants: (req, res) => {
@@ -31,6 +32,14 @@ const restaurantController = {
           }
         })
         return res.json({ data })
+      })
+  },
+  getRestaurant: (req, res) => {
+    Restaurant.findByPk(req.params.restaurantId, {
+      include: [Category, City, District, Coupon, Comment]
+    })
+      .then(restaurant => {
+        return res.json({ restaurant })
       })
   }
 }

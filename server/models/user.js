@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.PreferedCategory)
       User.hasMany(models.Order, { foreignKey: 'UserId' })
       User.hasMany(models.Reservation, {foreignKey: 'UserId'})
+      User.hasMany(models.Comment, {foreignKey: 'UserId'})
     }
   };
   User.init({

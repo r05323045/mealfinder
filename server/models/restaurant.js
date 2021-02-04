@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Restaurant.belongsTo(models.District)
       Restaurant.hasMany(models.Coupon)
       Restaurant.hasMany(models.Reservation, {foreignKey: 'RestaurantId'})
+      Restaurant.hasMany(models.Comment, {foreignKey: 'RestaurantId'})
     }
   };
   Restaurant.init({
