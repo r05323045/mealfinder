@@ -34,6 +34,11 @@ router.post('/signup', userController.signUp)
 router.get('/user/:id/profile', authenticated, userController.getProfile)
 router.put('/user/:id/profile', authenticated, upload.single('avatar'), userController.putProfile)
 
+//userController_Favorite model
+router.get('/user/favorite', authenticated, userController.getFavorites)
+router.post('/user/favorite/:restaurantId', authenticated, userController.addFavorite)
+router.delete('/user/favorite/:restaurantId', authenticated, userController.deleteFavorite)
+
 //coupon
 router.get('/coupons/:couponId', couponController.getCoupon)
 router.get('/coupons', couponController.getCoupons)

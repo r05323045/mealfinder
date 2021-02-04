@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt')
 const imgur = require('imgur-node-api')
 const db = require('../models')
 const User = db.User
+const Favorite = db.Favorite
+const Restaurant = db.Restaurant
 
 //JWT
 const jwt = require('jsonwebtoken')
@@ -137,6 +139,34 @@ const userController = {
 
 
   },
+
+  getFavorites: (req, res) => {
+    const UserId = req.user.id
+    Favorite.findAll({ where: { UserId }, include: [{ model: Restaurant }] })
+      .then(favorite => {
+        return res.json(favorite)
+      })
+  },
+
+  addFavorite: (req, res) => {
+    const UserId = req.user.id
+    const restaurantId = req.params.restaurantId
+    Favorite.create({
+      UserId,
+      RestaurantId: restaurantId
+    }).then(favorite => { res.json({ status: 'success', message: "Restaurant was successfully to add in your favorite list" }) })
+  },
+
+  deleteFavorite: (req, res) => {
+    const UserId = req.user.id
+    const restaurantId = req.params.restaurantId
+    Favorite.findOne({ where: { RestaurantId: restaurantId } })
+      .then(favorite => {
+        favorite.destroy()
+          .then(() => { res.json({ status: 'success', message: "Restaurant was successfully to remove from your favorite list" }) })
+      })
+  }
+
 }
 
 module.exports = userController
