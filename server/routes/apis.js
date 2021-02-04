@@ -36,6 +36,7 @@ router.put('/user/:id/profile', authenticated, upload.single('avatar'), userCont
 
 //userController_Favorite model
 router.get('/user/favorite', authenticated, userController.getFavorites)
+router.post('/user/favorite/:restaurantId', authenticated, userController.addFavorite)
 
 //coupon
 router.get('/coupons/:couponId', couponController.getCoupon)

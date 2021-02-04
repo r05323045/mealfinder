@@ -146,6 +146,15 @@ const userController = {
       .then(favorite => {
         return res.json(favorite)
       })
+  },
+
+  addFavorite: (req, res) => {
+    const UserId = req.user.id
+    const restaurantId = req.params.restaurantId
+    Favorite.create({
+      UserId,
+      RestaurantId: restaurantId
+    }).then(favorite => { res.json({ status: 'success', message: "Restaurant was successfully to add in your favorite list" }) })
   }
 }
 
