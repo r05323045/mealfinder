@@ -43,15 +43,27 @@ $red: rgb(255, 56, 92);
     margin: auto;
     max-width: 1040px;
     text-align: left;
-    padding: 36px 36px 0px;
+    padding: 36px 24px 0px;
     font-size: 24px;
     font-weight: 800;
     line-height: 1.5;
+    @media (min-width: 768px) {
+      padding: 36px 40px 0px;
+    }
+    @media (min-width: 992px) {
+      padding: 36px 80px 0px;
+    }
   }
   .not-found-container {
     margin: auto;
     max-width: 1040px;
-    padding: 36px;
+    padding: 36px 24px;
+    @media (min-width: 768px) {
+      padding: 36px 40px;
+    }
+    @media (min-width: 992px) {
+      padding: 36px 80px;
+    }
     .divider {
       background: $divider;
       height: 1px;
@@ -70,10 +82,13 @@ $red: rgb(255, 56, 92);
       position: relative;
       background: url(../assets/eatNow.svg) no-repeat center;
       background-size: cover;
-      @media (min-width: 992px) {
-        padding-top: 25%;
+      @media (min-width: 768px) {
+        padding-top: 33.3%;
         background: url(../assets/people-eating-food.svg) no-repeat center;
         background-size: cover;
+      }
+      @media (min-width: 992px) {
+        padding-top: 25%;
       }
       .cover {
         position: absolute;
