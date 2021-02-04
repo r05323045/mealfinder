@@ -160,7 +160,6 @@ export default {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
       this.scrollY = this.$refs['info-container'].scrollTop
-      console.log(this.couponInfoHeight, this.scrollBarHeight, this.footerHeight, this.scrollY)
     }
   }
 }
