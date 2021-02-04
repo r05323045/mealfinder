@@ -1,10 +1,7 @@
 const bcrypt = require('bcrypt')
 const imgur = require('imgur-node-api')
-
 const db = require('../models')
 const User = db.User
-
-const IMGUR_CLIENT_ID = '8576719394d1cf6'
 
 //JWT
 const jwt = require('jsonwebtoken')
@@ -43,6 +40,7 @@ const userController = {
   },
 
   signUp: (req, res) => {
+
     const { email, password, passwordConfirm, name } = req.body
     if (!email || !password || !passwordConfirm || !name) {
       return res.json({
@@ -93,12 +91,10 @@ const userController = {
 
   putProfile: (req, res) => {
     const UserId = req.user.id
-    const { file } = req
-    const { name, gender, phone_number, location, birthday } = req.body
+    const { body: { name, gender, phone_number, location, birthday }, file } = req
 
     if (file) {
-      console.log('file', file)
-      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.setClientID(process.env.IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         if (err) {
           console.log(err)
@@ -115,13 +111,12 @@ const userController = {
                 birthday,
                 avatar: file ? img.data.link : user.avatar
               }).then((user) => {
-                res.json({ status: 'success', message: 'user was successfully to update' })
+                res.json({ status: 'success', message: '[HAS FILE] user was successfully to update' })
               })
             }
           })
       })
     } else {
-      console.log('NO FILE')
       User.findByPk(UserId)
         .then(user => {
           if (user.id === UserId) {
@@ -132,7 +127,7 @@ const userController = {
               location,
               birthday
             }).then((user) => {
-              res.json({ status: 'success', message: 'user was successfully to update' })
+              res.json({ status: 'success', message: '[NO file update] user was successfully to update' })
             })
           }
         })
