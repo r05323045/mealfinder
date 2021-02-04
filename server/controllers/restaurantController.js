@@ -1,3 +1,4 @@
+const sequelize = require('sequelize')
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
@@ -20,6 +21,11 @@ const restaurantController = {
       raw: true,
       nest: true,
       include: [Category, City, District, Coupon],
+      attributes: {
+        include: [
+          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
+        ]
+      },
       offset: offset,
       limit: pageLimit
     }).then(restaurants => {
