@@ -354,10 +354,10 @@ $red: rgb(255, 56, 92);
       width: 100%;
       position: relative;
       @media (min-width: 768px) {
-        height: calc(588/744 * 100vw + 50px);
+        height: calc(min(588/744 * 100vw, 85vh) + 50px);
       }
       @media (min-width: 992px) {
-        height: calc(563/1128 * 100vw + 58px);
+        height: calc(min(563/1128 * 100vw, 85vh) + 58px);
       }
       .searchbar-wrapper-inner {
         width: calc(100% - 48px);

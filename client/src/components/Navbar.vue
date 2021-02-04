@@ -79,8 +79,20 @@
               <div class="divider-wrapper">
                 <div class="divider"></div>
               </div>
-              <div class="item">登出</div>
+              <div class="item" @click="$router.push('/signin').catch(()=>{})">登出</div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar-desktop-middle" v-show="openSearch">
+        <div class="tab-wrapper">
+          <div class="condition-wrapper">
+            <div class="condition">條件</div>
+            <div class="divider"></div>
+          </div>
+          <div class="name-wrapper">
+            <div class="name">名稱</div>
+            <div class="divider"></div>
           </div>
         </div>
       </div>
@@ -249,10 +261,13 @@ $red: rgb(255, 56, 92);
         align-items: center;
         height: 80px;
         .tab-wrapper {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: center;
+          display: none;
+          @media (min-width: 992px) {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+          }
           .condition-wrapper {
             display: flex;
             flex-direction: column;
@@ -447,6 +462,67 @@ $red: rgb(255, 56, 92);
           }
         }
       }
+      .navbar-desktop-middle {
+        display: none;
+        @media (min-width: 768px) {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          height: 80px;
+        }
+        @media (min-width: 992px) {
+          display: none;
+        }
+        .tab-wrapper {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          .condition-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.8)
+            }
+            .condition {
+              font-size: 16px;
+              line-height: 20px;
+              font-weight: 400;
+              padding: 10px 16px;
+              white-space: nowrap;
+            }
+            .divider {
+              width: 25%;
+              height: 2px;
+              background: #222222;
+            }
+          }
+          .name-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            &:hover {
+              filter: brightness(0.8)
+            }
+            .name {
+              font-size: 16px;
+              line-height: 20px;
+              font-weight: 400;
+              padding: 10px 16px;
+              white-space: nowrap;
+            }
+            .divider {
+              width: 50%;
+              height: 2px;
+            }
+          }
+        }
+      }
       .navbar-desktop-outer {
         margin: 0 auto;
         width: 100%;
@@ -592,8 +668,5 @@ $red: rgb(255, 56, 92);
 .navbar.openSearch {
   position: fixed;
   width: 100%;
-  .navbar-desktop {
-    height: 180px;
-  }
 }
 </style>
