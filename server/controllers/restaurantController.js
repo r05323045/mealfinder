@@ -1,10 +1,12 @@
 const db = require('../models')
+const favorite = require('../models/favorite')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const City = db.City
 const District = db.District
 const Coupon = db.Coupon
 const Comment = db.Comment
+const Favorite = db.Favorite
 
 const restaurantController = {
   getRestaurants: (req, res) => {
