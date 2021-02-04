@@ -1,7 +1,7 @@
 <template>
   <div class="past-reservation">
-    <div class="card-deck" v-for="i in 3" :key="`card-deck-${i}`">
-      <div class="booking-card" v-for="i in 3" :key="i" :class="{ 'last-card': i === 3 }" @click="$router.push(`/users/history/${i}`)">
+    <div class="card-deck" v-for="i in Math.floor(24/cardPerDeck)" :key="`card-deck-${i}`">
+      <div class="booking-card" v-for="i in cardPerDeck" :key="i" :class="{ 'last-card': i === 3 }" @click="$router.push(`/users/history/${i}`)">
         <div class="picture-wrapper">
           <div class="picture"></div>
         </div>
@@ -40,11 +40,31 @@
 export default {
   data () {
     return {
+      windowWidth: window.innerWidth,
+      cardPerDeck: 1
     }
   },
   mounted () {
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+    })
+    this.defineCardDeck()
+  },
+  watch: {
+    windowWidth () {
+      this.defineCardDeck()
+    }
   },
   methods: {
+    defineCardDeck () {
+      if (this.windowWidth < 768) {
+        this.cardPerDeck = 1
+      } else if (this.windowWidth < 992) {
+        this.cardPerDeck = 2
+      } else {
+        this.cardPerDeck = 3
+      }
+    }
   }
 }
 </script>
@@ -58,7 +78,7 @@ $red: rgb(255, 56, 92);
   .card-deck {
     display: flex;
     flex-direction: column;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       flex-direction: row;
     }
     .booking-card {
@@ -67,7 +87,7 @@ $red: rgb(255, 56, 92);
       border: 1px solid $divider;
       border-radius: 12px;
       box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         margin-right: 24px;
       }
       .picture-wrapper {
@@ -145,7 +165,7 @@ $red: rgb(255, 56, 92);
       }
     }
     .booking-card.last-card {
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         margin-right: 0;
       }
     }
