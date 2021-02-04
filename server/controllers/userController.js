@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt')
 const imgur = require('imgur-node-api')
 const db = require('../models')
 const User = db.User
+const Favorite = db.Favorite
+const Restaurant = db.Restaurant
 
 //JWT
 const jwt = require('jsonwebtoken')
@@ -137,6 +139,14 @@ const userController = {
 
 
   },
+
+  getFavorites: (req, res) => {
+    const UserId = req.user.id
+    Favorite.findAll({ where: { UserId }, include: [{ model: Restaurant }] })
+      .then(favorite => {
+        return res.json(favorite)
+      })
+  }
 }
 
 module.exports = userController
