@@ -4,6 +4,7 @@ const db = require('../models')
 const User = db.User
 const Favorite = db.Favorite
 const Restaurant = db.Restaurant
+const Like = db.Like
 
 //JWT
 const jwt = require('jsonwebtoken')
@@ -164,6 +165,25 @@ const userController = {
       .then(favorite => {
         favorite.destroy()
           .then(() => { res.json({ status: 'success', message: "Restaurant was successfully to remove from your favorite list" }) })
+      })
+  },
+
+  likeComment: (req, res) => {
+    const UserId = req.user.id
+    const commentId = req.params.commentId
+    Like.create({
+      UserId,
+      CommentId: commentId
+    }).then(like => { return res.json({ status: 'success', message: "Liked comment" }) })
+  },
+
+  disLikeComment: (req, res) => {
+    const commentId = req.params.commentId
+    Like.findOne({ where: { CommentId: commentId } })
+      .then(dislike => {
+        console.log('dislike', dislike)
+        dislike.destroy()
+          .then(() => { return res.json({ status: 'success', message: "Disliked comment" }) })
       })
   }
 
