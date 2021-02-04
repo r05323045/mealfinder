@@ -155,7 +155,18 @@ const userController = {
       UserId,
       RestaurantId: restaurantId
     }).then(favorite => { res.json({ status: 'success', message: "Restaurant was successfully to add in your favorite list" }) })
+  },
+
+  deleteFavorite: (req, res) => {
+    const UserId = req.user.id
+    const restaurantId = req.params.restaurantId
+    Favorite.findOne({ where: { RestaurantId: restaurantId } })
+      .then(favorite => {
+        favorite.destroy()
+          .then(() => { res.json({ status: 'success', message: "Restaurant was successfully to remove from your favorite list" }) })
+      })
   }
+
 }
 
 module.exports = userController
