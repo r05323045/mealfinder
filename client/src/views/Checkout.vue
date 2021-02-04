@@ -121,6 +121,9 @@ $red: rgb(255, 56, 92);
       font-weight: 800;
       line-height: 1.5;
       margin-bottom: 24px;
+      @media (min-width: 768px) {
+        font-size: 26px;
+      }
       @media (min-width: 992px) {
         display: none;
       }
