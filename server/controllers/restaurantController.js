@@ -1,5 +1,6 @@
 const sequelize = require('sequelize')
 const db = require('../models')
+const like = require('../models/like')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const City = db.City
@@ -7,6 +8,8 @@ const District = db.District
 const Coupon = db.Coupon
 const Comment = db.Comment
 const Favorite = db.Favorite
+const User = db.User
+const Like = db.Like
 
 const restaurantController = {
   getRestaurants: (req, res) => {
@@ -38,11 +41,22 @@ const restaurantController = {
     })
   },
   getRestaurant: (req, res) => {
-    Restaurant.findByPk(req.params.restaurantId, {
-      include: [Category, City, District, Coupon, Comment]
-    })
-      .then(restaurant => {
-        return res.json({ restaurant })
+    return Promise.all([
+      Restaurant.findByPk(req.params.restaurantId, {
+        include: [Category, City, District, Coupon],
+      }),
+      Comment.findAndCountAll({
+        where: { RestaurantId: req.params.restaurantId },
+        include: [User],
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comment.id)'), 'LikesCount']
+          ]
+        }
+      })
+    ])
+      .then(([restaurant, comments]) => {
+        return res.json({ restaurant, comments })
       })
   }
 }
