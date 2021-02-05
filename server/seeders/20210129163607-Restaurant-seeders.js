@@ -1,5 +1,6 @@
 'use strict';
 const data = require('../restaurant-data.json')
+const faker = require('faker')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -12,8 +13,8 @@ module.exports = {
         tel: data[i].tel,
         address: data[i].address,
         coordinates: JSON.stringify(data[i].coordinates),
-        picture:`https://loremflickr.com/320/240/restaurant,food/?lock=${Math.random() * 100}`,
-        business_hours: JSON.stringify(data[i].business_hours), 
+        picture: `https://loremflickr.com/320/240/restaurant,food/?lock=${Math.random() * 100}`,
+        business_hours: JSON.stringify(data[i].business_hours),
         google_map_url: data[i].google_map_url,
         day_off: "N/A",
         coupon: true,
@@ -23,7 +24,9 @@ module.exports = {
         CityId: data[i].CityId,
         DistrictId: data[i].DistrictId,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        average_consumption: Math.floor(Math.random() * 10 + 1) * 50,
+        description: faker.lorem.text()
       })
     }
     await queryInterface.bulkInsert('Restaurants', restaurants, {});

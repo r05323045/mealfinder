@@ -24,6 +24,7 @@ const authenticated = (req, res, next) => {
 const couponController = require('../controllers/couponController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
+const restaurantController = require('../controllers/restaurantController')
 
 //login,logout,signup
 router.post('/signin', userController.signIn)
@@ -46,6 +47,10 @@ router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 //coupon
 router.get('/coupons/:couponId', couponController.getCoupon)
 router.get('/coupons', couponController.getCoupons)
+
+//restaurant
+router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
+router.get('/restaurants', restaurantController.getRestaurants)
 
 //admin
 router.get('/admin/users', adminController.getUsers)

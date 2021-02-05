@@ -13,7 +13,6 @@ module.exports = {
         password: bcrypt.hashSync('12345678', 10),
         phone_number: '0912345678',
         location: '台北市',
-        CategoryId: Math.floor(Math.random() * 10) + 1,
         gender: 'female',
         birthday: randomDate(new Date(1900, 0, 1), new Date()),
         avatar: `https://i.pravatar.cc/150?img=${i + 2}`,
