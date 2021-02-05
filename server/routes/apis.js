@@ -44,16 +44,16 @@ router.delete('/user/favorite/:restaurantId', authenticated, userController.dele
 router.post('/like/:commentId', authenticated, userController.likeComment)
 router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 
-//coupon
+//couponController_Coupon model
 router.get('/coupons/:couponId', couponController.getCoupon)
 router.get('/coupons', couponController.getCoupons)
 
-//restaurant
+//restaurantController_Restaurant model
 router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
 
-//admin
+//adminController
 router.get('/admin/users', adminController.getUsers)
 router.get('/admin/restaurants', adminController.getRestaurants)
 router.get('/admin/categories', adminController.getCategories)
