@@ -56,6 +56,7 @@ router.get('/users/restaurants', authenticated, restaurantController.getUsersRes
 
 //commentController_Comment model
 router.get('/comments/:restaurantId', commentController.getComments)
+router.post('/comments/:restaurantId', authenticated, commentController.addComment)
 
 //adminController
 router.get('/admin/users', adminController.getUsers)
