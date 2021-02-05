@@ -40,6 +40,35 @@ const restaurantController = {
       return res.json({ data })
     })
   },
+  getUsersRestaurants: (req, res) => {
+    let offset = 0
+    const pageLimit = 24
+
+    if (req.query.page) {
+      offset = (req.query.page - 1) * pageLimit
+    }
+
+    return Restaurant.findAll({
+      include: [
+        Category, City, District, Coupon,
+        { model: User, as: 'FavoritedUsers' }
+      ],
+      attributes: {
+        include: [
+          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
+        ]
+      },
+      offset: offset,
+      limit: pageLimit
+    }).then(restaurants => {
+      const data = restaurants.map(restaurant => ({
+        ...restaurant.dataValues,
+        description: restaurant.dataValues.description.substring(0, 50),
+        isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      }))
+      return res.json({ data })
+    })
+  },
   getRestaurant: (req, res) => {
     return Promise.all([
       Restaurant.findByPk(req.params.restaurantId, {

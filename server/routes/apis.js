@@ -51,6 +51,7 @@ router.get('/coupons', couponController.getCoupons)
 //restaurant
 router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
+router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
 
 //admin
 router.get('/admin/users', adminController.getUsers)
