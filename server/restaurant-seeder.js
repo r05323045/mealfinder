@@ -1,6 +1,6 @@
 const fs = require('fs')
 const axios = require('axios')
-const key = 'AIzaSyAInMt_uuH0jJp7zTIbKumQpW3bXaJSliA'
+const key = process.env.Google_Map_API_KEY
 const seedersData = []
 const district = {
   "中正區": 1,
