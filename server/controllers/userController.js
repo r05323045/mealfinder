@@ -21,7 +21,6 @@ const userController = {
 
     User.findOne({ where: { email } })
       .then(user => {
-        const { id, email, phoneNumber, location, CategoryId, gender, birthday, avatar, name } = user
         if (!user) return res.status(401).json({ status: 'error', message: 'EMAIL OR PASSWORD ERROR' })
         if (!bcrypt.compareSync(password, user.password)) {
           return res.status(401).json({ status: 'error', message: 'EMAIL OR PASSWORD ERROR' })
@@ -29,13 +28,12 @@ const userController = {
 
         const paylod = { id: user.id }
         const token = jwt.sign(paylod, process.env.JWT_SECRET)
+        user.password = undefined
         return res.json({
           status: 'success',
           message: 'ok',
           token,
-          user: {
-            id, email, phoneNumber, location, CategoryId, gender, birthday, avatar, name
-          }
+          user
         })
       })
   },
