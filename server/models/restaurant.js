@@ -14,14 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       Restaurant.belongsTo(models.Category, { foreignKey: 'CategoryId' })
       Restaurant.belongsTo(models.City)
       Restaurant.belongsTo(models.District)
-      // Restaurant.belongsToMany(models.User, {
-      //   through: models.Favorite,
-      //   foreignKey: 'RestaurantId',
-      //   as: 'FavoritedUsers'
-      // })
+      Restaurant.belongsToMany(models.User, {
+        through: models.Favorite,
+        foreignKey: 'RestaurantId',
+        as: 'FavoritedUsers'
+      })
       Restaurant.hasMany(models.Coupon)
       Restaurant.hasMany(models.Reservation, { foreignKey: 'RestaurantId' })
-      Restaurant.hasMany(models.Favorite, { foreignKey: 'RestaurantId' })
+      // Restaurant.hasMany(models.Favorite, { foreignKey: 'RestaurantId' })
       Restaurant.hasMany(models.Comment, { foreignKey: 'RestaurantId' })
     }
   };
