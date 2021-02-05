@@ -25,6 +25,7 @@ const couponController = require('../controllers/couponController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 const restaurantController = require('../controllers/restaurantController')
+const commentController = require('../controllers/commentController.js')
 
 //login,logout,signup
 router.post('/signin', userController.signIn)
@@ -52,6 +53,9 @@ router.get('/coupons', couponController.getCoupons)
 router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
+
+//commentController_Comment model
+router.get('/comments/:restaurantId', commentController.getComments)
 
 //adminController
 router.get('/admin/users', adminController.getUsers)
