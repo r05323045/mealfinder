@@ -7,7 +7,7 @@
           <div class="close-wrapper" @click="closeModal">
             <div class="icon close"></div>
           </div>
-          <div class="title">經常用餐地區</div>
+          <div class="title">選擇用餐地區</div>
         </div>
         <div class="filter-container">
           <div class="category">

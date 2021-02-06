@@ -19,8 +19,8 @@
       <div class="restaurant-list" ref="restaurant-list">
         <div class="title">台北市各地的餐廳</div>
         <div class="filter-button-wrapper">
-          <div class="filter-button">地區</div>
-          <div class="filter-button">類型</div>
+          <div class="filter-button" :class="{ 'filter-on': districtFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
+          <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
           <div class="filter-button">預算</div>
         </div>
         <div v-if="restaurants.length > 0">
@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="load-more">
-          <div class="load-more-button" v-if="restaurants.length % 24 === 0" @click="fetchRestaurants(numOfPage)">載入更多結果</div>
+          <div class="load-more-button" v-if="restaurants.length % 24 === 0" @click="fetchRestaurants(filter)">載入更多結果</div>
         </div>
       </div>
       <div ref="footer">
@@ -66,6 +66,18 @@
       </div>
     </div>
     <FilterModal :showModal="showModal" @closeModal="closeFilter"></FilterModal>
+    <AddCategory
+      :showModal="showAddModal"
+      @closeAddModal="completeAdding"
+      :categoriesFilter = categoriesFilter
+    >
+    </AddCategory>
+    <ChangeDistrict
+      :showModal="showChangeModal"
+      @closeChangeModal="completeChanging"
+      :districtFilter = districtFilter
+    >
+    </ChangeDistrict>
   </div>
 </template>
 
@@ -76,6 +88,8 @@ import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import FilterModal from '@/components/Filter.vue'
+import AddCategory from '@/components/AddCategory.vue'
+import ChangeDistrict from '@/components/ChangeDistrict.vue'
 
 export default {
   data () {
@@ -89,13 +103,19 @@ export default {
       cardPerDeck: 1,
       restaurants: [],
       numOfPage: 0,
-      filter: ['']
+      filter: [''],
+      showAddModal: false,
+      showChangeModal: false,
+      categoriesFilter: [],
+      districtFilter: []
     }
   },
   components: {
     Navbar,
     Footer,
-    FilterModal
+    FilterModal,
+    AddCategory,
+    ChangeDistrict
   },
   mounted () {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll)
@@ -105,11 +125,16 @@ export default {
       this.windowWidth = window.innerWidth
     })
     this.defineCardDeck()
-    this.fetchRestaurants(['', 'category=日式料理', 'category=美式料理'])
+    this.fetchRestaurants()
   },
   watch: {
     windowWidth () {
       this.defineCardDeck()
+    },
+    filter () {
+      this.restaurants = []
+      this.numOfPage = 0
+      this.fetchRestaurants(this.filter)
     }
   },
   methods: {
@@ -140,9 +165,19 @@ export default {
         console.log(error)
         Toast.fire({
           icon: 'error',
-          title: '目前無法取得推文，請稍候'
+          title: '目前無法取得餐廳，請稍候'
         })
       }
+    },
+    completeAdding (isAdding, filter) {
+      this.showAddModal = false
+      if (isAdding) {
+        this.categoriesFilter = filter
+        this.filter = ['', ...this.districtFilter, ...filter.map(item => 'category=' + item)]
+      }
+    },
+    completeChanging () {
+      this.showChangeModal = false
     }
   }
 }
@@ -282,12 +317,22 @@ $red: rgb(255, 56, 92);
           margin: 24px 0;
         }
         .filter-button {
+          cursor: pointer;
           margin-right: 16px;
           border: 1px solid $divider;
           font-size: 14px;
           font-weight: 400;
           padding: 8px 16px;
           border-radius: 30px;
+          &:hover {
+            font-weight: 800;
+            border: 1px solid #000000;
+            transition: ease-in-out 0.3s;
+          }
+        }
+        .filter-button.filter-on {
+          font-weight: 800;
+          border: 1px solid #000000;
         }
       }
       .restaurant-card-deck {
