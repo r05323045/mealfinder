@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import moment from 'moment'
+import zh from './zh_TW.js'
+import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
+import * as rules from 'vee-validate/dist/rules'
 
 Vue.config.productionTip = false
 
@@ -121,6 +124,29 @@ Vue.filter('pickDateFormate', function (date) {
     return `${moment(date).format('M/DD')} ${moment(date).format('ddd')}`
   }
 })
+
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule])
+})
+
+extend('password', {
+  params: ['target'],
+  validate (value, { target }) {
+    return value === target
+  },
+  message: '密碼與密碼確認不相同'
+})
+
+configure({
+  classes: {
+    valid: 'is-valid',
+    invalid: 'is-invalid'
+  }
+})
+localize('tw', zh)
+
+Vue.component('ValidationProvider', ValidationProvider)
+Vue.component('ValidationObserver', ValidationObserver)
 
 new Vue({
   router,

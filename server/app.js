@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const flash = require('connect-flash')
 const session = require('express-session')
+const cors = require('cors')
+const path = require('path')
 
 const app = express()
 const port = 3000
@@ -19,7 +21,7 @@ app.use(session({ secret: 'restaurant_reservation', resave: false, saveUninitial
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
-app.use('/upload', express.static(__dirname + '/upload'))
+app.use('/upload', express.static(path.join(__dirname, '/upload')))
 
 app.use((req, res, next) => {
   res.locals.success_message = req.flash('success_message')
@@ -28,6 +30,7 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use(cors())
 
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`)

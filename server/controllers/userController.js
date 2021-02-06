@@ -6,11 +6,8 @@ const Favorite = db.Favorite
 const Restaurant = db.Restaurant
 const Like = db.Like
 
-//JWT
+// JWT
 const jwt = require('jsonwebtoken')
-const passportJWT = require('passport-jwt')
-const ExtractJWT = passportJWT.ExtractJwt
-const JwtStrategy = passportJWT.JwtStrategy
 
 const userController = {
   signIn: (req, res) => {
@@ -24,26 +21,24 @@ const userController = {
 
     User.findOne({ where: { email } })
       .then(user => {
-        const { id, email, phone_number, location, CategoryId, gender, birthday, avatar, name } = user
         if (!user) return res.status(401).json({ status: 'error', message: 'EMAIL OR PASSWORD ERROR' })
-        if (!bcrypt.compareSync(password, user.password))
+        if (!bcrypt.compareSync(password, user.password)) {
           return res.status(401).json({ status: 'error', message: 'EMAIL OR PASSWORD ERROR' })
+        }
 
-        var paylod = { id: user.id }
-        var token = jwt.sign(paylod, process.env.JWT_SECRET)
+        const paylod = { id: user.id }
+        const token = jwt.sign(paylod, process.env.JWT_SECRET)
+        user.password = undefined
         return res.json({
           status: 'success',
           message: 'ok',
           token,
-          user: {
-            id, email, phone_number, location, CategoryId, gender, birthday, avatar, name
-          }
+          user
         })
       })
   },
 
   signUp: (req, res) => {
-
     const { email, password, passwordConfirm, name } = req.body
     if (!email || !password || !passwordConfirm || !name) {
       return res.json({
@@ -58,7 +53,7 @@ const userController = {
         status: 'error',
         message: '兩次密碼輸入不同',
         email,
-        name,
+        name
       })
     } else {
       User.findOne({ where: { email } })
@@ -67,11 +62,16 @@ const userController = {
             return res.json({
               status: 'error',
               message: '此信箱已被使用，請直接登入使用',
-              name, email, password, passwordConfirm
+              name,
+              email,
+              password,
+              passwordConfirm
             })
           } else {
             User.create({
-              name, email, password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),
+              name,
+              email,
+              password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),
               avatar: 'https://cdn.pixabay.com/photo/2018/04/18/18/56/user-3331256__340.png'
             })
               .then(() => {
@@ -85,6 +85,12 @@ const userController = {
     }
   },
 
+  getCurrentUser: (req, res, callback) => {
+    const user = req.user
+    user.password = undefined
+    return res.json(user)
+  },
+
   getProfile: (req, res) => {
     User.findOne({ where: { id: req.params.id } })
       .then(user => {
@@ -94,7 +100,7 @@ const userController = {
 
   putProfile: (req, res) => {
     const UserId = req.user.id
-    const { body: { name, gender, phone_number, location, birthday }, file } = req
+    const { body: { name, gender, phoneNumber, location, birthday }, file } = req
 
     if (file) {
       imgur.setClientID(process.env.IMGUR_CLIENT_ID)
@@ -109,7 +115,7 @@ const userController = {
               user.update({
                 name,
                 gender,
-                phone_number,
+                phone_number: phoneNumber,
                 location,
                 birthday,
                 avatar: file ? img.data.link : user.avatar
@@ -126,7 +132,7 @@ const userController = {
             user.update({
               name,
               gender,
-              phone_number,
+              phone_number: phoneNumber,
               location,
               birthday
             }).then((user) => {
@@ -135,10 +141,6 @@ const userController = {
           }
         })
     }
-
-
-
-
   },
 
   getFavorites: (req, res) => {
@@ -155,16 +157,15 @@ const userController = {
     Favorite.create({
       UserId,
       RestaurantId: restaurantId
-    }).then(favorite => { res.json({ status: 'success', message: "Restaurant was successfully to add in your favorite list" }) })
+    }).then(favorite => { res.json({ status: 'success', message: 'Restaurant was successfully to add in your favorite list' }) })
   },
 
   deleteFavorite: (req, res) => {
-    const UserId = req.user.id
     const restaurantId = req.params.restaurantId
     Favorite.findOne({ where: { RestaurantId: restaurantId } })
       .then(favorite => {
         favorite.destroy()
-          .then(() => { res.json({ status: 'success', message: "Restaurant was successfully to remove from your favorite list" }) })
+          .then(() => { res.json({ status: 'success', message: 'Restaurant was successfully to remove from your favorite list' }) })
       })
   },
 
@@ -174,7 +175,7 @@ const userController = {
     Like.create({
       UserId,
       CommentId: commentId
-    }).then(like => { return res.json({ status: 'success', message: "Liked comment" }) })
+    }).then(like => { return res.json({ status: 'success', message: 'Liked comment' }) })
   },
 
   disLikeComment: (req, res) => {
@@ -183,7 +184,7 @@ const userController = {
       .then(dislike => {
         console.log('dislike', dislike)
         dislike.destroy()
-          .then(() => { return res.json({ status: 'success', message: "Disliked comment" }) })
+          .then(() => { return res.json({ status: 'success', message: 'Disliked comment' }) })
       })
   }
 
