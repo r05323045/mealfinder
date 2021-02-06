@@ -7,15 +7,14 @@ export default {
     if (filter && filter.length > 1) {
       queryString += filter.join('&')
     }
-    console.log(queryString)
     return apiHelper.get(`/restaurants${queryString}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   getUserRestaurants (page, filter) {
     let queryString = page ? `?page=${page}` : ''
-    if (filter) {
-      queryString += filter.join('&?')
+    if (filter && filter.length > 1) {
+      queryString += filter.join('&')
     }
     return apiHelper.get(`/users/restaurants${queryString}`, {
       headers: { Authorization: `Bearer ${getToken()}` }

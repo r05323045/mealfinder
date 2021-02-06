@@ -70,6 +70,9 @@ export default {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+    },
+    districtsFilter () {
+      this.tempFilter = this.districtsFilter
     }
   },
   methods: {

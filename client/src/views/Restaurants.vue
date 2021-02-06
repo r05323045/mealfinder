@@ -66,7 +66,13 @@
         <Footer></Footer>
       </div>
     </div>
-    <FilterModal :showModal="showModal" @closeModal="closeFilter"></FilterModal>
+    <FilterModal
+      :showModal="showModal"
+      @closeModal="closeFilter"
+      :categoriesFilter = categoriesFilter
+      :districtsFilter = districtsFilter
+    >
+    </FilterModal>
     <AddCategory
       :showModal="showAddModal"
       @closeAddModal="completeAdding"
@@ -139,8 +145,13 @@ export default {
     }
   },
   methods: {
-    closeFilter () {
+    closeFilter (isEditing, cateFilter, distFilter) {
       this.showModal = false
+      if (isEditing) {
+        this.categoriesFilter = cateFilter
+        this.districtsFilter = distFilter
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+      }
     },
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs['list-container'].scrollTop
@@ -175,7 +186,6 @@ export default {
       if (isAdding) {
         this.categoriesFilter = filter
         this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item), ...filter.map(item => 'category=' + item)]
-        console.log(this.filter)
       }
     },
     completeChanging (isChanging, filter) {
@@ -183,7 +193,6 @@ export default {
       if (isChanging) {
         this.districtsFilter = filter
         this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...filter.map(item => 'district=' + item)]
-        console.log(this.filter)
       }
     }
   }
