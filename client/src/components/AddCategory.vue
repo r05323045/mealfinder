@@ -100,7 +100,6 @@ export default {
       }
     },
     completeAdding () {
-      console.log(this.tempFilter)
       this.$emit('closeAddModal', true, this.tempFilter)
     }
   }

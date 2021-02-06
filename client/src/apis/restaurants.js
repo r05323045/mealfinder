@@ -4,7 +4,7 @@ const getToken = () => localStorage.getItem('token')
 export default {
   getRestaurants (page, filter) {
     let queryString = page ? `?page=${page}` : ''
-    if (filter && filter.length > 2) {
+    if (filter && filter.length > 1) {
       queryString += filter.join('&')
     }
     console.log(queryString)
@@ -23,6 +23,11 @@ export default {
   },
   getCategories () {
     return apiHelper.get('/categories', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getDistricts () {
+    return apiHelper.get('/districts', {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   }
