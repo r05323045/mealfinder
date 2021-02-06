@@ -91,6 +91,7 @@
 <script>
 
 import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
 import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
@@ -144,6 +145,9 @@ export default {
       this.fetchRestaurants(this.filter)
     }
   },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
+  },
   methods: {
     closeFilter (isEditing, cateFilter, distFilter) {
       this.showModal = false
@@ -170,7 +174,7 @@ export default {
     },
     async fetchRestaurants (filter) {
       try {
-        const { data } = await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUserRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
       } catch (error) {
