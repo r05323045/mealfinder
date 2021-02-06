@@ -52,6 +52,9 @@ router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
 
+// restaurantController_Category model
+router.get('/categories', restaurantController.getCategories)
+
 // adminController
 router.get('/admin/users', adminController.getUsers)
 router.get('/admin/restaurants', adminController.getRestaurants)

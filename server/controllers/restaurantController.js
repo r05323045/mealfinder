@@ -97,6 +97,11 @@ const restaurantController = {
       .then(([restaurant, comments]) => {
         return res.json({ restaurant, comments })
       })
+  },
+  getCategories: (req, res) => {
+    Category.findAll().then(categories => {
+      return res.json({ categories })
+    })
   }
 }
 
