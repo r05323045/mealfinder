@@ -23,33 +23,42 @@
           <div class="filter-button">類型</div>
           <div class="filter-button">預算</div>
         </div>
-        <div class="restaurant-card-deck" v-for="i in Math.floor(24/cardPerDeck)" :key="`card-deck-${i}`">
-          <div class="restaurant-card" v-for="i in cardPerDeck" :key="i" :class="{ 'last-card': i === 4}" @click="$router.push(`/restaurants/${i}`)">
-            <div class="card-image-wrapper">
-              <div class="heart-wrapper">
-                <img class="icon heart" src="../assets/black-heart.svg">
+        <div v-if="restaurants.length > 0">
+          <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
+            <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
+              <div class="restaurant-card"
+                v-for="(item, idx) in restaurants.slice((pageNum - 1) * 24, pageNum * 24).slice((deckNum - 1) * cardPerDeck, deckNum * cardPerDeck)"
+                :key="idx" :class="{ 'last-card': idx === cardPerDeck}"
+                @click="$router.push(`/restaurants/${item.id}`)"
+                :style="`flex: ${1/cardPerDeck}`"
+              >
+                <div class="card-image-wrapper">
+                  <div class="heart-wrapper">
+                    <img class="icon heart" src="../assets/black-heart.svg">
+                  </div>
+                  <div class="card-image" :style="`background: url(${item.picture}) no-repeat center; background-size: cover`"></div>
+                </div>
+                <div class="rating-wrapper">
+                  <svg class="icon star"></svg>
+                  <div class="rating">
+                    <span class="number"><span>{{ item.rating.padEnd(3, '.0') }}</span></span>
+                    <span class="count"><span>({{ item.CommentsCount }})</span></span>
+                  </div>
+                </div>
+                <div class="name">{{ item.name }}</div>
+                <div class="category-wrapper">
+                  <span v-if="item.Category" class="category">{{ item.Category.name }}</span>
+                  <span class="bullet">·</span>
+                  <span v-if="item.District" class="district">{{ item.District.name }}</span>
+                </div>
+                <div class="description">{{ item.description }}</div>
+                <div class="expense">${{ item.average_consumption }} / 人</div>
               </div>
-              <div class="card-image"></div>
             </div>
-            <div class="rating-wrapper">
-              <svg class="icon star"></svg>
-              <div class="rating">
-                <span class="number">4.85</span>
-                <span class="count">(20)</span>
-              </div>
-            </div>
-            <div class="name">711便利商店</div>
-            <div class="category-wrapper">
-              <span class="category">台式餐廳</span>
-              <span class="bullet">·</span>
-              <span class="district">大安區</span>
-            </div>
-            <div class="description">全台最大連鎖餐廳，小資族下班聚餐好去處好去處好去處好去處</div>
-            <div class="expense">$300 / 人</div>
           </div>
         </div>
         <div class="load-more">
-          <div class="load-more-button">載入更多結果</div>
+          <div class="load-more-button" v-if="restaurants.length % 24 === 0" @click="fetchRestaurants(numOfPage)">載入更多結果</div>
         </div>
       </div>
       <div ref="footer">
@@ -62,6 +71,8 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import FilterModal from '@/components/Filter.vue'
@@ -75,7 +86,10 @@ export default {
       divHeight: 0,
       scrollBarHeight: 0,
       windowWidth: window.innerWidth,
-      cardPerDeck: 1
+      cardPerDeck: 1,
+      restaurants: [],
+      numOfPage: 0,
+      filter: ['']
     }
   },
   components: {
@@ -91,6 +105,7 @@ export default {
       this.windowWidth = window.innerWidth
     })
     this.defineCardDeck()
+    this.fetchRestaurants(['', 'category=日式料理', 'category=美式料理'])
   },
   watch: {
     windowWidth () {
@@ -114,6 +129,19 @@ export default {
         this.cardPerDeck = 3
       } else {
         this.cardPerDeck = 4
+      }
+    },
+    async fetchRestaurants (filter) {
+      try {
+        const { data } = await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
+        this.restaurants = [...this.restaurants, ...data.data]
+        this.numOfPage += 1
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得推文，請稍候'
+        })
       }
     }
   }
@@ -269,6 +297,7 @@ $red: rgb(255, 56, 92);
           flex-direction: row;
         }
         .restaurant-card {
+          flex: 1;
           padding-top: 12px;
           margin-bottom: 28px;
           @media (min-width: 768px) {
@@ -329,8 +358,24 @@ $red: rgb(255, 56, 92);
               mask: url(../assets/star.svg) no-repeat center;
             }
             .rating {
+              display: flex;
+              flex-direction: row;
               .number {
+                height: 18px;
                 margin-right: 4px;
+                display: flex;
+                align-items: center;
+                span {
+                  height: 14px;
+                }
+              }
+              .count {
+                height: 18px;
+                display: flex;
+                align-items: center;
+                span {
+                  height: 14px;
+                }
               }
             }
           }
@@ -340,6 +385,11 @@ $red: rgb(255, 56, 92);
             text-align: left;
             font-size: 18px;
             line-height: 22px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 1 !important;
+            -webkit-box-orient: vertical !important;
           }
           .category-wrapper {
             margin-bottom: 4px;

@@ -548,7 +548,7 @@ $red: rgb(255, 56, 92);
               background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
               background-size: cover;
               border-radius: 8px;
-              filter: brightness(.4);
+              filter: brightness(.6);
               position: absolute;
               top: 0;
               bottom: 0;
@@ -574,7 +574,7 @@ $red: rgb(255, 56, 92);
               transform: scale(1.02);
               transition: ease-in-out 0.3s;
               .image {
-                filter: brightness(.8);
+                filter: brightness(0.9);
               }
             }
           }
@@ -628,7 +628,7 @@ $red: rgb(255, 56, 92);
               transform: scale(1.02);
               transition: ease-in-out 0.3s;
               .image {
-                filter: brightness(.8);
+                filter: brightness(0.9);
               }
             }
           }
@@ -700,7 +700,9 @@ $red: rgb(255, 56, 92);
                     bottom: 0;
                     right: 0;
                     left:0;
-                    filter: brightness(0.8);
+                    @media (min-width: 768px) {
+                      filter: brightness(0.8);
+                    }
                   }
                 }
                 &:hover {
