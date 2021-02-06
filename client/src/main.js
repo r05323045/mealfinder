@@ -129,6 +129,14 @@ Object.keys(rules).forEach(rule => {
   extend(rule, rules[rule])
 })
 
+extend('password', {
+  params: ['target'],
+  validate (value, { target }) {
+    return value === target
+  },
+  message: '密碼與密碼確認不相同'
+})
+
 configure({
   classes: {
     valid: 'is-valid',
