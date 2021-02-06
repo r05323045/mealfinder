@@ -102,6 +102,13 @@ const restaurantController = {
     Category.findAll().then(categories => {
       return res.json({ categories })
     })
+  },
+  getDistricts: (req, res) => {
+    District.findAll({
+      where: { CityId: 1 }
+    }).then(districts => {
+      return res.json({ districts })
+    })
   }
 }
 

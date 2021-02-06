@@ -55,6 +55,9 @@ router.get('/users/restaurants', authenticated, restaurantController.getUsersRes
 // restaurantController_Category model
 router.get('/categories', restaurantController.getCategories)
 
+// restaurantController_District model
+router.get('/districts', restaurantController.getDistricts)
+
 // adminController
 router.get('/admin/users', adminController.getUsers)
 router.get('/admin/restaurants', adminController.getRestaurants)
