@@ -23,7 +23,13 @@ const restaurantController = {
     Restaurant.findAll({
       raw: true,
       nest: true,
-      include: [Category, City, District, Coupon],
+      where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
+      include: [
+        { model: Category, where: req.query.category ? { name: req.query.category } : null },
+        City,
+        { model: District, where: req.query.district ? { name: req.query.district } : null },
+        Coupon
+      ],
       attributes: {
         include: [
           [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
@@ -49,8 +55,12 @@ const restaurantController = {
     }
 
     return Restaurant.findAll({
+      where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
       include: [
-        Category, City, District, Coupon,
+        { model: Category, where: req.query.category ? { name: req.query.category } : null },
+        City,
+        { model: District, where: req.query.district ? { name: req.query.district } : null },
+        Coupon,
         { model: User, as: 'FavoritedUsers' }
       ],
       attributes: {
