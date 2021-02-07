@@ -36,7 +36,7 @@ router.get('/get_current_user', authenticated, userController.getCurrentUser)
 
 // userController_Favorite model
 router.get('/user/favorite', authenticated, userController.getFavorites)
-router.post('/user/favorite/:restaurantId', authenticated, userController.addFavorite)
+router.post('/user/favorite', authenticated, userController.addFavorite)
 router.delete('/user/favorite/:restaurantId', authenticated, userController.deleteFavorite)
 
 // userController_Like model
