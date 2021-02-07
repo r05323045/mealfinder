@@ -40,7 +40,7 @@ router.post('/user/favorite', authenticated, userController.addFavorite)
 router.delete('/user/favorite/:restaurantId', authenticated, userController.deleteFavorite)
 
 // userController_Like model
-router.post('/like/:commentId', authenticated, userController.likeComment)
+router.post('/like', authenticated, userController.likeComment)
 router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 
 // couponController_Coupon model
