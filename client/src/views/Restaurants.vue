@@ -11,7 +11,7 @@
           <div class="text">所有餐廳</div>
         </div>
       </div>
-      <div class="filter-wrapper" @click="showModal = !showModal">
+      <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
         <div class="icon filter"></div>
       </div>
     </div>
@@ -323,6 +323,7 @@ $red: rgb(255, 56, 92);
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
       .icon.filter {
         margin: auto;
         height: 16px;
@@ -330,6 +331,16 @@ $red: rgb(255, 56, 92);
         background-color: #000000;
         mask: url(../assets/filter.svg) no-repeat center;
       }
+    }
+    .filter-wrapper.filter-on:after {
+      background-color: $red;
+      border-radius: 50%;
+      content: "";
+      height: 6px;
+      width: 6px;
+      left: 50%;
+      position: absolute;
+      top: 8px;
     }
   }
   .list-container {
