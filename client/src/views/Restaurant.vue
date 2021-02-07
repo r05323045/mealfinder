@@ -22,32 +22,32 @@
     </div>
     <div class="info-container" ref="info-container">
       <div class="mobile-picture-wrapper">
-        <div class="picture"></div>
+        <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
       </div>
       <div class="restaurant-info" ref="restaurant-info">
         <div class="picture-wrapper">
-          <div class="picture"></div>
+          <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
         </div>
         <div class="title-wrapper">
           <h1 class="title">
-            ToTsuZen Steak 現切現煎以克計價濕式熟成牛排
+            {{ restaurant.name }}
           </h1>
           <div class="info-wrapper">
             <div class="rating-wrapper">
               <div class="icon star"></div>
-              <div class="rating">4.58</div>
-              <div class="rating-count">(84)</div>
+              <div class="rating" v-if="restaurant.rating">{{ restaurant.rating.padEnd(3, '.0') }}</div>
+              <div class="rating-count">({{ restaurant.CommentsCount }})</div>
             </div>
             <div class="dot">·</div>
-            <div class="district">大安區</div>
+            <div class="district" v-if="restaurant.District">{{ restaurant.District.name }}</div>
           </div>
-          <div class="address-wrapper">
-            台北市敦化南路一段1巷1號
+          <div class="address-wrapper" v-if="restaurant.District">
+            台北市{{ `${restaurant.District.name}${restaurant.address}` }}
           </div>
           <div class="contact-wrapper">
             <div class="phone-wrapper">
               <img class="icon phone" src="../assets/phone.svg">
-              <div class="phone">02-0000-0000</div>
+              <div class="phone">{{ restaurant.tel }}</div>
             </div>
             <div class="map-wrapper">
               <img class="icon map" src="../assets/map.svg">
@@ -59,7 +59,7 @@
           <div class="divider"></div>
           <div class="title">餐廳簡介</div>
           <div class="description">
-            ToTsuZen是日文漢字裡面"突然"的發音, 店名取名為ToTsuZen 的用意是以速食牛排的概念, 讓"突然"想吃高品質牛排的客人, 就可以很輕鬆自在的依照自己想吃的份量, 幾百塊的價格, 享受高端餐廳的牛排品質與美味.
+            {{ restaurant.description }}
           </div>
         </div>
         <div class="rule-wrapper">
@@ -170,8 +170,8 @@
           <div class="divider"></div>
           <div class="title">餐廳資訊</div>
           <div class="info-and-map">
-            <div class="map-wrapper">
-              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
+            <div class="map-wrapper" v-if="restaurant.place_id">
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=place_id:${restaurant.place_id}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -179,28 +179,36 @@
                   <img class="icon map" src="../assets/map.svg">
                   <div class="title">地址</div>
                 </div>
-                <div class="content">台北市敦化南路一段的巷59號</div>
+                <div class="content" v-if="restaurant.District">台北市{{ `${restaurant.District.name}${restaurant.address}` }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
                   <img class="icon phone" src="../assets/phone.svg">
                   <div class="title">電話</div>
                 </div>
-                <div class="content">02-0000-0000</div>
+                <div class="content">{{ restaurant.tel }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
                   <img class="icon time" src="../assets/clock.svg">
                   <div class="title">營業時間</div>
                 </div>
-                <div class="content">11:00 - 21:00</div>
+                <div class="content">
+                  {{ todayBusinessHours }}
+                  <div class="show-more" @click="showBusinessHour = !showBusinessHour" :class="{ showing: showBusinessHour}"></div>
+                </div>
+                <div class="business-hour-wrapper" v-show="showBusinessHour">
+                  <div class="content-wrapper">
+                    <div class="content" v-for="(time, idx) in restaurant.business_hours" :key="`business_hours-${idx}`">{{ time }}</div>
+                  </div>
+                </div>
               </div>
               <div class="item-wrapper last">
                 <div class="top-wrapper">
                   <img class="icon map" src="../assets/restaurant.svg">
                   <div class="title">餐廳類型</div>
                 </div>
-                <div class="content">牛排</div>
+                <div class="content" v-if="restaurant.Category">{{ restaurant.Category.name }}</div>
               </div>
             </div>
           </div>
@@ -217,25 +225,27 @@
           <div class="divider"></div>
           <div class="text-wrapper">
             <div class="icon star"></div>
-            <div class="text">4.47（49則評價）</div>
+            <div class="text" v-if="restaurant.rating">{{ `${restaurant.rating.padEnd(3, '.0')}（${restaurant.CommentsCount}則評價）` }}</div>
           </div>
-          <div class="comment-container-deck" v-for="i in 5" :key="`comment-deck-${i}`">
-            <div class="comment-container"  v-for="i in 2" :key="`comment-${i}`" :class="{ 'last-comment-container': i === 2 }">
-              <div class="comment-user">
-                <div class="avatar"></div>
-                <div class="name-wrapper">
-                  <div class="name">Jim</div>
-                  <div class="time">2018年4月</div>
+          <div v-if="restaurant.Comments">
+            <div class="comment-container-deck" v-for="deckNum in Math.ceil(restaurant.CommentsCount/2)" :key="`comment-deck-${deckNum}`">
+              <div class="comment-container"  v-for="(item, idx) in restaurant.Comments.slice((deckNum - 1) * 2, deckNum * 2)" :key="`comment-${idx}`" :class="{ 'last-comment-container': idx === 2 }">
+                <div class="comment-user">
+                  <div class="avatar"></div>
+                  <div class="name-wrapper">
+                    <div class="name">{{ item.name }}</div>
+                    <div class="time">{{ item.createdAt| fromNow }}</div>
+                  </div>
                 </div>
-              </div>
-              <div class="content">很好吃</div>
-              <div class="like-wrapper">
-                <div class="icon like"></div>
-                <div class="count">3</div>
+                <div class="content">{{ item.content }}</div>
+                <div class="like-wrapper">
+                  <div class="icon like"></div>
+                  <div class="count">{{ item.LikesCount }}</div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="load-more">
+          <div class="load-more" v-if="restaurant.CommentsCount > 24">
             <div class="load-more-button">載入更多評論</div>
           </div>
         </div>
@@ -264,6 +274,9 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import moment from 'moment'
 import Footer from '@/components/Footer.vue'
@@ -294,7 +307,10 @@ export default {
       bookingTime: '',
       noon: [['11:00', '11:30', '12:00'], ['12:30', '13:00', '13:30']],
       afternoon: [['14:00', '14:30', '15:00'], ['15:30', '16:00', '16:30']],
-      night: [['17:00', '17:30', '18:00'], ['18:30', '19:00', '19:30'], ['20:00']]
+      night: [['17:00', '17:30', '18:00'], ['18:30', '19:00', '19:30'], ['20:00']],
+      restaurant: {},
+      todayBusinessHours: '',
+      showBusinessHour: false
     }
   },
   components: {
@@ -302,11 +318,17 @@ export default {
     Footer,
     Navbar
   },
+  created () {
+    this.fetchRestaurant(this.$route.params.id)
+  },
   mounted () {
     this.$refs['info-container'].addEventListener('scroll', this.onScroll)
     this.footerHeight = this.$refs.footer.offsetHeight
     this.restaurantInfoHeight = this.$refs['info-container'].scrollHeight
     this.scrollBarHeight = this.$refs['info-container'].clientHeight
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     onScroll (e) {
@@ -327,6 +349,27 @@ export default {
         behavior: 'auto',
         block: 'center',
         inline: 'center'
+      })
+    },
+    async fetchRestaurant (id) {
+      try {
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
+        this.restaurant = data
+        console.log(this.restaurant.business_hours)
+        this.findTodayBusinessHours()
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
+    },
+    findTodayBusinessHours () {
+      this.restaurant.business_hours.forEach((b, idx) => {
+        if (b.slice(0, 3) === moment(new Date()).format('dddd')) {
+          this.todayBusinessHours = this.restaurant.business_hours[idx]
+        }
       })
     }
   }
@@ -678,6 +721,7 @@ $primary-color: #222;
                 padding: 0 8px;
               }
               .select {
+                cursor: pointer;
                 width: 100%;
                 padding: 0 1.4rem 0 0.8rem;
                 appearance: none;
@@ -717,6 +761,7 @@ $primary-color: #222;
                 padding: 0 8px;
               }
               .mx-input {
+                cursor: pointer;
                 height: 40px;
                 padding: 0 1.4rem 0 0.8rem;
                 appearance: none;
@@ -873,6 +918,7 @@ $primary-color: #222;
             }
             .item-wrapper {
               border-bottom: 1px solid $divider;
+              position: relative;
               .top-wrapper {
                 display: flex;
                 flex-direction: row;
@@ -894,9 +940,45 @@ $primary-color: #222;
                 text-align: left;
                 margin-left: 24px;
                 font-size: 16px;
-                font-weight: 00;
                 line-height: 1.5;
                 margin-bottom: 12px;
+                position: relative;
+                .show-more {
+                  cursor: pointer;
+                  position: absolute;
+                  right: 0;
+                  top: 4px;
+                  width: 16px;
+                  height: 16px;
+                  background-image: url("../assets/down-arrow.svg");
+                  background-repeat: no-repeat;
+                }
+                .show-more.showing {
+                  background-image: url("../assets/up-arrow.svg");
+                  background-repeat: no-repeat;
+                }
+              }
+              .business-hour-wrapper {
+                z-index: 3;
+                box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                border-radius: 15px;
+                .content-wrapper {
+                  margin: 12px 12px 0px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: flex-start;
+                  align-items: center;
+                  .content {
+                    width: 100%;
+                    flex: 1;
+                    text-align: left;
+                  }
+                }
               }
             }
             .item-wrapper.last {
@@ -984,6 +1066,7 @@ $primary-color: #222;
             flex: 1;
             margin-bottom: 40px;
             @media (min-width: 768px) {
+              flex: 0.5;
               padding: 16px;
               margin-right: 16px;
               border: 1px solid $divider;
@@ -1034,12 +1117,16 @@ $primary-color: #222;
               flex-direction: row;
               line-height: 18px;
               .icon.like {
+                cursor: pointer;
                 margin: auto 0;
                 margin-right: 8px;
                 background-color: #222222;
                 height: 14px;
                 width: 14px;
                 mask: url(../assets/like.svg) no-repeat center;
+                &:hover {
+                  background-color: $red;
+                }
               }
               .count {
                 font-size: 14px;

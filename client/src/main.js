@@ -125,6 +125,13 @@ Vue.filter('pickDateFormate', function (date) {
   }
 })
 
+Vue.filter('fromNow', function (datetime) {
+  if (!datetime) {
+    return '-'
+  }
+  return moment(datetime).fromNow()
+})
+
 Object.keys(rules).forEach(rule => {
   extend(rule, rules[rule])
 })

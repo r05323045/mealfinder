@@ -175,7 +175,7 @@ export default {
     },
     async fetchRestaurants (filter) {
       try {
-        const { data } = this.isAuthenticated ? await restaurantsAPI.getUserRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
       } catch (error) {

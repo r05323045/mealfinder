@@ -11,12 +11,22 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  getUserRestaurants (page, filter) {
+  getUsersRestaurants (page, filter) {
     let queryString = page ? `?page=${page}` : ''
     if (filter && filter.length > 1) {
       queryString += filter.join('&')
     }
     return apiHelper.get(`/users/restaurants${queryString}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getRestaurant (id) {
+    return apiHelper.get(`/restaurants/${id}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getUsersRestaurant (id) {
+    return apiHelper.get(`/users/restaurants/${id}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
