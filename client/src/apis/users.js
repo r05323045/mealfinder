@@ -16,5 +16,15 @@ export default {
     return apiHelper.delete(`/user/favorite/${restaurantId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  likeComment (commentId) {
+    return apiHelper.post('/like', { commentId: commentId }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  disLikeComment (commentId) {
+    return apiHelper.delete(`/like/${commentId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
 }

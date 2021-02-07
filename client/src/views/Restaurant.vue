@@ -49,9 +49,9 @@
               <img class="icon phone" src="../assets/phone.svg">
               <div class="phone">{{ restaurant.tel }}</div>
             </div>
-            <div class="map-wrapper">
+            <div class="map-wrapper" @click="scrollToMap">
               <img class="icon map" src="../assets/map.svg">
-              <div class="map" @click="scrollToMap">查看地圖</div>
+              <div class="map">查看地圖</div>
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@
                 </select>
               </div>
               <div class="select-wrapper children">
-                <select class="select children" v-model="childrenNum">
+                <select class="select children" v-model="childNum">
                   <option value="0">0位小孩</option>
                   <option value="1">1位小孩</option>
                   <option value="2">2位小孩</option>
@@ -177,9 +177,9 @@
                   <img class="icon time" src="../assets/clock.svg">
                   <div class="title">營業時間</div>
                 </div>
-                <div class="content">
+                <div class="content business-hour" @click="showBusinessHour = !showBusinessHour">
                   {{ todayBusinessHours }}
-                  <div class="show-more" @click="showBusinessHour = !showBusinessHour" :class="{ showing: showBusinessHour}"></div>
+                  <div class="show-more" :class="{ showing: showBusinessHour}"></div>
                 </div>
                 <div class="business-hour-wrapper" v-show="showBusinessHour">
                   <div class="content-wrapper">
@@ -205,7 +205,7 @@
             </div>
           </div>
         </div>
-        <div class="comment-wrapper">
+        <div class="comment-wrapper" v-if="restaurant.CommentsCount > 0">
           <div class="divider"></div>
           <div class="text-wrapper">
             <div class="icon star"></div>
@@ -223,7 +223,7 @@
                 </div>
                 <div class="content">{{ item.content }}</div>
                 <div class="like-wrapper">
-                  <div class="icon like"></div>
+                  <div class="icon like" :class="{ isAuthenticated: isAuthenticated, isLiked: item.isLiked }" @click="isAuthenticated ? item.isLiked ? disLikeComment(item.id) : likeComment(item.id) : ''"></div>
                   <div class="count">{{ item.LikesCount }}</div>
                 </div>
               </div>
@@ -238,17 +238,17 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight + scrollBarHeight">
+    <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight">
       <div class="booking-info-wrapper">
         <div class="booking-info">{{ pickDate | pickDateFormate }}</div>
         <div class="booking-info">
           <span>{{ adultNum }}大</span>
-          <span v-if="childrenNum > 0">{{ childrenNum }}小</span>
+          <span v-if="childNum > 0">{{ childNum }}小</span>
         </div>
         <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
       </div>
       <div class="divider"></div>
-      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime" @click="bookingTime ? $router.push('/booking') : ''">
+      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime" @click="bookingTime ? $router.push(`/booking?adult=${adultNum}&child=${childNum}&date=${pickDate}&time=${bookingTime}`) : ''">
         <div class="text" v-if="bookingTime">下一步，填寫聯絡資訊</div>
         <div class="text" v-if="!bookingTime">選擇用餐時間</div>
       </div>
@@ -261,6 +261,7 @@
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 import restaurantsAPI from '@/apis/restaurants'
+import usersAPI from '@/apis/users'
 import Navbar from '@/components/Navbar.vue'
 import moment from 'moment'
 import Footer from '@/components/Footer.vue'
@@ -288,7 +289,7 @@ export default {
       },
       scrollBarHeight: 0,
       adultNum: 2,
-      childrenNum: 0,
+      childNum: 0,
       bookingTime: '',
       noon: ['11:00', '11:30', '12:00', '12:30', '13:00', '13:30'],
       afternoon: [['14:00', '14:30', '15:00'], ['15:30', '16:00', '16:30']],
@@ -309,7 +310,7 @@ export default {
     this.fetchRestaurant(this.$route.params.id)
   },
   mounted () {
-    this.$refs['info-container'].addEventListener('scroll', this.onScroll)
+    this.$refs['info-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.footerHeight = this.$refs.footer.offsetHeight
     this.restaurantInfoHeight = this.$refs['info-container'].scrollHeight
     this.scrollBarHeight = this.$refs['info-container'].clientHeight
@@ -408,7 +409,7 @@ export default {
         }
       }
       for (let i = 0; i < 2; i++) {
-        if (startAndEnd[i].slice(3, 5) !== '00' || startAndEnd[i].slice(3, 5) !== '30') {
+        if (startAndEnd[i].slice(3, 5) !== '00' && startAndEnd[i].slice(3, 5) !== '30') {
           if (Number(startAndEnd[i].slice(3, 5)) > 30) {
             startAndEnd[i] = startAndEnd[i].slice(0, 3) + '30'
           } else {
@@ -457,6 +458,46 @@ export default {
           }
         })
       })
+    },
+    async likeComment (id) {
+      try {
+        const { data } = await usersAPI.likeComment(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.Comments.forEach(c => {
+          if (c.id === id) {
+            c.isLiked = true
+            c.LikesCount += 1
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
+      }
+    },
+    async disLikeComment (id) {
+      try {
+        const { data } = await usersAPI.disLikeComment(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.Comments.forEach(c => {
+          if (c.id === id) {
+            c.isLiked = false
+            c.LikesCount -= 1
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
+      }
     }
   }
 }
@@ -715,6 +756,7 @@ $primary-color: #222;
             }
           }
           .map-wrapper {
+            cursor: pointer;
             display: flex;
             flex-direction: row;
             margin-right: 20px;
@@ -1050,6 +1092,9 @@ $primary-color: #222;
                   background-repeat: no-repeat;
                 }
               }
+              .content.business-hour {
+                cursor: pointer;
+              }
               .business-hour-wrapper {
                 z-index: 3;
                 box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
@@ -1209,15 +1254,25 @@ $primary-color: #222;
               flex-direction: row;
               line-height: 18px;
               .icon.like {
-                cursor: pointer;
                 margin: auto 0;
                 margin-right: 8px;
                 background-color: #222222;
                 height: 14px;
                 width: 14px;
                 mask: url(../assets/like.svg) no-repeat center;
+              }
+              .icon.like.isAuthenticated {
+                cursor: pointer;
                 &:hover {
                   background-color: $red;
+                }
+              }
+              .icon.like.isAuthenticated.isLiked {
+                cursor: pointer;
+                background-color: $red;
+                mask: url(../assets/isLiked.svg) no-repeat center;
+                &:hover {
+                  mask: url(../assets/like.svg) no-repeat center;
                 }
               }
               .count {
