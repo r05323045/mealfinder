@@ -2,14 +2,14 @@
   <div class="booking" ref="booking">
     <Navbar class="restaurant-navbar" v-show="scrollY === 0"></Navbar>
     <div class="booking-searchbar-wrapper">
-      <div class="back-wrapper">
+      <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
           <div class="text">
-            ToTsuZen Steak 現切現煎以克計價濕式熟成牛排
+            {{ restaurant.name }}
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@
               </div>
             </div>
             <div class="submit-button-wrapper">
-              <button class="submit-button" type="submit" @click="submitReservation(invalid || !submitPurpose)" :disabled="invalid">
+              <button class="submit-button" type="submit" @click.prevent="submitReservation(invalid || !submitPurpose)" :disabled="invalid">
                 <div class="button">確認訂位</div>
               </button>
               <div class="back-button" @click.prevent="$router.go(-1)">
@@ -209,7 +209,7 @@ export default {
         this.firstClickSubmit = true
       }
       if (!invalid) {
-        this.$router.push('/booking/success')
+        this.$router.push(`/booking/success/${this.restaurant.id}`).catch(() => {})
       }
     }
   }
