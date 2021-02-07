@@ -171,7 +171,7 @@ const userController = {
 
   likeComment: (req, res) => {
     const UserId = req.user.id
-    const commentId = req.params.commentId
+    const commentId = req.body.commentId
     Like.create({
       UserId,
       CommentId: commentId
@@ -182,7 +182,6 @@ const userController = {
     const commentId = req.params.commentId
     Like.findOne({ where: { CommentId: commentId } })
       .then(dislike => {
-        console.log('dislike', dislike)
         dislike.destroy()
           .then(() => { return res.json({ status: 'success', message: 'Disliked comment' }) })
       })

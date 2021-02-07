@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "default-passive-events": "^2.0.0",
     "dotenv": "^8.2.0",
     "htmlparser2": "^6.0.0",
     "loadsh": "0.0.4",

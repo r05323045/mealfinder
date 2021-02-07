@@ -127,7 +127,7 @@ export default {
     ChangeDistrict
   },
   mounted () {
-    this.$refs['list-container'].addEventListener('scroll', this.onScroll)
+    this.$refs['list-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.divHeight = this.$refs['list-container'].scrollHeight
     this.scrollBarHeight = this.$refs['list-container'].clientHeight
     window.addEventListener('resize', () => {
@@ -175,7 +175,7 @@ export default {
     },
     async fetchRestaurants (filter) {
       try {
-        const { data } = this.isAuthenticated ? await restaurantsAPI.getUserRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
       } catch (error) {

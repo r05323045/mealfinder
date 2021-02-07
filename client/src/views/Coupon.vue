@@ -146,7 +146,7 @@ export default {
     Navbar
   },
   mounted () {
-    this.$refs['info-container'].addEventListener('scroll', this.onScroll)
+    this.$refs['info-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.footerHeight = this.$refs.footer.offsetHeight
     this.couponInfoHeight = this.$refs['info-container'].scrollHeight
     this.scrollBarHeight = this.$refs['info-container'].clientHeight

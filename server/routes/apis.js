@@ -40,7 +40,7 @@ router.post('/user/favorite', authenticated, userController.addFavorite)
 router.delete('/user/favorite/:restaurantId', authenticated, userController.deleteFavorite)
 
 // userController_Like model
-router.post('/like/:commentId', authenticated, userController.likeComment)
+router.post('/like', authenticated, userController.likeComment)
 router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 
 // couponController_Coupon model
@@ -50,6 +50,7 @@ router.get('/coupons', couponController.getCoupons)
 // restaurantController_Restaurant model
 router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
+router.get('/users/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
 
 // restaurantController_Category model

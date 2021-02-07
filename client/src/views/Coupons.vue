@@ -87,7 +87,7 @@ export default {
     FilterModal
   },
   mounted () {
-    this.$refs['list-container'].addEventListener('scroll', this.onScroll)
+    this.$refs['list-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.divHeight = this.$refs['list-container'].scrollHeight
     this.scrollBarHeight = this.$refs['list-container'].clientHeight
     window.addEventListener('resize', () => {

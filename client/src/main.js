@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import moment from 'moment'
 import zh from './zh_TW.js'
+import 'default-passive-events'
 import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
 
@@ -123,6 +124,13 @@ Vue.filter('pickDateFormate', function (date) {
   } else {
     return `${moment(date).format('M/DD')} ${moment(date).format('ddd')}`
   }
+})
+
+Vue.filter('fromNow', function (datetime) {
+  if (!datetime) {
+    return '-'
+  }
+  return moment(datetime).fromNow()
 })
 
 Object.keys(rules).forEach(rule => {
