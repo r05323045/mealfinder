@@ -136,7 +136,7 @@ export default {
     Navbar
   },
   mounted () {
-    this.$refs.booking.addEventListener('scroll', this.onScroll)
+    this.$refs.booking.addEventListener('scroll', this.onScroll, { passive: true })
   },
   methods: {
     onScroll (e) {

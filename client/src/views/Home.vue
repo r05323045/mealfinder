@@ -278,7 +278,7 @@ export default {
         }
       }
     })
-    this.$refs.home.addEventListener('scroll', this.onScroll)
+    this.$refs.home.addEventListener('scroll', this.onScroll, { passive: true })
     this.homeHeight = this.$refs.home.scrollHeight
     this.scrollBarHeight = this.$refs.home.clientHeight
   },
