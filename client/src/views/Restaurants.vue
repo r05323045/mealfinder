@@ -34,8 +34,8 @@
                 :style="`flex: ${1/cardPerDeck}`"
               >
                 <div class="card-image-wrapper">
-                  <div class="heart-wrapper">
-                    <img class="icon heart" src="../assets/black-heart.svg">
+                  <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="addFavorite(Number(item.id))">
+                    <div class="icon heart" :class="{ isFavorited: item.isFavorited }"></div>
                   </div>
                   <div class="card-image" :style="`background: url(${item.picture}) no-repeat center; background-size: cover`"></div>
                 </div>
@@ -93,6 +93,7 @@
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 import restaurantsAPI from '@/apis/restaurants'
+import usersAPI from '@/apis/users'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import FilterModal from '@/components/Filter.vue'
@@ -176,6 +177,7 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUserRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
+        console.log(this.restaurants)
         this.numOfPage += 1
       } catch (error) {
         console.log(error)
@@ -197,6 +199,25 @@ export default {
       if (isChanging) {
         this.districtsFilter = filter
         this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...filter.map(item => 'district=' + item)]
+      }
+    },
+    async addFavorite (id) {
+      try {
+        const { data } = await usersAPI.addFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurants.forEach(restaurant => {
+          if (restaurant.id === id) {
+            restaurant.isFavorited = true
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
       }
     }
   }
@@ -364,6 +385,7 @@ $red: rgb(255, 56, 92);
             flex-direction: row;
           }
           .restaurant-card {
+            cursor: pointer;
             flex: 1;
             padding-top: 12px;
             margin-bottom: 28px;
@@ -387,6 +409,12 @@ $red: rgb(255, 56, 92);
                   margin: auto;
                   height: 24px;
                   width: 24px;
+                  background: url(../assets/black-heart.svg) no-repeat center;
+                  background-size: cover;
+                }
+                .icon.heart.isFavorited {
+                  background: url(../assets/red-heart.svg) no-repeat center;
+                  background-size: cover;
                 }
               }
               margin-bottom: 10px;
