@@ -16,7 +16,12 @@
           <div class="icon share"></div>
         </div>
         <div class="favorite-wrapper">
-          <div class="icon favorite"></div>
+          <div
+            class="icon favorite"
+            :class="{ isFavorited: restaurant.isFavorited }"
+            @click.stop="restaurant.isFavorited ? deleteFavorite(Number(restaurant.id)) : addFavorite(Number(restaurant.id))"
+          >
+          </div>
         </div>
       </div>
     </div>
@@ -29,6 +34,19 @@
           <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
         </div>
         <div class="title-wrapper">
+          <div class="icon-container">
+            <div class="share-wrapper">
+              <div class="icon share"></div>
+            </div>
+            <div class="favorite-wrapper">
+              <div
+                class="icon favorite"
+                :class="{ isFavorited: restaurant.isFavorited }"
+                @click.stop="restaurant.isFavorited ? deleteFavorite(Number(restaurant.id)) : addFavorite(Number(restaurant.id))"
+              >
+              </div>
+            </div>
+          </div>
           <h1 class="title">
             {{ restaurant.name }}
           </h1>
@@ -495,6 +513,36 @@ export default {
           title: '目前無法收藏餐廳，請稍後'
         })
       }
+    },
+    async addFavorite (id) {
+      try {
+        const { data } = await usersAPI.addFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.isFavorited = true
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
+      }
+    },
+    async deleteFavorite (id) {
+      try {
+        const { data } = await usersAPI.deleteFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.isFavorited = false
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取消收藏餐廳，請稍後'
+        })
+      }
     }
   }
 }
@@ -603,6 +651,10 @@ $primary-color: #222;
           background-color: #000000;
           mask: url(../assets/favorite.svg) no-repeat center;
         }
+        .icon.favorite.isFavorited {
+          background-color: $red;
+          mask: url(../assets/red-heart.svg) no-repeat center;
+        }
       }
       .share-wrapper {
         margin-right: 20px;
@@ -679,6 +731,52 @@ $primary-color: #222;
       }
       .title-wrapper {
         padding: 32px 0px 24px 0px;
+        position: relative;
+        .icon-container {
+          display: none;
+          @media (min-width: 768px) {
+            position: absolute;
+            bottom: 24px;
+            right: 0;
+            display: flex;
+            flex-direction: row;
+          }
+          .favorite-wrapper {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.favorite {
+              margin: auto;
+              height: 16px;
+              width: 16px;
+              background-color: #000000;
+              mask: url(../assets/favorite.svg) no-repeat center;
+            }
+            .icon.favorite.isFavorited {
+              background-color: $red;
+              mask: url(../assets/red-heart.svg) no-repeat center;
+            }
+          }
+          .share-wrapper {
+            cursor: pointer;
+            margin-right: 20px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.share {
+              margin: auto;
+              height: 16px;
+              width: 16px;
+              background-color: #000000;
+              mask: url(../assets/share.svg) no-repeat center;
+            }
+          }
+        }
         .title {
           text-align: left;
           margin: 0;
