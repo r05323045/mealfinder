@@ -11,5 +11,10 @@ export default {
     return apiHelper.post('/user/favorite', { id: restaurantId }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  deleteFavorite (restaurantId) {
+    return apiHelper.delete(`/user/favorite/${restaurantId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
 }

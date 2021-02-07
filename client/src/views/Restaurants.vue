@@ -34,7 +34,7 @@
                 :style="`flex: ${1/cardPerDeck}`"
               >
                 <div class="card-image-wrapper">
-                  <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="addFavorite(Number(item.id))">
+                  <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="item.isFavorited ? deleteFavorite(Number(item.id)) : addFavorite(Number(item.id))">
                     <div class="icon heart" :class="{ isFavorited: item.isFavorited }"></div>
                   </div>
                   <div class="card-image" :style="`background: url(${item.picture}) no-repeat center; background-size: cover`"></div>
@@ -177,7 +177,6 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUserRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
-        console.log(this.restaurants)
         this.numOfPage += 1
       } catch (error) {
         console.log(error)
@@ -217,6 +216,25 @@ export default {
         Toast.fire({
           icon: 'error',
           title: '目前無法收藏餐廳，請稍後'
+        })
+      }
+    },
+    async deleteFavorite (id) {
+      try {
+        const { data } = await usersAPI.deleteFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurants.forEach(restaurant => {
+          if (restaurant.id === id) {
+            restaurant.isFavorited = false
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取消收藏餐廳，請稍後'
         })
       }
     }
