@@ -104,7 +104,7 @@
               type="date"
               :formatter="momentFormat"
               :placeholder="pickDate | pickDateFormate"
-              :disabled-date="notBeforeToday"
+              :disabled-date="notOpen"
               :editable="false"
               :clearable="false"
             ></date-picker>
@@ -113,54 +113,38 @@
             <div class="title">用餐時段</div>
             <div class="explain">*灰色表示該時間已客滿，可點選其他可訂位日期</div>
             <div class="book-container">
-              <div class="divider-wrapper">
+              <div class="divider-wrapper" v-if="businessHoursObj[pickDateName] && businessHoursObj[pickDateName].noon.length > 0">
                 <div class="text">中午</div>
                 <div class="divider"></div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in noon[0]" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
+              <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
+                <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].noon.length/3)" :key="`noon-wrapper-${i}`">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].noon.slice((i - 1) * 3, i * 3)" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                </div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in noon[1]" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="divider-wrapper">
+              <div class="divider-wrapper" v-if="businessHoursObj[pickDateName] && businessHoursObj[pickDateName].afternoon.length > 0">
                 <div class="text">下午</div>
                 <div class="divider"></div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in afternoon[0]" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
+              <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
+                <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].afternoon.length/3)" :key="`afternoon-wrapper-${i}`">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].afternoon.slice((i - 1) * 3, i * 3)" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                </div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in afternoon[1]" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="divider-wrapper">
+              <div class="divider-wrapper" v-if="businessHoursObj[pickDateName] && businessHoursObj[pickDateName].night.length > 0">
                 <div class="text">晚上</div>
                 <div class="divider"></div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in night[0]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in night[1]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in night[2]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-                <div style="flex: 1; margin: 0 4px 16px"></div>
-                <div style="flex: 1; margin: 0 4px 16px"></div>
+              <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
+                <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].night.length/3)" :key="`night-wrapper-${i}`">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].night.slice((i - 1) * 3, i * 3)" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="note">如有訂位以外的需求，請在下一步訂位資訊填寫</div>
@@ -264,7 +248,7 @@
         <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
       </div>
       <div class="divider"></div>
-      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime">
+      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime" @click="bookingTime ? $router.push('/booking') : ''">
         <div class="text" v-if="bookingTime">下一步，填寫聯絡資訊</div>
         <div class="text" v-if="!bookingTime">選擇用餐時間</div>
       </div>
@@ -292,6 +276,7 @@ export default {
       today: `${moment().format('M/DD')} ${moment().format('ddd')} (今日)`,
       chooseDate: false,
       pickDate: Date.now(),
+      pickDateName: moment(this.pickDate).format('dddd'),
       momentFormat: {
         stringify: (date) => {
           if (moment(date).format('M/DD') === moment().format('M/DD')) {
@@ -305,12 +290,14 @@ export default {
       adultNum: 2,
       childrenNum: 0,
       bookingTime: '',
-      noon: [['11:00', '11:30', '12:00'], ['12:30', '13:00', '13:30']],
+      noon: ['11:00', '11:30', '12:00', '12:30', '13:00', '13:30'],
       afternoon: [['14:00', '14:30', '15:00'], ['15:30', '16:00', '16:30']],
       night: [['17:00', '17:30', '18:00'], ['18:30', '19:00', '19:30'], ['20:00']],
       restaurant: {},
       todayBusinessHours: '',
-      showBusinessHour: false
+      showBusinessHour: false,
+      businessHoursObj: {},
+      closeDate: []
     }
   },
   components: {
@@ -330,6 +317,11 @@ export default {
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
+  watch: {
+    pickDate () {
+      this.pickDateName = moment(this.pickDate).format('dddd')
+    }
+  },
   methods: {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
@@ -341,8 +333,8 @@ export default {
     selectDate () {
       this.chooseDate = !this.chooseDate
     },
-    notBeforeToday (date) {
-      return date < new Date(new Date().setHours(0, 0, 0, 0))
+    notOpen (date) {
+      return date < new Date(new Date().setHours(0, 0, 0, 0)) || this.closeDate.includes(moment(date).format('dddd'))
     },
     scrollToMap () {
       this.$refs['information-wrapper'].scrollIntoView({
@@ -355,8 +347,18 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
         this.restaurant = data
-        console.log(this.restaurant.business_hours)
         this.findTodayBusinessHours()
+        this.businessHoursProcessor()
+        if (this.closeDate.includes(moment(this.pickDate).format('dddd'))) {
+          const today = new Date()
+          for (let i = 0; i < 6; i++) {
+            this.pickDate = today.setDate(new Date().getDate() + i)
+            if (!this.closeDate.includes(moment(this.pickDate).format('dddd'))) {
+              break
+            }
+          }
+          this.pickDateName = moment(this.pickDate).format('dddd')
+        }
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -370,6 +372,90 @@ export default {
         if (b.slice(0, 3) === moment(new Date()).format('dddd')) {
           this.todayBusinessHours = this.restaurant.business_hours[idx]
         }
+      })
+    },
+    businessHoursProcessor () {
+      this.restaurant.business_hours.forEach(b => {
+        this.businessHoursObj[b.slice(0, 3)] = { hours: [], start: '', end: '', noon: [], afternoon: [], night: [] }
+        if (!b.includes('休息')) {
+          let startAndEnd
+          if (b.slice(5, b.length).includes(',')) {
+            startAndEnd = b.slice(5, b.length).split(',')[0].trim().split(' – ')
+            this.checkStartAndEnd(startAndEnd, b)
+            this.pushOpenHours()
+            startAndEnd = b.slice(5, b.length).split(',')[1].trim().split(' – ')
+            this.checkStartAndEnd(startAndEnd, b)
+            this.pushOpenHours()
+          } else {
+            startAndEnd = b.slice(5, b.length).split(' – ')
+            this.checkStartAndEnd(startAndEnd, b)
+            this.pushOpenHours()
+          }
+        } else {
+          this.closeDate.push(b.slice(0, 3))
+        }
+      })
+      this.dayOrNight('06:00', '13:30', 'noon')
+      this.dayOrNight('14:00', '17:30', 'afternoon')
+      this.dayOrNight('18:00', '23:30', 'night')
+      this.dayOrNight('00:00', '05:30', 'night')
+    },
+    checkStartAndEnd (startAndEnd, dayName) {
+      const halfHourArray = []
+      for (let i = 0; i < 24; i++) {
+        for (let j = 0; j < 2; j++) {
+          halfHourArray.push(`${String(i).padStart(2, '0')}:${String(j * 30).padStart(2, '0')}`)
+        }
+      }
+      for (let i = 0; i < 2; i++) {
+        if (startAndEnd[i].slice(3, 5) !== '00' || startAndEnd[i].slice(3, 5) !== '30') {
+          if (Number(startAndEnd[i].slice(3, 5)) > 30) {
+            startAndEnd[i] = startAndEnd[i].slice(0, 3) + '30'
+          } else {
+            startAndEnd[i] = startAndEnd[i].slice(0, 3) + '00'
+          }
+        }
+      }
+      halfHourArray.forEach((time, idx) => {
+        if (time === startAndEnd[0]) {
+          this.businessHoursObj[dayName.slice(0, 3)].start = halfHourArray[idx]
+        }
+        if (time === startAndEnd[1]) {
+          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[idx - 2]
+        }
+      })
+    },
+    pushOpenHours () {
+      const halfHourArray = []
+      for (let i = 0; i < 24; i++) {
+        for (let j = 0; j < 2; j++) {
+          halfHourArray.push(`${String(i).padStart(2, '0')}:${String(j * 30).padStart(2, '0')}`)
+        }
+      }
+      Object.keys(this.businessHoursObj).forEach(key => {
+        halfHourArray.forEach((time, idx) => {
+          if (new Date('1970/01/01 ' + this.businessHoursObj[key].start) > new Date('1970/01/01 ' + this.businessHoursObj[key].end)) {
+            if (!this.businessHoursObj[key].hours.includes(time) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + this.businessHoursObj[key].end)) {
+              this.businessHoursObj[key].hours.push(time)
+            }
+            if (!this.businessHoursObj[key].hours.includes(time) && !(new Date('1970/01/01 ' + time) >= new Date('1970/01/01 ' + this.businessHoursObj[key].end) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + this.businessHoursObj[key].start))) {
+              this.businessHoursObj[key].hours.push(time)
+            }
+          } else {
+            if (!this.businessHoursObj[key].hours.includes(time) && (new Date('1970/01/01 ' + time) >= new Date('1970/01/01 ' + this.businessHoursObj[key].start) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + this.businessHoursObj[key].end))) {
+              this.businessHoursObj[key].hours.push(time)
+            }
+          }
+        })
+      })
+    },
+    dayOrNight (begin, end, range) {
+      Object.keys(this.businessHoursObj).forEach(key => {
+        this.businessHoursObj[key].hours.forEach((time, idx) => {
+          if (!this.businessHoursObj[key][range].includes(time) && (new Date('1970/01/01 ' + time) >= new Date('1970/01/01 ' + begin) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + end))) {
+            this.businessHoursObj[key][range].push(time)
+          }
+        })
       })
     }
   }
@@ -832,37 +918,43 @@ $primary-color: #222;
             .button-wrapper {
               text-align: left;
               display: flex;
-              .button {
-                cursor: pointer;
-                margin: 0 4px 16px;
-                height: 44px;
-                padding: 8px 0;
-                appearance: none;
+              flex-direction: column;
+              width: 100%;
+              .button-row {
                 flex: 1;
-                border-radius: 8px;
-                border: 1px solid $ultimategray;
-                background: none;
-                .text {
-                  font-weight: 400;
-                  font-size: 16px;
-                  line-height: 1.5;
-                  width: 100%;
-                  text-align: center;
+                display: flex;
+                .button {
+                  cursor: pointer;
+                  margin: 0 4px 16px;
+                  height: 44px;
+                  padding: 8px 0;
+                  appearance: none;
+                  width: calc((100% - 24px) / 3);
+                  border-radius: 8px;
+                  border: 1px solid $ultimategray;
+                  background: none;
+                  .text {
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    width: 100%;
+                    text-align: center;
+                  }
+                  &:hover {
+                    background: #666;
+                    .text {
+                      color: #ffffff
+                    }
+                  }
                 }
-                &:hover {
-                  background: #666;
+                .button:focus {
+                  outline: none;
+                }
+                .button.active {
+                  background: #000000;
                   .text {
                     color: #ffffff
                   }
-                }
-              }
-              .button:focus {
-                outline: none;
-              }
-              .button.active {
-                background: #000000;
-                .text {
-                  color: #ffffff
                 }
               }
             }
