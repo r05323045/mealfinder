@@ -103,7 +103,7 @@
               v-model="pickDate"
               type="date"
               :formatter="momentFormat"
-              :placeholder="pickDate | pickDateFormate"
+              :placeholder="pickDate | pickDateFormat"
               :disabled-date="notOpen"
               :editable="false"
               :clearable="false"
@@ -240,7 +240,7 @@
     </div>
     <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight">
       <div class="booking-info-wrapper">
-        <div class="booking-info">{{ pickDate | pickDateFormate }}</div>
+        <div class="booking-info">{{ pickDate | pickDateFormat }}</div>
         <div class="booking-info">
           <span>{{ adultNum }}大</span>
           <span v-if="childNum > 0">{{ childNum }}小</span>

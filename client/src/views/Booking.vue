@@ -20,25 +20,25 @@
         <div class="booking-card-wrapper">
           <div class="booking-card">
             <div class="picture-wrapper">
-              <div class="picture"></div>
+              <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
             </div>
             <div class="header">
               <img class="icon-restaurant" src="../assets/restaurant.svg">
-              <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+              <div class="name">{{ restaurant.name }}</div>
             </div>
             <div class="divider"></div>
             <div class="info">
               <div class="item-wrapper">
                 <img class="icon profile" src="../assets/profile.svg">
-                <div class="number">2大</div>
+                <div class="number">{{ adultNum }}大<span v-if="childNum > 0">{{ childNum }}小</span></div>
               </div>
               <div class="item-wrapper">
                 <img class="icon time" src="../assets/calendar.svg">
-                <div class="date">2021/01/23 (週六)</div>
+                <div class="date">{{ bookingDate | bookingDateFormat  }}</div>
               </div>
               <div class="item-wrapper">
                 <img class="icon time" src="../assets/clock.svg">
-                <div class="time">11:30</div>
+                <div class="time">{{ bookingTime }}</div>
               </div>
             </div>
           </div>
@@ -47,13 +47,13 @@
           <div class="title">確認訂位與填寫聯絡資訊</div>
           <div class="contact-card">
             <div class="all-wrapper">
-              <label for="name" class="all-text">訂位人姓名</label>
-              <input id="name" class="all-input">
+              <label for="name" class="all-text"></label>
+              <input id="name" type="text" class="all-input" v-model="userName">
               <div class="gender">
                 <span class="item-wrapper">
                   <label for="gender-female" class="item">
                     <span class="radio-input">
-                      <input name="gender" id="gender-female" role="radio" value="1" type="radio" checked>
+                      <input name="gender" id="gender-female" role="radio" value="female" type="radio" checked v-model="userGender">
                       <span class="radio-control"></span>
                     </span>
                     <span class="text">小姐</span>
@@ -62,7 +62,7 @@
                 <span class="item-wrapper">
                   <label for="gender-male" class="item">
                     <span class="radio-input">
-                      <input name="gender" id="gender-male" role="radio" value="1" type="radio">
+                      <input name="gender" id="gender-male" role="radio" value="male" type="radio" v-model="userGender">
                       <span class="radio-control"></span>
                     </span>
                     <span class="text">先生</span>
@@ -71,7 +71,7 @@
                 <span class="item-wrapper">
                   <label for="gender-other" class="item">
                     <span class="radio-input">
-                      <input name="gender" id="gender-other" role="radio" value="1" type="radio">
+                      <input name="gender" id="gender-other" role="radio" value="other" type="radio" v-model="userGender">
                       <span class="radio-control"></span>
                     </span>
                     <span class="text">其他</span>
@@ -81,11 +81,11 @@
             </div>
             <div class="all-wrapper">
               <label for="phone" class="all-text">訂位人手機號碼</label>
-              <input id="phone" class="all-input">
+              <input id="phone" type="text" class="all-input" v-model="userPhone">
             </div>
             <div class="all-wrapper">
               <label for="email" class="all-text">訂位人 Email</label>
-              <input id="email" class="all-input">
+              <input id="email" type="email" class="all-input" v-model="userEmail">
             </div>
             <div class="all-wrapper">
               <label for="purpose" class="all-text">用餐目的</label>
@@ -120,6 +120,9 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
@@ -128,15 +131,42 @@ export default {
       purpose: ['慶生', '約會', '週年慶', '家庭聚餐', '朋友聚餐', '商務聚餐'],
       submitPurpose: [],
       scrollY: 0,
-      scrollUp: true
+      scrollUp: true,
+      restaurant: [],
+      restaurantId: 0,
+      bookingTime: '',
+      bookingDate: new Date(),
+      adultNum: 0,
+      childNum: 0,
+      userName: '',
+      userGender: '',
+      userPhone: '',
+      userEmail: ''
     }
   },
   components: {
     Footer,
     Navbar
   },
+  created () {
+    this.restaurantId = this.$route.query.restaurant
+    this.adultNum = Number(this.$route.query.adult)
+    this.childNum = Number(this.$route.query.child)
+    this.bookingDate = new Date(Number(this.$route.query.date))
+    this.bookingTime = this.$route.query.time
+    this.fetchRestaurant(this.restaurantId)
+    if (this.currentUser) {
+      this.userName = this.currentUser.name
+      this.userGender = this.currentUser.gender
+      this.userPhone = this.currentUser.phone_number
+      this.userEmail = this.currentUser.email
+    }
+  },
   mounted () {
     this.$refs.booking.addEventListener('scroll', this.onScroll, { passive: true })
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     onScroll (e) {
@@ -147,6 +177,18 @@ export default {
         this.submitPurpose.splice(this.submitPurpose.indexOf(purpose), 1)
       } else {
         this.submitPurpose = [...this.submitPurpose, purpose]
+      }
+    },
+    async fetchRestaurant (id) {
+      try {
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
+        this.restaurant = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
       }
     }
   }
@@ -427,6 +469,7 @@ $primary-color: #222;
                     outline: none;
                   }
                   .radio-control {
+                    overflow: hidden;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -434,10 +477,10 @@ $primary-color: #222;
                   input + .radio-control::before {
                     content: "";
                     display: block;
-                    background: $red;
-                    width: 0.6em;
-                    height: 0.6em;
-                    box-shadow: inset 0.6em 0.6em currentColor;
+                    width: 0.5rem;
+                    height: 0.5rem;
+                    background: #222222;
+                    box-shadow: inset 0.8em 0.8em currentColor;
                     border-radius: 50%;
                     transition: 180ms transform ease-in-out;
                     transform: scale(0);
@@ -449,7 +492,6 @@ $primary-color: #222;
                     border: 0.1em solid $divider;
                   }
                   input:checked + .radio-control::before {
-                    background: $red;
                     transform: scale(1);
                   }
                 }

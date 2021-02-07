@@ -118,11 +118,19 @@ moment.locale('zh-tw', {
   }
 })
 
-Vue.filter('pickDateFormate', function (date) {
+Vue.filter('pickDateFormat', function (date) {
   if (moment(date).format('M/DD') === moment().format('M/DD')) {
     return `${moment().format('M/DD')} ${moment().format('ddd')} (今日)`
   } else {
     return `${moment(date).format('M/DD')} ${moment(date).format('ddd')}`
+  }
+})
+
+Vue.filter('bookingDateFormat', function (date) {
+  if (moment(date).format('M/DD') === moment().format('M/DD')) {
+    return `${moment().format('YYYY/M/DD')} ${moment().format('ddd')} (今日)`
+  } else {
+    return `${moment(date).format('YYYY/M/DD')} ${moment(date).format('ddd')}`
   }
 })
 
