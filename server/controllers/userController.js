@@ -153,7 +153,7 @@ const userController = {
 
   addFavorite: (req, res) => {
     const UserId = req.user.id
-    const restaurantId = req.params.restaurantId
+    const restaurantId = req.body.id
     Favorite.create({
       UserId,
       RestaurantId: restaurantId

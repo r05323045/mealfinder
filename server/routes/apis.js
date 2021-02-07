@@ -36,7 +36,7 @@ router.get('/get_current_user', authenticated, userController.getCurrentUser)
 
 // userController_Favorite model
 router.get('/user/favorite', authenticated, userController.getFavorites)
-router.post('/user/favorite/:restaurantId', authenticated, userController.addFavorite)
+router.post('/user/favorite', authenticated, userController.addFavorite)
 router.delete('/user/favorite/:restaurantId', authenticated, userController.deleteFavorite)
 
 // userController_Like model
@@ -51,6 +51,12 @@ router.get('/coupons', couponController.getCoupons)
 router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
+
+// restaurantController_Category model
+router.get('/categories', restaurantController.getCategories)
+
+// restaurantController_District model
+router.get('/districts', restaurantController.getDistricts)
 
 // adminController
 router.get('/admin/users', adminController.getUsers)

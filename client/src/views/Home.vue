@@ -38,7 +38,7 @@
         <div class="district-deck">
           <div class="district">
             <div class="background">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1560624338-df6746731250?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">大安區</span>
               </div>
@@ -46,7 +46,7 @@
           </div>
           <div class="district">
             <div class="background">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1605723123713-e942a3200930?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">士林區</span>
               </div>
@@ -56,7 +56,7 @@
         <div class="district-deck">
           <div class="district">
             <div class="background">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">信義區</span>
               </div>
@@ -64,7 +64,7 @@
           </div>
           <div class="district">
             <div class="background">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">中正區</span>
               </div>
@@ -74,17 +74,17 @@
         <div class="district-deck">
           <div class="district">
             <div class="background">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1552993873-0dd1110e025f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1351&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
-                <span class="text">中山區</span>
+                <span class="text">松山區</span>
               </div>
             </div>
           </div>
           <div class="district">
             <div class="background">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
-                <span class="text">查看更多地區</span>
+                <span class="text">更多地區</span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@
         <div class="district-deck-desktop">
           <div class="district">
             <div class="background top">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1560624338-df6746731250?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">大安區</span>
               </div>
@@ -100,7 +100,7 @@
           </div>
           <div class="district">
             <div class="background top">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1605723123713-e942a3200930?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">士林區</span>
               </div>
@@ -110,7 +110,7 @@
         <div class="district-deck-desktop">
           <div class="district">
             <div class="background bottom">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">信義區</span>
               </div>
@@ -118,15 +118,15 @@
           </div>
           <div class="district">
             <div class="background bottom">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
-                <span class="text">中山區</span>
+                <span class="text">中正區</span>
               </div>
             </div>
           </div>
           <div class="district">
             <div class="background bottom">
-              <div class="image"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
                 <span class="text">更多地區</span>
               </div>
@@ -143,7 +143,7 @@
               <div class="swiper-slide">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1496112774951-bf41010eed5e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
                 <div class="category-name">日式料理</div>
@@ -152,38 +152,47 @@
               <div class="swiper-slide">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1476240070072-d734bba9f6c1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">日式料理</div>
-                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
+                <div class="category-name">台式料理</div>
+                <div class="category-intro">探索台北在地好味道</div>
               </div>
               <div class="swiper-slide">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1542384557-0824d90731ee?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">日式料理</div>
-                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
+                <div class="category-name">美式料理</div>
+                <div class="category-intro">輕鬆多元的菜色，聊天、聚餐的好選擇</div>
               </div>
               <div class="swiper-slide">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1455853739633-8c94c03d8121?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">日式料理</div>
-                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
+                <div class="category-name">早午餐</div>
+                <div class="category-intro">精選台北特色人氣早午餐</div>
               </div>
               <div class="swiper-slide">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1468072114808-903e572b8ead?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">日式料理</div>
-                <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
+                <div class="category-name">餐酒館</div>
+                <div class="category-intro">放鬆你的夜晚，搜羅不同風格餐酒館</div>
+              </div>
+              <div class="swiper-slide">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1543992321-cefacfc2322e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1332&q=80) no-repeat center; background-size: cover"></div>
+                  </div>
+                </div>
+                <div class="category-name">更多類型</div>
+                <div class="category-intro">尋找更多不同特色餐廳</div>
               </div>
             </div>
             <div class="swiper-button-next"></div>
@@ -468,6 +477,7 @@ $red: rgb(255, 56, 92);
             }
           }
           .button {
+            cursor: pointer;
             margin: 24px 0 0 24px;
             float: left;
             background: #ffffff;
@@ -478,6 +488,11 @@ $red: rgb(255, 56, 92);
             font-weight: 600;
             @media (min-width: 768px) {
               margin: 24px 0 0 0;
+            }
+            &:hover {
+              transition: ease-in-out 0.3s;
+              background: #000000;
+              color: #ffffff;
             }
           }
         }
@@ -523,7 +538,62 @@ $red: rgb(255, 56, 92);
           flex: 1;
           width: 50%;
           .background {
+            cursor: pointer;
             padding-bottom: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .image {
+              background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
+              background-size: cover;
+              border-radius: 8px;
+              filter: brightness(.6);
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              right: 0;
+              left:0;
+            }
+            .text-wrapper {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              right: 0;
+              left:0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              .text {
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 18px;
+              }
+            }
+            &:hover {
+              transform: scale(1.02);
+              transition: ease-in-out 0.3s;
+              .image {
+                filter: brightness(0.9);
+              }
+            }
+          }
+        }
+      }
+      .district-deck-desktop {
+        display: none;
+        @media (min-width: 768px) {
+          display: flex;
+          flex-direction: row;
+          margin: 10px 0;
+        }
+        .district {
+          margin: 5px 10px;
+          flex: 1;
+          width: 50%;
+          .background {
+            cursor: pointer;
+            padding-bottom: 66.7%;
             position: relative;
             display: flex;
             justify-content: center;
@@ -554,50 +624,11 @@ $red: rgb(255, 56, 92);
                 font-size: 18px;
               }
             }
-          }
-        }
-      }
-      .district-deck-desktop {
-        display: none;
-        @media (min-width: 768px) {
-          display: flex;
-          flex-direction: row;
-          margin: 10px 0;
-        }
-        .district {
-          margin: 5px 10px;
-          flex: 1;
-          width: 50%;
-          .background {
-            padding-bottom: 66.7%;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            .image {
-              background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
-              background-size: cover;
-              border-radius: 8px;
-              filter: brightness(.4);
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              right: 0;
-              left:0;
-            }
-            .text-wrapper {
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              right: 0;
-              left:0;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              .text {
-                color: #ffffff;
-                font-weight: 600;
-                font-size: 18px;
+            &:hover {
+              transform: scale(1.02);
+              transition: ease-in-out 0.3s;
+              .image {
+                filter: brightness(0.9);
               }
             }
           }
@@ -655,6 +686,7 @@ $red: rgb(255, 56, 92);
               font-size: 18px;
               width: 50%;
               .inner-wrapper {
+                cursor: pointer;
                 width: 100%;
                 .background {
                   padding-bottom: 100%;
@@ -668,6 +700,18 @@ $red: rgb(255, 56, 92);
                     bottom: 0;
                     right: 0;
                     left:0;
+                    @media (min-width: 768px) {
+                      filter: brightness(0.8);
+                    }
+                  }
+                }
+                &:hover {
+                  transform: scale(1.02);
+                  transition: ease-in-out 0.3s;
+                  .background {
+                    .image {
+                      filter: brightness(1);
+                    }
                   }
                 }
               }
@@ -699,6 +743,10 @@ $red: rgb(255, 56, 92);
               box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.2);
               width: 3rem;
               height: 3rem;
+              &:hover {
+                transform: scale(1.05);
+                transition: ease-in-out 0.3s;
+              }
               &:focus {
                 outline: none;
               }
@@ -783,6 +831,11 @@ $red: rgb(255, 56, 92);
                 font-weight: 700;
                 font-size: 16px;
                 line-height: 20px;
+                &:hover {
+                  box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
+                  transform: scale(1.02);
+                  transition: ease-in-out 0.3s;
+                }
               }
               .button.map {
                 border: 1px solid #000000;

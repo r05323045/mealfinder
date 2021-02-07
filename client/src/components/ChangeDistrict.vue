@@ -7,19 +7,22 @@
           <div class="close-wrapper" @click="closeModal">
             <div class="icon close"></div>
           </div>
-          <div class="title">經常用餐地區</div>
+          <div class="title">
+            選擇用餐地區
+            <div class="clear-all" @click="tempFilter = []">清除全部</div>
+          </div>
         </div>
         <div class="filter-container">
           <div class="category">
             <div class="title">台北市</div>
             <div class="item-group">
-              <label class="item" v-for="(el, idx) in districts" :key="idx">
+              <label class="item" v-for="(item, idx) in districts" :key="idx">
                 <div class="text-wrapper">
-                  <div class="text">{{ el }}</div>
+                  <div class="text">{{ item.name }}</div>
                 </div>
                 <div class="input-container" :for="`checkbox-${idx}`">
                   <div class="input-wrapper">
-                    <input class="input" name="district" type="checkbox" :id="`checkbox-${idx}`">
+                    <input class="input" name="district" type="checkbox" :id="`checkbox-${idx}`"  @click="addToFilter(item.name)" :checked="tempFilter.includes(item.name)">
                     <span>
                       <span class="icon check"></span>
                     </span>
@@ -30,7 +33,7 @@
           </div>
         </div>
         <div class="filter-button-wrapper">
-          <div class="filter-button">
+          <div class="filter-button" @click="completeChanging">
             <div class="button">完成</div>
           </div>
         </div>
@@ -40,28 +43,63 @@
 </template>
 
 <script>
+
+import { Toast } from '@/utils/helpers'
+import restaurantsAPI from '@/apis/restaurants'
 export default {
   data () {
     return {
       modalContentShow: false,
-      districts: ['大安區', '信義區', '士林區', '中正區', '松山區', '中山區', '萬華區', '文山區']
+      districts: [],
+      tempFilter: []
     }
   },
   props: {
     showModal: {
       type: Boolean
+    },
+    districtsFilter: {
+      type: Array
     }
+  },
+  created () {
+    this.fetchDistricts()
   },
   watch: {
     showModal () {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+    },
+    districtsFilter () {
+      this.tempFilter = this.districtsFilter
     }
   },
   methods: {
     closeModal () {
       this.$emit('closeChangeModal')
+    },
+    async fetchDistricts () {
+      try {
+        const { data } = await restaurantsAPI.getDistricts()
+        this.districts = data.districts
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得類別，請稍候'
+        })
+      }
+    },
+    addToFilter (district) {
+      if (this.tempFilter.includes(district)) {
+        this.tempFilter.splice(this.tempFilter.indexOf(district), 1)
+      } else {
+        this.tempFilter = [...this.tempFilter, district]
+      }
+    },
+    completeChanging () {
+      this.$emit('closeChangeModal', true, this.tempFilter)
     }
   }
 }
@@ -113,6 +151,8 @@ $divider: #E6ECF0;
       position: relative;
       border-bottom: 1px solid $divider;
       .close-wrapper {
+        z-index: 1;
+        cursor: pointer;
         position: absolute;
         left: 10;
         height: 32px;
@@ -129,11 +169,21 @@ $divider: #E6ECF0;
         }
       }
       .title {
-        cursor: pointer;
         line-height: 32px;
         flex: 1;
         font-size: 16px;
         font-weight: 600;
+        position: relative;
+        .clear-all {
+          cursor: pointer;
+          position: absolute;
+          top: 0;
+          right: 10px;
+          line-height: 32px;
+          font-size: 16px;
+          font-weight: 600;
+          text-decoration: underline;
+        }
       }
     }
     .filter-container {
@@ -208,6 +258,7 @@ $divider: #E6ECF0;
       padding: 16px 24px;
       background: #ffffff;
       .filter-button {
+        cursor: pointer;
         height: 100%;
         width: calc(100%);
         background: #222222;

@@ -7,19 +7,22 @@
           <div class="close-wrapper" @click="closeModal">
             <div class="icon close"></div>
           </div>
-          <div class="title">偏好的餐廳類型</div>
+          <div class="title">
+            選擇餐廳類型
+            <div class="clear-all" @click="tempFilter = []">清除全部</div>
+          </div>
         </div>
         <div class="filter-container">
           <div class="category">
             <div class="title">餐廳類型</div>
             <div class="item-group">
-              <label class="item" v-for="i in 8" :key="i">
+              <label class="item" v-for="(item, idx) in categories" :key="idx">
                 <div class="text-wrapper">
-                  <div class="text">日式料理</div>
+                  <div class="text">{{ item.name }}</div>
                 </div>
-                <div class="input-container" :for="`checkbox-${i}`">
+                <div class="input-container" :for="`checkbox-${idx}`">
                   <div class="input-wrapper">
-                    <input class="input" type="checkbox" :id="`checkbox-${i}`">
+                    <input class="input" type="checkbox" :id="`checkbox-${idx}`" @click="addToFilter(item.name)" :checked="tempFilter.includes(item.name)">
                     <span>
                       <span class="icon check"></span>
                     </span>
@@ -30,7 +33,7 @@
           </div>
         </div>
         <div class="filter-button-wrapper">
-          <div class="filter-button">
+          <div class="filter-button" @click="completeAdding">
             <div class="button">完成</div>
           </div>
         </div>
@@ -40,27 +43,64 @@
 </template>
 
 <script>
+
+import { Toast } from '@/utils/helpers'
+import restaurantsAPI from '@/apis/restaurants'
 export default {
   data () {
     return {
-      modalContentShow: false
+      modalContentShow: false,
+      categories: [],
+      tempFilter: []
     }
   },
   props: {
     showModal: {
       type: Boolean
+    },
+    categoriesFilter: {
+      type: Array
     }
+  },
+  created () {
+    this.fetchCategories()
   },
   watch: {
     showModal () {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+    },
+    categoriesFilter () {
+      this.tempFilter = this.categoriesFilter
     }
   },
   methods: {
     closeModal () {
       this.$emit('closeAddModal')
+      this.tempFilter = this.categoriesFilter
+    },
+    async fetchCategories () {
+      try {
+        const { data } = await restaurantsAPI.getCategories()
+        this.categories = data.categories
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得類別，請稍候'
+        })
+      }
+    },
+    addToFilter (category) {
+      if (this.tempFilter.includes(category)) {
+        this.tempFilter.splice(this.tempFilter.indexOf(category), 1)
+      } else {
+        this.tempFilter = [...this.tempFilter, category]
+      }
+    },
+    completeAdding () {
+      this.$emit('closeAddModal', true, this.tempFilter)
     }
   }
 }
@@ -111,7 +151,10 @@ $divider: #E6ECF0;
       width: calc(100% - 32px);
       position: relative;
       border-bottom: 1px solid $divider;
+      display: flex;
       .close-wrapper {
+        z-index: 1;
+        cursor: pointer;
         position: absolute;
         left: 10;
         height: 32px;
@@ -128,13 +171,25 @@ $divider: #E6ECF0;
         }
       }
       .title {
-        line-height: 32px;
         flex: 1;
+        line-height: 32px;
         font-size: 16px;
         font-weight: 600;
+        position: relative;
+        .clear-all {
+          cursor: pointer;
+          position: absolute;
+          top: 0;
+          right: 10px;
+          line-height: 32px;
+          font-size: 16px;
+          font-weight: 600;
+          text-decoration: underline;
+        }
       }
     }
     .filter-container {
+      overflow-y: scroll;
       background: #ffffff;
       height: calc(100% - 168px);
       width: calc(100% - 48px);
@@ -207,6 +262,7 @@ $divider: #E6ECF0;
       padding: 16px 24px;
       background: #ffffff;
       .filter-button {
+        cursor: pointer;
         height: 100%;
         width: calc(100%);
         background: #222222;
