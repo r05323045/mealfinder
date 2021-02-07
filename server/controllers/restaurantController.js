@@ -83,7 +83,7 @@ const restaurantController = {
     return Restaurant.findByPk(req.params.restaurantId, {
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentCount']
+          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
         ]
       },
       include: [
@@ -96,7 +96,9 @@ const restaurantController = {
           model: Comment,
           attributes: {
             include: [
-              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount']
+              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'avatar']
             ]
           }
         }
@@ -111,7 +113,7 @@ const restaurantController = {
     return Restaurant.findByPk(req.params.restaurantId, {
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentCount']
+          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
         ]
       },
       include: [
@@ -124,7 +126,9 @@ const restaurantController = {
           model: Comment,
           attributes: {
             include: [
-              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount']
+              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'avatar']
             ]
           }
         }
