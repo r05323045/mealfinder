@@ -44,13 +44,13 @@
               <div class="divider-wrapper">
                 <div class="divider"></div>
               </div>
-              <div class="item">登出</div>
+              <div class="item" @click="$router.push('/signin').catch(()=>{})">登出</div>
             </div>
           </div>
         </div>
       </div>
       <div class="navbar-desktop-middle">
-        <div class="tab-wrapper" v-show="openSearch">
+        <div class="tab-wrapper">
           <div class="condition-wrapper">
             <div class="condition">條件</div>
             <div class="divider"></div>

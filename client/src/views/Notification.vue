@@ -56,6 +56,9 @@ $red: rgb(255, 56, 92);
     padding: 36px 24px;
     text-align: left;
     position: relative;
+    @media (min-width: 768px) {
+      padding: 36px 40px;
+    }
     @media (min-width: 992px) {
       padding: 36px 80px;
     }
@@ -63,6 +66,12 @@ $red: rgb(255, 56, 92);
       font-size: 24px;
       font-weight: 800;
       line-height: 1.5;
+      @media (min-width: 768px) {
+        font-size: 26px;
+      }
+      @media (min-width: 992px) {
+        font-size: 32px;
+      }
     }
     .notification-card {
       margin: 24px 0 ;

@@ -67,7 +67,7 @@ $red: rgb(255, 56, 92);
       font-weight: 600;
       .title {
         font-size: 16px;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           font-size: 18px;
         }
       }
@@ -75,7 +75,7 @@ $red: rgb(255, 56, 92);
         cursor: pointer;
         text-decoration: underline;
         font-size: 14px;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           font-size: 16px;
         }
       }
@@ -120,7 +120,7 @@ $red: rgb(255, 56, 92);
             font-weight: 400;
             line-height: 1.5;
             text-align: left;
-            @media (min-width: 992px) {
+            @media (min-width: 768px) {
               font-size: 18px;
             }
           }
@@ -132,6 +132,9 @@ $red: rgb(255, 56, 92);
             display: flex;
             justify-content: center;
             align-items: center;
+            @media (min-width: 768px) {
+              font-size: 19px;
+            }
             @media (min-width: 992px) {
               font-size: 22px;
             }
@@ -172,6 +175,9 @@ $red: rgb(255, 56, 92);
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      @media (min-width: 768px) {
+        font-size: 19px;
+      }
       @media (min-width: 992px) {
         font-size: 22px;
       }

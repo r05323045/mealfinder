@@ -110,6 +110,9 @@ $red: rgb(255, 56, 92);
     position: relative;
     margin: auto;
     max-width: 1040px;
+    @media (min-width: 768px) {
+      padding: 36px 40px 60px;
+    }
     @media (min-width: 992px) {
       padding: 36px 80px 60px;
     }
@@ -118,6 +121,9 @@ $red: rgb(255, 56, 92);
       font-weight: 800;
       line-height: 1.5;
       margin-bottom: 24px;
+      @media (min-width: 768px) {
+        font-size: 26px;
+      }
       @media (min-width: 992px) {
         display: none;
       }
@@ -130,9 +136,9 @@ $red: rgb(255, 56, 92);
         flex-direction: row;
       }
       .order-card-wrapper {
-        max-width: 300px;
         flex: 1;
         @media (min-width: 992px) {
+          max-width: 300px;
           margin: 60px 36px 0 0;
         }
         .order-card {

@@ -146,7 +146,7 @@ export default {
     Navbar
   },
   mounted () {
-    this.$refs['info-container'].addEventListener('scroll', this.onScroll)
+    this.$refs['info-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.footerHeight = this.$refs.footer.offsetHeight
     this.couponInfoHeight = this.$refs['info-container'].scrollHeight
     this.scrollBarHeight = this.$refs['info-container'].clientHeight
@@ -160,13 +160,6 @@ export default {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
       this.scrollY = this.$refs['info-container'].scrollTop
-    },
-    scrollToMap () {
-      this.$refs['information-wrapper'].scrollIntoView({
-        behavior: 'auto',
-        block: 'center',
-        inline: 'center'
-      })
     }
   }
 }
@@ -179,7 +172,6 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $default-color: #000000;
 $primary-color: #222;
-@import '~vue2-datepicker/scss/index.scss';
 .coupon {
   height: 100%;
   position: relative;
@@ -188,7 +180,7 @@ $primary-color: #222;
   padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: block;
     }
   }
@@ -204,7 +196,7 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: none;
     }
     .back-wrapper {
@@ -300,14 +292,14 @@ $primary-color: #222;
     scroll-behavior: smooth;
     position: absolute;
     top: 60px;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       top: 0px;
     }
     .mobile-picture-wrapper {
       width: 100%;
       padding-top: 66.7%;
       position: relative;
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         display: none;
       }
       .picture {
@@ -324,12 +316,15 @@ $primary-color: #222;
       margin: auto;
       max-width: 1040px;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 105px 40px 0;
+      }
       @media (min-width: 992px) {
         padding: 105px 80px 0;
       }
       .picture-wrapper {
         display: none;
-         @media (min-width: 992px) {
+         @media (min-width: 768px) {
           display: block;
           width: 100%;
           padding-top: 50%;
@@ -535,10 +530,13 @@ $primary-color: #222;
           position: relative;
           background: url(../assets/eatNow.svg) no-repeat center;
           background-size: cover;
-          @media (min-width: 992px) {
-            padding-top: 25%;
+          @media (min-width: 768px) {
+            padding-top: 33.3%;
             background: url(../assets/people-eating-food.svg) no-repeat center;
             background-size: cover;
+          }
+          @media (min-width: 992px) {
+            padding-top: 25%;
           }
           .cover {
             position: absolute;
@@ -573,6 +571,10 @@ $primary-color: #222;
     height: 48px;
     padding: 16px 24px;
     background: #ffffff;
+    @media (min-width: 768px) {
+      width: calc(100vw - 80px);
+      padding: 12px 40px;
+    }
     @media (min-width: 992px) {
       width: calc(100vw - 160px);
       padding: 16px 80px;
@@ -587,6 +589,9 @@ $primary-color: #222;
       display: flex;
       justify-content: center;
       align-items: center;
+      @media (min-width: 768px) {
+        width: calc(100vw - 80px);
+      }
       @media (min-width: 992px) {
         width: calc(100vw - 160px);
       }

@@ -16,42 +16,60 @@
           <div class="icon share"></div>
         </div>
         <div class="favorite-wrapper">
-          <div class="icon favorite"></div>
+          <div
+            class="icon favorite"
+            :class="{ isFavorited: restaurant.isFavorited }"
+            @click.stop="restaurant.isFavorited ? deleteFavorite(Number(restaurant.id)) : addFavorite(Number(restaurant.id))"
+          >
+          </div>
         </div>
       </div>
     </div>
     <div class="info-container" ref="info-container">
       <div class="mobile-picture-wrapper">
-        <div class="picture"></div>
+        <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
       </div>
       <div class="restaurant-info" ref="restaurant-info">
         <div class="picture-wrapper">
-          <div class="picture"></div>
+          <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
         </div>
         <div class="title-wrapper">
+          <div class="icon-container">
+            <div class="share-wrapper">
+              <div class="icon share"></div>
+            </div>
+            <div class="favorite-wrapper">
+              <div
+                class="icon favorite"
+                :class="{ isFavorited: restaurant.isFavorited }"
+                @click.stop="restaurant.isFavorited ? deleteFavorite(Number(restaurant.id)) : addFavorite(Number(restaurant.id))"
+              >
+              </div>
+            </div>
+          </div>
           <h1 class="title">
-            ToTsuZen Steak 現切現煎以克計價濕式熟成牛排
+            {{ restaurant.name }}
           </h1>
           <div class="info-wrapper">
             <div class="rating-wrapper">
               <div class="icon star"></div>
-              <div class="rating">4.58</div>
-              <div class="rating-count">(84)</div>
+              <div class="rating" v-if="restaurant.rating">{{ restaurant.rating.padEnd(3, '.0') }}</div>
+              <div class="rating-count">({{ restaurant.CommentsCount }})</div>
             </div>
             <div class="dot">·</div>
-            <div class="district">大安區</div>
+            <div class="district" v-if="restaurant.District">{{ restaurant.District.name }}</div>
           </div>
-          <div class="address-wrapper">
-            台北市敦化南路一段1巷1號
+          <div class="address-wrapper" v-if="restaurant.District">
+            台北市{{ `${restaurant.District.name}${restaurant.address}` }}
           </div>
           <div class="contact-wrapper">
             <div class="phone-wrapper">
               <img class="icon phone" src="../assets/phone.svg">
-              <div class="phone">02-0000-0000</div>
+              <div class="phone">{{ restaurant.tel }}</div>
             </div>
-            <div class="map-wrapper">
+            <div class="map-wrapper" @click="scrollToMap">
               <img class="icon map" src="../assets/map.svg">
-              <div class="map" @click="scrollToMap">查看地圖</div>
+              <div class="map">查看地圖</div>
             </div>
           </div>
         </div>
@@ -59,7 +77,7 @@
           <div class="divider"></div>
           <div class="title">餐廳簡介</div>
           <div class="description">
-            ToTsuZen是日文漢字裡面"突然"的發音, 店名取名為ToTsuZen 的用意是以速食牛排的概念, 讓"突然"想吃高品質牛排的客人, 就可以很輕鬆自在的依照自己想吃的份量, 幾百塊的價格, 享受高端餐廳的牛排品質與美味.
+            {{ restaurant.description }}
           </div>
         </div>
         <div class="rule-wrapper">
@@ -88,7 +106,7 @@
                 </select>
               </div>
               <div class="select-wrapper children">
-                <select class="select children" v-model="childrenNum">
+                <select class="select children" v-model="childNum">
                   <option value="0">0位小孩</option>
                   <option value="1">1位小孩</option>
                   <option value="2">2位小孩</option>
@@ -103,8 +121,8 @@
               v-model="pickDate"
               type="date"
               :formatter="momentFormat"
-              :placeholder="pickDate | pickDateFormate"
-              :disabled-date="notBeforeToday"
+              :placeholder="pickDate | pickDateFormat"
+              :disabled-date="notOpen"
               :editable="false"
               :clearable="false"
             ></date-picker>
@@ -113,54 +131,38 @@
             <div class="title">用餐時段</div>
             <div class="explain">*灰色表示該時間已客滿，可點選其他可訂位日期</div>
             <div class="book-container">
-              <div class="divider-wrapper">
+              <div class="divider-wrapper" v-if="businessHoursObj[pickDateName] && businessHoursObj[pickDateName].noon.length > 0">
                 <div class="text">中午</div>
                 <div class="divider"></div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in noon[0]" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
+              <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
+                <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].noon.length/3)" :key="`noon-wrapper-${i}`">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].noon.slice((i - 1) * 3, i * 3)" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                </div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in noon[1]" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="divider-wrapper">
+              <div class="divider-wrapper" v-if="businessHoursObj[pickDateName] && businessHoursObj[pickDateName].afternoon.length > 0">
                 <div class="text">下午</div>
                 <div class="divider"></div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in afternoon[0]" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
+              <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
+                <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].afternoon.length/3)" :key="`afternoon-wrapper-${i}`">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].afternoon.slice((i - 1) * 3, i * 3)" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                </div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in afternoon[1]" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="divider-wrapper">
+              <div class="divider-wrapper" v-if="businessHoursObj[pickDateName] && businessHoursObj[pickDateName].night.length > 0">
                 <div class="text">晚上</div>
                 <div class="divider"></div>
               </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in night[0]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in night[1]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-              </div>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in night[2]" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
-                  <span class="text">{{ el }}</span>
-                </button>
-                <div style="flex: 1; margin: 0 4px 16px"></div>
-                <div style="flex: 1; margin: 0 4px 16px"></div>
+              <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
+                <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].night.length/3)" :key="`night-wrapper-${i}`">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].night.slice((i - 1) * 3, i * 3)" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="note">如有訂位以外的需求，請在下一步訂位資訊填寫</div>
@@ -170,8 +172,8 @@
           <div class="divider"></div>
           <div class="title">餐廳資訊</div>
           <div class="info-and-map">
-            <div class="map-wrapper">
-              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
+            <div class="map-wrapper" v-if="restaurant.place_id">
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=place_id:${restaurant.place_id}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -179,28 +181,36 @@
                   <img class="icon map" src="../assets/map.svg">
                   <div class="title">地址</div>
                 </div>
-                <div class="content">台北市敦化南路一段的巷59號</div>
+                <div class="content" v-if="restaurant.District">台北市{{ `${restaurant.District.name}${restaurant.address}` }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
                   <img class="icon phone" src="../assets/phone.svg">
                   <div class="title">電話</div>
                 </div>
-                <div class="content">02-0000-0000</div>
+                <div class="content">{{ restaurant.tel }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
                   <img class="icon time" src="../assets/clock.svg">
                   <div class="title">營業時間</div>
                 </div>
-                <div class="content">11:00 - 21:00</div>
+                <div class="content business-hour" @click="showBusinessHour = !showBusinessHour">
+                  {{ todayBusinessHours }}
+                  <div class="show-more" :class="{ showing: showBusinessHour}"></div>
+                </div>
+                <div class="business-hour-wrapper" v-show="showBusinessHour">
+                  <div class="content-wrapper">
+                    <div class="content" v-for="(time, idx) in restaurant.business_hours" :key="`business_hours-${idx}`">{{ time }}</div>
+                  </div>
+                </div>
               </div>
               <div class="item-wrapper last">
                 <div class="top-wrapper">
                   <img class="icon map" src="../assets/restaurant.svg">
                   <div class="title">餐廳類型</div>
                 </div>
-                <div class="content">牛排</div>
+                <div class="content" v-if="restaurant.Category">{{ restaurant.Category.name }}</div>
               </div>
             </div>
           </div>
@@ -213,29 +223,31 @@
             </div>
           </div>
         </div>
-        <div class="comment-wrapper">
+        <div class="comment-wrapper" v-if="restaurant.CommentsCount > 0">
           <div class="divider"></div>
           <div class="text-wrapper">
             <div class="icon star"></div>
-            <div class="text">4.47（49則評價）</div>
+            <div class="text" v-if="restaurant.rating">{{ `${restaurant.rating.padEnd(3, '.0')}（${restaurant.CommentsCount}則評價）` }}</div>
           </div>
-          <div class="comment-container-deck" v-for="i in 5" :key="`comment-deck-${i}`">
-            <div class="comment-container"  v-for="i in 2" :key="`comment-${i}`" :class="{ 'last-comment-container': i === 2 }">
-              <div class="comment-user">
-                <div class="avatar"></div>
-                <div class="name-wrapper">
-                  <div class="name">Jim</div>
-                  <div class="time">2018年4月</div>
+          <div v-if="restaurant.Comments">
+            <div class="comment-container-deck" v-for="deckNum in Math.ceil(restaurant.CommentsCount/2)" :key="`comment-deck-${deckNum}`">
+              <div class="comment-container"  v-for="(item, idx) in restaurant.Comments.slice((deckNum - 1) * 2, deckNum * 2)" :key="`comment-${idx}`" :class="{ 'last-comment-container': idx === 2 }">
+                <div class="comment-user">
+                  <div class="avatar"></div>
+                  <div class="name-wrapper">
+                    <div class="name">{{ item.name }}</div>
+                    <div class="time">{{ item.createdAt| fromNow }}</div>
+                  </div>
                 </div>
-              </div>
-              <div class="content">很好吃</div>
-              <div class="like-wrapper">
-                <div class="icon like"></div>
-                <div class="count">3</div>
+                <div class="content">{{ item.content }}</div>
+                <div class="like-wrapper">
+                  <div class="icon like" :class="{ isAuthenticated: isAuthenticated, isLiked: item.isLiked }" @click="isAuthenticated ? item.isLiked ? disLikeComment(item.id) : likeComment(item.id) : ''"></div>
+                  <div class="count">{{ item.LikesCount }}</div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="load-more">
+          <div class="load-more" v-if="restaurant.CommentsCount > 24">
             <div class="load-more-button">載入更多評論</div>
           </div>
         </div>
@@ -244,17 +256,17 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight + scrollBarHeight">
+    <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight">
       <div class="booking-info-wrapper">
-        <div class="booking-info">{{ pickDate | pickDateFormate }}</div>
+        <div class="booking-info">{{ pickDate | pickDateFormat }}</div>
         <div class="booking-info">
           <span>{{ adultNum }}大</span>
-          <span v-if="childrenNum > 0">{{ childrenNum }}小</span>
+          <span v-if="childNum > 0">{{ childNum }}小</span>
         </div>
         <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
       </div>
       <div class="divider"></div>
-      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime">
+      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime" @click="bookingTime ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
         <div class="text" v-if="bookingTime">下一步，填寫聯絡資訊</div>
         <div class="text" v-if="!bookingTime">選擇用餐時間</div>
       </div>
@@ -264,6 +276,10 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import restaurantsAPI from '@/apis/restaurants'
+import usersAPI from '@/apis/users'
 import Navbar from '@/components/Navbar.vue'
 import moment from 'moment'
 import Footer from '@/components/Footer.vue'
@@ -279,6 +295,7 @@ export default {
       today: `${moment().format('M/DD')} ${moment().format('ddd')} (今日)`,
       chooseDate: false,
       pickDate: Date.now(),
+      pickDateName: moment(this.pickDate).format('dddd'),
       momentFormat: {
         stringify: (date) => {
           if (moment(date).format('M/DD') === moment().format('M/DD')) {
@@ -290,11 +307,13 @@ export default {
       },
       scrollBarHeight: 0,
       adultNum: 2,
-      childrenNum: 0,
+      childNum: 0,
       bookingTime: '',
-      noon: [['11:00', '11:30', '12:00'], ['12:30', '13:00', '13:30']],
-      afternoon: [['14:00', '14:30', '15:00'], ['15:30', '16:00', '16:30']],
-      night: [['17:00', '17:30', '18:00'], ['18:30', '19:00', '19:30'], ['20:00']]
+      restaurant: {},
+      todayBusinessHours: '',
+      showBusinessHour: false,
+      businessHoursObj: {},
+      closeDate: []
     }
   },
   components: {
@@ -302,11 +321,22 @@ export default {
     Footer,
     Navbar
   },
+  created () {
+    this.fetchRestaurant(this.$route.params.id)
+  },
   mounted () {
-    this.$refs['info-container'].addEventListener('scroll', this.onScroll)
+    this.$refs['info-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.footerHeight = this.$refs.footer.offsetHeight
     this.restaurantInfoHeight = this.$refs['info-container'].scrollHeight
     this.scrollBarHeight = this.$refs['info-container'].clientHeight
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
+  },
+  watch: {
+    pickDate () {
+      this.pickDateName = moment(this.pickDate).format('dddd')
+    }
   },
   methods: {
     onScroll (e) {
@@ -319,8 +349,8 @@ export default {
     selectDate () {
       this.chooseDate = !this.chooseDate
     },
-    notBeforeToday (date) {
-      return date < new Date(new Date().setHours(0, 0, 0, 0))
+    notOpen (date) {
+      return date < new Date(new Date().setHours(0, 0, 0, 0)) || this.closeDate.includes(moment(date).format('dddd'))
     },
     scrollToMap () {
       this.$refs['information-wrapper'].scrollIntoView({
@@ -328,6 +358,191 @@ export default {
         block: 'center',
         inline: 'center'
       })
+    },
+    async fetchRestaurant (id) {
+      try {
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
+        this.restaurant = data
+        this.findTodayBusinessHours()
+        this.businessHoursProcessor()
+        if (this.closeDate.includes(moment(this.pickDate).format('dddd'))) {
+          const today = new Date()
+          for (let i = 0; i < 6; i++) {
+            this.pickDate = today.setDate(new Date().getDate() + i)
+            if (!this.closeDate.includes(moment(this.pickDate).format('dddd'))) {
+              break
+            }
+          }
+          this.pickDateName = moment(this.pickDate).format('dddd')
+        }
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
+    },
+    findTodayBusinessHours () {
+      this.restaurant.business_hours.forEach((b, idx) => {
+        if (b.slice(0, 3) === moment(new Date()).format('dddd')) {
+          this.todayBusinessHours = this.restaurant.business_hours[idx]
+        }
+      })
+    },
+    businessHoursProcessor () {
+      this.restaurant.business_hours.forEach(b => {
+        this.businessHoursObj[b.slice(0, 3)] = { hours: [], start: '', end: '', noon: [], afternoon: [], night: [] }
+        if (!b.includes('休息')) {
+          let startAndEnd
+          if (b.slice(5, b.length).includes(',')) {
+            startAndEnd = b.slice(5, b.length).split(',')[0].trim().split(' – ')
+            this.checkStartAndEnd(startAndEnd, b)
+            this.pushOpenHours()
+            startAndEnd = b.slice(5, b.length).split(',')[1].trim().split(' – ')
+            this.checkStartAndEnd(startAndEnd, b)
+            this.pushOpenHours()
+          } else {
+            startAndEnd = b.slice(5, b.length).split(' – ')
+            this.checkStartAndEnd(startAndEnd, b)
+            this.pushOpenHours()
+          }
+        } else {
+          this.closeDate.push(b.slice(0, 3))
+        }
+      })
+      this.dayOrNight('06:00', '13:30', 'noon')
+      this.dayOrNight('14:00', '17:30', 'afternoon')
+      this.dayOrNight('18:00', '23:30', 'night')
+      this.dayOrNight('00:00', '05:30', 'night')
+    },
+    checkStartAndEnd (startAndEnd, dayName) {
+      const halfHourArray = []
+      for (let i = 0; i < 24; i++) {
+        for (let j = 0; j < 2; j++) {
+          halfHourArray.push(`${String(i).padStart(2, '0')}:${String(j * 30).padStart(2, '0')}`)
+        }
+      }
+      for (let i = 0; i < 2; i++) {
+        if (startAndEnd[i].slice(3, 5) !== '00' && startAndEnd[i].slice(3, 5) !== '30') {
+          if (Number(startAndEnd[i].slice(3, 5)) > 30) {
+            startAndEnd[i] = startAndEnd[i].slice(0, 3) + '30'
+          } else {
+            startAndEnd[i] = startAndEnd[i].slice(0, 3) + '00'
+          }
+        }
+      }
+      halfHourArray.forEach((time, idx) => {
+        if (time === startAndEnd[0]) {
+          this.businessHoursObj[dayName.slice(0, 3)].start = halfHourArray[idx]
+        }
+        if (time === startAndEnd[1]) {
+          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[idx - 2]
+        }
+      })
+    },
+    pushOpenHours () {
+      const halfHourArray = []
+      for (let i = 0; i < 24; i++) {
+        for (let j = 0; j < 2; j++) {
+          halfHourArray.push(`${String(i).padStart(2, '0')}:${String(j * 30).padStart(2, '0')}`)
+        }
+      }
+      Object.keys(this.businessHoursObj).forEach(key => {
+        halfHourArray.forEach((time, idx) => {
+          if (new Date('1970/01/01 ' + this.businessHoursObj[key].start) > new Date('1970/01/01 ' + this.businessHoursObj[key].end)) {
+            if (!this.businessHoursObj[key].hours.includes(time) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + this.businessHoursObj[key].end)) {
+              this.businessHoursObj[key].hours.push(time)
+            }
+            if (!this.businessHoursObj[key].hours.includes(time) && !(new Date('1970/01/01 ' + time) >= new Date('1970/01/01 ' + this.businessHoursObj[key].end) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + this.businessHoursObj[key].start))) {
+              this.businessHoursObj[key].hours.push(time)
+            }
+          } else {
+            if (!this.businessHoursObj[key].hours.includes(time) && (new Date('1970/01/01 ' + time) >= new Date('1970/01/01 ' + this.businessHoursObj[key].start) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + this.businessHoursObj[key].end))) {
+              this.businessHoursObj[key].hours.push(time)
+            }
+          }
+        })
+      })
+    },
+    dayOrNight (begin, end, range) {
+      Object.keys(this.businessHoursObj).forEach(key => {
+        this.businessHoursObj[key].hours.forEach((time, idx) => {
+          if (!this.businessHoursObj[key][range].includes(time) && (new Date('1970/01/01 ' + time) >= new Date('1970/01/01 ' + begin) && new Date('1970/01/01 ' + time) <= new Date('1970/01/01 ' + end))) {
+            this.businessHoursObj[key][range].push(time)
+          }
+        })
+      })
+    },
+    async likeComment (id) {
+      try {
+        const { data } = await usersAPI.likeComment(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.Comments.forEach(c => {
+          if (c.id === id) {
+            c.isLiked = true
+            c.LikesCount += 1
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
+      }
+    },
+    async disLikeComment (id) {
+      try {
+        const { data } = await usersAPI.disLikeComment(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.Comments.forEach(c => {
+          if (c.id === id) {
+            c.isLiked = false
+            c.LikesCount -= 1
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
+      }
+    },
+    async addFavorite (id) {
+      try {
+        const { data } = await usersAPI.addFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.isFavorited = true
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
+      }
+    },
+    async deleteFavorite (id) {
+      try {
+        const { data } = await usersAPI.deleteFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.isFavorited = false
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取消收藏餐廳，請稍後'
+        })
+      }
     }
   }
 }
@@ -349,7 +564,7 @@ $primary-color: #222;
   padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: block;
     }
   }
@@ -365,7 +580,7 @@ $primary-color: #222;
     justify-content: center;
     align-items: center;
     background: #ffffff;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       display: none;
     }
     .back-wrapper {
@@ -436,6 +651,10 @@ $primary-color: #222;
           background-color: #000000;
           mask: url(../assets/favorite.svg) no-repeat center;
         }
+        .icon.favorite.isFavorited {
+          background-color: $red;
+          mask: url(../assets/red-heart.svg) no-repeat center;
+        }
       }
       .share-wrapper {
         margin-right: 20px;
@@ -461,14 +680,14 @@ $primary-color: #222;
     scroll-behavior: smooth;
     position: absolute;
     top: 60px;
-    @media (min-width: 992px) {
+    @media (min-width: 768px) {
       top: 0px;
     }
     .mobile-picture-wrapper {
       width: 100%;
       padding-top: 66.7%;
       position: relative;
-      @media (min-width: 992px) {
+      @media (min-width: 768px) {
         display: none;
       }
       .picture {
@@ -485,12 +704,15 @@ $primary-color: #222;
       margin: auto;
       max-width: 1040px;
       padding: 0 24px;
+      @media (min-width: 768px) {
+        padding: 105px 40px 0;
+      }
       @media (min-width: 992px) {
         padding: 105px 80px 0;
       }
       .picture-wrapper {
         display: none;
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
           display: block;
           padding-top: 50%;
           width: 100%;
@@ -509,6 +731,52 @@ $primary-color: #222;
       }
       .title-wrapper {
         padding: 32px 0px 24px 0px;
+        position: relative;
+        .icon-container {
+          display: none;
+          @media (min-width: 768px) {
+            position: absolute;
+            bottom: 24px;
+            right: 0;
+            display: flex;
+            flex-direction: row;
+          }
+          .favorite-wrapper {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.favorite {
+              margin: auto;
+              height: 16px;
+              width: 16px;
+              background-color: #000000;
+              mask: url(../assets/favorite.svg) no-repeat center;
+            }
+            .icon.favorite.isFavorited {
+              background-color: $red;
+              mask: url(../assets/red-heart.svg) no-repeat center;
+            }
+          }
+          .share-wrapper {
+            cursor: pointer;
+            margin-right: 20px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.share {
+              margin: auto;
+              height: 16px;
+              width: 16px;
+              background-color: #000000;
+              mask: url(../assets/share.svg) no-repeat center;
+            }
+          }
+        }
         .title {
           text-align: left;
           margin: 0;
@@ -583,6 +851,7 @@ $primary-color: #222;
             }
           }
           .map-wrapper {
+            cursor: pointer;
             display: flex;
             flex-direction: row;
             margin-right: 20px;
@@ -668,10 +937,14 @@ $primary-color: #222;
             .select-wrapper {
               padding: 0 4px;
               flex: 1;
+              @media (min-width: 768px) {
+                padding: 0 6px;
+              }
               @media (min-width: 992px) {
                 padding: 0 8px;
               }
               .select {
+                cursor: pointer;
                 width: 100%;
                 padding: 0 1.4rem 0 0.8rem;
                 appearance: none;
@@ -704,10 +977,14 @@ $primary-color: #222;
             .mx-input-wrapper {
               padding: 0 4px;
               flex: 1;
+              @media (min-width: 768px) {
+                padding: 0 8px;
+              }
               @media (min-width: 992px) {
                 padding: 0 8px;
               }
               .mx-input {
+                cursor: pointer;
                 height: 40px;
                 padding: 0 1.4rem 0 0.8rem;
                 appearance: none;
@@ -725,6 +1002,9 @@ $primary-color: #222;
               }
               .mx-icon-calendar {
                 right: 12px;
+                @media (min-width: 768px) {
+                  right: 14px;
+                }
                 @media (min-width: 992px) {
                   right: 16px;
                 }
@@ -775,37 +1055,43 @@ $primary-color: #222;
             .button-wrapper {
               text-align: left;
               display: flex;
-              .button {
-                cursor: pointer;
-                margin: 0 4px 16px;
-                height: 44px;
-                padding: 8px 0;
-                appearance: none;
+              flex-direction: column;
+              width: 100%;
+              .button-row {
                 flex: 1;
-                border-radius: 8px;
-                border: 1px solid $ultimategray;
-                background: none;
-                .text {
-                  font-weight: 400;
-                  font-size: 16px;
-                  line-height: 1.5;
-                  width: 100%;
-                  text-align: center;
+                display: flex;
+                .button {
+                  cursor: pointer;
+                  margin: 0 4px 16px;
+                  height: 44px;
+                  padding: 8px 0;
+                  appearance: none;
+                  width: calc((100% - 24px) / 3);
+                  border-radius: 8px;
+                  border: 1px solid $ultimategray;
+                  background: none;
+                  .text {
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    width: 100%;
+                    text-align: center;
+                  }
+                  &:hover {
+                    background: #666;
+                    .text {
+                      color: #ffffff
+                    }
+                  }
                 }
-                &:hover {
-                  background: #666;
+                .button:focus {
+                  outline: none;
+                }
+                .button.active {
+                  background: #000000;
                   .text {
                     color: #ffffff
                   }
-                }
-              }
-              .button:focus {
-                outline: none;
-              }
-              .button.active {
-                background: #000000;
-                .text {
-                  color: #ffffff
                 }
               }
             }
@@ -861,6 +1147,7 @@ $primary-color: #222;
             }
             .item-wrapper {
               border-bottom: 1px solid $divider;
+              position: relative;
               .top-wrapper {
                 display: flex;
                 flex-direction: row;
@@ -882,9 +1169,48 @@ $primary-color: #222;
                 text-align: left;
                 margin-left: 24px;
                 font-size: 16px;
-                font-weight: 00;
                 line-height: 1.5;
                 margin-bottom: 12px;
+                position: relative;
+                .show-more {
+                  cursor: pointer;
+                  position: absolute;
+                  right: 0;
+                  top: 4px;
+                  width: 16px;
+                  height: 16px;
+                  background-image: url("../assets/down-arrow.svg");
+                  background-repeat: no-repeat;
+                }
+                .show-more.showing {
+                  background-image: url("../assets/up-arrow.svg");
+                  background-repeat: no-repeat;
+                }
+              }
+              .content.business-hour {
+                cursor: pointer;
+              }
+              .business-hour-wrapper {
+                z-index: 3;
+                box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                border-radius: 15px;
+                .content-wrapper {
+                  margin: 12px 12px 0px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: flex-start;
+                  align-items: center;
+                  .content {
+                    width: 100%;
+                    flex: 1;
+                    text-align: left;
+                  }
+                }
               }
             }
             .item-wrapper.last {
@@ -911,6 +1237,9 @@ $primary-color: #222;
           margin-bottom: 24px;
           padding-top: 66.7%;
           position: relative;
+          @media (min-width: 768px) {
+            padding-top: 50%;
+          }
           @media (min-width: 992px) {
             padding-top: 33.3%;
           }
@@ -922,6 +1251,9 @@ $primary-color: #222;
             right: 50%;
             background: url(https://inline.imgix.net/menus/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-abf54248-3e5f-4faa-8367-5a6f171277f9_201912-01.jpg) no-repeat center;
             background-size: cover;
+            @media (min-width: 768px) {
+              right: 66.7%;
+            }
             @media (min-width: 992px) {
               right: 75%;
             }
@@ -958,17 +1290,23 @@ $primary-color: #222;
         .comment-container-deck {
           display: flex;
           flex-direction: column;
-          @media (min-width: 992px) {
+          @media (min-width: 768px) {
             flex-direction: row;
           }
           .comment-container {
             padding: 0px;
             flex: 1;
             margin-bottom: 40px;
-            @media (min-width: 992px) {
-              padding: 24px;
+            @media (min-width: 768px) {
+              flex: 0.5;
+              padding: 16px;
+              margin-right: 16px;
               border: 1px solid $divider;
               border-radius: 32px;
+            }
+
+            @media (min-width: 992px) {
+              padding: 24px;
               margin-right: 24px;
             }
             .comment-user {
@@ -1018,6 +1356,20 @@ $primary-color: #222;
                 width: 14px;
                 mask: url(../assets/like.svg) no-repeat center;
               }
+              .icon.like.isAuthenticated {
+                cursor: pointer;
+                &:hover {
+                  background-color: $red;
+                }
+              }
+              .icon.like.isAuthenticated.isLiked {
+                cursor: pointer;
+                background-color: $red;
+                mask: url(../assets/isLiked.svg) no-repeat center;
+                &:hover {
+                  mask: url(../assets/like.svg) no-repeat center;
+                }
+              }
               .count {
                 font-size: 14px;
                 font-weight: 400;
@@ -1025,7 +1377,7 @@ $primary-color: #222;
             }
           }
           .comment-container.last-comment-container {
-            @media (min-width: 992px) {
+            @media (min-width: 768px) {
               margin-right: 0;
             }
           }
@@ -1057,6 +1409,10 @@ $primary-color: #222;
     width: calc(100vw - 48px);
     padding: 8px 24px;
     background: #ffffff;
+    @media (min-width: 768px) {
+      width: calc(100vw - 80px);
+      padding: 12px 40px;
+    }
     @media (min-width: 992px) {
       width: calc(100vw - 160px);
       padding: 16px 80px;
@@ -1082,6 +1438,7 @@ $primary-color: #222;
       margin: 8px auto;
     }
     .booking-button {
+      cursor: pointer;
       margin: auto;
       max-width: 1040px;
       height: 48px;
@@ -1091,6 +1448,9 @@ $primary-color: #222;
       display: flex;
       justify-content: center;
       align-items: center;
+      @media (min-width: 768px) {
+        width: calc(100vw - 80px);
+      }
       @media (min-width: 992px) {
         width: calc(100vw - 160px);
       }
