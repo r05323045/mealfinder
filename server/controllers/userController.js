@@ -7,6 +7,7 @@ const Restaurant = db.Restaurant
 const Like = db.Like
 const Order = db.Order
 const orderItem = db.orderItem
+const Coupon = db.Coupon
 
 // JWT
 const jwt = require('jsonwebtoken')
@@ -193,7 +194,16 @@ const userController = {
     const userId = req.params.id
     Order.findAll({ where: { UserId: userId }, include: [orderItem] })
       .then(orders => { res.json(orders) })
+  },
+
+  getPurchase: (req, res) => {
+    const itemId = req.params.itemId
+    orderItem.findByPk(itemId, { include: [Coupon] })
+      .then(item => {
+        res.json(item)
+      })
   }
+
 
 }
 
