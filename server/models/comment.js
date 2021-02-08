@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Comment.belongsTo(models.Restaurant, {foreignKey: 'RestaurantId'})
       Comment.belongsTo(models.User, {foreignKey: 'UserId'})
       Comment.hasMany(models.Like, { foreignKey: 'CommentId' })
+      Comment.belongsTo(models.Reservation, {foreignKey: 'ReservationId'})
     }
   };
   Comment.init({
