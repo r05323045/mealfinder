@@ -43,6 +43,9 @@ router.delete('/user/favorite/:restaurantId', authenticated, userController.dele
 router.post('/like', authenticated, userController.likeComment)
 router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 
+//userController_Order model
+router.get('/user/:id/purchase/coupons', authenticated, userController.getPurchases)
+
 // couponController_Coupon model
 router.get('/coupons/:couponId', couponController.getCoupon)
 router.get('/coupons', couponController.getCoupons)

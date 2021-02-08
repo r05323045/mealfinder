@@ -5,6 +5,8 @@ const User = db.User
 const Favorite = db.Favorite
 const Restaurant = db.Restaurant
 const Like = db.Like
+const Order = db.Order
+const orderItem = db.orderItem
 
 // JWT
 const jwt = require('jsonwebtoken')
@@ -185,6 +187,12 @@ const userController = {
         dislike.destroy()
           .then(() => { return res.json({ status: 'success', message: 'Disliked comment' }) })
       })
+  },
+
+  getPurchases: (req, res) => {
+    const userId = req.params.id
+    Order.findAll({ where: { UserId: userId }, include: [orderItem] })
+      .then(orders => { res.json(orders) })
   }
 
 }
