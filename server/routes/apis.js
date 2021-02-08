@@ -44,7 +44,7 @@ router.post('/like', authenticated, userController.likeComment)
 router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 
 //userController_Order model
-router.get('/user/:id/purchase/coupons', authenticated, userController.getPurchases)
+router.get('/user/:id/purchase', authenticated, userController.getPurchases)
 router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.getPurchase)
 
 // couponController_Coupon model
