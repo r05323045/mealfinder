@@ -21,7 +21,7 @@ const routes = [
     component: () => import('@/views/Booking.vue')
   },
   {
-    path: '/booking/success',
+    path: '/booking/success/:id',
     component: () => import('@/views/BookingSuccess.vue')
   },
   {

@@ -16,7 +16,12 @@
           <div class="icon share"></div>
         </div>
         <div class="favorite-wrapper">
-          <div class="icon favorite"></div>
+          <div
+            class="icon favorite"
+            :class="{ isFavorited: restaurant.isFavorited }"
+            @click.stop="restaurant.isFavorited ? deleteFavorite(Number(restaurant.id)) : addFavorite(Number(restaurant.id))"
+          >
+          </div>
         </div>
       </div>
     </div>
@@ -29,6 +34,19 @@
           <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
         </div>
         <div class="title-wrapper">
+          <div class="icon-container">
+            <div class="share-wrapper">
+              <div class="icon share"></div>
+            </div>
+            <div class="favorite-wrapper">
+              <div
+                class="icon favorite"
+                :class="{ isFavorited: restaurant.isFavorited }"
+                @click.stop="restaurant.isFavorited ? deleteFavorite(Number(restaurant.id)) : addFavorite(Number(restaurant.id))"
+              >
+              </div>
+            </div>
+          </div>
           <h1 class="title">
             {{ restaurant.name }}
           </h1>
@@ -103,7 +121,7 @@
               v-model="pickDate"
               type="date"
               :formatter="momentFormat"
-              :placeholder="pickDate | pickDateFormate"
+              :placeholder="pickDate | pickDateFormat"
               :disabled-date="notOpen"
               :editable="false"
               :clearable="false"
@@ -240,7 +258,7 @@
     </div>
     <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight">
       <div class="booking-info-wrapper">
-        <div class="booking-info">{{ pickDate | pickDateFormate }}</div>
+        <div class="booking-info">{{ pickDate | pickDateFormat }}</div>
         <div class="booking-info">
           <span>{{ adultNum }}大</span>
           <span v-if="childNum > 0">{{ childNum }}小</span>
@@ -248,7 +266,7 @@
         <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
       </div>
       <div class="divider"></div>
-      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime" @click="bookingTime ? $router.push(`/booking?adult=${adultNum}&child=${childNum}&date=${pickDate}&time=${bookingTime}`) : ''">
+      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime" @click="bookingTime ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
         <div class="text" v-if="bookingTime">下一步，填寫聯絡資訊</div>
         <div class="text" v-if="!bookingTime">選擇用餐時間</div>
       </div>
@@ -495,6 +513,36 @@ export default {
           title: '目前無法收藏餐廳，請稍後'
         })
       }
+    },
+    async addFavorite (id) {
+      try {
+        const { data } = await usersAPI.addFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.isFavorited = true
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法收藏餐廳，請稍後'
+        })
+      }
+    },
+    async deleteFavorite (id) {
+      try {
+        const { data } = await usersAPI.deleteFavorite(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.restaurant.isFavorited = false
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取消收藏餐廳，請稍後'
+        })
+      }
     }
   }
 }
@@ -603,6 +651,10 @@ $primary-color: #222;
           background-color: #000000;
           mask: url(../assets/favorite.svg) no-repeat center;
         }
+        .icon.favorite.isFavorited {
+          background-color: $red;
+          mask: url(../assets/red-heart.svg) no-repeat center;
+        }
       }
       .share-wrapper {
         margin-right: 20px;
@@ -679,6 +731,52 @@ $primary-color: #222;
       }
       .title-wrapper {
         padding: 32px 0px 24px 0px;
+        position: relative;
+        .icon-container {
+          display: none;
+          @media (min-width: 768px) {
+            position: absolute;
+            bottom: 24px;
+            right: 0;
+            display: flex;
+            flex-direction: row;
+          }
+          .favorite-wrapper {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.favorite {
+              margin: auto;
+              height: 16px;
+              width: 16px;
+              background-color: #000000;
+              mask: url(../assets/favorite.svg) no-repeat center;
+            }
+            .icon.favorite.isFavorited {
+              background-color: $red;
+              mask: url(../assets/red-heart.svg) no-repeat center;
+            }
+          }
+          .share-wrapper {
+            cursor: pointer;
+            margin-right: 20px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.share {
+              margin: auto;
+              height: 16px;
+              width: 16px;
+              background-color: #000000;
+              mask: url(../assets/share.svg) no-repeat center;
+            }
+          }
+        }
         .title {
           text-align: left;
           margin: 0;
@@ -1340,6 +1438,7 @@ $primary-color: #222;
       margin: 8px auto;
     }
     .booking-button {
+      cursor: pointer;
       margin: auto;
       max-width: 1040px;
       height: 48px;
