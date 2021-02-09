@@ -178,7 +178,6 @@ export default {
       try {
         const { data } = await couponsAPI.getCoupons(this.numOfPage + 1, filter)
         this.coupons = [...this.coupons, ...data.data]
-        console.log(this.coupons)
         this.numOfPage += 1
       } catch (error) {
         console.log(error)

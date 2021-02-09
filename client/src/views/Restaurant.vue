@@ -26,11 +26,11 @@
       </div>
     </div>
     <div class="info-container" ref="info-container">
-      <div class="mobile-picture-wrapper">
+      <div class="mobile-picture-wrapper" v-if="restaurant.picture">
         <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
       </div>
       <div class="restaurant-info" ref="restaurant-info">
-        <div class="picture-wrapper">
+        <div class="picture-wrapper" v-if="restaurant.picture">
           <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
         </div>
         <div class="title-wrapper">

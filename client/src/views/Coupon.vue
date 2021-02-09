@@ -1,5 +1,5 @@
 <template>
-  <div class="coupon">
+  <div class="coupon" ref="coupon">
     <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
     <div class="coupon-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
@@ -15,28 +15,30 @@
         <div class="share-wrapper">
           <div class="icon share"></div>
         </div>
-        <div class="favorite-wrapper">
-          <div class="icon favorite"></div>
-        </div>
       </div>
     </div>
     <div class="info-container" ref="info-container">
-      <div class="mobile-picture-wrapper">
-        <div class="picture"></div>
+      <div class="mobile-picture-wrapper" v-if="coupon.Restaurant">
+        <div class="picture" :style="`background: url(${coupon.Restaurant.picture}) no-repeat center; background-size: cover`"></div>
       </div>
       <div class="coupon-info" ref="coupon-info">
-        <div class="picture-wrapper">
-          <div class="picture"></div>
+        <div class="picture-wrapper" v-if="coupon.Restaurant">
+          <div class="picture" :style="`background: url(${coupon.Restaurant.picture}) no-repeat center; background-size: cover`"></div>
         </div>
         <div class="title-wrapper">
           <h1 class="title">
-            ToTsuZen Steak - 安格斯牛排即享券
+            {{ coupon.description }}
           </h1>
           <div class="info-wrapper">
             <div class="price-wrapper">
-              <div class="price">$299</div>
+              <div class="icon-container">
+                <div class="share-wrapper">
+                  <div class="icon share"></div>
+                </div>
+              </div>
+              <div class="price">{{ coupon.price | priceFormat }}</div>
               <div class="unit">/ 個</div>
-              <div class="origin-price">原價 $359</div>
+              <div class="origin-price" v-if="coupon.Restaurant">原價 {{ Number(coupon.price) + Math.round((5 - Number(coupon.Restaurant.rating)) * 100)  | priceFormat }}</div>
             </div>
             <div class="number-wrapper">
               <div class="text">數量</div>
@@ -67,38 +69,46 @@
         <div ref="information-wrapper" class="information-wrapper">
           <div class="divider"></div>
           <div class="title">餐廳資訊</div>
-          <div class="info-and-map">
+          <div class="info-and-map" v-if="coupon.Restaurant">
             <div class="map-wrapper">
-              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%95%A6%E5%8C%96%E5%8D%97%E8%B7%AF%E4%B8%80%E6%AE%B5233%E5%B7%B759%E8%99%9F`" class="google-map"></iframe>
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=place_id:${coupon.Restaurant.place_id}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
                 <div class="top-wrapper">
                   <img class="icon map" src="../assets/map.svg">
-                  <div class="title">地圖</div>
+                  <div class="title">地址</div>
                 </div>
-                <div class="content">台北市敦化南路一段的巷59號</div>
+                <div class="content" v-if="coupon.Restaurant">台北市{{ `${coupon.Restaurant.DistrictName}${coupon.Restaurant.address}` }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
                   <img class="icon phone" src="../assets/phone.svg">
                   <div class="title">電話</div>
                 </div>
-                <div class="content">02-0000-0000</div>
+                <div class="content">{{ coupon.Restaurant.tel }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
                   <img class="icon time" src="../assets/clock.svg">
                   <div class="title">營業時間</div>
                 </div>
-                <div class="content">11:00 - 21:00</div>
+                <div class="content business-hour" @click="showBusinessHour = !showBusinessHour">
+                  {{ todayBusinessHours }}
+                  <div class="show-more" :class="{ showing: showBusinessHour}"></div>
+                </div>
+                <div class="business-hour-wrapper" v-show="showBusinessHour">
+                  <div class="content-wrapper">
+                    <div class="content" v-for="(time, idx) in coupon.Restaurant.business_hours" :key="`business_hours-${idx}`">{{ time }}</div>
+                  </div>
+                </div>
               </div>
               <div class="item-wrapper last">
                 <div class="top-wrapper">
                   <img class="icon map" src="../assets/restaurant.svg">
                   <div class="title">餐廳類型</div>
                 </div>
-                <div class="content">牛排</div>
+                <div class="content">{{ coupon.Restaurant.CategoryName }}</div>
               </div>
             </div>
           </div>
@@ -108,7 +118,7 @@
           <div class="title">擔心沒位子用餐？</div>
           <div class="illustration-wrapper">
             <div class="cover">
-              <div class="button">現在訂位</div>
+              <div class="button" @click="$router.push(`/restaurants/${$route.params.id}`)">現在訂位</div>
             </div>
           </div>
         </div>
@@ -117,7 +127,7 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollBarHeight + scrollY + footerHeight">
+    <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollY + footerHeight">
       <div class="filter-button">
         <div class="button">加入購物車</div>
       </div>
@@ -127,6 +137,9 @@
 
 <script>
 
+import moment from 'moment'
+import { Toast } from '@/utils/helpers'
+import couponsAPI from '@/apis/coupons'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
@@ -138,18 +151,24 @@ export default {
       couponInfoHeight: 1,
       footerHeight: 0,
       scrollBarHeight: 0,
-      productNum: 0
+      productNum: 0,
+      coupon: {},
+      todayBusinessHours: '',
+      showBusinessHour: false
     }
   },
   components: {
     Footer,
     Navbar
   },
+  created () {
+    this.fetchCoupon(this.$route.params.id)
+  },
   mounted () {
-    this.$refs['info-container'].addEventListener('scroll', this.onScroll, { passive: true })
+    this.$refs.coupon.addEventListener('scroll', this.onScroll, { passive: true })
     this.footerHeight = this.$refs.footer.offsetHeight
-    this.couponInfoHeight = this.$refs['info-container'].scrollHeight
-    this.scrollBarHeight = this.$refs['info-container'].clientHeight
+    this.couponInfoHeight = this.$refs.coupon.scrollHeight
+    this.scrollBarHeight = this.$refs.coupon.clientHeight
   },
   watch: {
     productNum () {
@@ -158,8 +177,28 @@ export default {
   },
   methods: {
     onScroll (e) {
-      this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
-      this.scrollY = this.$refs['info-container'].scrollTop
+      this.scrollUp = this.scrollY > this.$refs.coupon.scrollTop
+      this.scrollY = this.$refs.coupon.scrollTop
+    },
+    async fetchCoupon (id) {
+      try {
+        const { data } = await couponsAPI.getCoupon(id)
+        this.coupon = data
+        this.findTodayBusinessHours()
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐券資訊，請稍候'
+        })
+      }
+    },
+    findTodayBusinessHours () {
+      this.coupon.Restaurant.business_hours.forEach((b, idx) => {
+        if (b.slice(0, 3) === moment(new Date()).format('dddd')) {
+          this.todayBusinessHours = this.coupon.Restaurant.business_hours[idx]
+        }
+      })
     }
   }
 }
@@ -173,10 +212,10 @@ $red: rgb(255, 56, 92);
 $default-color: #000000;
 $primary-color: #222;
 .coupon {
-  height: 100%;
-  position: relative;
   overflow: scroll;
+  position: relative;
   width: 100%;
+  height: 100%;
   .restaurant-navbar {
     display: none;
     @media (min-width: 768px) {
@@ -253,22 +292,7 @@ $primary-color: #222;
       display: flex;
       flex-direction: row;
       padding: 6px 24px 0 8px;
-      .favorite-wrapper {
-        width: 16px;
-        height: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .icon.favorite {
-          margin: auto;
-          height: 16px;
-          width: 16px;
-          background-color: #000000;
-          mask: url(../assets/favorite.svg) no-repeat center;
-        }
-      }
       .share-wrapper {
-        margin-right: 20px;
         width: 16px;
         height: 16px;
         display: flex;
@@ -351,6 +375,33 @@ $primary-color: #222;
           .price-wrapper {
             display: flex;
             flex-direction: row;
+            position: relative;
+            .icon-container {
+              display: none;
+              @media (min-width: 768px) {
+                position: absolute;
+                bottom: 0px;
+                right: 0;
+                display: flex;
+                flex-direction: row;
+              }
+              .share-wrapper {
+                cursor: pointer;
+                margin-right: 20px;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .icon.share {
+                  margin: auto;
+                  height: 16px;
+                  width: 16px;
+                  background-color: #000000;
+                  mask: url(../assets/share.svg) no-repeat center;
+                }
+              }
+            }
             .price{
               margin-bottom: 4px;
               text-align: left;
@@ -386,6 +437,7 @@ $primary-color: #222;
               margin-top: 12px;
               flex: 1;
               .select {
+                cursor: pointer;
                 width: 100%;
                 padding: 0 1.4rem 0 0.8rem;
                 appearance: none;
@@ -476,6 +528,7 @@ $primary-color: #222;
             }
             .item-wrapper {
               border-bottom: 1px solid $divider;
+              position: relative;
               .top-wrapper {
                 display: flex;
                 flex-direction: row;
@@ -497,9 +550,48 @@ $primary-color: #222;
                 text-align: left;
                 margin-left: 24px;
                 font-size: 16px;
-                font-weight: 00;
                 line-height: 1.5;
                 margin-bottom: 12px;
+                position: relative;
+                .show-more {
+                  cursor: pointer;
+                  position: absolute;
+                  right: 0;
+                  top: 4px;
+                  width: 16px;
+                  height: 16px;
+                  background-image: url("../assets/down-arrow.svg");
+                  background-repeat: no-repeat;
+                }
+                .show-more.showing {
+                  background-image: url("../assets/up-arrow.svg");
+                  background-repeat: no-repeat;
+                }
+              }
+              .content.business-hour {
+                cursor: pointer;
+              }
+              .business-hour-wrapper {
+                z-index: 3;
+                box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                border-radius: 15px;
+                .content-wrapper {
+                  margin: 12px 12px 0px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: flex-start;
+                  align-items: center;
+                  .content {
+                    width: 100%;
+                    flex: 1;
+                    text-align: left;
+                  }
+                }
               }
             }
             .item-wrapper.last {
