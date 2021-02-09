@@ -1,5 +1,5 @@
 <template>
-  <div class="restaurant">
+  <div ref="restaurant" class="restaurant">
     <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
     <div class="restaurant-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
@@ -325,10 +325,10 @@ export default {
     this.fetchRestaurant(this.$route.params.id)
   },
   mounted () {
-    this.$refs['info-container'].addEventListener('scroll', this.onScroll, { passive: true })
+    this.$refs.restaurant.addEventListener('scroll', this.onScroll, { passive: true })
     this.footerHeight = this.$refs.footer.offsetHeight
-    this.restaurantInfoHeight = this.$refs['info-container'].scrollHeight
-    this.scrollBarHeight = this.$refs['info-container'].clientHeight
+    this.restaurantInfoHeight = this.$refs.restaurant.scrollHeight
+    this.scrollBarHeight = this.$refs.restaurant.clientHeight
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
@@ -340,8 +340,8 @@ export default {
   },
   methods: {
     onScroll (e) {
-      this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
-      this.scrollY = this.$refs['info-container'].scrollTop
+      this.scrollUp = this.scrollY > this.$refs.restaurant.scrollTop
+      this.scrollY = this.$refs.restaurant.scrollTop
     },
     closeFilter () {
       this.showModal = false
@@ -557,11 +557,10 @@ $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .restaurant {
+  overflow: scroll;
   position: relative;
-  overflow: hidden;
   width: 100%;
   height: 100%;
-  padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
     @media (min-width: 768px) {
@@ -676,7 +675,6 @@ $primary-color: #222;
   .info-container {
     height: 100%;
     width: 100%;
-    overflow: scroll;
     scroll-behavior: smooth;
     position: absolute;
     top: 60px;

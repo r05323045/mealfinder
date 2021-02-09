@@ -16,7 +16,7 @@
         </div>
         <div class="nav-item" v-if="signIn" @click="$router.push('/users/history').catch(()=>{})" :class="{ active: $route.path.includes('/history') }">
           <div class="wrapper">
-            <div class="icon restaurant"></div>
+            <div class="icon-restaurant"></div>
             <div class="text">訂位</div>
           </div>
         </div>
@@ -211,7 +211,13 @@ $red: rgb(255, 56, 92);
           .icon.noti {
             mask: url(../assets/notification.svg) no-repeat center;
           }
-          .icon.restaurant {
+          .icon-restaurant {
+            margin: 0 auto;
+            background-color: $ultimategray;
+            width: 100%;
+            height: 100%;
+            max-height: 21px;
+            max-width: 21px;
             mask: url(../assets/restaurant.svg) no-repeat center;
           }
           .text {

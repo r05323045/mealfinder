@@ -175,9 +175,8 @@ $primary-color: #222;
 .coupon {
   height: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: scroll;
   width: 100%;
-  padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
     @media (min-width: 768px) {
@@ -288,7 +287,6 @@ $primary-color: #222;
   .info-container {
     width: 100%;
     height: 100%;
-    overflow: scroll;
     scroll-behavior: smooth;
     position: absolute;
     top: 60px;

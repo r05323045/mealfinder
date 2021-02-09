@@ -23,7 +23,7 @@
           <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
           <div class="filter-button">預算</div>
         </div>
-        <div class="restaurant-card-deck-wrapper" v-if="restaurants.length === 0"></div>
+        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0"></div>
         <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
