@@ -134,6 +134,14 @@ Vue.filter('bookingDateFormat', function (date) {
   }
 })
 
+Vue.filter('priceFormat', function (value) {
+  return '$' + value
+    .toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/,
+      function (all, pre, groupOf3Digital) {
+        return pre + groupOf3Digital.replace(/\d{3}/g, ',$&')
+      })
+})
+
 Vue.filter('fromNow', function (datetime) {
   if (!datetime) {
     return '-'
