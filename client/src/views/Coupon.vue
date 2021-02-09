@@ -108,7 +108,7 @@
                   <img class="icon map" src="../assets/restaurant.svg">
                   <div class="title">餐廳類型</div>
                 </div>
-                <div class="content">牛排</div>
+                <div class="content">{{ coupon.Restaurant.CategoryName }}</div>
               </div>
             </div>
           </div>
