@@ -56,7 +56,20 @@ const couponController = {
       })
   },
   getCoupon: (req, res) => {
-    return Coupon.findByPk(req.params.couponId, { include: [Restaurant] })
+    return Coupon.findByPk(req.params.couponId,
+      {
+        include: [
+          {
+            model: Restaurant,
+            attributes: {
+              include: [
+                [sequelize.literal('(SELECT name FROM restaurant_reservation.Categories WHERE Categories.id = Restaurant.CategoryId)'), 'CategoryName'],
+                [sequelize.literal('(SELECT name FROM restaurant_reservation.Districts WHERE Districts.id = Restaurant.DistrictId)'), 'DistrictName']
+              ]
+            }
+          }
+        ]
+      })
       .then(coupon => {
         return res.json(coupon)
       })
