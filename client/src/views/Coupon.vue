@@ -15,9 +15,6 @@
         <div class="share-wrapper">
           <div class="icon share"></div>
         </div>
-        <div class="favorite-wrapper">
-          <div class="icon favorite"></div>
-        </div>
       </div>
     </div>
     <div class="info-container" ref="info-container">
@@ -290,22 +287,7 @@ $primary-color: #222;
       display: flex;
       flex-direction: row;
       padding: 6px 24px 0 8px;
-      .favorite-wrapper {
-        width: 16px;
-        height: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .icon.favorite {
-          margin: auto;
-          height: 16px;
-          width: 16px;
-          background-color: #000000;
-          mask: url(../assets/favorite.svg) no-repeat center;
-        }
-      }
       .share-wrapper {
-        margin-right: 20px;
         width: 16px;
         height: 16px;
         display: flex;
