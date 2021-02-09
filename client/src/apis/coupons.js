@@ -10,5 +10,10 @@ export default {
     return apiHelper.get(`/coupons${queryString}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  getCoupon (id) {
+    return apiHelper.get(`/coupons/${id}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
 }
