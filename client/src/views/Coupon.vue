@@ -31,6 +31,11 @@
           </h1>
           <div class="info-wrapper">
             <div class="price-wrapper">
+              <div class="icon-container">
+                <div class="share-wrapper">
+                  <div class="icon share"></div>
+                </div>
+              </div>
               <div class="price">{{ coupon.price | priceFormat }}</div>
               <div class="unit">/ 個</div>
               <div class="origin-price" v-if="coupon.Restaurant">原價 {{ Number(coupon.price) + Math.round((5 - Number(coupon.Restaurant.rating)) * 100)  | priceFormat }}</div>
@@ -370,6 +375,33 @@ $primary-color: #222;
           .price-wrapper {
             display: flex;
             flex-direction: row;
+            position: relative;
+            .icon-container {
+              display: none;
+              @media (min-width: 768px) {
+                position: absolute;
+                bottom: 0px;
+                right: 0;
+                display: flex;
+                flex-direction: row;
+              }
+              .share-wrapper {
+                cursor: pointer;
+                margin-right: 20px;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .icon.share {
+                  margin: auto;
+                  height: 16px;
+                  width: 16px;
+                  background-color: #000000;
+                  mask: url(../assets/share.svg) no-repeat center;
+                }
+              }
+            }
             .price{
               margin-bottom: 4px;
               text-align: left;
