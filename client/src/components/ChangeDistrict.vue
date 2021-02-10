@@ -187,6 +187,7 @@ $divider: #E6ECF0;
       }
     }
     .filter-container {
+      overflow-y: scroll;
       background: #ffffff;
       height: calc(100% - 168px);
       width: calc(100% - 48px);
