@@ -5,8 +5,8 @@
       <div class="info-container">
         <div class="title">會員中心</div>
         <div class="account-wrapper">
-          <div class="name">Jim Lin</div>
-          <div class="account">@jimlin</div>
+          <div class="name">{{ currentUser.name }}</div>
+          <div class="account">{{ currentUser.email }}</div>
         </div>
         <div class="link" @click="$router.push('/users/profile')">前往個人資料</div>
       </div>
@@ -82,6 +82,9 @@
           </div>
         </div>
       </div>
+      <div class="logout-button-wrapper">
+        <div class="logout-button" @click="signout">登出</div>
+      </div>
     </div>
     <div ref="footer">
       <Footer></Footer>
@@ -91,6 +94,8 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 
@@ -106,13 +111,27 @@ export default {
     Navbar,
     Footer
   },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
+  },
   mounted () {
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth
     })
   },
   methods: {
-    onScroll (e) {
+    signout () {
+      this.$store.commit('revokeAuthentication')
+      this.showMenu = false
+      this.$router.push('/').catch(() => {})
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+      Toast.fire({
+        icon: 'success',
+        title: '成功登出'
+      })
     }
   }
 }
@@ -260,6 +279,23 @@ $red: rgb(255, 56, 92);
             line-height: 20px;
           }
         }
+      }
+    }
+    .logout-button-wrapper {
+      padding: 40px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      @media (min-width: 768px) {
+        display: none;
+      }
+      .logout-button {
+        width: 100%;
+        padding: 12px 0;
+        border-radius: 12px;
+        border: 1px solid #000000;
+        font-size: 16px;
+        font-weight: 600;
       }
     }
   }
