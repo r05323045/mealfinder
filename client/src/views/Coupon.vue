@@ -19,11 +19,11 @@
     </div>
     <div class="info-container" ref="info-container">
       <div class="mobile-picture-wrapper" v-if="coupon.Restaurant">
-        <div class="picture" :style="`background: url(${coupon.Restaurant.picture}) no-repeat center; background-size: cover`"></div>
+        <div class="picture" :style="`background: url(${coupon.Restaurant.picture}) no-repeat center / cover`"></div>
       </div>
       <div class="coupon-info" ref="coupon-info">
         <div class="picture-wrapper" v-if="coupon.Restaurant">
-          <div class="picture" :style="`background: url(${coupon.Restaurant.picture}) no-repeat center; background-size: cover`"></div>
+          <div class="picture" :style="`background: url(${coupon.Restaurant.picture}) no-repeat center / cover`"></div>
         </div>
         <div class="title-wrapper">
           <h1 class="title">

@@ -37,7 +37,7 @@
                   <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="item.isFavorited ? deleteFavorite(Number(item.id)) : addFavorite(Number(item.id))">
                     <div class="icon heart" :class="{ isFavorited: item.isFavorited }"></div>
                   </div>
-                  <div class="card-image" :style="`background: url(${item.picture}) no-repeat center; background-size: cover`"></div>
+                  <div class="card-image" :style="`background: url(${item.picture}) no-repeat center / cover`"></div>
                 </div>
                 <div class="rating-wrapper">
                   <svg class="icon star"></svg>
@@ -458,7 +458,7 @@ $red: rgb(255, 56, 92);
                 width: 100%;
                 border-radius: 16px;
                 background: url(https://images.unsplash.com/photo-1512058564366-18510be2db19?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80) no-repeat center;
-                background-size: cover;
+                background-size: cover !important;
               }
             }
             .rating-wrapper {
