@@ -13,8 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.PreferedCategory)
       User.hasMany(models.Order, { foreignKey: 'UserId' })
-      User.hasMany(models.Comment, {foreignKey: 'UserId'})
+      User.hasMany(models.Comment, { foreignKey: 'UserId' })
       User.hasMany(models.Reservation, { foreignKey: 'UserId' })
+      User.belongsTo(models.District)
       User.belongsToMany(models.Restaurant, {
         through: models.Favorite,
         foreignKey: 'UserId',
@@ -33,7 +34,8 @@ module.exports = (sequelize, DataTypes) => {
     gender: DataTypes.STRING,
     birthday: DataTypes.DATE,
     avatar: DataTypes.STRING,
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    DistrictId: DataTypes.INTRGER
   }, {
     sequelize,
     modelName: 'User',
