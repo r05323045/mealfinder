@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt')
 const imgur = require('imgur-node-api')
 const db = require('../models')
+const sequelize = require('sequelize')
 const User = db.User
+const PreferedCategory = db.PreferedCategory
 const Favorite = db.Favorite
 const Restaurant = db.Restaurant
 const Like = db.Like
@@ -92,9 +94,26 @@ const userController = {
   },
 
   getProfile: (req, res) => {
-    User.findOne({ where: { id: req.params.id } })
-      .then(user => {
-        return res.json(user)
+    Promise.all([
+      User.findOne({
+        where: { id: req.params.id },
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT name FROM restaurant_reservation.Districts WHERE Districts.id = User.DistrictId)'), 'DistrictName']
+          ]
+        }
+      }),
+      PreferedCategory.findAll({
+        where: { UserId: req.params.id },
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT name FROM restaurant_reservation.Categories WHERE Categories.id = PreferedCategory.CategoryId)'), 'CategorytName']
+          ]
+        }
+      })
+    ])
+      .then(([user, preferedCategory]) => {
+        return res.json({ ...user.dataValues, preferedCategory: preferedCategory.map(p => p.dataValues.CategorytName) })
       })
   },
 
