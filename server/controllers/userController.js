@@ -3,6 +3,7 @@ const imgur = require('imgur-node-api')
 const db = require('../models')
 const sequelize = require('sequelize')
 const User = db.User
+const Category = db.Category
 const PreferedCategory = db.PreferedCategory
 const Favorite = db.Favorite
 const Restaurant = db.Restaurant
@@ -118,9 +119,8 @@ const userController = {
   },
 
   putProfile: (req, res) => {
-    const UserId = req.user.id
-    const { body: { name, gender, phoneNumber, location, birthday }, file } = req
-
+    const UserId = req.params.id
+    const { body: { name, gender, email, phoneNumber, DistrictId }, file } = req
     if (file) {
       imgur.setClientID(process.env.IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
@@ -134,9 +134,9 @@ const userController = {
               user.update({
                 name,
                 gender,
+                email,
                 phone_number: phoneNumber,
-                location,
-                birthday,
+                DistrictId,
                 avatar: file ? img.data.link : user.avatar
               }).then((user) => {
                 res.json({ status: 'success', message: '[HAS FILE] user was successfully to update' })
@@ -147,19 +147,44 @@ const userController = {
     } else {
       User.findByPk(UserId)
         .then(user => {
-          if (user.id === UserId) {
-            user.update({
-              name,
-              gender,
-              phone_number: phoneNumber,
-              location,
-              birthday
-            }).then((user) => {
-              res.json({ status: 'success', message: '[NO file update] user was successfully to update' })
-            })
-          }
+          console.log(user)
+          user.update({
+            name,
+            gender,
+            email,
+            phone_number: phoneNumber,
+            DistrictId
+          }).then((user) => {
+            res.json({ status: 'success', message: '[NO file update] user was successfully to update' })
+          })
         })
     }
+  },
+
+  putPreferedCategory: (req, res) => {
+    PreferedCategory.destroy({
+      where: { UserId: req.params.id }
+    })
+      .then(() => {
+        Category.findAll({
+          where: { name: req.body.preferedCategory }
+        })
+          .then((category) => {
+            const promises = category.map((data) => {
+              return PreferedCategory.create({
+                UserId: req.params.id,
+                CategoryId: data.id
+              })
+            })
+            Promise.all(promises)
+              .then(() => {
+                return res.json({ status: 'success', message: 'preferedCategory was successfully to update' })
+              })
+          })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
 
   getFavorites: (req, res) => {
