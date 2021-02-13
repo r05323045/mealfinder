@@ -60,10 +60,21 @@ export default {
     },
     districtsFilter: {
       type: Array
+    },
+    restrict: {
+      type: Boolean,
+      default: false
+    },
+    defaultDistrict: {
+      type: String,
+      default: ''
     }
   },
   created () {
     this.fetchDistricts()
+    if (this.defaultDistrict) {
+      this.tempFilter = [this.defaultDistrict]
+    }
   },
   watch: {
     showModal () {
@@ -72,7 +83,12 @@ export default {
       }, 100)
     },
     districtsFilter () {
-      this.tempFilter = this.districtsFilter
+      if (this.defaultDistrict) {
+        this.tempFilter = this.districtsFilter
+      }
+    },
+    defaultDistrict () {
+      this.tempFilter = [this.defaultDistrict]
     }
   },
   methods: {
@@ -92,14 +108,26 @@ export default {
       }
     },
     addToFilter (district) {
-      if (this.tempFilter.includes(district)) {
-        this.tempFilter.splice(this.tempFilter.indexOf(district), 1)
+      if (!this.restrict) {
+        if (this.tempFilter.includes(district)) {
+          this.tempFilter.splice(this.tempFilter.indexOf(district), 1)
+        } else {
+          this.tempFilter = [...this.tempFilter, district]
+        }
       } else {
-        this.tempFilter = [...this.tempFilter, district]
+        this.tempFilter = [district]
       }
     },
     completeChanging () {
-      this.$emit('closeChangeModal', true, this.tempFilter)
+      if (this.restrict) {
+        this.districts.forEach(d => {
+          if (d.name === this.tempFilter[0]) {
+            this.$emit('closeChangeModal', true, this.tempFilter, d.id)
+          }
+        })
+      } else {
+        this.$emit('closeChangeModal', true, this.tempFilter)
+      }
     }
   }
 }

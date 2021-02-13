@@ -1352,7 +1352,7 @@ $primary-color: #222;
                 background-color: #222222;
                 height: 14px;
                 width: 14px;
-                mask: url(../assets/like.svg) no-repeat center;
+                mask: url(../assets/black-heart.svg) no-repeat center;
               }
               .icon.like.isAuthenticated {
                 cursor: pointer;
@@ -1365,7 +1365,7 @@ $primary-color: #222;
                 background-color: $red;
                 mask: url(../assets/isLiked.svg) no-repeat center;
                 &:hover {
-                  mask: url(../assets/like.svg) no-repeat center;
+                  mask: url(../assets/black-heart.svg) no-repeat center;
                 }
               }
               .count {
