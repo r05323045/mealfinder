@@ -18,26 +18,42 @@
             <div class="divider"></div>
             <div class="info">
               <div class="title">
-                完成度 90%
+                完成度 {{ profileProgress }}%
               </div>
               <div class="progress-bar">
-                <div class="inner"></div>
+                <div class="inner" :style="`width: ${profileProgress}%`"></div>
               </div>
               <div class="item-wrapper">
-                <img class="icon" src="../assets/bold-check.svg">
-                <div class="text">已填寫偏好餐廳類型</div>
+                <img v-if="user.preferedCategory && user.preferedCategory.length > 0" class="icon" src="../assets/bold-check.svg">
+                <div v-if="user.preferedCategory && !user.preferedCategory.length > 0" class="icon"></div>
+                <div class="text">
+                  <span v-if="user.preferedCategory && user.preferedCategory.length > 0">已</span>
+                  <span v-if="user.preferedCategory && !user.preferedCategory.length > 0">尚未</span>填寫偏好餐廳類型
+                </div>
               </div>
               <div class="item-wrapper">
-                <img class="icon" src="../assets/bold-check.svg">
-                <div class="text">已填寫經常用餐地區</div>
+                <img v-if="user.DistrictName" class="icon" src="../assets/bold-check.svg">
+                <div v-if="!user.DistrictName" class="icon"></div>
+                <div class="text">
+                  <span v-if="user.DistrictName">已</span>
+                  <span v-if="!user.DistrictName">尚未</span>填寫經常用餐地區
+                </div>
               </div>
               <div class="item-wrapper">
-                <img class="icon" src="../assets/bold-check.svg">
-                <div class="text">已填寫手機</div>
+                <img v-if="user.phone_number" class="icon" src="../assets/bold-check.svg">
+                <div v-if="!user.phone_number" class="icon"></div>
+                <div class="text">
+                  <span v-if="user.phone_number">已</span>
+                  <span v-if="!user.phone_number">尚未</span>填寫手機
+                </div>
               </div>
-              <div class="item-wrapper">
-                <img class="icon" style="height: 0">
-                <div class="text">尚未認證手機</div>
+              <div class="item-wrapper" v-if="user.avatar">
+                <img v-if="(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))" class="icon" src="../assets/bold-check.svg">
+                <div v-if="!(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))" class="icon"></div>
+                <div class="text">
+                  <span v-if="(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))">已</span>
+                  <span v-if="!(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))">尚未</span>上傳大頭照
+                </div>
               </div>
             </div>
           </div>
@@ -57,90 +73,105 @@
           <div class="information-container">
             <div class="title">
               個人資料
-              <div class="edit" @click="editing = !editing"><span v-if="editing">取消</span>編輯</div>
+              <div class="edit" v-if="!editing" @click="startEditing">編輯</div>
+              <div class="edit" v-if="editing" @click="cancelEditing">取消編輯</div>
             </div>
             <div class="information-body" :class="{ editing: editing }">
-              <div class="item-wrapper">
-                <div class="top-wrapper">
-                  <img class="icon profile" src="../assets/profile.svg">
-                  <div class="title">我的姓名</div>
+
+              <validation-observer ref="formvalidation" v-slot="{ invalid }">
+                <validation-provider v-slot="{ errors, classes }" rules="required">
+                  <div class="item-wrapper">
+                    <div class="top-wrapper">
+                      <img class="icon profile" src="../assets/profile.svg">
+                      <div class="title">我的姓名</div>
+                    </div>
+                      <input class="content" name="name" v-model="tempName" type="text" :class="classes">
+                      <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '名稱') }}</span>
+                  </div>
+                </validation-provider>
+                <div class="item-wrapper item-gender">
+                  <div class="top-wrapper">
+                    <img class="icon lgbt" src="../assets/lgbt.svg">
+                    <div class="title">我的性別</div>
+                  </div>
+                  <div class="gender">
+                    <span class="inner-wrapper">
+                      <label for="gender-female" class="item">
+                        <span class="radio-input">
+                          <input name="gender" id="gender-female" role="radio" value="female" type="radio" v-model="tempGender" checked :disabled="!editing">
+                          <span class="radio-control"></span>
+                        </span>
+                        <span class="text">小姐</span>
+                      </label>
+                    </span>
+                    <span class="inner-wrapper">
+                      <label for="gender-male" class="item">
+                        <span class="radio-input">
+                          <input name="gender" id="gender-male" role="radio" value="male" type="radio" v-model="tempGender" :disabled="!editing">
+                          <span class="radio-control"></span>
+                        </span>
+                        <span class="text">先生</span>
+                      </label>
+                    </span>
+                    <span class="inner-wrapper">
+                      <label for="gender-other" class="item">
+                        <span class="radio-input">
+                          <input name="gender" id="gender-other" role="radio" value="other" type="radio" v-model="tempGender" :disabled="!editing">
+                          <span class="radio-control"></span>
+                        </span>
+                        <span class="text">其他</span>
+                      </label>
+                    </span>
+                  </div>
                 </div>
-                <input class="content" name="name" :value="user.name" type="text">
-              </div>
-              <div class="item-wrapper item-gender">
-                <div class="top-wrapper">
-                  <img class="icon lgbt" src="../assets/lgbt.svg">
-                  <div class="title">我的性別</div>
+                 <validation-provider v-slot="{ errors, classes }" rules="required|email">
+                  <div class="item-wrapper">
+                    <div class="top-wrapper">
+                      <img class="icon email" src="../assets/email.svg">
+                      <div class="title">我的Email</div>
+                    </div>
+                    <input class="content" name="email" type="email" v-model="tempEmail" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '名稱') }}</span>
+                  </div>
+                </validation-provider>
+                <validation-provider v-slot="{ errors, classes }" rules="numeric">
+                  <div class="item-wrapper">
+                    <div class="top-wrapper">
+                      <img class="icon phone" src="../assets/phone.svg">
+                      <div class="title">我的手機</div>
+                    </div>
+                    <input class="content" name="phoneNumber" type="text" :placeholder="tempPhoneNumber ? '' : '無'" v-model="tempPhoneNumber" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phoneNumber ', '手機號碼') }}</span>
+                  </div>
+                </validation-provider>
+                <div class="item-wrapper">
+                  <div class="top-wrapper">
+                    <img class="icon map" src="../assets/map.svg">
+                    <div class="title">經常用餐地區</div>
+                  </div>
+                  <input v-show="false" name="DistrictId" type="number" v-model="tempDistrictId">
+                  <div class="content" v-if="tempDistrictName">{{ tempDistrictName }}</div>
+                  <div class="content" v-if="!tempDistrictName">無</div>
+                  <div class="add" v-if="editing">
+                    <span class="text" @click="showChangeModal = !showChangeModal">變更</span>
+                  </div>
                 </div>
-                <div class="gender">
-                  <span class="inner-wrapper">
-                    <label for="gender-female" class="item">
-                      <span class="radio-input">
-                        <input name="gender" id="gender-female" role="radio" value="female" type="radio" v-model="user.gender" checked :disabled="!editing">
-                        <span class="radio-control"></span>
-                      </span>
-                      <span class="text">小姐</span>
-                    </label>
-                  </span>
-                  <span class="inner-wrapper">
-                    <label for="gender-male" class="item">
-                      <span class="radio-input">
-                        <input name="gender" id="gender-male" role="radio" value="male" type="radio" v-model="user.gender" :disabled="!editing">
-                        <span class="radio-control"></span>
-                      </span>
-                      <span class="text">先生</span>
-                    </label>
-                  </span>
-                  <span class="inner-wrapper">
-                    <label for="gender-other" class="item">
-                      <span class="radio-input">
-                        <input name="gender" id="gender-other" role="radio" value="other" type="radio" v-model="user.gender" :disabled="!editing">
-                        <span class="radio-control"></span>
-                      </span>
-                      <span class="text">其他</span>
-                    </label>
-                  </span>
+                <div class="item-wrapper last">
+                  <div class="top-wrapper">
+                    <img class="icon" src="../assets/restaurant.svg">
+                    <div class="title">偏好的餐廳類型</div>
+                  </div>
+                  <div class="content" v-if="tempCategory.length > 0">{{ tempCategory.join('、') }}</div>
+                  <div class="content" v-if="tempCategory.length === 0">無</div>
+                  <div class="add" v-if="editing">
+                    <span class="text" @click="showAddModal = !showAddModal">新增更多</span>
+                  </div>
                 </div>
-              </div>
-              <div class="item-wrapper">
-                <div class="top-wrapper">
-                  <img class="icon email" src="../assets/email.svg">
-                  <div class="title">我的Email</div>
+                <div class="button-wrapper" v-if="editing">
+                  <div class="cancel" @click="cancelEditing">取消</div>
+                  <button class="save" @click="putProfile" :disabled="invalid">儲存</button>
                 </div>
-                <input class="content" name="email" type="email" v-model="user.email">
-              </div>
-              <div class="item-wrapper">
-                <div class="top-wrapper">
-                  <img class="icon phone" src="../assets/phone.svg">
-                  <div class="title">我的手機</div>
-                </div>
-                <input class="content" name="phoneNumber" type="number" v-model="user.phone_number">
-              </div>
-              <div class="item-wrapper">
-                <div class="top-wrapper">
-                  <img class="icon map" src="../assets/map.svg">
-                  <div class="title">經常用餐地區</div>
-                </div>
-                <input v-show="false" name="DistrictId" type="number" v-model="tempDistrictId">
-                <div class="content">{{ tempDistrictName }}</div>
-                <div class="add" v-if="editing">
-                  <span class="text" @click="showChangeModal = !showChangeModal">變更</span>
-                </div>
-              </div>
-              <div class="item-wrapper last">
-                <div class="top-wrapper">
-                  <img class="icon" src="../assets/restaurant.svg">
-                  <div class="title">偏好的餐廳類型</div>
-                </div>
-                <div class="content" v-if="user.preferedCategory">{{ tempCategory.join('、') }}</div>
-                <div class="add" v-if="editing">
-                  <span class="text" @click="showAddModal = !showAddModal">新增更多</span>
-                </div>
-              </div>
-              <div class="button-wrapper" v-if="editing">
-                <div class="cancel" @click="cancelEditing">取消</div>
-                <div class="save" @click="putProfile">儲存</div>
-              </div>
+              </validation-observer>
             </div>
           </div>
         </div>
@@ -179,6 +210,10 @@ export default {
       showAddModal: false,
       showChangeModal: false,
       user: {},
+      tempName: '',
+      tempGender: '',
+      tempEmail: '',
+      tempPhoneNumber: '',
       tempDistrictId: '',
       tempDistrictName: '',
       tempCategory: [],
@@ -192,7 +227,23 @@ export default {
     ChangeDistrict
   },
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    ...mapState(['currentUser', 'isAuthenticated']),
+    profileProgress () {
+      let progress = 0
+      if (this.user.preferedCategory && this.user.preferedCategory.length > 0) {
+        progress += 25
+      }
+      if (this.user.DistrictName) {
+        progress += 25
+      }
+      if (this.user.phone_number) {
+        progress += 25
+      }
+      if (this.user.avatar && (this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))) {
+        progress += 25
+      }
+      return progress
+    }
   },
   created () {
     this.fetchProfile(this.currentUser.id)
@@ -200,8 +251,6 @@ export default {
   mounted () {
   },
   methods: {
-    onScroll (e) {
-    },
     completeAdding (isAdding, filter) {
       this.showAddModal = false
       if (isAdding) {
@@ -213,12 +262,19 @@ export default {
       if (isChanging && id) {
         this.tempDistrictId = id
         this.tempDistrictName = filter[0]
+      } else if (isChanging && !id) {
+        this.tempDistrictId = null
+        this.tempDistrictName = null
       }
     },
     async fetchProfile (id) {
       try {
         const { data } = await usersAPI.getProfile(id)
         this.user = data
+        this.tempName = this.user.name
+        this.tempGender = this.user.gender
+        this.tempEmail = this.user.email
+        this.tempPhoneNumber = this.user.phone_number
         this.tempDistrictId = this.user.DistrictId
         this.tempDistrictName = this.user.DistrictName
         this.tempCategory = this.user.preferedCategory
@@ -251,6 +307,14 @@ export default {
           icon: 'success',
           title: '更新成功！'
         })
+        this.user.name = this.tempName
+        this.user.gender = this.tempGender
+        this.user.email = this.tempEmail
+        this.user.phone_number = this.tempPhoneNumber
+        this.user.DistrictId = this.tempDistrictId
+        this.user.DistrictName = this.tempDistrictName
+        this.user.preferedCategory = this.tempCategory
+        await this.$store.dispatch('fetchCurrentUser')
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -259,8 +323,15 @@ export default {
         })
       }
     },
+    startEditing () {
+      this.editing = true
+    },
     cancelEditing () {
       this.editing = false
+      this.tempName = this.user.name
+      this.tempGender = this.user.gender
+      this.tempEmail = this.user.email
+      this.tempPhoneNumber = this.user.phone_number
       this.tempDistrictId = this.user.DistrictId
       this.tempDistrictName = this.user.DistrictName
       this.tempCategory = this.user.preferedCategory
@@ -289,6 +360,7 @@ export default {
           icon: 'success',
           title: '更新成功！'
         })
+        await this.$store.dispatch('fetchCurrentUser')
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -306,6 +378,7 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
+$darkred: #c13515;
 .profile-page {
   height: 100vh;
   overflow-y: scroll;
@@ -485,6 +558,9 @@ $red: rgb(255, 56, 92);
             .item-wrapper {
               margin-bottom: 12px;
               border-bottom: 1px solid $divider;
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
               .top-wrapper {
                 display: flex;
                 flex-direction: row;
@@ -522,6 +598,19 @@ $red: rgb(255, 56, 92);
                 &:focus {
                   outline: none;
                 }
+                &::placeholder {
+                  color: #222222;
+                }
+              }
+              .content.is-invalid {
+                border: 1px solid $darkred;
+              }
+              .invalid-text {
+                width: 100%;
+                text-align: left;
+                font-size: 12px;
+                line-height: 1.5;
+                color: $darkred;
               }
               .gender {
                 margin: 12px 0 12px;
@@ -541,6 +630,7 @@ $red: rgb(255, 56, 92);
                   transition: 180ms all ease-in-out;
                   opacity: 0.8;
                   .radio-input {
+                    cursor: pointer;
                     height: 1.5rem;
                     width: 1.5rem;
                     display: flex;
@@ -566,15 +656,15 @@ $red: rgb(255, 56, 92);
                     input + .radio-control::before {
                       content: "";
                       display: block;
-                      width: 0.6em;
+                      width: 0.62em;
                       height: 0.6em;
-                      box-shadow: inset 0.6em 0.6em currentColor;
+                      box-shadow: inset 0.6em 0.62em currentColor;
                       border-radius: 50%;
                       transition: 180ms transform ease-in-out;
                       transform: scale(0);
                     }
                     .radio-control {
-                      width: 1rem;
+                      width: 1.05rem;
                       height: 1rem;
                       border-radius: 50%;
                       border: 0.1em solid #666;
@@ -595,9 +685,6 @@ $red: rgb(255, 56, 92);
                 }
               }
             }
-            .item-wrapper.last {
-              border: none;
-            }
             .item-wrapper.item-gender {
               border: none;
             }
@@ -616,6 +703,12 @@ $red: rgb(255, 56, 92);
                 width: calc(100% - 16px);
                 &:focus {
                   box-shadow: 0 0 0.15em 0.1em currentColor;
+                }
+              }
+              input.content.is-invalid {
+                border: 1px solid $darkred;
+                &:focus {
+                  box-shadow: 0 0 0.15em 0.1em $darkred;
                 }
               }
               .add {

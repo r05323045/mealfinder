@@ -115,16 +115,22 @@ export default {
           this.tempFilter = [...this.tempFilter, district]
         }
       } else {
-        this.tempFilter = [district]
+        if (this.tempFilter.includes(district)) {
+          this.tempFilter.splice(this.tempFilter.indexOf(district), 1)
+        } else {
+          this.tempFilter = [district]
+        }
       }
     },
     completeChanging () {
-      if (this.restrict) {
+      if (this.restrict && this.tempFilter.length > 0) {
         this.districts.forEach(d => {
           if (d.name === this.tempFilter[0]) {
             this.$emit('closeChangeModal', true, this.tempFilter, d.id)
           }
         })
+      } else if (this.restrict && this.tempFilter.length === 0) {
+        this.$emit('closeChangeModal', true, this.tempFilter)
       } else {
         this.$emit('closeChangeModal', true, this.tempFilter)
       }

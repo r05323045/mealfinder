@@ -8,7 +8,9 @@
           <div class="name">{{ currentUser.name }}</div>
           <div class="account">{{ currentUser.email }}</div>
         </div>
-        <div class="link" @click="$router.push('/users/profile')">前往個人資料</div>
+        <div class="link-wrapper">
+          <span class="link" @click="$router.push('/users/profile')">前往個人資料</span>
+        </div>
       </div>
       <div class="card-deck-container">
         <div class="link-card-deck">
@@ -114,6 +116,9 @@ export default {
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
+  created () {
+    this.$store.dispatch('fetchCurrentUser')
+  },
   mounted () {
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth
@@ -178,11 +183,14 @@ $red: rgb(255, 56, 92);
           color: #666;
         }
       }
-      .link {
-        cursor: pointer;
+      .link-wrapper {
         margin-top: 8px;
-        color: #008489;
-        font-weight: 600;
+        .link {
+          width: auto;
+          cursor: pointer;
+          color: #008489;
+          font-weight: 600;
+        }
       }
     }
     .card-deck-container {

@@ -446,12 +446,14 @@ $red: rgb(255, 56, 92);
             .icon.hamburger {
               height: 16px;
               width: 16px;
+              object-fit: cover;
             }
             .icon.profile {
               border-radius: 100%;
               height: 30px;
               width: 30px;
               margin-left: 12px;
+              object-fit: cover;
             }
           }
           .menu-wrapper {
