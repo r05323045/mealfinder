@@ -130,30 +130,27 @@ const userController = {
         }
         return User.findByPk(UserId)
           .then(user => {
-            if (user.id === UserId) {
-              user.update({
-                name,
-                gender,
-                email,
-                phone_number: phoneNumber,
-                DistrictId,
-                avatar: file ? img.data.link : user.avatar
-              }).then((user) => {
-                res.json({ status: 'success', message: '[HAS FILE] user was successfully to update' })
-              })
-            }
+            user.update({
+              name,
+              gender,
+              email,
+              phone_number: phoneNumber,
+              DistrictId: !DistrictId ? null : DistrictId,
+              avatar: file ? img.data.link : user.avatar
+            }).then((user) => {
+              res.json({ status: 'success', message: '[HAS FILE] user was successfully to update' })
+            })
           })
       })
     } else {
       User.findByPk(UserId)
         .then(user => {
-          console.log(user)
           user.update({
             name,
             gender,
             email,
             phone_number: phoneNumber,
-            DistrictId
+            DistrictId: !DistrictId ? null : DistrictId
           }).then((user) => {
             res.json({ status: 'success', message: '[NO file update] user was successfully to update' })
           })
