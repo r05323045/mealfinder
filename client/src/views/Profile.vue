@@ -229,18 +229,18 @@ export default {
   computed: {
     ...mapState(['currentUser', 'isAuthenticated']),
     profileProgress () {
-      let progress = 0
+      let progress = 60
       if (this.user.preferedCategory && this.user.preferedCategory.length > 0) {
-        progress += 25
+        progress += 10
       }
       if (this.user.DistrictName) {
-        progress += 25
+        progress += 10
       }
       if (this.user.phone_number) {
-        progress += 25
+        progress += 10
       }
       if (this.user.avatar && (this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))) {
-        progress += 25
+        progress += 10
       }
       return progress
     }

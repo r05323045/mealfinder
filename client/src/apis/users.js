@@ -22,6 +22,15 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getFavorites (page, filter) {
+    let queryString = page ? `?page=${page}` : ''
+    if (filter && filter.length > 1) {
+      queryString += filter.join('&')
+    }
+    return apiHelper.get(`/user/favorite${queryString}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   addFavorite (restaurantId) {
     return apiHelper.post('/user/favorite', { id: restaurantId }, {
       headers: { Authorization: `Bearer ${getToken()}` }

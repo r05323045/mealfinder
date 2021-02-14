@@ -211,6 +211,10 @@ export default {
             restaurant.isFavorited = true
           }
         })
+        Toast.fire({
+          icon: 'success',
+          title: '已加入收藏'
+        })
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -229,6 +233,10 @@ export default {
           if (restaurant.id === id) {
             restaurant.isFavorited = false
           }
+        })
+        Toast.fire({
+          icon: 'success',
+          title: '已移除收藏'
         })
       } catch (error) {
         console.log(error)
