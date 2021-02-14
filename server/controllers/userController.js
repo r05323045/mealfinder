@@ -7,6 +7,9 @@ const Category = db.Category
 const PreferedCategory = db.PreferedCategory
 const Favorite = db.Favorite
 const Restaurant = db.Restaurant
+const City = db.City
+const District = db.District
+const Coupon = db.Coupon
 const Like = db.Like
 
 // JWT
@@ -186,9 +189,43 @@ const userController = {
 
   getFavorites: (req, res) => {
     const UserId = req.user.id
-    Favorite.findAll({ where: { UserId }, include: [{ model: Restaurant }] })
+    const pageLimit = 24
+    const filters = {}
+    let offset = 0
+
+    if (req.query.min && req.query.max) {
+      filters.average_consumption = { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] }
+    }
+
+    if (req.query.page) {
+      offset = (req.query.page - 1) * pageLimit
+    }
+    Favorite.findAll({ where: { UserId } })
       .then(favorite => {
-        return res.json(favorite)
+        filters.id = favorite.map(f => f.RestaurantId)
+        Restaurant.findAll({
+          where: filters,
+          include: [
+            { model: Category, where: req.query.category ? { name: req.query.category } : null },
+            City,
+            { model: District, where: req.query.district ? { name: req.query.district } : null },
+            Coupon
+          ],
+          attributes: {
+            include: [
+              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
+            ]
+          },
+          offset: offset,
+          limit: pageLimit
+        }).then(restaurants => {
+          const data = restaurants.map(restaurant => ({
+            ...restaurant.dataValues,
+            description: restaurant.dataValues.description.substring(0, 50),
+            isFavorited: true
+          }))
+          return res.json({ data })
+        })
       })
   },
 
