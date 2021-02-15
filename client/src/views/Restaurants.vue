@@ -8,7 +8,7 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">所有餐廳</div>
+          <div class="text">餐廳列表</div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
@@ -127,7 +127,7 @@ export default {
     ChangeDistrict
   },
   created () {
-    if (this.$route.query) {
+    if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
       if (this.$route.query.category && this.$route.query.district) {
         this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
         this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
@@ -193,7 +193,6 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
-        console.log(this.restaurants.length)
         this.numOfPage += 1
       } catch (error) {
         console.log(error)
