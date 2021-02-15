@@ -109,6 +109,12 @@ export default {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+      if (this.categoriesFilter) {
+        this.tempCategoriesFilter = this.categoriesFilter
+      }
+      if (this.districtsFilter) {
+        this.tempDistrictsFilter = this.districtsFilter
+      }
     },
     categoriesFilter () {
       this.tempCategoriesFilter = this.categoriesFilter

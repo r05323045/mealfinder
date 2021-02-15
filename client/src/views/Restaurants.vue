@@ -126,6 +126,23 @@ export default {
     AddCategory,
     ChangeDistrict
   },
+  created () {
+    if (this.$route.query) {
+      if (this.$route.query.category && this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+      } else if (this.$route.query.category && !this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item)]
+      } else if (!this.$route.query.category && this.$route.query.district) {
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+        this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item)]
+      }
+    } else {
+      this.fetchRestaurants()
+    }
+  },
   mounted () {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.divHeight = this.$refs['list-container'].scrollHeight
@@ -134,7 +151,6 @@ export default {
       this.windowWidth = window.innerWidth
     })
     this.defineCardDeck()
-    this.fetchRestaurants()
   },
   watch: {
     windowWidth () {
@@ -177,6 +193,7 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
+        console.log(this.restaurants.length)
         this.numOfPage += 1
       } catch (error) {
         console.log(error)
