@@ -34,6 +34,14 @@ router.get('/user/:id/profile', authenticated, userController.getProfile)
 router.put('/user/:id/profile', authenticated, upload.single('avatar'), userController.putProfile)
 router.get('/get_current_user', authenticated, userController.getCurrentUser)
 
+// userController_UserModel
+router.get('/user/:id/profile', authenticated, userController.getProfile)
+router.put('/user/:id/profile', authenticated, upload.single('avatar'), userController.putProfile)
+router.get('/get_current_user', authenticated, userController.getCurrentUser)
+
+// userController_PreferedCategory model
+router.put('/user/:id/preferedcategory', authenticated, userController.putPreferedCategory)
+
 // userController_Favorite model
 router.get('/user/favorite', authenticated, userController.getFavorites)
 router.post('/user/favorite', authenticated, userController.addFavorite)

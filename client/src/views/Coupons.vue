@@ -37,7 +37,7 @@
                   <div class="heart-wrapper">
                     <div class="icon heart"></div>
                   </div>
-                  <div class="card-image" :style="`background: url(${item.Restaurant.picture}) no-repeat center; background-size: cover`"></div>
+                  <div class="card-image" :style="`background: url(${item.Restaurant.picture}) no-repeat center / cover`"></div>
                 </div>
                 <div class="rating-wrapper">
                   <svg class="icon star"></svg>

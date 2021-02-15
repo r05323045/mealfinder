@@ -49,9 +49,9 @@
             <div class="contact-card">
               <div class="all-wrapper">
                 <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="name" class="all-text"></label>
-                  <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '手機號碼') }}</span>
+                  <label for="phone" class="all-text"></label>
+                  <input id="phone" type="text" class="all-input" v-model="userName" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
                 </validation-provider>
                 <div class="gender">
                   <span class="item-wrapper">

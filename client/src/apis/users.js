@@ -7,6 +7,21 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getProfile (id) {
+    return apiHelper.get(`/user/${id}/profile`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  putProfile (id, formData) {
+    return apiHelper.put(`/user/${id}/profile`, formData, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  putPreferedCategory (id, preferedCategory) {
+    return apiHelper.put(`/user/${id}/preferedcategory`, { preferedCategory: preferedCategory }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   addFavorite (restaurantId) {
     return apiHelper.post('/user/favorite', { id: restaurantId }, {
       headers: { Authorization: `Bearer ${getToken()}` }

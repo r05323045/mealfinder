@@ -104,7 +104,7 @@ $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .signin {
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
   position: relative;
   width: 100%;
   .signin-form {

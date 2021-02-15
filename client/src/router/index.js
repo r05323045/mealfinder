@@ -1,7 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from './../store'
 
 Vue.use(VueRouter)
+
+const authorticated = (to, from, next) => {
+  if (!store.state.isAuthenticated) {
+    next('/signin')
+    return
+  }
+  next()
+}
 
 const routes = [
   {
@@ -44,46 +53,57 @@ const routes = [
     path: '/users',
     redirect: '/users/center',
     component: () => import('@/views/Users.vue'),
+    beforeEnter: authorticated,
     children: [
       {
         path: '/users/center',
-        component: () => import('@/views/Member.vue')
+        component: () => import('@/views/Member.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/profile',
-        component: () => import('@/views/Profile.vue')
+        component: () => import('@/views/Profile.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/history',
-        component: () => import('@/views/History.vue')
+        component: () => import('@/views/History.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/history/:id',
-        component: () => import('@/views/Reservation.vue')
+        component: () => import('@/views/Reservation.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/purchase',
-        component: () => import('@/views/Purchase.vue')
+        component: () => import('@/views/Purchase.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/purchase/:1',
-        component: () => import('@/views/Record.vue')
+        component: () => import('@/views/Record.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/checkout',
-        component: () => import('@/views/Checkout.vue')
+        component: () => import('@/views/Checkout.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/checkout/success',
-        component: () => import('@/views/CheckoutSuccess.vue')
+        component: () => import('@/views/CheckoutSuccess.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/favorite',
-        component: () => import('@/views/Favorite.vue')
+        component: () => import('@/views/Favorite.vue'),
+        beforeEnter: authorticated
       },
       {
         path: '/users/notification',
-        component: () => import('@/views/Notification.vue')
+        component: () => import('@/views/Notification.vue'),
+        beforeEnter: authorticated
       }
     ]
   },
