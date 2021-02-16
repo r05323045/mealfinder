@@ -72,6 +72,9 @@ export default {
   },
   created () {
     this.fetchDistricts()
+    if (this.districtsFilter) {
+      this.tempFilter = [this.districtsFilter]
+    }
     if (this.defaultDistrict) {
       this.tempFilter = [this.defaultDistrict]
     }
@@ -81,7 +84,7 @@ export default {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
-      if (this.defaultDistrict) {
+      if (this.districtsFilter) {
         this.tempFilter = this.districtsFilter
       }
     },
