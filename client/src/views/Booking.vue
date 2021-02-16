@@ -513,8 +513,8 @@ $darkred: #c13515;
                   input + .radio-control::before {
                     content: "";
                     display: block;
-                    width: 0.5rem;
-                    height: 0.5rem;
+                    width: 0.62rem;
+                    height: 0.6rem;
                     background: #222222;
                     box-shadow: inset 0.8em 0.8em currentColor;
                     border-radius: 50%;
@@ -522,7 +522,7 @@ $darkred: #c13515;
                     transform: scale(0);
                   }
                   .radio-control {
-                    width: 1rem;
+                    width: 1.05rem;
                     height: 1rem;
                     border-radius: 50%;
                     border: 0.1em solid $divider;

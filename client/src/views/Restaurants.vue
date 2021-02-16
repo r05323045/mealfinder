@@ -8,7 +8,7 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">所有餐廳</div>
+          <div class="text">餐廳列表</div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
@@ -126,6 +126,23 @@ export default {
     AddCategory,
     ChangeDistrict
   },
+  created () {
+    if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
+      if (this.$route.query.category && this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+      } else if (this.$route.query.category && !this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item)]
+      } else if (!this.$route.query.category && this.$route.query.district) {
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+        this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item)]
+      }
+    } else {
+      this.fetchRestaurants()
+    }
+  },
   mounted () {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.divHeight = this.$refs['list-container'].scrollHeight
@@ -134,7 +151,6 @@ export default {
       this.windowWidth = window.innerWidth
     })
     this.defineCardDeck()
-    this.fetchRestaurants()
   },
   watch: {
     windowWidth () {
@@ -211,6 +227,10 @@ export default {
             restaurant.isFavorited = true
           }
         })
+        Toast.fire({
+          icon: 'success',
+          title: '已加入收藏'
+        })
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -229,6 +249,10 @@ export default {
           if (restaurant.id === id) {
             restaurant.isFavorited = false
           }
+        })
+        Toast.fire({
+          icon: 'success',
+          title: '已移除收藏'
         })
       } catch (error) {
         console.log(error)

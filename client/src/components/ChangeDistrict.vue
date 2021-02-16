@@ -81,6 +81,9 @@ export default {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+      if (this.defaultDistrict) {
+        this.tempFilter = this.districtsFilter
+      }
     },
     districtsFilter () {
       if (this.defaultDistrict) {
