@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
     rating: DataTypes.STRING,
     RestaurantId: DataTypes.INTEGER,
-    UserId: DataTypes.INTEGER
+    UserId: DataTypes.INTEGER,
+    ReservationId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Comment',
