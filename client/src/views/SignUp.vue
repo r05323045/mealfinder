@@ -6,37 +6,47 @@
           <div class="logo"></div>
         </div>
         <div class="signup-card">
-          <form class="signup-content">
-            <div class="all-wrapper">
-              <label for="account" class="all-text">帳號</label>
-              <input id="account" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="name" class="all-text">名稱</label>
-              <input id="name" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="email" class="all-text">Email</label>
-              <input id="email" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="password" class="all-text">密碼</label>
-              <input id="password" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="password-comfirm" class="all-text">密碼確認</label>
-              <input id="password-comfirm" class="all-input">
-            </div>
-            <div class="submit-button-wrapper">
-              <button class="submit-button" type="submit" @click.prevent="">
-                <div class="button">註冊</div>
-              </button>
-            </div>
-            <div class="text-wrapper">
-              <span class="text">已經有帳號？</span>
-              <span class="text register" @click="$router.push('/signin')">立即登入</span>
-            </div>
-          </form>
+          <validation-observer ref="formvalidation" v-slot="{ invalid }">
+            <form class="signup-content">
+              <validation-provider v-slot="{ errors, classes }" rules="required">
+                <div class="all-wrapper">
+                  <label for="name" class="all-text">名稱</label>
+                  <input id="name" type="text" class="all-input" v-model="name" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '名稱') }}</span>
+                </div>
+              </validation-provider>
+              <validation-provider v-slot="{ errors, classes }" rules="required|email">
+                <div class="all-wrapper">
+                  <label for="email" class="all-text">電子郵件</label>
+                  <input id="email" type="email" class="all-input" v-model="email" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
+                </div>
+              </validation-provider>
+              <validation-provider name="password" v-slot="{ errors, classes }" rules="required|password:@confirm">
+                <div class="all-wrapper">
+                  <label for="password" class="all-text">密碼</label>
+                  <input id="password" type="password" class="all-input" v-model="password" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('password ', '密碼') }}</span>
+                </div>
+              </validation-provider>
+              <validation-provider name="confirm" v-slot="{ errors, classes }" rules="required|password:@password">
+                <div class="all-wrapper">
+                  <label for="password-confirm" class="all-text">密碼確認</label>
+                  <input id="password-confirm" type="password" class="all-input" v-model="passwordConfirm" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('confirm ', '密碼確認') }}</span>
+                </div>
+              </validation-provider>
+              <div class="submit-button-wrapper">
+                <button class="submit-button" type="submit" @click.prevent="signup" :disabled="invalid">
+                  <div class="button">註冊</div>
+                </button>
+              </div>
+              <div class="text-wrapper">
+                <span class="text">已經有帳號？</span>
+                <span class="text register" @click="$router.push('/signin')">立即登入</span>
+              </div>
+            </form>
+          </validation-observer>
           <div class="social-media-signup">
             <div class="text">使用社群帳號快速註冊</div>
             <div class="social-button google" @click.prevent="">
@@ -60,24 +70,36 @@
 
 <script>
 
+import authorizationAPI from '@/apis/authorization'
+import { Toast } from '@/utils/helpers'
 export default {
   data () {
     return {
-      purpose: ['慶生', '約會', '週年慶', '家庭聚餐', '朋友聚餐', '商務聚餐'],
-      submitPurpose: []
+      name: '',
+      email: '',
+      password: '',
+      passwordConfirm: ''
     }
   },
-  mounted () {
-  },
   methods: {
-    onScroll (e) {
+    async signup () {
+      try {
+        const { data } = await authorizationAPI.signUp({ name: this.name, email: this.email, password: this.password, passwordConfirm: this.passwordConfirm })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '註冊成功'
+        })
 
-    },
-    changePurpose (purpose) {
-      if (this.submitPurpose.includes(purpose)) {
-        this.submitPurpose.splice(this.submitPurpose.indexOf(purpose), 1)
-      } else {
-        this.submitPurpose = [...this.submitPurpose, purpose]
+        this.$router.push('/signin')
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: error
+        })
       }
     }
   }
@@ -89,6 +111,7 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
+$darkred: #c13515;
 .signup {
   height: 100%;
   overflow: scroll;
@@ -144,6 +167,14 @@ $red: rgb(255, 56, 92);
               border: 1px solid $divider;
               border-radius: 8px;
               width: calc(100% - 24px);
+            }
+            .all-input.is-invalid {
+              border: 1px solid $darkred;
+            }
+            .invalid-text {
+              font-size: 12px;
+              line-height: 1.5;
+              color: $darkred;
             }
           }
           .submit-button-wrapper {

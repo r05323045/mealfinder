@@ -3,6 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import moment from 'moment'
+import zh from './zh_TW.js'
+import 'default-passive-events'
+import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
+import * as rules from 'vee-validate/dist/rules'
 
 Vue.config.productionTip = false
 
@@ -114,13 +118,59 @@ moment.locale('zh-tw', {
   }
 })
 
-Vue.filter('pickDateFormate', function (date) {
+Vue.filter('pickDateFormat', function (date) {
   if (moment(date).format('M/DD') === moment().format('M/DD')) {
     return `${moment().format('M/DD')} ${moment().format('ddd')} (今日)`
   } else {
     return `${moment(date).format('M/DD')} ${moment(date).format('ddd')}`
   }
 })
+
+Vue.filter('bookingDateFormat', function (date) {
+  if (moment(date).format('M/DD') === moment().format('M/DD')) {
+    return `${moment().format('YYYY/M/DD')} ${moment().format('ddd')} (今日)`
+  } else {
+    return `${moment(date).format('YYYY/M/DD')} ${moment(date).format('ddd')}`
+  }
+})
+
+Vue.filter('priceFormat', function (value) {
+  return '$' + Number(value)
+    .toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/,
+      function (all, pre, groupOf3Digital) {
+        return pre + groupOf3Digital.replace(/\d{3}/g, ',$&')
+      })
+})
+
+Vue.filter('fromNow', function (datetime) {
+  if (!datetime) {
+    return '-'
+  }
+  return moment(datetime).fromNow()
+})
+
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule])
+})
+
+extend('password', {
+  params: ['target'],
+  validate (value, { target }) {
+    return value === target
+  },
+  message: '密碼與密碼確認不相同'
+})
+
+configure({
+  classes: {
+    valid: 'is-valid',
+    invalid: 'is-invalid'
+  }
+})
+localize('tw', zh)
+
+Vue.component('ValidationProvider', ValidationProvider)
+Vue.component('ValidationObserver', ValidationObserver)
 
 new Vue({
   router,

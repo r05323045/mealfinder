@@ -2,14 +2,14 @@
   <div class="booking" ref="booking">
     <Navbar class="restaurant-navbar" v-show="scrollY === 0"></Navbar>
     <div class="booking-searchbar-wrapper">
-      <div class="back-wrapper">
+      <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
           <div class="text">
-            ToTsuZen Steak 現切現煎以克計價濕式熟成牛排
+            {{ restaurant.name }}
           </div>
         </div>
       </div>
@@ -20,95 +20,110 @@
         <div class="booking-card-wrapper">
           <div class="booking-card">
             <div class="picture-wrapper">
-              <div class="picture"></div>
+              <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
             </div>
             <div class="header">
               <img class="icon-restaurant" src="../assets/restaurant.svg">
-              <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+              <div class="name">{{ restaurant.name }}</div>
             </div>
             <div class="divider"></div>
             <div class="info">
               <div class="item-wrapper">
                 <img class="icon profile" src="../assets/profile.svg">
-                <div class="number">2大</div>
+                <div class="number">{{ adultNum }}大<span v-if="childNum > 0">{{ childNum }}小</span></div>
               </div>
               <div class="item-wrapper">
                 <img class="icon time" src="../assets/calendar.svg">
-                <div class="date">2021/01/23 (週六)</div>
+                <div class="date">{{ bookingDate | bookingDateFormat  }}</div>
               </div>
               <div class="item-wrapper">
                 <img class="icon time" src="../assets/clock.svg">
-                <div class="time">11:30</div>
+                <div class="time">{{ bookingTime }}</div>
               </div>
             </div>
           </div>
         </div>
         <div class="contact-card-wrapper">
-          <div class="title">確認訂位與填寫聯絡資訊</div>
-          <div class="contact-card">
-            <div class="all-wrapper">
-              <label for="name" class="all-text">訂位人姓名</label>
-              <input id="name" class="all-input">
-              <div class="gender">
-                <span class="item-wrapper">
-                  <label for="gender-female" class="item">
-                    <span class="radio-input">
-                      <input name="gender" id="gender-female" role="radio" value="1" type="radio" checked>
-                      <span class="radio-control"></span>
-                    </span>
-                    <span class="text">小姐</span>
-                  </label>
-                </span>
-                <span class="item-wrapper">
-                  <label for="gender-male" class="item">
-                    <span class="radio-input">
-                      <input name="gender" id="gender-male" role="radio" value="1" type="radio">
-                      <span class="radio-control"></span>
-                    </span>
-                    <span class="text">先生</span>
-                  </label>
-                </span>
-                <span class="item-wrapper">
-                  <label for="gender-other" class="item">
-                    <span class="radio-input">
-                      <input name="gender" id="gender-other" role="radio" value="1" type="radio">
-                      <span class="radio-control"></span>
-                    </span>
-                    <span class="text">其他</span>
-                  </label>
-                </span>
+          <validation-observer ref="formvalidation" v-slot="{ invalid }">
+            <div class="title">確認訂位與填寫聯絡資訊</div>
+            <div class="contact-card">
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="required">
+                  <label for="phone" class="all-text"></label>
+                  <input id="phone" type="text" class="all-input" v-model="userName" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
+                </validation-provider>
+                <div class="gender">
+                  <span class="item-wrapper">
+                    <label for="gender-female" class="item">
+                      <span class="radio-input">
+                        <input name="gender" id="gender-female" role="radio" value="female" type="radio" checked v-model="userGender">
+                        <span class="radio-control"></span>
+                      </span>
+                      <span class="text">小姐</span>
+                    </label>
+                  </span>
+                  <span class="item-wrapper">
+                    <label for="gender-male" class="item">
+                      <span class="radio-input">
+                        <input name="gender" id="gender-male" role="radio" value="male" type="radio" v-model="userGender">
+                        <span class="radio-control"></span>
+                      </span>
+                      <span class="text">先生</span>
+                    </label>
+                  </span>
+                  <span class="item-wrapper">
+                    <label for="gender-other" class="item">
+                      <span class="radio-input">
+                        <input name="gender" id="gender-other" role="radio" value="other" type="radio" v-model="userGender">
+                        <span class="radio-control"></span>
+                      </span>
+                      <span class="text">其他</span>
+                    </label>
+                  </span>
+                </div>
+              </div>
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="required">
+                  <label for="phone" class="all-text">訂位人手機號碼</label>
+                  <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
+                </validation-provider>
+              </div>
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="required|email">
+                  <label for="email" class="all-text">訂位人電子郵件</label>
+                  <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
+                </validation-provider>
+              </div>
+              <div class="all-wrapper">
+                <label for="purpose" class="all-text">用餐目的</label>
+                <div class="button-wrapper">
+                  <button class="button" v-for="(el, idx) in purpose" :key="`purpose-${idx}`" @click.prevent="changePurpose(el)" :class="{select: submitPurpose.includes(el)}">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                  <span v-if="!submitPurpose && firstClickSubmit" class="invalid-text">請選擇用餐目的</span>
+                </div>
+              </div>
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="max:140">
+                  <label for="note" class="all-text">其他備註</label>
+                  <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！（例如：行動不便、過敏）" v-model="userNote" :class="classes"></textarea>
+                  <div class="note-count">({{ userNote.length }}/140)</div>
+                  <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
+                </validation-provider>
               </div>
             </div>
-            <div class="all-wrapper">
-              <label for="phone" class="all-text">訂位人手機號碼</label>
-              <input id="phone" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="email" class="all-text">訂位人 Email</label>
-              <input id="email" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="purpose" class="all-text">用餐目的</label>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in purpose" :key="`purpose-${idx}`" @click.prevent="changePurpose(el)" :class="{select: submitPurpose.includes(el)}">
-                  <span class="text">{{ el }}</span>
-                </button>
+            <div class="submit-button-wrapper">
+              <button class="submit-button" type="submit" @click.prevent="submitReservation(invalid || !submitPurpose)" :disabled="invalid">
+                <div class="button">確認訂位</div>
+              </button>
+              <div class="back-button" @click.prevent="$router.go(-1)">
+                <div class="button">回上一步</div>
               </div>
             </div>
-            <div class="all-wrapper">
-              <label for="note" class="all-text">其他備註</label>
-              <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！（例如：行動不便、過敏）"></textarea>
-              <div class="note-count">(0/140)</div>
-            </div>
-          </div>
-          <div class="submit-button-wrapper">
-            <button class="submit-button" type="submit" @click.prevent="">
-              <div class="button">確認訂位</div>
-            </button>
-            <div class="back-button" @click.prevent="">
-              <div class="button">回上一步</div>
-            </div>
-          </div>
+          </validation-observer>
         </div>
       </div>
     </form>
@@ -120,33 +135,81 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   data () {
     return {
-      purpose: ['慶生', '約會', '週年慶', '家庭聚餐', '朋友聚餐', '商務聚餐'],
-      submitPurpose: [],
+      purpose: ['慶生', '約會', '家庭聚餐', '朋友聚餐', '商務聚餐', '其他'],
+      submitPurpose: '',
       scrollY: 0,
-      scrollUp: true
+      scrollUp: true,
+      restaurant: [],
+      restaurantId: 0,
+      bookingTime: '',
+      bookingDate: new Date(),
+      adultNum: 0,
+      childNum: 0,
+      userName: '',
+      userGender: 'female',
+      userPhone: '',
+      userEmail: '',
+      userNote: '',
+      firstClickSubmit: false
     }
   },
   components: {
     Footer,
     Navbar
   },
+  created () {
+    this.restaurantId = this.$route.query.restaurant
+    this.adultNum = Number(this.$route.query.adult)
+    this.childNum = Number(this.$route.query.child)
+    this.bookingDate = new Date(Number(this.$route.query.date))
+    this.bookingTime = this.$route.query.time
+    this.fetchRestaurant(this.restaurantId)
+    if (this.currentUser) {
+      this.userName = this.currentUser.name
+      this.userGender = this.currentUser.gender
+      this.userPhone = this.currentUser.phone_number
+      this.userEmail = this.currentUser.email
+    }
+  },
   mounted () {
-    this.$refs.booking.addEventListener('scroll', this.onScroll)
+    this.$refs.booking.addEventListener('scroll', this.onScroll, { passive: true })
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     onScroll (e) {
       this.scrollY = this.$refs.booking.scrollTop
     },
     changePurpose (purpose) {
-      if (this.submitPurpose.includes(purpose)) {
-        this.submitPurpose.splice(this.submitPurpose.indexOf(purpose), 1)
-      } else {
-        this.submitPurpose = [...this.submitPurpose, purpose]
+      this.submitPurpose = purpose
+    },
+    async fetchRestaurant (id) {
+      try {
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
+        this.restaurant = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
+    },
+    submitReservation (invalid) {
+      if (!this.firstClickSubmit) {
+        this.firstClickSubmit = true
+      }
+      if (!invalid) {
+        this.$router.push(`/booking/success/${this.restaurant.id}`).catch(() => {})
       }
     }
   }
@@ -160,6 +223,7 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $default-color: #000000;
 $primary-color: #222;
+$darkred: #c13515;
 @import '~vue2-datepicker/scss/index.scss';
 .booking {
   height: 100%;
@@ -375,6 +439,7 @@ $primary-color: #222;
           .all-wrapper {
             margin-bottom: 24px;
             width: 100%;
+            position: relative;
             .all-text {
               width: 100%;
               font-size: 16px;
@@ -391,6 +456,19 @@ $primary-color: #222;
               border: 1px solid $divider;
               border-radius: 8px;
               width: calc(100% - 24px);
+            }
+            .all-input.is-invalid {
+              border: 1px solid $darkred;
+            }
+            .invalid-text {
+              font-size: 12px;
+              line-height: 1.5;
+              color: $darkred;
+            }
+            .invalid-text.note-error {
+              position: absolute;
+              top: 100%;
+              left: 0;
             }
             .gender {
               display: flex;
@@ -427,6 +505,7 @@ $primary-color: #222;
                     outline: none;
                   }
                   .radio-control {
+                    overflow: hidden;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -434,22 +513,21 @@ $primary-color: #222;
                   input + .radio-control::before {
                     content: "";
                     display: block;
-                    background: $red;
-                    width: 0.6em;
-                    height: 0.6em;
-                    box-shadow: inset 0.6em 0.6em currentColor;
+                    width: 0.62rem;
+                    height: 0.6rem;
+                    background: #222222;
+                    box-shadow: inset 0.8em 0.8em currentColor;
                     border-radius: 50%;
                     transition: 180ms transform ease-in-out;
                     transform: scale(0);
                   }
                   .radio-control {
-                    width: 1rem;
+                    width: 1.05rem;
                     height: 1rem;
                     border-radius: 50%;
                     border: 0.1em solid $divider;
                   }
                   input:checked + .radio-control::before {
-                    background: $red;
                     transform: scale(1);
                   }
                 }
@@ -472,7 +550,11 @@ $primary-color: #222;
               }
             }
             .note-count {
+              position: absolute;
+              right: 0;
+              top: 100%;
               font-size: 12px;
+              line-height: 1.5;
               color: #666;
               font-weight: 400;
               text-align: right;
@@ -481,6 +563,7 @@ $primary-color: #222;
               text-align: left;
               margin-top: 16px;
               .button {
+                cursor: pointer;
                 margin: 0 4px 16px;
                 height: 44px;
                 padding: 8px 12px;
@@ -520,6 +603,7 @@ $primary-color: #222;
       width: 100%;
       background: #ffffff;
       .submit-button {
+        cursor: pointer;
         border: none;
         appearance: none;
         margin-bottom: 20px;
@@ -542,6 +626,7 @@ $primary-color: #222;
         }
       }
       .back-button {
+        cursor: pointer;
         border: 1px solid #222222;
         margin-bottom: 12px;
         height: 46px;

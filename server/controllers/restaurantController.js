@@ -1,21 +1,18 @@
 const sequelize = require('sequelize')
 const db = require('../models')
-const like = require('../models/like')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const City = db.City
 const District = db.District
 const Coupon = db.Coupon
 const Comment = db.Comment
-const Favorite = db.Favorite
 const User = db.User
-const Like = db.Like
 
 const restaurantController = {
   getRestaurants: (req, res) => {
     let offset = 0
     const pageLimit = 24
-    let isFavorited = false //沒登入狀態
+    const isFavorited = false
 
     if (req.query.page) {
       offset = (req.query.page - 1) * pageLimit
@@ -23,7 +20,13 @@ const restaurantController = {
     Restaurant.findAll({
       raw: true,
       nest: true,
-      include: [Category, City, District, Coupon],
+      where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
+      include: [
+        { model: Category, where: req.query.category ? { name: req.query.category } : null },
+        City,
+        { model: District, where: req.query.district ? { name: req.query.district } : null },
+        Coupon
+      ],
       attributes: {
         include: [
           [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
@@ -49,8 +52,12 @@ const restaurantController = {
     }
 
     return Restaurant.findAll({
+      where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
       include: [
-        Category, City, District, Coupon,
+        { model: Category, where: req.query.category ? { name: req.query.category } : null },
+        City,
+        { model: District, where: req.query.district ? { name: req.query.district } : null },
+        Coupon,
         { model: User, as: 'FavoritedUsers' }
       ],
       attributes: {
@@ -70,23 +77,77 @@ const restaurantController = {
     })
   },
   getRestaurant: (req, res) => {
-    return Promise.all([
-      Restaurant.findByPk(req.params.restaurantId, {
-        include: [Category, City, District, Coupon],
-      }),
-      Comment.findAndCountAll({
-        where: { RestaurantId: req.params.restaurantId },
-        include: [User],
-        attributes: {
-          include: [
-            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comment.id)'), 'LikesCount']
-          ]
+    return Restaurant.findByPk(req.params.restaurantId, {
+      attributes: {
+        include: [
+          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
+        ]
+      },
+      include: [
+        Category,
+        City,
+        District,
+        Coupon,
+        { model: User, as: 'FavoritedUsers' },
+        {
+          model: Comment,
+          attributes: {
+            include: [
+              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'avatar']
+            ]
+          }
         }
-      })
-    ])
+      ]
+    })
       .then(([restaurant, comments]) => {
+        restaurant.dataValues.isFavorited = false
         return res.json({ restaurant, comments })
       })
+  },
+  getUsersRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.restaurantId, {
+      attributes: {
+        include: [
+          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
+        ]
+      },
+      include: [
+        Category,
+        City,
+        District,
+        Coupon,
+        { model: User, as: 'FavoritedUsers' },
+        {
+          model: Comment,
+          attributes: {
+            include: [
+              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.UserId = ${req.user.id})`), 'isLiked'],
+              [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'avatar']
+            ]
+          }
+        }
+      ]
+    })
+      .then(restaurant => {
+        restaurant.dataValues.isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+        return res.json(restaurant)
+      })
+  },
+  getCategories: (req, res) => {
+    Category.findAll().then(categories => {
+      return res.json({ categories })
+    })
+  },
+  getDistricts: (req, res) => {
+    District.findAll({
+      where: { CityId: 1 }
+    }).then(districts => {
+      return res.json({ districts })
+    })
   }
 }
 

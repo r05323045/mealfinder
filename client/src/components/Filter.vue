@@ -1,5 +1,6 @@
 <template>
   <div class="modal" v-show="showModal" :class="{ show: showModal, innerShow: modalContentShow }">
+    <div class="modal-background" @click="closeModal"></div>
     <div class="modal-content" v-show="showModal" :class="{ show: modalContentShow }">
       <div v-show="modalContentShow">
         <div class="top-wrapper">
@@ -8,20 +9,50 @@
           </div>
           <div class="title">篩選條件</div>
           <div class="clear-wrapper">
-            <div class="text">清除</div>
+            <div class="text" @click="clearAll">清除</div>
           </div>
         </div>
         <div class="filter-container">
+          <div class="district">
+            <div class="title">用餐地區</div>
+            <div class="item-group">
+              <label class="item" v-for="(item, idx) in districts" :key="`district-${idx}`">
+                <div class="text-wrapper">
+                  <div class="text">{{ item.name }}</div>
+                </div>
+                <div class="input-container" :for="`checkbox-district-${idx}`">
+                  <div class="input-wrapper">
+                    <input
+                      class="input"
+                      type="checkbox"
+                      :id="`checkbox-district-${idx}`"
+                      @click="addToFilter(item.name, 'district')"
+                      :checked="tempDistrictsFilter.includes(item.name)"
+                    >
+                    <span>
+                      <span class="icon check"></span>
+                    </span>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
           <div class="category">
             <div class="title">餐廳類型</div>
             <div class="item-group">
-              <label class="item" v-for="i in 8" :key="i">
+              <label class="item" v-for="(item, idx) in categories" :key="`category-${idx}`">
                 <div class="text-wrapper">
-                  <div class="text">日式料理</div>
+                  <div class="text">{{ item.name }}</div>
                 </div>
-                <div class="input-container" :for="`checkbox-${i}`">
+                <div class="input-container" :for="`checkbox-category-${idx}`">
                   <div class="input-wrapper">
-                    <input class="input" type="checkbox" :id="`checkbox-${i}`">
+                    <input
+                      class="input"
+                      type="checkbox"
+                      :id="`checkbox-category-${idx}`"
+                      @click="addToFilter(item.name, 'category')"
+                      :checked="tempCategoriesFilter.includes(item.name)"
+                    >
                     <span>
                       <span class="icon check"></span>
                     </span>
@@ -32,7 +63,7 @@
           </div>
         </div>
         <div class="filter-button-wrapper">
-          <div class="filter-button">
+          <div class="filter-button"  @click="completeEditing">
             <div class="button">顯示結果</div>
           </div>
         </div>
@@ -42,27 +73,108 @@
 </template>
 
 <script>
+
+import { Toast } from '@/utils/helpers'
+import restaurantsAPI from '@/apis/restaurants'
 export default {
   data () {
     return {
-      modalContentShow: false
+      modalContentShow: false,
+      districts: [],
+      categories: [],
+      tempCategoriesFilter: [],
+      tempDistrictsFilter: []
     }
   },
   props: {
     showModal: {
       type: Boolean
+    },
+    categoriesFilter: {
+      type: Array
+    },
+    districtsFilter: {
+      type: Array
     }
+  },
+  created () {
+    return Promise.all([
+      this.fetchCategories(),
+      this.fetchDistricts()
+    ])
+      .then(() => {})
   },
   watch: {
     showModal () {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+      if (this.categoriesFilter) {
+        this.tempCategoriesFilter = this.categoriesFilter
+      }
+      if (this.districtsFilter) {
+        this.tempDistrictsFilter = this.districtsFilter
+      }
+    },
+    categoriesFilter () {
+      this.tempCategoriesFilter = this.categoriesFilter
+    },
+    districtsFilter () {
+      this.tempDistrictsFilter = this.districtsFilter
     }
   },
   methods: {
     closeModal () {
       this.$emit('closeModal')
+    },
+    async fetchDistricts () {
+      try {
+        const { data } = await restaurantsAPI.getDistricts()
+        this.districts = data.districts
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得類別，請稍候'
+        })
+      }
+    },
+    async fetchCategories () {
+      try {
+        const { data } = await restaurantsAPI.getCategories()
+        this.categories = data.categories
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得類別，請稍候'
+        })
+      }
+    },
+    addToFilter (item, type) {
+      switch (type) {
+        case 'district':
+          if (this.tempDistrictsFilter.includes(item)) {
+            this.tempDistrictsFilter.splice(this.tempDistrictsFilter.indexOf(item), 1)
+          } else {
+            this.tempDistrictsFilter = [...this.tempDistrictsFilter, item]
+          }
+          break
+        case 'category':
+          if (this.tempCategoriesFilter.includes(item)) {
+            this.tempCategoriesFilter.splice(this.tempCategoriesFilter.indexOf(item), 1)
+          } else {
+            this.tempCategoriesFilter = [...this.tempCategoriesFilter, item]
+          }
+          break
+      }
+    },
+    completeEditing () {
+      this.$emit('closeModal', true, this.tempCategoriesFilter, this.tempDistrictsFilter)
+    },
+    clearAll () {
+      this.tempCategoriesFilter = []
+      this.tempDistrictsFilter = []
     }
   }
 }
@@ -72,7 +184,6 @@ export default {
 $ultimategray: #939597;
 $divider: #E6ECF0;
 .modal.show {
-  opacity: 50%;
   overflow: hidden;
   z-index: 999;
   position: fixed;
@@ -83,9 +194,16 @@ $divider: #E6ECF0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background: #666;
   transition: 0.1s;
   transform: translateY(0);
+}
+.modal-background {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #666;
+  opacity: 0.5;
 }
 .modal-content.show {
   height: 100%;
@@ -139,11 +257,13 @@ $divider: #E6ECF0;
     }
   }
   .filter-container {
+    overflow-y: scroll;
     background: #ffffff;
     height: calc(100vh - 168px);
     width: calc(100vw - 48px);
     padding: 12px 24px;
-    .category {
+    .category,
+    .district {
       padding: 8px 0 24px 0;
       .title {
         text-align: left;

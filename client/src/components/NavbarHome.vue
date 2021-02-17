@@ -31,20 +31,24 @@
         <div class="side-nav">
           <div class="side-nav-button" @click="showMenu = !showMenu">
             <img class="icon hamburger" src="../assets/hamburger.svg">
-            <img class="icon profile" src="../assets/default-profile.svg">
+            <img class="icon profile" v-if="!isAuthenticated" src="../assets/default-profile.svg">
+            <img class="icon profile" v-if="isAuthenticated" :src="currentUser.avatar">
           </div>
           <div ref="menu-wrapper" class="menu-wrapper" v-show="showMenu">
             <div class="menu">
-              <div class="item" @click="$router.push('/users/center').catch(()=>{})">會員中心</div>
-              <div class="item" @click="$router.push('/users/history').catch(()=>{})">訂位紀錄</div>
-              <div class="item" @click="$router.push('/users/favorite').catch(()=>{})">我的收藏</div>
+              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/center').catch(()=>{})">會員中心</div>
+              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/history').catch(()=>{})">訂位紀錄</div>
+              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/favorite').catch(()=>{})">我的收藏</div>
+              <div class="item" @click="$router.push('/restaurants').catch(()=>{})">探索餐廳</div>
               <div class="item" @click="$router.push('/coupons').catch(()=>{})">優惠</div>
-              <div class="item" @click="$router.push('/users/purchase').catch(()=>{})">購物車</div>
-              <div class="item" @click="$router.push('/users/notification').catch(()=>{})">通知</div>
-              <div class="divider-wrapper">
+              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/purchase').catch(()=>{})">購物車</div>
+              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/notification').catch(()=>{})">通知</div>
+              <div class="divider-wrapper" v-if="isAuthenticated">
                 <div class="divider"></div>
               </div>
-              <div class="item" @click="$router.push('/signin').catch(()=>{})">登出</div>
+              <div class="item" v-if="!isAuthenticated" @click="$router.push('/signin').catch(()=>{})">登入</div>
+              <div class="item" v-if="!isAuthenticated" @click="$router.push('/signup').catch(()=>{})">註冊</div>
+              <div class="item" v-if="isAuthenticated" @click="signout">登出</div>
             </div>
           </div>
         </div>
@@ -94,6 +98,9 @@
 </template>
 
 <script>
+
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -103,6 +110,9 @@ export default {
       defaultState: true,
       showMenu: false
     }
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   mounted () {
     document.body.addEventListener('click', (e) => {
@@ -123,6 +133,21 @@ export default {
     clickSearchBar () {
       this.openSearch = !this.openSearch
       this.clickSearch = !this.clickSearch
+    },
+    signout () {
+      this.$store.commit('revokeAuthentication')
+      this.showMenu = false
+      if (this.$route.path.includes('/users')) {
+        this.$router.push('/').catch(() => {})
+      }
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+      Toast.fire({
+        icon: 'success',
+        title: '成功登出'
+      })
     }
   }
 }
@@ -309,11 +334,14 @@ $red: rgb(255, 56, 92);
             .icon.hamburger {
               height: 16px;
               width: 16px;
+              object-fit: cover;
             }
             .icon.profile {
+              border-radius: 100%;
               height: 30px;
               width: 30px;
               margin-left: 12px;
+              object-fit: cover;
             }
           }
           .menu-wrapper {
