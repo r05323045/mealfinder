@@ -65,7 +65,7 @@
           <div class="contact-wrapper">
             <div class="phone-wrapper">
               <img class="icon phone" src="../assets/phone.svg">
-              <div class="phone">{{ restaurant.tel }}</div>
+              <div class="phone">{{ restaurant.tel ? restaurant.tel : '尚未提供' }}</div>
             </div>
             <div class="map-wrapper" @click="scrollToMap">
               <img class="icon map" src="../assets/map.svg">
@@ -172,8 +172,8 @@
           <div class="divider"></div>
           <div class="title">餐廳資訊</div>
           <div class="info-and-map">
-            <div class="map-wrapper" v-if="restaurant.place_id">
-              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=place_id:${restaurant.place_id}`" class="google-map"></iframe>
+            <div class="map-wrapper" v-if="restaurant.google_map_url">
+              <iframe :src="`${restaurant.google_map_url.split('&q=')[0].split('key=')[0]}key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=${restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -188,7 +188,7 @@
                   <img class="icon phone" src="../assets/phone.svg">
                   <div class="title">電話</div>
                 </div>
-                <div class="content">{{ restaurant.tel }}</div>
+                <div class="content">{{ restaurant.tel ? restaurant.tel : '尚未提供' }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
@@ -396,15 +396,15 @@ export default {
         this.businessHoursObj[b.slice(0, 3)] = { hours: [], start: '', end: '', noon: [], afternoon: [], night: [] }
         if (!b.includes('休息')) {
           let startAndEnd
-          if (b.slice(5, b.length).includes(',')) {
-            startAndEnd = b.slice(5, b.length).split(',')[0].trim().split(' – ')
+          if (b.slice(4, b.length).includes(',')) {
+            startAndEnd = b.slice(4, b.length).split(',')[0].trim().split('-')
             this.checkStartAndEnd(startAndEnd, b)
             this.pushOpenHours()
-            startAndEnd = b.slice(5, b.length).split(',')[1].trim().split(' – ')
+            startAndEnd = b.slice(4, b.length).split(',')[1].trim().split('-')
             this.checkStartAndEnd(startAndEnd, b)
             this.pushOpenHours()
           } else {
-            startAndEnd = b.slice(5, b.length).split(' – ')
+            startAndEnd = b.slice(4, b.length).split('-')
             this.checkStartAndEnd(startAndEnd, b)
             this.pushOpenHours()
           }
@@ -438,7 +438,11 @@ export default {
           this.businessHoursObj[dayName.slice(0, 3)].start = halfHourArray[idx]
         }
         if (time === startAndEnd[1]) {
-          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[idx - 2]
+          let lastBooking = idx - 2
+          if (lastBooking < 0) {
+            lastBooking = halfHourArray.length + lastBooking
+          }
+          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[lastBooking]
         }
       })
     },

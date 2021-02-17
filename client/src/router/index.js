@@ -26,6 +26,10 @@ const routes = [
     component: () => import('@/views/Restaurant.vue')
   },
   {
+    path: '/map',
+    component: () => import('@/views/Map.vue')
+  },
+  {
     path: '/booking',
     component: () => import('@/views/Booking.vue')
   },

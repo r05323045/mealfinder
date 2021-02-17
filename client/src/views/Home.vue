@@ -29,7 +29,7 @@
               <span>今晚...</span><br>
               <span>我想來點</span>
             </div>
-            <div class="button">瀏覽周邊餐廳</div>
+            <div class="button" @click="$router.push('/map')">瀏覽周邊餐廳</div>
           </div>
         </div>
       </div>
@@ -149,23 +149,23 @@
                 <div class="category-name">日式料理</div>
                 <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
               </div>
-              <div class="swiper-slide" @click="$router.push('/restaurants?category=台式料理')">
+              <div class="swiper-slide" @click="$router.push('/restaurants?category=港式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1476240070072-d734bba9f6c1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1562492901-e7021f6af8c2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">台式料理</div>
-                <div class="category-intro">探索台北在地好味道</div>
+                <div class="category-name">港式料理</div>
+                <div class="category-intro">喜歡香港風味的你，不能錯過</div>
               </div>
-              <div class="swiper-slide" @click="$router.push('/restaurants?category=美式料理')">
+              <div class="swiper-slide" @click="$router.push('/restaurants?category=韓式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1542384557-0824d90731ee?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1498654896293-37aacf113fd9?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">美式料理</div>
-                <div class="category-intro">輕鬆多元的菜色，聊天、聚餐的好選擇</div>
+                <div class="category-name">韓式料理</div>
+                <div class="category-intro">聊天、聚餐的好選擇</div>
               </div>
               <div class="swiper-slide" @click="$router.push('/restaurants?category=早午餐')">
                 <div class="inner-wrapper">
@@ -209,7 +209,7 @@
                 <div class="button" @click="$router.push('/restaurants')">餐廳清單</div>
               </div>
               <div class="button-wrapper">
-                <div class="button map" @click="$router.push('/restaurants')">地圖探索</div>
+                <div class="button map" @click="$router.push('/map')">地圖探索</div>
               </div>
             </div>
           </div>
@@ -219,7 +219,7 @@
                 <div class="background restaurant-background"></div>
                 <span class="text">餐廳清單</span>
               </div>
-              <div class="item" @click="$router.push('/restaurants')">
+              <div class="item" @click="$router.push('/map')">
                 <div class="background map-background"></div>
                 <span class="text">地圖探索</span>
               </div>

@@ -1,38 +1,43 @@
-'use strict';
-const data = require('../restaurant-data.json')
+'use strict'
+const data = require('../test-restaurant-data.json')
 const faker = require('faker')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const restaurants = []
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.data.length; i++) {
+      try {
+        let a = data.data[i].coordinates.replace(/'/g, '"')
+      } catch {
+        console.log(data.data[i].coordinates, i)
+      }
       restaurants.push({
         id: i * 10 + 1,
-        place_id: data[i].place_id,
-        name: data[i].name,
-        tel: data[i].tel,
-        address: data[i].address,
-        coordinates: JSON.stringify(data[i].coordinates),
-        picture: `https://loremflickr.com/320/240/restaurant,food/?lock=${Math.random() * 100}`,
-        business_hours: JSON.stringify(data[i].business_hours),
-        google_map_url: data[i].google_map_url,
-        day_off: "N/A",
+        place_id: null,
+        name: data.data[i].name,
+        tel: data.data[i].tel && data.data[i].tel[0] !== '0' ? null : data.data[i].tel,
+        address: data.data[i].address,
+        coordinates: JSON.stringify(JSON.parse(data.data[i].coordinates.replace(/'/g, '"'))),
+        picture: data.data[i].picture,
+        business_hours: JSON.stringify(JSON.parse(data.data[i].business_hours.replace(/'/g, '"'))),
+        google_map_url: data.data[i].google_map_url,
+        day_off: null,
         coupon: true,
         deposit: false,
-        rating: data[i].rating.toString(),
-        CategoryId: (Math.floor(Math.random() * 16) * 10 + 1),
-        CityId: data[i].CityId,
-        DistrictId: data[i].DistrictId,
+        rating: data.data[i].rating,
+        CategoryId: data.data[i].CategoryId,
+        CityId: 1,
+        DistrictId: Number(data.data[i].DistrictId),
         createdAt: new Date(),
         updatedAt: new Date(),
-        average_consumption: Math.floor(Math.random() * 10 + 1) * 50,
+        average_consumption: data.data[i].average_consumption ? data.data[i].average_consumption : null,
         description: faker.lorem.text()
       })
     }
-    await queryInterface.bulkInsert('Restaurants', restaurants, {});
+    await queryInterface.bulkInsert('Restaurants', restaurants, {})
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Restaurants', null, {});
+    await queryInterface.bulkDelete('Restaurants', null, {})
   }
-};
+}
