@@ -438,7 +438,11 @@ export default {
           this.businessHoursObj[dayName.slice(0, 3)].start = halfHourArray[idx]
         }
         if (time === startAndEnd[1]) {
-          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[idx - 2]
+          let lastBooking = idx - 2
+          if (lastBooking < 0) {
+            lastBooking = halfHourArray.length + lastBooking
+          }
+          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[lastBooking]
         }
       })
     },
