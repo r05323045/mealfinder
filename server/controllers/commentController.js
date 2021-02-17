@@ -101,6 +101,35 @@ const commentController = {
           })
         })
       })
+  },
+  deleteComment: (req, res) => {
+    Comment.findByPk(req.params.commentId)
+      .then(comment => {
+        console.log(comment)
+        const RestaurantId = comment.RestaurantId
+        comment.destroy()
+          .then(comment => {
+            // update Restaurant average raitng
+            Comment.findOne({
+              where: { RestaurantId: RestaurantId },
+              attributes: {
+                include: [
+                  [sequelize.literal(`(SELECT AVG(rating) as avg_rating FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${RestaurantId})`), 'avg_rating']
+                ]
+              }
+            }).then(comment => {
+              console.log(comment)
+              Restaurant.findByPk(RestaurantId)
+                .then(restaurant => {
+                  restaurant.update({
+                    rating: Math.floor((comment.dataValues.avg_rating) * 10) / 10
+                  })
+                }).then(restaurant => {
+                  return res.json({ status: 'success', message: 'Comment was successfully deleted' })
+                })
+            })
+          })
+      })
   }
 }
 

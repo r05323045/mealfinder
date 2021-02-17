@@ -58,6 +58,7 @@ router.get('/users/restaurants', authenticated, restaurantController.getUsersRes
 router.get('/comments/:restaurantId', commentController.getComments)
 router.post('/comments/:restaurantId', authenticated, commentController.addComment)
 router.put('/comments/:commentId', authenticated, commentController.updateComment)
+router.delete('/comments/:commentId', authenticated, commentController.deleteComment)
 
 //adminController
 router.get('/admin/users', adminController.getUsers)
