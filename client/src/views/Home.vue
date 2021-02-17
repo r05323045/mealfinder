@@ -29,7 +29,7 @@
               <span>今晚...</span><br>
               <span>我想來點</span>
             </div>
-            <div class="button">瀏覽周邊餐廳</div>
+            <div class="button" @click="$router.push('/map')">瀏覽周邊餐廳</div>
           </div>
         </div>
       </div>

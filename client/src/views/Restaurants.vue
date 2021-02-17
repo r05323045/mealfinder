@@ -53,7 +53,7 @@
                   <span v-if="item.District" class="district">{{ item.District.name }}</span>
                 </div>
                 <div class="description">{{ item.description }}</div>
-                <div class="expense">${{ item.average_consumption }} / 人</div>
+                <div class="expense" v-if="item.average_consumption">${{ item.average_consumption }} / 人</div>
               </div>
             </div>
           </div>

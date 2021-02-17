@@ -6,6 +6,11 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const restaurants = []
     for (let i = 0; i < data.data.length; i++) {
+      try {
+        let a = data.data[i].coordinates.replace(/'/g, '"')
+      } catch {
+        console.log(data.data[i].coordinates, i)
+      }
       restaurants.push({
         id: i * 10 + 1,
         place_id: null,
@@ -25,7 +30,7 @@ module.exports = {
         DistrictId: Number(data.data[i].DistrictId),
         createdAt: new Date(),
         updatedAt: new Date(),
-        average_consumption: data.data[i].average_consumption,
+        average_consumption: data.data[i].average_consumption ? data.data[i].average_consumption : null,
         description: faker.lorem.text()
       })
     }
