@@ -59,7 +59,7 @@
           </div>
         </div>
         <div class="load-more">
-          <div class="load-more-button" v-if="restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants(filter)">載入更多結果</div>
+          <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants(filter)">載入更多結果</div>
         </div>
       </div>
       <div ref="footer">
@@ -116,7 +116,8 @@ export default {
       showAddModal: false,
       showChangeModal: false,
       categoriesFilter: [],
-      districtsFilter: []
+      districtsFilter: [],
+      noMoreData: false
     }
   },
   components: {
@@ -192,6 +193,7 @@ export default {
     async fetchRestaurants (filter) {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
+        this.noMoreData = data.data.length === 0
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
       } catch (error) {
