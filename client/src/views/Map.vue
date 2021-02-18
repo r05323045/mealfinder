@@ -20,11 +20,16 @@
           <div class="title">所選區域的餐廳</div>
           <div class="sub-title">
             <img class="sub-title-img" src="../assets/diet.svg">
-            收錄台北市數千家餐廳
+            收錄台北市數千家餐廳，探索你週邊的美食
           </div>
           <div class="restaurant-list-card">
             <div class="card-content">
-              <div class="item-wrapper" v-for="(r, index) in restaurants" :key="`${index}`" @mouseover="clickMarker(r)" @click="$router.push(`restaurants/${r.id}`)">
+              <div class="item-wrapper"
+                v-for="(r, index) in restaurants"
+                :key="`${index}`"
+                @click="$router.push(`restaurants/${r.id}`)"
+                @mouseover="clickMarker(r)"
+              >
                 <div class="container">
                   <div class="image-container">
                     <div class="image-wrapper">
@@ -56,29 +61,40 @@
             </div>
           </div>
           <div class="load-more">
-            <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants()">載入更多結果</div>
+            <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants()">搜尋更多</div>
           </div>
         </div>
         <div class="google-map" id="map">
+          <div class="fix-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants()">
+            <div class="button-text">搜尋更多</div>
+          </div>
           <GmapMap
             :center="mapCenter"
             :zoom="12"
             map-type-id="terrain"
             style="width: 100%; height: 100%; display: block"
             ref="gmap"
-            @click="infoWindow.open=false"
+            @click="closeInfoWindow($event)"
+            v-if="restaurants.length > 0"
+            :options="options"
           >
-            <GmapMarker
+            <gmap-custom-marker
               :key="index"
               v-for="(r, index) in restaurants"
-              :position="r.position"
-              :clickable="true"
-              @click="clickMarker(r)"
-            />
+              :marker="r.position"
+              @click.native="clickMarker(r)"
+            >
+              <div class="marker-wrapper marker-item" :class="{ markerFocus: infoWindow.open && infoWindow.restaurant.id === r.id}">
+                <div class="marker-text marker-item" v-if="r.average_consumption">{{ r.average_consumption | priceFormat }}</div>
+                <div class="marker-text marker-item" v-if="!r.average_consumption">$ -</div>
+                <div class="heart-wrapper marker-item" v-if="isAuthenticated && r.isFavorited">
+                  <div class="icon heart marker-item"></div>
+                </div>
+              </div>
+            </gmap-custom-marker>
             <gmap-info-window
               :position="infoWindow.position"
               :opened="infoWindow.open"
-              @closeclick="infoWindow.open=false"
               :options="{
                 pixelOffset: {
                   width: 0,
@@ -126,6 +142,7 @@
 
 <script>
 
+import GmapCustomMarker from 'vue2-gmap-custom-marker'
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 import usersAPI from '@/apis/users'
@@ -137,6 +154,9 @@ export default {
     return {
       restaurants: [],
       mapCenter: { lat: 25.0196471, lng: 121.5334885 },
+      options: {
+        clickableIcons: false
+      },
       infoWindow: {
         position: { lat: 25.0196471, lng: 121.5334885 },
         open: false,
@@ -148,6 +168,7 @@ export default {
     }
   },
   components: {
+    GmapCustomMarker,
     Footer,
     Navbar
   },
@@ -163,6 +184,11 @@ export default {
   methods: {
     onScroll (e) {
       this.scrollY = this.$refs['map-page'].scrollTop
+    },
+    closeInfoWindow () {
+      if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
+        this.infoWindow.open = false
+      }
     },
     clickMarker (restaurant) {
       this.mapCenter = restaurant.position
@@ -231,9 +257,9 @@ export default {
       }
     },
     openInfoWindow (restaurant) {
+      this.infoWindow.open = true
       this.infoWindow.position = restaurant.position
       this.infoWindow.restaurant = restaurant
-      this.infoWindow.open = true
     }
   }
 }
@@ -585,12 +611,81 @@ $darkred: #c13515;
         @media (min-width: 1441px) {
           flex: calc(9/16)
         }
+        .fix-button {
+          position: absolute;
+          top: 12px;
+          left: calc(50% - 40px);
+          height: 28px;
+          z-index: 999;
+          background: #000000;
+          color: #ffffff;
+          border-radius: 28px;
+          padding: 0 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          @media (min-width: 768px) {
+            display: none;
+          }
+          .button-text {
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+        .marker-wrapper {
+          height: 28px;
+          z-index: 99;
+          background: #ffffff;
+          border-radius: 28px;
+          padding: 0 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+          .marker-text {
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 600;
+          }
+          .heart-wrapper {
+            margin-left: 4px;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.heart {
+              margin: auto;
+              width: 18px;
+              height: 18px;
+              background: url(../assets/red-heart.svg) no-repeat center;
+              background-size: cover;
+            }
+          }
+        }
+        .marker-wrapper.markerFocus {
+          z-index: 100 !important;
+          background: #000000;
+          color: #ffffff;
+          transform: scale(1.1);
+          transition: ease-in-out 0.3s;
+          .heart-wrapper {
+            .icon.heart {
+              background: #ffffff;
+              mask: url(../assets/red-heart.svg) no-repeat center / cover;
+            }
+          }
+
+        }
         .gmnoprint,
         .gm-fullscreen-control {
           display: none;
         }
         .gm-style-iw {
           padding: 0;
+          .gm-ui-hover-effect {
+            display: none !important;
+          }
           .gm-style-iw-d {
             padding: 0;
             overflow: visible !important;
