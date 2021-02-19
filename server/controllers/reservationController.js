@@ -17,6 +17,26 @@ const reservationController = {
     }).then(reservation => {
       return res.json({ status: 'success', message: 'reservation has been succesfully confirmed' })
     })
+  },
+  deleteReservation: (req, res) => {
+    Reservation.findByPk(req.params.reservationId)
+      .then(reservation => {
+        const today = new Date()
+        const reservationDate = new Date(reservation.date)
+        // 驗證使用者身份是否為訂位者
+        if (reservation.UserId !== req.user.id) {
+          return res.json({ status: 'error', message: "You cannot cancel other's reservation." })
+        }
+        // 欲取消的訂位時間點不能在過去
+        if (today > reservationDate) {
+          return res.json({ status: 'error', message: 'Reservation in the past cannot be cancelled!' })
+        }
+        // 取消訂位
+        reservation.destroy()
+          .then(reservation => {
+            return res.json({ status: 'success', message: 'Reservation has been successfully cancelled' })
+          })
+      })
   }
 }
 

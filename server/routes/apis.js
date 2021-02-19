@@ -65,6 +65,7 @@ router.get('/users/restaurants', authenticated, restaurantController.getUsersRes
 
 // reservationController_reservation model
 router.post('/user/reservation/:restaurantId', authenticated, reservationController.addReservation)
+router.delete('/user/reservation/:reservationId', authenticated, reservationController.deleteReservation)
 
 // commentController_Comment model
 router.get('/comments/:restaurantId', commentController.getComments)
