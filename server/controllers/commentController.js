@@ -2,7 +2,7 @@ const sequelize = require('sequelize')
 const db = require('../models')
 const Comment = db.Comment
 const Reservation = db.Reservation
-const Restaurant = db.Restaurant
+// const Restaurant = db.Restaurant
 
 const commentController = {
   getComments: (req, res) => {
@@ -47,24 +47,25 @@ const commentController = {
             UserId: req.user.id,
             ReservationId: reservation.id
           }).then(comment => {
-            // 更新 Restaurant rating
-            Comment.findOne({
-              where: { RestaurantId: req.params.restaurantId },
-              attributes: {
-                include: [
-                  [sequelize.literal(`(SELECT AVG(rating) as avg_rating FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'avg_rating']
-                ]
-              }
-            }).then(comment => {
-              Restaurant.findByPk(req.params.restaurantId)
-                .then(restaurant => {
-                  restaurant.update({
-                    rating: Math.floor((comment.dataValues.avg_rating) * 10) / 10
-                  })
-                }).then(restaurant => {
-                  return res.json({ status: 'success', message: 'Comment was successfully created' })
-                })
-            })
+            // // 更新 Restaurant rating
+            // Comment.findOne({
+            //   where: { RestaurantId: req.params.restaurantId },
+            //   attributes: {
+            //     include: [
+            //       [sequelize.literal(`(SELECT AVG(rating) as avg_rating FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'avg_rating']
+            //     ]
+            //   }
+            // }).then(comment => {
+            //   Restaurant.findByPk(req.params.restaurantId)
+            //     .then(restaurant => {
+            //       restaurant.update({
+            //         rating: Math.floor((comment.dataValues.avg_rating) * 10) / 10
+            //       })
+            //     }).then(restaurant => {
+            //       return res.json({ status: 'success', message: 'Comment was successfully created' })
+            //     })
+            // })
+            return res.json({ status: 'success', message: 'Comment was successfully created' })
           })
         })
       }
@@ -80,25 +81,26 @@ const commentController = {
           UserId: req.user.id,
           ReservationId: req.body.ReservationId
         }).then(comment => {
-          // update Restaurant average rating
-          Comment.findOne({
-            where: { RestaurantId: req.body.RestaurantId },
-            attributes: {
-              include: [
-                [sequelize.literal(`(SELECT AVG(rating) as avg_rating FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.body.RestaurantId})`), 'avg_rating']
-              ]
-            }
-          }).then(comment => {
-            console.log(comment)
-            Restaurant.findByPk(req.body.RestaurantId)
-              .then(restaurant => {
-                restaurant.update({
-                  rating: Math.floor((comment.dataValues.avg_rating) * 10) / 10
-                })
-              }).then(restaurant => {
-                return res.json({ status: 'success', message: 'Comment was successfully updated' })
-              })
-          })
+          // // update Restaurant average rating
+          // Comment.findOne({
+          //   where: { RestaurantId: req.body.RestaurantId },
+          //   attributes: {
+          //     include: [
+          //       [sequelize.literal(`(SELECT AVG(rating) as avg_rating FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.body.RestaurantId})`), 'avg_rating']
+          //     ]
+          //   }
+          // }).then(comment => {
+          //   console.log(comment)
+          //   Restaurant.findByPk(req.body.RestaurantId)
+          //     .then(restaurant => {
+          //       restaurant.update({
+          //         rating: Math.floor((comment.dataValues.avg_rating) * 10) / 10
+          //       })
+          //     }).then(restaurant => {
+          //       return res.json({ status: 'success', message: 'Comment was successfully updated' })
+          //     })
+          // })
+          return res.json({ status: 'success', message: 'Comment was successfully updated' })
         })
       })
   },
@@ -109,25 +111,26 @@ const commentController = {
         const RestaurantId = comment.RestaurantId
         comment.destroy()
           .then(comment => {
-            // update Restaurant average raitng
-            Comment.findOne({
-              where: { RestaurantId: RestaurantId },
-              attributes: {
-                include: [
-                  [sequelize.literal(`(SELECT AVG(rating) as avg_rating FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${RestaurantId})`), 'avg_rating']
-                ]
-              }
-            }).then(comment => {
-              console.log(comment)
-              Restaurant.findByPk(RestaurantId)
-                .then(restaurant => {
-                  restaurant.update({
-                    rating: Math.floor((comment.dataValues.avg_rating) * 10) / 10
-                  })
-                }).then(restaurant => {
-                  return res.json({ status: 'success', message: 'Comment was successfully deleted' })
-                })
-            })
+            // // update Restaurant average raitng
+            // Comment.findOne({
+            //   where: { RestaurantId: RestaurantId },
+            //   attributes: {
+            //     include: [
+            //       [sequelize.literal(`(SELECT AVG(rating) as avg_rating FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${RestaurantId})`), 'avg_rating']
+            //     ]
+            //   }
+            // }).then(comment => {
+            //   console.log(comment)
+            //   Restaurant.findByPk(RestaurantId)
+            //     .then(restaurant => {
+            //       restaurant.update({
+            //         rating: Math.floor((comment.dataValues.avg_rating) * 10) / 10
+            //       })
+            //     }).then(restaurant => {
+            //       return res.json({ status: 'success', message: 'Comment was successfully deleted' })
+            //     })
+            // })
+            return res.json({ status: 'success', message: 'Comment was successfully deleted' })
           })
       })
   }
