@@ -1,10 +1,26 @@
+const sequelize = require('sequelize')
 const db = require('../models')
 const Reservation = db.Reservation
 // const mailManager = require('../mailManager')
 
 const reservationController = {
+  getReservations: (req, res) => {
+    Reservation.findAll({
+      where: { UserId: req.user.id },
+      attributes: {
+        include: [
+          [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+          [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_picture']
+        ]
+      },
+      raw: true,
+      nest: true
+    }).then(reservations => {
+      console.log(reservations)
+      return res.json({ reservations })
+    })
+  },
   addReservation: (req, res) => {
-    // const { date, time, partySize_adult, partySize_kids, note, purpose } = req.body
     Reservation.create({
       date: req.body.date,
       time: req.body.time,
