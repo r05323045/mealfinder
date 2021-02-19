@@ -108,7 +108,7 @@ const commentController = {
     Comment.findByPk(req.params.commentId)
       .then(comment => {
         console.log(comment)
-        const RestaurantId = comment.RestaurantId
+        // const RestaurantId = comment.RestaurantId
         comment.destroy()
           .then(comment => {
             // // update Restaurant average raitng
