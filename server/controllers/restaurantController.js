@@ -101,9 +101,9 @@ const restaurantController = {
         }
       ]
     })
-      .then(([restaurant, comments]) => {
+      .then(restaurant => {
         restaurant.dataValues.isFavorited = false
-        return res.json({ restaurant, comments })
+        return res.json(restaurant)
       })
   },
   getUsersRestaurant: (req, res) => {
