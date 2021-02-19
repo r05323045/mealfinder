@@ -2,14 +2,14 @@
   <div class="map-page" ref="map-page">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="map-searchbar-wrapper">
-      <div class="back-wrapper" @click="$router.go(-1)">
+      <div class="back-wrapper" @click="$router.push('/restaurants')">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
           <div class="text">
-            地圖探索
+            清單搜尋
           </div>
         </div>
       </div>
@@ -85,8 +85,7 @@
               @click.native="clickMarker(r)"
             >
               <div class="marker-wrapper marker-item" :class="{ markerFocus: infoWindow.open && infoWindow.restaurant.id === r.id}">
-                <div class="marker-text marker-item" v-if="r.average_consumption">{{ r.average_consumption | priceFormat }}</div>
-                <div class="marker-text marker-item" v-if="!r.average_consumption">$ -</div>
+                <div class="marker-text marker-item">{{ r.Category.name }}</div>
                 <div class="heart-wrapper marker-item" v-if="isAuthenticated && r.isFavorited">
                   <div class="icon heart marker-item"></div>
                 </div>
