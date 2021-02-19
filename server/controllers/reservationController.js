@@ -20,6 +20,21 @@ const reservationController = {
       return res.json({ reservations })
     })
   },
+  getReservation: (req, res) => {
+    Reservation.findByPk(req.params.reservationId, {
+      attributes: {
+        include: [
+          [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+          [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
+          [sequelize.literal('(SELECT email FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_email'],
+          [sequelize.literal('(SELECT phone_number FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_phone_number']
+        ]
+      }
+    }).then(reservation => {
+      console.log(reservation)
+      return res.json({ reservation })
+    })
+  },
   addReservation: (req, res) => {
     Reservation.create({
       date: req.body.date,
