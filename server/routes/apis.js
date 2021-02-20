@@ -60,6 +60,7 @@ router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
 router.get('/users/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
+router.get('/nearby', restaurantController.getNearByRestaurants)
 
 // restaurantController_Category model
 router.get('/categories', restaurantController.getCategories)
