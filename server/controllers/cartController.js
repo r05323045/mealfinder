@@ -1,6 +1,7 @@
 const db = require('../models')
 const Cart = db.Cart
 const CartItem = db.CartItem
+const OrderItem = db.OrderItem
 
 const cartController = {
   getCart: (req, res) => {
@@ -68,7 +69,18 @@ const cartController = {
           return res.json({ status: 'success', message: 'delete item in cart' })
         })
     })
-  }
+  },
+
+  getOrder: (req, res) => {
+    Cart.findByPk(req.session.cartId, { include: 'items' })
+      .then(cart => {
+        cart = cart || { items: [] }
+        let totalPrice = cart.items.length > 0 ? cart.items.map(d => d.price * d.CartItem.quantity).reduce((a, b) => a + b) : 0
+        let totalQuantity = cart.items.length
+        return res.json({ totalQuantity, totalPrice })
+      })
+  },
+
 }
 
 module.exports = cartController
