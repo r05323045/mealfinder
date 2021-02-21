@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 
 //金流參數
-const URL = 'https://b868dba75dc9.ngrok.io'
+const URL = 'https://e7aa7ca85b39.ngrok.io'
 const MerchantID = 'MS318595991'
 const HashKey = 'UTkH5cZt6nQb99Jqo8Xfcp9isYHfBCOA'
 const HashIV = 'CS54PvL1tbZnptrP'
