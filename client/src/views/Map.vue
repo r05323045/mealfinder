@@ -13,11 +13,19 @@
           </div>
         </div>
       </div>
+      <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 5 }" @click="showModal = !showModal">
+        <div class="icon filter"></div>
+      </div>
     </div>
     <div class="map-container">
       <div class="map-wrapper">
-        <div class="restaurants-list" :class="{ leaveTop: this.scrollY > 0}">
+        <div class="restaurants-list" ref="restaurants-list" :class="{ leaveTop: this.scrollY > 0}">
           <div class="title">所選區域的餐廳</div>
+          <div class="filter-button-wrapper">
+            <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
+            <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
+            <div class="filter-button">預算</div>
+          </div>
           <div class="sub-title">
             <img class="sub-title-img" src="../assets/diet.svg">
             收錄台北市數千家餐廳，探索你週邊的美食
@@ -28,7 +36,7 @@
                 v-for="(r, index) in restaurants"
                 :key="`${index}`"
                 @click="$router.push(`restaurants/${r.id}`)"
-                @mouseover="clickMarker(r)"
+                @mouseover="hoverRestaurant(r)"
               >
                 <div class="container">
                   <div class="image-container">
@@ -38,7 +46,7 @@
                   </div>
                   <div class="card-right-wrapper">
                     <div class="top-wrapper">
-                      <div class="restaurant-name">{{ r.name }}</div>
+                      <div class="restaurant-name"><span>{{ r.name }}</span></div>
                       <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="r.isFavorited ? deleteFavorite(Number(r.id)) : addFavorite(Number(r.id))">
                         <div class="icon heart" :class="{ isFavorited: r.isFavorited }"></div>
                       </div>
@@ -61,12 +69,12 @@
             </div>
           </div>
           <div class="load-more">
-            <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants()">搜尋更多</div>
+            <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchNearByRestaurants(hasPage=true)">搜尋更多</div>
           </div>
         </div>
         <div class="google-map" id="map">
-          <div class="fix-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants()">
-            <div class="button-text">搜尋更多</div>
+          <div class="fix-button" @click="fetchNearByRestaurants()" v-if="!infoWindow.open">
+            <div class="button-text">在此範圍搜尋</div>
           </div>
           <GmapMap
             :center="mapCenter"
@@ -75,7 +83,6 @@
             style="width: 100%; height: 100%; display: block"
             ref="gmap"
             @click="closeInfoWindow($event)"
-            v-if="restaurants.length > 0"
             :options="options"
           >
             <gmap-custom-marker
@@ -84,7 +91,7 @@
               :marker="r.position"
               @click.native="clickMarker(r)"
             >
-              <div class="marker-wrapper marker-item" :class="{ markerFocus: infoWindow.open && infoWindow.restaurant.id === r.id}">
+              <div class="marker-wrapper marker-item" :class="{ markerFocus: hoverOn === r.id || infoWindow.open && infoWindow.restaurant.id === r.id}">
                 <div class="marker-text marker-item">{{ r.Category.name }}</div>
                 <div class="heart-wrapper marker-item" v-if="isAuthenticated && r.isFavorited">
                   <div class="icon heart marker-item"></div>
@@ -136,6 +143,25 @@
         <Footer></Footer>
       </div>
     </div>
+    <FilterModal
+      :showModal="showModal"
+      @closeModal="closeFilter"
+      :categoriesFilter = categoriesFilter
+      :districtsFilter = districtsFilter
+    >
+    </FilterModal>
+    <AddCategory
+      :showModal="showAddModal"
+      @closeAddModal="completeAdding"
+      :categoriesFilter = categoriesFilter
+    >
+    </AddCategory>
+    <ChangeDistrict
+      :showModal="showChangeModal"
+      @closeChangeModal="completeChanging"
+      :districtsFilter = districtsFilter
+    >
+    </ChangeDistrict>
   </div>
 </template>
 
@@ -148,11 +174,21 @@ import usersAPI from '@/apis/users'
 import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import FilterModal from '@/components/Filter.vue'
+import AddCategory from '@/components/AddCategory.vue'
+import ChangeDistrict from '@/components/ChangeDistrict.vue'
 export default {
   data () {
     return {
+      showModal: false,
       restaurants: [],
-      mapCenter: { lat: 25.0196471, lng: 121.5334885 },
+      showAddModal: false,
+      showChangeModal: false,
+      categoriesFilter: [],
+      districtsFilter: [],
+      mobileBound: { lat: 24.96428535078719, lng: 121.47942180559336 },
+      mapCenter: { lat: 25.0469724, lng: 121.5460995 },
+      filter: ['', 'clat=25.0469724', 'clng=121.5460995', 'blat=24.96428535078719', 'blng=121.47942180559336'],
       options: {
         clickableIcons: false
       },
@@ -162,19 +198,23 @@ export default {
         restaurant: {}
       },
       noMoreData: false,
-      numOfPage: 0,
-      scrollY: 0
+      scrollY: 0,
+      numOfPage: 1,
+      hoverOn: 0
     }
   },
   components: {
     GmapCustomMarker,
     Footer,
-    Navbar
+    Navbar,
+    FilterModal,
+    AddCategory,
+    ChangeDistrict
   },
   created () {
   },
   mounted () {
-    this.fetchRestaurants()
+    this.fetchNearByRestaurants()
     this.$refs['map-page'].addEventListener('scroll', this.onScroll, { passive: true })
   },
   computed: {
@@ -184,14 +224,75 @@ export default {
     onScroll (e) {
       this.scrollY = this.$refs['map-page'].scrollTop
     },
+    closeFilter (isEditing, cateFilter, distFilter) {
+      this.showModal = false
+      if (isEditing) {
+        this.categoriesFilter = cateFilter
+        this.districtsFilter = distFilter
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+      }
+      this.restaurants = []
+      this.numOfPage = 1
+      this.fetchNearByRestaurants(this.filter)
+    },
+
+    completeAdding (isAdding, filter) {
+      this.showAddModal = false
+      if (isAdding) {
+        this.categoriesFilter = filter
+        this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item), ...filter.map(item => 'category=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+      }
+      this.restaurants = []
+      this.numOfPage = 1
+      this.fetchNearByRestaurants(this.filter)
+    },
+    completeChanging (isChanging, filter) {
+      this.showChangeModal = false
+      if (isChanging) {
+        this.districtsFilter = filter
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...filter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+      }
+      this.restaurants = []
+      this.numOfPage = 1
+      this.fetchNearByRestaurants(this.filter)
+    },
     closeInfoWindow () {
       if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
         this.infoWindow.open = false
+        this.hoverOn = 0
       }
     },
     clickMarker (restaurant) {
       this.mapCenter = restaurant.position
       this.openInfoWindow(restaurant)
+    },
+    async fetchNearByRestaurants (hasPage) {
+      try {
+        if (this.$refs.gmap.$mapObject) {
+          if (!(this.$refs.gmap.$mapObject.getCenter().lat() === this.mapCenter.lat && this.$refs.gmap.$mapObject.getCenter().lng() === this.mapCenter.lng)) {
+            this.mapCenter = { lat: this.$refs.gmap.$mapObject.getCenter().lat(), lng: this.$refs.gmap.$mapObject.getCenter().lng() }
+          }
+          this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+        }
+        if (!hasPage) {
+          this.numOfPage = 1
+        }
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUserNearByRestaurants(this.numOfPage, this.filter) : await restaurantsAPI.getNearByRestaurants(this.numOfPage, this.filter)
+        this.noMoreData = data.data.length === 0
+        this.restaurants = data.data
+        this.restaurants.forEach(r => {
+          r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
+        })
+        this.numOfPage += 1
+        this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
+        this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
     },
     async fetchRestaurants (filter) {
       try {
@@ -256,9 +357,13 @@ export default {
       }
     },
     openInfoWindow (restaurant) {
+      this.hoverOn = restaurant.id
       this.infoWindow.open = true
       this.infoWindow.position = restaurant.position
       this.infoWindow.restaurant = restaurant
+    },
+    hoverRestaurant (restaurant) {
+      this.hoverOn = restaurant.id
     }
   }
 }
@@ -339,6 +444,32 @@ $darkred: #c13515;
         }
       }
     }
+    .filter-wrapper {
+      padding-right: 8px;
+      width: 40px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      .icon.filter {
+        margin: auto;
+        height: 16px;
+        width: 16px;
+        background-color: #000000;
+        mask: url(../assets/filter.svg) no-repeat center;
+      }
+    }
+    .filter-wrapper.filter-on:after {
+      background-color: $red;
+      border-radius: 50%;
+      content: "";
+      height: 6px;
+      width: 6px;
+      left: 50%;
+      position: absolute;
+      top: 8px;
+    }
   }
   .map-container {
     height: 100%;
@@ -350,7 +481,7 @@ $darkred: #c13515;
       top: 0px;
     }
     .map-wrapper {
-      height: 100%;
+      height: calc(100% - 80px);
       margin: auto;
       display: flex;
       @media (min-width: 768px) {
@@ -383,6 +514,32 @@ $darkred: #c13515;
           @media (min-width: 992px) {
             font-size: 32px;
             line-height: 36px;
+          }
+        }
+        .filter-button-wrapper {
+          display: none;
+          @media (min-width: 768px) {
+            display: flex;
+            flex-direction: row;
+            margin: 24px 0;
+          }
+          .filter-button {
+            cursor: pointer;
+            margin-right: 16px;
+            border: 1px solid $divider;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 8px 16px;
+            border-radius: 30px;
+            &:hover {
+              font-weight: 800;
+              border: 1px solid #000000;
+              transition: ease-in-out 0.3s;
+            }
+          }
+          .filter-button.filter-on {
+            font-weight: 800;
+            border: 1px solid #000000;
           }
         }
         .sub-title {
@@ -581,7 +738,6 @@ $darkred: #c13515;
         }
         .load-more {
           width: 100%;
-          margin: 40px 0;
           .load-more-button {
             cursor: pointer;
             width: auto;
@@ -603,6 +759,7 @@ $darkred: #c13515;
       .google-map {
         flex: 1;
         height: calc(100vh - 114px);
+        position: relative;
         @media (min-width: 768px) {
           height: 100%;
           flex: 0.5;
@@ -611,11 +768,12 @@ $darkred: #c13515;
           flex: calc(9/16)
         }
         .fix-button {
+          cursor: pointer;
           position: absolute;
-          top: 12px;
+          top: 24px;
           left: calc(50% - 40px);
           height: 28px;
-          z-index: 999;
+          z-index: 998;
           background: #000000;
           color: #ffffff;
           border-radius: 28px;
@@ -624,7 +782,8 @@ $darkred: #c13515;
           justify-content: center;
           align-items: center;
           @media (min-width: 768px) {
-            display: none;
+            top: 24px;
+            left: calc(50% - 40px);
           }
           .button-text {
             line-height: 18px;
@@ -663,7 +822,7 @@ $darkred: #c13515;
           }
         }
         .marker-wrapper.markerFocus {
-          z-index: 100 !important;
+          z-index: 999 !important;
           background: #000000;
           color: #ffffff;
           transform: scale(1.1);
