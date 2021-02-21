@@ -198,10 +198,15 @@ $red: rgb(255, 56, 92);
         display: flex;
         flex-direction: row;
         .link-card-wrapper {
+          background: #ffffff;
           cursor: pointer;
           width: 100%;
           flex: 1;
           padding: 4px;
+          &:hover {
+            transform: scale(1.05);
+            transition: ease-in-out 0.3s;
+          }
           .link-card {
             border-radius: 8px;
             box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 8px;
@@ -261,8 +266,8 @@ $red: rgb(255, 56, 92);
         background-size: cover;
         @media (min-width: 768px) {
           padding-top: 33.3%;
-          background: url(../assets/people-eating-food.svg) no-repeat center;
-          background-size: cover;
+          background: url(../assets/meeting-in-restaurant.svg) no-repeat center;
+          background-size: contain;
         }
         @media (min-width: 992px) {
           padding-top: 25%;
@@ -285,6 +290,10 @@ $red: rgb(255, 56, 92);
             font-weight: 700;
             font-size: 16px;
             line-height: 20px;
+            &:hover {
+              transform: scale(1.05);
+              transition: ease-in-out 0.3s;
+            }
           }
         }
       }
