@@ -1,21 +1,18 @@
 const sequelize = require('sequelize')
 const db = require('../models')
-const like = require('../models/like')
 const Restaurant = db.Restaurant
 const Category = db.Category
 const City = db.City
 const District = db.District
 const Coupon = db.Coupon
 const Comment = db.Comment
-const Favorite = db.Favorite
 const User = db.User
-const Like = db.Like
 
 const restaurantController = {
   getRestaurants: (req, res) => {
     let offset = 0
     const pageLimit = 24
-    let isFavorited = false //沒登入狀態
+    const isFavorited = false
 
     if (req.query.page) {
       offset = (req.query.page - 1) * pageLimit
@@ -104,9 +101,9 @@ const restaurantController = {
         }
       ]
     })
-      .then(([restaurant, comments]) => {
+      .then(restaurant => {
         restaurant.dataValues.isFavorited = false
-        return res.json({ restaurant, comments })
+        return res.json(restaurant)
       })
   },
   getUsersRestaurant: (req, res) => {

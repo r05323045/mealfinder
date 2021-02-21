@@ -29,14 +29,14 @@
               <span>今晚...</span><br>
               <span>我想來點</span>
             </div>
-            <div class="button">瀏覽周邊餐廳</div>
+            <div class="button" @click="$router.push('/map')">瀏覽周邊餐廳</div>
           </div>
         </div>
       </div>
       <div class="area">
         <div class="title">前往熱門地區</div>
         <div class="district-deck">
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=大安區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1560624338-df6746731250?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -44,7 +44,7 @@
               </div>
             </div>
           </div>
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=士林區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1605723123713-e942a3200930?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="district-deck">
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=信義區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -62,7 +62,7 @@
               </div>
             </div>
           </div>
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=中正區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -72,7 +72,7 @@
           </div>
         </div>
         <div class="district-deck">
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=松山區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1552993873-0dd1110e025f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1351&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -80,7 +80,7 @@
               </div>
             </div>
           </div>
-          <div class="district">
+          <div class="district"  @click="$router.push('/restaurants')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -90,7 +90,7 @@
           </div>
         </div>
         <div class="district-deck-desktop">
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=大安區')">
             <div class="background top">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1560624338-df6746731250?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -98,7 +98,7 @@
               </div>
             </div>
           </div>
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=士林區')">
             <div class="background top">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1605723123713-e942a3200930?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -108,7 +108,7 @@
           </div>
         </div>
         <div class="district-deck-desktop">
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=信義區')">
             <div class="background bottom">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -116,7 +116,7 @@
               </div>
             </div>
           </div>
-          <div class="district">
+          <div class="district" @click="$router.push('/restaurants?district=中正區')">
             <div class="background bottom">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -124,7 +124,7 @@
               </div>
             </div>
           </div>
-          <div class="district">
+          <div class="district"  @click="$router.push('/restaurants')">
             <div class="background bottom">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
               <div class="text-wrapper">
@@ -140,7 +140,7 @@
           <div class="description">對於某些料理情有獨鍾嗎？我們都幫你整理好了</div>
           <div class="swiper-container">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
+              <div class="swiper-slide" @click="$router.push('/restaurants?category=日式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
                     <div class="image" style="background: url(https://images.unsplash.com/photo-1496112774951-bf41010eed5e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
@@ -149,25 +149,25 @@
                 <div class="category-name">日式料理</div>
                 <div class="category-intro">拉麵、壽司、燒肉等料理等你來品嚐</div>
               </div>
-              <div class="swiper-slide">
+              <div class="swiper-slide" @click="$router.push('/restaurants?category=港式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1476240070072-d734bba9f6c1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1562492901-e7021f6af8c2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">台式料理</div>
-                <div class="category-intro">探索台北在地好味道</div>
+                <div class="category-name">港式料理</div>
+                <div class="category-intro">喜歡香港風味的你，不能錯過</div>
               </div>
-              <div class="swiper-slide">
+              <div class="swiper-slide" @click="$router.push('/restaurants?category=韓式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1542384557-0824d90731ee?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1498654896293-37aacf113fd9?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
                   </div>
                 </div>
-                <div class="category-name">美式料理</div>
-                <div class="category-intro">輕鬆多元的菜色，聊天、聚餐的好選擇</div>
+                <div class="category-name">韓式料理</div>
+                <div class="category-intro">聊天、聚餐的好選擇</div>
               </div>
-              <div class="swiper-slide">
+              <div class="swiper-slide" @click="$router.push('/restaurants?category=早午餐')">
                 <div class="inner-wrapper">
                   <div class="background">
                     <div class="image" style="background: url(https://images.unsplash.com/photo-1455853739633-8c94c03d8121?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
@@ -176,7 +176,7 @@
                 <div class="category-name">早午餐</div>
                 <div class="category-intro">精選台北特色人氣早午餐</div>
               </div>
-              <div class="swiper-slide">
+              <div class="swiper-slide" @click="$router.push('/restaurants?category=餐酒館')">
                 <div class="inner-wrapper">
                   <div class="background">
                     <div class="image" style="background: url(https://images.unsplash.com/photo-1468072114808-903e572b8ead?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
@@ -185,7 +185,7 @@
                 <div class="category-name">餐酒館</div>
                 <div class="category-intro">放鬆你的夜晚，搜羅不同風格餐酒館</div>
               </div>
-              <div class="swiper-slide">
+              <div class="swiper-slide" @click="$router.push('/restaurants')">
                 <div class="inner-wrapper">
                   <div class="background">
                     <div class="image" style="background: url(https://images.unsplash.com/photo-1543992321-cefacfc2322e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1332&q=80) no-repeat center; background-size: cover"></div>
@@ -209,18 +209,18 @@
                 <div class="button" @click="$router.push('/restaurants')">餐廳清單</div>
               </div>
               <div class="button-wrapper">
-                <div class="button map" @click="$router.push('/restaurants')">地圖探索</div>
+                <div class="button map" @click="$router.push('/map')">地圖探索</div>
               </div>
             </div>
           </div>
           <div class="item-group">
             <div class="item-wrapper">
               <div class="item" @click="$router.push('/restaurants')">
-                <div class="background"></div>
+                <div class="background restaurant-background"></div>
                 <span class="text">餐廳清單</span>
               </div>
-              <div class="item" @click="$router.push('/restaurants')">
-                <div class="background"></div>
+              <div class="item" @click="$router.push('/map')">
+                <div class="background map-background"></div>
                 <span class="text">地圖探索</span>
               </div>
             </div>
@@ -873,7 +873,7 @@ $red: rgb(255, 56, 92);
               position: relative;
               .background {
                 border-radius: 32px;
-                background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
+                background: url(https://storage.googleapis.com/gweb-cloudblog-publish/images/063-MAP-Supporting_Kotlin-ER_2880x1200_1_X.max-2200x2200.png) no-repeat center;
                 background-size: cover;
                 position: absolute;
                 filter: brightness(0.3);
@@ -881,6 +881,10 @@ $red: rgb(255, 56, 92);
                 left: 0;
                 right: 0;
                 bottom: 0;
+              }
+              .background.restaurant-background {
+                background: url(https://images.unsplash.com/photo-1589505603958-adb54f67a6c8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80) no-repeat center;
+                background-size: cover;
               }
               .text {
                 color: #ffffff;

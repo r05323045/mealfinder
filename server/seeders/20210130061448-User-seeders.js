@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 const bcrypt = require('bcrypt')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    function randomDate(start, end) {
-      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    function randomDate (start, end) {
+      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
     }
     await queryInterface.bulkInsert('Users',
       Array.from({ length: 10 }).map((item, i) => ({
@@ -13,6 +13,7 @@ module.exports = {
         password: bcrypt.hashSync('12345678', 10),
         phone_number: '0912345678',
         location: '台北市',
+        DistrictId: 1 + Math.floor(Math.random() * 11) * 10,
         gender: 'female',
         birthday: randomDate(new Date(1900, 0, 1), new Date()),
         avatar: `https://i.pravatar.cc/150?img=${i + 2}`,
@@ -20,10 +21,10 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       }))
-      , {});
+      , {})
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Users', null, {})
   }
-};
+}

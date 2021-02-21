@@ -8,10 +8,10 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">所有餐券</div>
+          <div class="text">餐券列表</div>
         </div>
       </div>
-      <div class="filter-wrapper" @click="showModal = !showModal">
+      <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
         <div class="icon filter"></div>
       </div>
     </div>
@@ -19,55 +19,87 @@
       <div class="coupon-list" ref="coupon-list">
         <div class="title">餐券列表</div>
         <div class="filter-button-wrapper">
-          <div class="filter-button">地區</div>
-          <div class="filter-button">類型</div>
+          <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
+          <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
           <div class="filter-button">預算</div>
         </div>
-        <div class="restaurant-card-deck" v-for="i in Math.floor(24/cardPerDeck)" :key="`card-deck-${i}`">
-          <div class="restaurant-card" v-for="i in cardPerDeck" :key="i" :class="{ 'last-card': i === 4}" @click="$router.push(`/coupons/${i}`)">
-            <div class="card-image-wrapper">
-              <div class="heart-wrapper">
-                <img class="icon heart" src="../assets/black-heart.svg">
+        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="coupons.length === 0"></div>
+        <div v-if="coupons.length > 0" class="restaurant-card-deck-wrapper">
+          <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
+            <div class="restaurant-card-deck"  v-for="deckNum in Math.ceil(coupons.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
+              <div class="restaurant-card"
+                v-for="(item, idx) in coupons.slice((pageNum - 1) * 24, pageNum * 24).slice((deckNum - 1) * cardPerDeck, deckNum * cardPerDeck)"
+                :key="idx" :class="{ 'last-card': idx === cardPerDeck}"
+                @click="$router.push(`/coupons/${item.id}`)"
+                :style="`flex: ${1/cardPerDeck}`"
+              >
+                <div class="card-image-wrapper">
+                  <div class="heart-wrapper">
+                    <div class="icon heart"></div>
+                  </div>
+                  <div class="card-image" :style="`background: url(${item.Restaurant.picture}) no-repeat center / cover`"></div>
+                </div>
+                <div class="rating-wrapper">
+                  <svg class="icon star"></svg>
+                  <div class="rating">
+                    <span class="number"><span>{{ item.Restaurant.rating.padEnd(3, '.0') }}</span></span>
+                  </div>
+                </div>
+                <div class="name">{{ item.description }}</div>
+                <div class="category-wrapper">
+                  <span v-if="item.Restaurant" class="category">{{ item.Restaurant.CategoryName }}</span>
+                  <span class="bullet">·</span>
+                  <span v-if="item.Restaurant" class="district">{{ item.Restaurant.DistrictName }}</span>
+                </div>
+                <div class="description">{{ item.Restaurant.description }}</div>
+                <div class="price-wrapper">
+                  <div class="price">{{ item.price | priceFormat }}</div>
+                  <div class="origin-price">{{ Number(item.price) + Math.round((5 - Number(item.Restaurant.rating)) * 100)  | priceFormat }}</div>
+                </div>
               </div>
-              <div class="card-image"></div>
-            </div>
-            <div class="rating-wrapper">
-              <svg class="icon star"></svg>
-              <div class="rating">
-                <span class="number">4.85</span>
-                <span class="count">(20)</span>
-              </div>
-            </div>
-            <div class="name">711便利商店 - 大亨堡</div>
-            <div class="category-wrapper">
-              <span class="category">台式餐廳</span>
-              <span class="bullet">·</span>
-              <span class="district">大安區</span>
-            </div>
-            <div class="description">全台最大連鎖餐廳，小資族下班聚餐好去處好去處好去處好去處</div>
-            <div class="price-wrapper">
-              <div class="price">$299</div>
-              <div class="origin-price">$359</div>
             </div>
           </div>
         </div>
         <div class="load-more">
-          <div class="load-more-button">載入更多結果</div>
+          <div class="load-more-button" v-if="coupons.length > 0 && coupons.length % 24 === 0" @click="fetchCoupons(filter)">載入更多結果</div>
         </div>
       </div>
       <div ref="footer">
         <Footer></Footer>
       </div>
     </div>
-    <FilterModal :showModal="showModal" @closeModal="closeFilter"></FilterModal>
+    <FilterModal
+      :showModal="showModal"
+      @closeModal="closeFilter"
+      :categoriesFilter = categoriesFilter
+      :districtsFilter = districtsFilter
+    >
+    </FilterModal>
+    <AddCategory
+      :showModal="showAddModal"
+      @closeAddModal="completeAdding"
+      :categoriesFilter = categoriesFilter
+    >
+    </AddCategory>
+    <ChangeDistrict
+      :showModal="showChangeModal"
+      @closeChangeModal="completeChanging"
+      :districtsFilter = districtsFilter
+    >
+    </ChangeDistrict>
   </div>
 </template>
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import couponsAPI from '@/apis/coupons'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import FilterModal from '@/components/Filter.vue'
+import AddCategory from '@/components/AddCategory.vue'
+import ChangeDistrict from '@/components/ChangeDistrict.vue'
 
 export default {
   data () {
@@ -78,13 +110,22 @@ export default {
       divHeight: 0,
       scrollBarHeight: 0,
       windowWidth: window.innerWidth,
-      cardPerDeck: 1
+      cardPerDeck: 1,
+      coupons: [],
+      numOfPage: 0,
+      filter: [''],
+      showAddModal: false,
+      showChangeModal: false,
+      categoriesFilter: [],
+      districtsFilter: []
     }
   },
   components: {
     Navbar,
     Footer,
-    FilterModal
+    FilterModal,
+    AddCategory,
+    ChangeDistrict
   },
   mounted () {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll, { passive: true })
@@ -94,15 +135,29 @@ export default {
       this.windowWidth = window.innerWidth
     })
     this.defineCardDeck()
+    this.fetchCoupons()
   },
   watch: {
     windowWidth () {
       this.defineCardDeck()
+    },
+    filter () {
+      this.coupons = []
+      this.numOfPage = 0
+      this.fetchCoupons(this.filter)
     }
   },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
+  },
   methods: {
-    closeFilter () {
+    closeFilter (isEditing, cateFilter, distFilter) {
       this.showModal = false
+      if (isEditing) {
+        this.categoriesFilter = cateFilter
+        this.districtsFilter = distFilter
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+      }
     },
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs['list-container'].scrollTop
@@ -117,6 +172,33 @@ export default {
         this.cardPerDeck = 3
       } else {
         this.cardPerDeck = 4
+      }
+    },
+    async fetchCoupons (filter) {
+      try {
+        const { data } = await couponsAPI.getCoupons(this.numOfPage + 1, filter)
+        this.coupons = [...this.coupons, ...data.data]
+        this.numOfPage += 1
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐券，請稍候'
+        })
+      }
+    },
+    completeAdding (isAdding, filter) {
+      this.showAddModal = false
+      if (isAdding) {
+        this.categoriesFilter = filter
+        this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item), ...filter.map(item => 'category=' + item)]
+      }
+    },
+    completeChanging (isChanging, filter) {
+      this.showChangeModal = false
+      if (isChanging) {
+        this.districtsFilter = filter
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...filter.map(item => 'district=' + item)]
       }
     }
   }
@@ -204,6 +286,7 @@ $red: rgb(255, 56, 92);
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
       .icon.filter {
         margin: auto;
         height: 16px;
@@ -211,6 +294,16 @@ $red: rgb(255, 56, 92);
         background-color: #000000;
         mask: url(../assets/filter.svg) no-repeat center;
       }
+    }
+    .filter-wrapper.filter-on:after {
+      background-color: $red;
+      border-radius: 50%;
+      content: "";
+      height: 6px;
+      width: 6px;
+      left: 50%;
+      position: absolute;
+      top: 8px;
     }
   }
   .list-container {
@@ -257,138 +350,173 @@ $red: rgb(255, 56, 92);
           margin: 24px 0;
         }
         .filter-button {
+          cursor: pointer;
           margin-right: 16px;
           border: 1px solid $divider;
           font-size: 14px;
           font-weight: 400;
           padding: 8px 16px;
           border-radius: 30px;
+          &:hover {
+            font-weight: 800;
+            border: 1px solid #000000;
+            transition: ease-in-out 0.3s;
+          }
+        }
+        .filter-button.filter-on {
+          font-weight: 800;
+          border: 1px solid #000000;
         }
       }
-      .restaurant-card-deck {
-        width: 100%;
-        @media (min-width: 768px) {
-          display: flex;
-          flex-direction: row;
-        }
-        .restaurant-card {
-          padding-top: 12px;
-          margin-bottom: 28px;
+      .restaurant-card-deck-wrapper {
+        min-height: 600px;
+        .restaurant-card-deck {
+          width: 100%;
           @media (min-width: 768px) {
-            margin-right: 16px;
+            display: flex;
+            flex-direction: row;
           }
-          .card-image-wrapper {
-            .heart-wrapper {
-              z-index: 1;
-              position: absolute;
-              top: 0;
-              right: 0;
-              padding-right: 8px;
-              width: 40px;
-              height: 48px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              .icon.heart {
-                cursor: pointer;
-                margin: auto;
-                height: 24px;
-                width: 24px;
+          .restaurant-card {
+            cursor: pointer;
+            padding-top: 12px;
+            margin-bottom: 28px;
+            @media (min-width: 768px) {
+              margin-right: 16px;
+            }
+            .card-image-wrapper {
+              .heart-wrapper {
+                z-index: 1;
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding-right: 8px;
+                width: 40px;
+                height: 48px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .icon.heart {
+                  cursor: pointer;
+                  margin: auto;
+                  height: 24px;
+                  width: 24px;
+                }
+              }
+              margin-bottom: 10px;
+              padding-top: 66.7%;
+              position: relative;
+              .card-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                border-radius: 16px;
+                background: url(https://images.unsplash.com/photo-1512058564366-18510be2db19?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80) no-repeat center;
+                background-size: cover;
               }
             }
-            margin-bottom: 10px;
-            padding-top: 66.7%;
-            position: relative;
-            .card-image {
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
+            .rating-wrapper {
+              margin-bottom: 6px;
               width: 100%;
-              border-radius: 16px;
-              background: url(https://images.unsplash.com/photo-1512058564366-18510be2db19?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80) no-repeat center;
-              background-size: cover;
-            }
-          }
-          .rating-wrapper {
-            margin-bottom: 6px;
-            width: 100%;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-            line-height: 18px;
-            .icon {
-              margin: auto 0;
-              margin-right: 4px;
-              background-color: $red;
-              height: 14px;
-              width: 14px;
-            }
-            .icon.star {
-              mask: url(../assets/star.svg) no-repeat center;
-            }
-            .rating {
-              .number {
+              font-size: 14px;
+              font-weight: 500;
+              display: flex;
+              flex-direction: row;
+              justify-content: flex-start;
+              align-items: center;
+              line-height: 18px;
+              .icon {
+                margin: auto 0;
                 margin-right: 4px;
+                background-color: $red;
+                height: 14px;
+                width: 14px;
+              }
+              .icon.star {
+                mask: url(../assets/star.svg) no-repeat center;
+              }
+              .rating {
+                display: flex;
+                flex-direction: row;
+                .number {
+                  height: 18px;
+                  margin-right: 4px;
+                  display: flex;
+                  align-items: center;
+                  span {
+                    height: 14px;
+                  }
+                }
+                .count {
+                  height: 18px;
+                  display: flex;
+                  align-items: center;
+                  span {
+                    height: 14px;
+                  }
+                }
               }
             }
-          }
-          .name {
-            margin-bottom: 6px;
-            font-weight: 800;
-            text-align: left;
-            font-size: 18px;
-            line-height: 22px;
-          }
-          .category-wrapper {
-            margin-bottom: 4px;
-            text-align: left;
-            font-size: 16px;
-            line-height: 20px;
-            .bullet {
-              margin: 0 4px;
-            }
-          }
-          .description {
-            margin-bottom: 16px;
-            text-align: left;
-            font-size: 16px;
-            line-height: 20px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box !important;
-            -webkit-line-clamp: 1 !important;
-            -webkit-box-orient: vertical !important;
-          }
-          .price-wrapper {
-            display: flex;
-            flex-direction: row;
-            .price{
-              margin-bottom: 4px;
-              text-align: left;
+            .name {
+              margin-bottom: 6px;
               font-weight: 800;
+              text-align: left;
               font-size: 18px;
-              line-height: 20px;
-              margin-right: 12px;
+              line-height: 22px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box !important;
+              -webkit-line-clamp: 1 !important;
+              -webkit-box-orient: vertical !important;
             }
-            .origin-price {
-              text-decoration: line-through;
-              color: #666;
+            .category-wrapper {
               margin-bottom: 4px;
               text-align: left;
-              font-weight: 800;
               font-size: 16px;
               line-height: 20px;
+              .bullet {
+                margin: 0 4px;
+              }
+            }
+            .description {
+              margin-bottom: 16px;
+              text-align: left;
+              font-size: 16px;
+              line-height: 20px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box !important;
+              -webkit-line-clamp: 1 !important;
+              -webkit-box-orient: vertical !important;
+            }
+            .price-wrapper {
+              display: flex;
+              flex-direction: row;
+              .price{
+                margin-bottom: 4px;
+                text-align: left;
+                font-weight: 800;
+                font-size: 18px;
+                line-height: 20px;
+                margin-right: 12px;
+              }
+              .origin-price {
+                text-decoration: line-through;
+                color: #666;
+                margin-bottom: 4px;
+                text-align: left;
+                font-weight: 800;
+                font-size: 16px;
+                line-height: 20px;
+              }
             }
           }
-        }
-        .restaurant-card.last-card {
-          @media (min-width: 768px) {
-            margin-right: 0;
+          .restaurant-card.last-card {
+            @media (min-width: 768px) {
+              margin-right: 0;
+            }
           }
         }
       }
@@ -396,6 +524,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         margin: 80px 0 80px;
         .load-more-button {
+          cursor: pointer;
           width: auto;
           margin: auto;
           padding: 14px 24px;

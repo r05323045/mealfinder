@@ -1,5 +1,5 @@
 <template>
-  <div class="restaurant">
+  <div ref="restaurant" class="restaurant">
     <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
     <div class="restaurant-searchbar-wrapper">
       <div class="back-wrapper" @click="$router.go(-1)">
@@ -26,12 +26,12 @@
       </div>
     </div>
     <div class="info-container" ref="info-container">
-      <div class="mobile-picture-wrapper">
-        <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
+      <div class="mobile-picture-wrapper" v-if="restaurant.picture">
+        <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center / cover`"></div>
       </div>
       <div class="restaurant-info" ref="restaurant-info">
-        <div class="picture-wrapper">
-          <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
+        <div class="picture-wrapper" v-if="restaurant.picture">
+          <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center / cover`"></div>
         </div>
         <div class="title-wrapper">
           <div class="icon-container">
@@ -65,7 +65,7 @@
           <div class="contact-wrapper">
             <div class="phone-wrapper">
               <img class="icon phone" src="../assets/phone.svg">
-              <div class="phone">{{ restaurant.tel }}</div>
+              <div class="phone">{{ restaurant.tel ? restaurant.tel : '尚未提供' }}</div>
             </div>
             <div class="map-wrapper" @click="scrollToMap">
               <img class="icon map" src="../assets/map.svg">
@@ -172,8 +172,8 @@
           <div class="divider"></div>
           <div class="title">餐廳資訊</div>
           <div class="info-and-map">
-            <div class="map-wrapper" v-if="restaurant.place_id">
-              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=place_id:${restaurant.place_id}`" class="google-map"></iframe>
+            <div class="map-wrapper" v-if="restaurant.google_map_url">
+              <iframe :src="`${restaurant.google_map_url.split('&q=')[0].split('key=')[0]}key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=${restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -188,7 +188,7 @@
                   <img class="icon phone" src="../assets/phone.svg">
                   <div class="title">電話</div>
                 </div>
-                <div class="content">{{ restaurant.tel }}</div>
+                <div class="content">{{ restaurant.tel ? restaurant.tel : '尚未提供' }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="top-wrapper">
@@ -266,9 +266,10 @@
         <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
       </div>
       <div class="divider"></div>
-      <div class="booking-button" :class="{ invalid: !bookingTime}" :disabled="!bookingTime" @click="bookingTime ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
-        <div class="text" v-if="bookingTime">下一步，填寫聯絡資訊</div>
-        <div class="text" v-if="!bookingTime">選擇用餐時間</div>
+      <div class="booking-button" :class="{ invalid: !bookingTime || adultNum < 1}" :disabled="!bookingTime || adultNum < 1" @click="bookingTime && adultNum > 0 ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
+        <div class="text" v-if="bookingTime && adultNum > 0">下一步，填寫聯絡資訊</div>
+        <div class="text" v-if="!bookingTime && adultNum > 0">選擇用餐時間</div>
+        <div class="text" v-if="adultNum < 1">選擇用餐人數</div>
       </div>
     </div>
   </div>
@@ -325,10 +326,10 @@ export default {
     this.fetchRestaurant(this.$route.params.id)
   },
   mounted () {
-    this.$refs['info-container'].addEventListener('scroll', this.onScroll, { passive: true })
+    this.$refs.restaurant.addEventListener('scroll', this.onScroll, { passive: true })
     this.footerHeight = this.$refs.footer.offsetHeight
-    this.restaurantInfoHeight = this.$refs['info-container'].scrollHeight
-    this.scrollBarHeight = this.$refs['info-container'].clientHeight
+    this.restaurantInfoHeight = this.$refs.restaurant.scrollHeight
+    this.scrollBarHeight = this.$refs.restaurant.clientHeight
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
@@ -340,8 +341,8 @@ export default {
   },
   methods: {
     onScroll (e) {
-      this.scrollUp = this.scrollY > this.$refs['info-container'].scrollTop
-      this.scrollY = this.$refs['info-container'].scrollTop
+      this.scrollUp = this.scrollY > this.$refs.restaurant.scrollTop
+      this.scrollY = this.$refs.restaurant.scrollTop
     },
     closeFilter () {
       this.showModal = false
@@ -395,15 +396,15 @@ export default {
         this.businessHoursObj[b.slice(0, 3)] = { hours: [], start: '', end: '', noon: [], afternoon: [], night: [] }
         if (!b.includes('休息')) {
           let startAndEnd
-          if (b.slice(5, b.length).includes(',')) {
-            startAndEnd = b.slice(5, b.length).split(',')[0].trim().split(' – ')
+          if (b.slice(4, b.length).includes(',')) {
+            startAndEnd = b.slice(4, b.length).split(',')[0].trim().split('-')
             this.checkStartAndEnd(startAndEnd, b)
             this.pushOpenHours()
-            startAndEnd = b.slice(5, b.length).split(',')[1].trim().split(' – ')
+            startAndEnd = b.slice(4, b.length).split(',')[1].trim().split('-')
             this.checkStartAndEnd(startAndEnd, b)
             this.pushOpenHours()
           } else {
-            startAndEnd = b.slice(5, b.length).split(' – ')
+            startAndEnd = b.slice(4, b.length).split('-')
             this.checkStartAndEnd(startAndEnd, b)
             this.pushOpenHours()
           }
@@ -437,7 +438,11 @@ export default {
           this.businessHoursObj[dayName.slice(0, 3)].start = halfHourArray[idx]
         }
         if (time === startAndEnd[1]) {
-          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[idx - 2]
+          let lastBooking = idx - 2
+          if (lastBooking < 0) {
+            lastBooking = halfHourArray.length + lastBooking
+          }
+          this.businessHoursObj[dayName.slice(0, 3)].end = halfHourArray[lastBooking]
         }
       })
     },
@@ -557,11 +562,10 @@ $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .restaurant {
+  overflow: scroll;
   position: relative;
-  overflow: hidden;
   width: 100%;
   height: 100%;
-  padding-bottom: 81px;
   .restaurant-navbar {
     display: none;
     @media (min-width: 768px) {
@@ -676,7 +680,6 @@ $primary-color: #222;
   .info-container {
     height: 100%;
     width: 100%;
-    overflow: scroll;
     scroll-behavior: smooth;
     position: absolute;
     top: 60px;
@@ -1354,7 +1357,7 @@ $primary-color: #222;
                 background-color: #222222;
                 height: 14px;
                 width: 14px;
-                mask: url(../assets/like.svg) no-repeat center;
+                mask: url(../assets/black-heart.svg) no-repeat center;
               }
               .icon.like.isAuthenticated {
                 cursor: pointer;
@@ -1367,7 +1370,7 @@ $primary-color: #222;
                 background-color: $red;
                 mask: url(../assets/isLiked.svg) no-repeat center;
                 &:hover {
-                  mask: url(../assets/like.svg) no-repeat center;
+                  mask: url(../assets/black-heart.svg) no-repeat center;
                 }
               }
               .count {

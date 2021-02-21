@@ -49,9 +49,9 @@
             <div class="contact-card">
               <div class="all-wrapper">
                 <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="name" class="all-text"></label>
-                  <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '手機號碼') }}</span>
+                  <label for="phone" class="all-text"></label>
+                  <input id="phone" type="text" class="all-input" v-model="userName" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
                 </validation-provider>
                 <div class="gender">
                   <span class="item-wrapper">
@@ -513,8 +513,8 @@ $darkred: #c13515;
                   input + .radio-control::before {
                     content: "";
                     display: block;
-                    width: 0.5rem;
-                    height: 0.5rem;
+                    width: 0.62rem;
+                    height: 0.6rem;
                     background: #222222;
                     box-shadow: inset 0.8em 0.8em currentColor;
                     border-radius: 50%;
@@ -522,7 +522,7 @@ $darkred: #c13515;
                     transform: scale(0);
                   }
                   .radio-control {
-                    width: 1rem;
+                    width: 1.05rem;
                     height: 1rem;
                     border-radius: 50%;
                     border: 0.1em solid $divider;

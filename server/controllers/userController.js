@@ -1,9 +1,15 @@
 const bcrypt = require('bcrypt')
 const imgur = require('imgur-node-api')
 const db = require('../models')
+const sequelize = require('sequelize')
 const User = db.User
+const Category = db.Category
+const PreferedCategory = db.PreferedCategory
 const Favorite = db.Favorite
 const Restaurant = db.Restaurant
+const City = db.City
+const District = db.District
+const Coupon = db.Coupon
 const Like = db.Like
 const Order = db.Order
 const orderItem = db.orderItem
@@ -95,16 +101,32 @@ const userController = {
   },
 
   getProfile: (req, res) => {
-    User.findOne({ where: { id: req.params.id } })
-      .then(user => {
-        return res.json(user)
+    Promise.all([
+      User.findOne({
+        where: { id: req.params.id },
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT name FROM restaurant_reservation.Districts WHERE Districts.id = User.DistrictId)'), 'DistrictName']
+          ]
+        }
+      }),
+      PreferedCategory.findAll({
+        where: { UserId: req.params.id },
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT name FROM restaurant_reservation.Categories WHERE Categories.id = PreferedCategory.CategoryId)'), 'CategorytName']
+          ]
+        }
+      })
+    ])
+      .then(([user, preferedCategory]) => {
+        return res.json({ ...user.dataValues, preferedCategory: preferedCategory.map(p => p.dataValues.CategorytName) })
       })
   },
 
   putProfile: (req, res) => {
-    const UserId = req.user.id
-    const { body: { name, gender, phoneNumber, location, birthday }, file } = req
-
+    const UserId = req.params.id
+    const { body: { name, gender, email, phoneNumber, DistrictId }, file } = req
     if (file) {
       imgur.setClientID(process.env.IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
@@ -114,43 +136,99 @@ const userController = {
         }
         return User.findByPk(UserId)
           .then(user => {
-            if (user.id === UserId) {
-              user.update({
-                name,
-                gender,
-                phone_number: phoneNumber,
-                location,
-                birthday,
-                avatar: file ? img.data.link : user.avatar
-              }).then((user) => {
-                res.json({ status: 'success', message: '[HAS FILE] user was successfully to update' })
-              })
-            }
+            user.update({
+              name,
+              gender,
+              email,
+              phone_number: phoneNumber,
+              DistrictId: !DistrictId ? null : DistrictId,
+              avatar: file ? img.data.link : user.avatar
+            }).then((user) => {
+              res.json({ status: 'success', message: '[HAS FILE] user was successfully to update' })
+            })
           })
       })
     } else {
       User.findByPk(UserId)
         .then(user => {
-          if (user.id === UserId) {
-            user.update({
-              name,
-              gender,
-              phone_number: phoneNumber,
-              location,
-              birthday
-            }).then((user) => {
-              res.json({ status: 'success', message: '[NO file update] user was successfully to update' })
-            })
-          }
+          user.update({
+            name,
+            gender,
+            email,
+            phone_number: phoneNumber,
+            DistrictId: !DistrictId ? null : DistrictId
+          }).then((user) => {
+            res.json({ status: 'success', message: '[NO file update] user was successfully to update' })
+          })
         })
     }
   },
 
+  putPreferedCategory: (req, res) => {
+    PreferedCategory.destroy({
+      where: { UserId: req.params.id }
+    })
+      .then(() => {
+        Category.findAll({
+          where: { name: req.body.preferedCategory }
+        })
+          .then((category) => {
+            const promises = category.map((data) => {
+              return PreferedCategory.create({
+                UserId: req.params.id,
+                CategoryId: data.id
+              })
+            })
+            Promise.all(promises)
+              .then(() => {
+                return res.json({ status: 'success', message: 'preferedCategory was successfully to update' })
+              })
+          })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+
   getFavorites: (req, res) => {
     const UserId = req.user.id
-    Favorite.findAll({ where: { UserId }, include: [{ model: Restaurant }] })
+    const pageLimit = 24
+    const filters = {}
+    let offset = 0
+
+    if (req.query.min && req.query.max) {
+      filters.average_consumption = { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] }
+    }
+
+    if (req.query.page) {
+      offset = (req.query.page - 1) * pageLimit
+    }
+    Favorite.findAll({ where: { UserId } })
       .then(favorite => {
-        return res.json(favorite)
+        filters.id = favorite.map(f => f.RestaurantId)
+        Restaurant.findAll({
+          where: filters,
+          include: [
+            { model: Category, where: req.query.category ? { name: req.query.category } : null },
+            City,
+            { model: District, where: req.query.district ? { name: req.query.district } : null },
+            Coupon
+          ],
+          attributes: {
+            include: [
+              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
+            ]
+          },
+          offset: offset,
+          limit: pageLimit
+        }).then(restaurants => {
+          const data = restaurants.map(restaurant => ({
+            ...restaurant.dataValues,
+            description: restaurant.dataValues.description.substring(0, 50),
+            isFavorited: true
+          }))
+          return res.json({ data })
+        })
       })
   },
 

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const restaurantData = require('../restaurant-data.json')
 
 module.exports = {
@@ -15,10 +15,10 @@ module.exports = {
         updatedAt: new Date()
       })
     }
-    await queryInterface.bulkInsert('Coupons', coupons, {});
+    await queryInterface.bulkInsert('Coupons', coupons, {})
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Coupons', null, {});
+    await queryInterface.bulkDelete('Coupons', null, {})
   }
-};
+}

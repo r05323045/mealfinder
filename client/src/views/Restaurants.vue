@@ -8,7 +8,7 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">所有餐廳</div>
+          <div class="text">餐廳列表</div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
@@ -23,7 +23,7 @@
           <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
           <div class="filter-button">預算</div>
         </div>
-        <div class="restaurant-card-deck-wrapper" v-if="restaurants.length === 0"></div>
+        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0"></div>
         <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
@@ -37,7 +37,7 @@
                   <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="item.isFavorited ? deleteFavorite(Number(item.id)) : addFavorite(Number(item.id))">
                     <div class="icon heart" :class="{ isFavorited: item.isFavorited }"></div>
                   </div>
-                  <div class="card-image" :style="`background: url(${item.picture}) no-repeat center; background-size: cover`"></div>
+                  <div class="card-image" :style="`background: url(${item.picture}) no-repeat center / cover`"></div>
                 </div>
                 <div class="rating-wrapper">
                   <svg class="icon star"></svg>
@@ -53,13 +53,13 @@
                   <span v-if="item.District" class="district">{{ item.District.name }}</span>
                 </div>
                 <div class="description">{{ item.description }}</div>
-                <div class="expense">${{ item.average_consumption }} / 人</div>
+                <div class="expense" v-if="item.average_consumption">${{ item.average_consumption }} / 人</div>
               </div>
             </div>
           </div>
         </div>
         <div class="load-more">
-          <div class="load-more-button" v-if="restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants(filter)">載入更多結果</div>
+          <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchRestaurants(filter)">載入更多結果</div>
         </div>
       </div>
       <div ref="footer">
@@ -116,7 +116,8 @@ export default {
       showAddModal: false,
       showChangeModal: false,
       categoriesFilter: [],
-      districtsFilter: []
+      districtsFilter: [],
+      noMoreData: false
     }
   },
   components: {
@@ -126,6 +127,23 @@ export default {
     AddCategory,
     ChangeDistrict
   },
+  created () {
+    if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
+      if (this.$route.query.category && this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+      } else if (this.$route.query.category && !this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item)]
+      } else if (!this.$route.query.category && this.$route.query.district) {
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+        this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item)]
+      }
+    } else {
+      this.fetchRestaurants()
+    }
+  },
   mounted () {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.divHeight = this.$refs['list-container'].scrollHeight
@@ -134,7 +152,6 @@ export default {
       this.windowWidth = window.innerWidth
     })
     this.defineCardDeck()
-    this.fetchRestaurants()
   },
   watch: {
     windowWidth () {
@@ -176,6 +193,7 @@ export default {
     async fetchRestaurants (filter) {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
+        this.noMoreData = data.data.length === 0
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
       } catch (error) {
@@ -211,6 +229,10 @@ export default {
             restaurant.isFavorited = true
           }
         })
+        Toast.fire({
+          icon: 'success',
+          title: '已加入收藏'
+        })
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -229,6 +251,10 @@ export default {
           if (restaurant.id === id) {
             restaurant.isFavorited = false
           }
+        })
+        Toast.fire({
+          icon: 'success',
+          title: '已移除收藏'
         })
       } catch (error) {
         console.log(error)
@@ -458,7 +484,7 @@ $red: rgb(255, 56, 92);
                 width: 100%;
                 border-radius: 16px;
                 background: url(https://images.unsplash.com/photo-1512058564366-18510be2db19?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80) no-repeat center;
-                background-size: cover;
+                background-size: cover !important;
               }
             }
             .rating-wrapper {

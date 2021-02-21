@@ -60,19 +60,41 @@ export default {
     },
     districtsFilter: {
       type: Array
+    },
+    restrict: {
+      type: Boolean,
+      default: false
+    },
+    defaultDistrict: {
+      type: String,
+      default: ''
     }
   },
   created () {
     this.fetchDistricts()
+    if (this.districtsFilter) {
+      this.tempFilter = [this.districtsFilter]
+    }
+    if (this.defaultDistrict) {
+      this.tempFilter = [this.defaultDistrict]
+    }
   },
   watch: {
     showModal () {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+      if (this.districtsFilter) {
+        this.tempFilter = this.districtsFilter
+      }
     },
     districtsFilter () {
-      this.tempFilter = this.districtsFilter
+      if (this.defaultDistrict) {
+        this.tempFilter = this.districtsFilter
+      }
+    },
+    defaultDistrict () {
+      this.tempFilter = [this.defaultDistrict]
     }
   },
   methods: {
@@ -92,14 +114,32 @@ export default {
       }
     },
     addToFilter (district) {
-      if (this.tempFilter.includes(district)) {
-        this.tempFilter.splice(this.tempFilter.indexOf(district), 1)
+      if (!this.restrict) {
+        if (this.tempFilter.includes(district)) {
+          this.tempFilter.splice(this.tempFilter.indexOf(district), 1)
+        } else {
+          this.tempFilter = [...this.tempFilter, district]
+        }
       } else {
-        this.tempFilter = [...this.tempFilter, district]
+        if (this.tempFilter.includes(district)) {
+          this.tempFilter.splice(this.tempFilter.indexOf(district), 1)
+        } else {
+          this.tempFilter = [district]
+        }
       }
     },
     completeChanging () {
-      this.$emit('closeChangeModal', true, this.tempFilter)
+      if (this.restrict && this.tempFilter.length > 0) {
+        this.districts.forEach(d => {
+          if (d.name === this.tempFilter[0]) {
+            this.$emit('closeChangeModal', true, this.tempFilter, d.id)
+          }
+        })
+      } else if (this.restrict && this.tempFilter.length === 0) {
+        this.$emit('closeChangeModal', true, this.tempFilter)
+      } else {
+        this.$emit('closeChangeModal', true, this.tempFilter)
+      }
     }
   }
 }
@@ -187,6 +227,7 @@ $divider: #E6ECF0;
       }
     }
     .filter-container {
+      overflow-y: scroll;
       background: #ffffff;
       height: calc(100% - 168px);
       width: calc(100% - 48px);

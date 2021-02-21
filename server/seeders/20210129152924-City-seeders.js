@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const data = require('../city-and-district-data.json')
 
 module.exports = {
@@ -13,11 +13,10 @@ module.exports = {
         updatedAt: new Date()
       })
     }
-    await queryInterface.bulkInsert('Cities', cities, {});
-
+    await queryInterface.bulkInsert('Cities', cities, {})
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Cities', null, {});
+    await queryInterface.bulkDelete('Cities', null, {})
   }
-};
+}

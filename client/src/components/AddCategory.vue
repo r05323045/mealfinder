@@ -4,7 +4,7 @@
     <div class="modal-content" v-show="showModal" :class="{show: modalContentShow }">
       <div class="modal-container" v-show="modalContentShow">
         <div class="top-wrapper">
-          <div class="close-wrapper" @click="closeModal">
+          <div class="close-wrapper" @click.stop="closeModal">
             <div class="icon close"></div>
           </div>
           <div class="title">
@@ -60,25 +60,39 @@ export default {
     },
     categoriesFilter: {
       type: Array
+    },
+    defaultCategories: {
+      type: Array
     }
   },
   created () {
     this.fetchCategories()
+    if (this.defaultCategories) {
+      this.tempFilter = this.defaultCategories
+    }
   },
   watch: {
     showModal () {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
+      if (this.categoriesFilter) {
+        this.tempFilter = this.categoriesFilter
+      }
     },
     categoriesFilter () {
       this.tempFilter = this.categoriesFilter
+    },
+    defaultCategories () {
+      this.tempFilter = this.defaultCategories
     }
   },
   methods: {
     closeModal () {
       this.$emit('closeAddModal')
-      this.tempFilter = this.categoriesFilter
+      if (this.categoriesFilter) {
+        this.tempFilter = this.categoriesFilter
+      }
     },
     async fetchCategories () {
       try {

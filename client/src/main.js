@@ -5,6 +5,7 @@ import store from './store'
 import moment from 'moment'
 import zh from './zh_TW.js'
 import 'default-passive-events'
+import * as VueGoogleMaps from 'vue2-google-maps'
 import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
 
@@ -134,6 +135,14 @@ Vue.filter('bookingDateFormat', function (date) {
   }
 })
 
+Vue.filter('priceFormat', function (value) {
+  return '$' + Number(value)
+    .toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/,
+      function (all, pre, groupOf3Digital) {
+        return pre + groupOf3Digital.replace(/\d{3}/g, ',$&')
+      })
+})
+
 Vue.filter('fromNow', function (datetime) {
   if (!datetime) {
     return '-'
@@ -163,6 +172,14 @@ localize('tw', zh)
 
 Vue.component('ValidationProvider', ValidationProvider)
 Vue.component('ValidationObserver', ValidationObserver)
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk',
+    libraries: 'places'
+  },
+  installComponents: true
+})
 
 new Vue({
   router,

@@ -24,6 +24,8 @@ const couponController = require('../controllers/couponController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 const restaurantController = require('../controllers/restaurantController')
+const commentController = require('../controllers/commentController.js')
+const reservationController = require('../controllers/reservationController')
 
 // login,logout,signup
 router.post('/signin', userController.signIn)
@@ -33,6 +35,14 @@ router.post('/signup', userController.signUp)
 router.get('/user/:id/profile', authenticated, userController.getProfile)
 router.put('/user/:id/profile', authenticated, upload.single('avatar'), userController.putProfile)
 router.get('/get_current_user', authenticated, userController.getCurrentUser)
+
+// userController_UserModel
+router.get('/user/:id/profile', authenticated, userController.getProfile)
+router.put('/user/:id/profile', authenticated, upload.single('avatar'), userController.putProfile)
+router.get('/get_current_user', authenticated, userController.getCurrentUser)
+
+// userController_PreferedCategory model
+router.put('/user/:id/preferedcategory', authenticated, userController.putPreferedCategory)
 
 // userController_Favorite model
 router.get('/user/favorite', authenticated, userController.getFavorites)
@@ -56,6 +66,18 @@ router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
 router.get('/users/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
+
+// reservationController_reservation model
+router.post('/user/reservation/:restaurantId', authenticated, reservationController.addReservation)
+router.delete('/user/reservation/:reservationId', authenticated, reservationController.deleteReservation)
+router.get('/user/reservations/:reservationId', authenticated, reservationController.getReservation)
+router.get('/user/reservations', authenticated, reservationController.getReservations)
+
+// commentController_Comment model
+router.get('/comments/:restaurantId', commentController.getComments)
+router.post('/comments/:restaurantId', authenticated, commentController.addComment)
+router.put('/comments/:commentId', authenticated, commentController.updateComment)
+router.delete('/comments/:commentId', authenticated, commentController.deleteComment)
 
 // restaurantController_Category model
 router.get('/categories', restaurantController.getCategories)
