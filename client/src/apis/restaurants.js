@@ -16,7 +16,7 @@ export default {
     if (filter && filter.length > 1) {
       queryString += filter.join('&')
     }
-    return apiHelper.get(`/users/restaurants${queryString}`, {
+    return apiHelper.get(`/user/restaurants${queryString}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
@@ -26,7 +26,7 @@ export default {
     })
   },
   getUsersRestaurant (id) {
-    return apiHelper.get(`/users/restaurants/${id}`, {
+    return apiHelper.get(`/user/restaurants/${id}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

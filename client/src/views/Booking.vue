@@ -138,6 +138,7 @@
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 import restaurantsAPI from '@/apis/restaurants'
+import reservationsAPI from '@/apis/reservations'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
@@ -147,7 +148,7 @@ export default {
       submitPurpose: '',
       scrollY: 0,
       scrollUp: true,
-      restaurant: [],
+      restaurant: {},
       restaurantId: 0,
       bookingTime: '',
       bookingDate: new Date(),
@@ -204,12 +205,45 @@ export default {
         })
       }
     },
+    async addReservation (form) {
+      try {
+        const formData = {
+          date: this.bookingDate,
+          time: this.bookingTime,
+          partySize_adult: this.adultNum,
+          partySize_kids: this.childNum,
+          UserId: this.currentUser.id,
+          RestaurantId: this.restaurantId,
+          name: this.userName,
+          gender: this.userGender,
+          phone: this.userPhone,
+          email: this.userEmail,
+          purpose: this.submitPurpose,
+          note: this.userNote
+        }
+        const { data } = await reservationsAPI.addReservation(formData)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '訂位成功'
+        })
+        this.$router.push(`/booking/success?restaurant=${this.restaurantId}&adult=${this.adultNum}&child=${this.childNum}&date=${new Date(this.bookingDate).getTime()}&time=${this.bookingTime}`).catch(() => {})
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法訂位'
+        })
+      }
+    },
     submitReservation (invalid) {
       if (!this.firstClickSubmit) {
         this.firstClickSubmit = true
       }
       if (!invalid) {
-        this.$router.push(`/booking/success/${this.restaurant.id}`).catch(() => {})
+        this.addReservation()
       }
     }
   }

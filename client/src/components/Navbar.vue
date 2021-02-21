@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div class="navbar-desktop" :class="{ openSearch: openSearch }">
+    <div class="navbar-desktop" :class="{ openSearch: openSearch, atMap: $route.path.includes('/map') }">
       <div class="navbar-desktop-inner">
         <div class="logo-wrapper" @click="$router.push('/').catch(()=>{})">
           <div class="logo"></div>
@@ -689,6 +689,11 @@ $red: rgb(255, 56, 92);
           }
         }
       }
+    }
+    .navbar-desktop.atMap {
+      max-width: none;
+      padding: 0 24px;
+      width: calc(100% - 48px);
     }
     .navbar-filter {
       position: absolute;
