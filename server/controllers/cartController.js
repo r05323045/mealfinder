@@ -38,6 +38,17 @@ const cartController = {
         })
       })
   },
+
+  addCartItem: (req, res) => {
+    CartItem.findByPk(req.params.id).then(cartItem => {
+      cartItem.update({
+        quantity: cartItem.quantity + 1
+      })
+        .then((cartItem) => {
+          return res.json({ status: 'success', message: 'update the item of quantity(add) in cart' })
+        })
+    })
+  }
 }
 
 module.exports = cartController
