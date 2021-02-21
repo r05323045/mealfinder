@@ -42,7 +42,11 @@ const reservationController = {
       partySize_adult: req.body.partySize_adult,
       partySize_kids: req.body.partySize_kids,
       UserId: req.user.id,
-      RestaurantId: req.params.restaurantId,
+      UserName: req.body.name,
+      gender: req.body.gender,
+      phone: req.body.phone,
+      email: req.body.email,
+      RestaurantId: req.body.RestaurantId,
       note: req.body.note,
       purpose: req.body.purpose
     }).then(reservation => {

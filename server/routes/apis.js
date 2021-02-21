@@ -61,13 +61,13 @@ router.get('/coupons', couponController.getCoupons)
 router.get('/restaurants/:restaurantId', restaurantController.getRestaurant)
 router.get('/restaurants', restaurantController.getRestaurants)
 router.get('/nearby', restaurantController.getNearByRestaurants)
-router.get('/users/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
-router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
+router.get('/user/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
+router.get('/user/restaurants', authenticated, restaurantController.getUsersRestaurants)
 router.get('users/nearby', authenticated, restaurantController.getUserNearByRestaurants)
 
 // reservationController_reservation model
-router.post('/user/reservation/:restaurantId', authenticated, reservationController.addReservation)
-router.delete('/user/reservation/:reservationId', authenticated, reservationController.deleteReservation)
+router.post('/user/reservations', authenticated, reservationController.addReservation)
+router.delete('/user/reservations/:reservationId', authenticated, reservationController.deleteReservation)
 router.get('/user/reservations/:reservationId', authenticated, reservationController.getReservation)
 router.get('/user/reservations', authenticated, reservationController.getReservations)
 

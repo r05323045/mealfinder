@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div class="footer" :class="{ atMap: $route.path.includes('/map') }">
     <div class="logo">OUR LOGO</div>
     <div class="wrapper">
       <div class="item">關於我們</div>
@@ -89,6 +89,10 @@ $divider: #E6ECF0;
       }
     }
   }
+}
+.footer.atMap {
+  max-width: none;
+  padding: 54px 24px 80px;
 }
 
 </style>

@@ -1,35 +1,41 @@
 <template>
   <div class="past-reservation">
-    <div class="card-deck" v-for="i in Math.floor(24/cardPerDeck)" :key="`card-deck-${i}`">
-      <div class="booking-card" v-for="i in cardPerDeck" :key="i" :class="{ 'last-card': i === 3 }" @click="$router.push(`/users/history/${i}`)">
-        <div class="picture-wrapper">
-          <div class="picture"></div>
+    <div class="more-container" v-if="restaurants.length < 1">
+      <div class="more-title">過去沒有訂位的紀錄</div>
+      <div class="illustration-wrapper">
+        <div class="cover">
+          <div class="button" @click="$router.push('/restaurants')">現在就去找餐廳</div>
         </div>
-        <div class="header">
-          <img class="icon restaurant" src="../assets/restaurant.svg">
-          <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+      </div>
+    </div>
+    <div v-if="restaurants.length > 0">
+      <div class="card-deck" v-for="i in Math.ceil(restaurants.length/cardPerDeck)" :key="`card-deck-${i}`">
+        <div class="booking-card" v-for="(restaurant, index) in restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck)" :key="restaurant.id" :class="{ 'last-card': index === 3 }" @click="$router.push(`/users/history/${restaurant.id}`)">
+          <div class="picture-wrapper">
+            <div class="picture" :style="`background: url(${restaurant.Restaurant_picture}) no-repeat center / cover`"></div>
+          </div>
+          <div class="header">
+            <img class="icon restaurant" src="../assets/restaurant.svg">
+            <div class="name">{{ restaurant.Restaurant_name }}</div>
+          </div>
+          <div class="divider"></div>
+          <div class="info">
+            <div class="item-wrapper">
+              <img class="icon profile" src="../assets/profile.svg">
+              <div class="number">{{ restaurant.partySize_adult }}大<span v-if="restaurant.partySize_kids > 0">小</span></div>
+            </div>
+            <div class="item-wrapper">
+              <img class="icon time" src="../assets/calendar.svg">
+              <div class="date">{{ new Date(new Date(restaurant.date.slice(0, 10)).toDateString()) | bookingDateFormat }}</div>
+            </div>
+            <div class="item-wrapper">
+              <img class="icon time" src="../assets/clock.svg">
+              <div class="time">{{ restaurant.time.slice(0, 5) }}</div>
+            </div>
+          </div>
         </div>
-        <div class="divider"></div>
-        <div class="info">
-          <div class="item-wrapper">
-            <img class="icon profile" src="../assets/profile.svg">
-            <div class="number">2大</div>
-          </div>
-          <div class="item-wrapper">
-            <img class="icon time" src="../assets/calendar.svg">
-            <div class="date">2021/01/23 (週六)</div>
-          </div>
-          <div class="item-wrapper">
-            <img class="icon time" src="../assets/clock.svg">
-            <div class="time">11:30</div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="write-comment">
-          <div class="button-wrapper">
-            <div class="button">填寫評論</div>
-          </div>
-        </div>
+        <div class="booking-card" style="box-shadow: none; border: none" v-if="cardPerDeck > 1 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
+        <div class="booking-card" style="box-shadow: none; border: none" v-if="cardPerDeck > 2 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
       </div>
     </div>
   </div>
@@ -41,8 +47,17 @@ export default {
   data () {
     return {
       windowWidth: window.innerWidth,
-      cardPerDeck: 1
+      cardPerDeck: 1,
+      restaurants: []
     }
+  },
+  props: {
+    reservations: {
+      type: Array
+    }
+  },
+  created () {
+    this.restaurants = this.reservations
   },
   mounted () {
     window.addEventListener('resize', () => {
@@ -53,6 +68,9 @@ export default {
   watch: {
     windowWidth () {
       this.defineCardDeck()
+    },
+    reservations () {
+      this.restaurants = this.reservations
     }
   },
   methods: {
@@ -75,6 +93,56 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .past-reservation {
+  .more-container {
+    padding: 12px 0;
+    .divider {
+      background: $divider;
+      height: 1px;
+    }
+    .more-title {
+      margin-bottom: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: left;
+      line-height: 22px;
+    }
+    .illustration-wrapper {
+      width: 100%;
+      padding-top: 66.7%;
+      position: relative;
+      background: url(../assets/drink-coffee.svg) no-repeat center;
+      background-size: cover;
+      @media (min-width: 768px) {
+        border-radius: 54px;
+        padding-top: 33.3%;
+        background: url(../assets/people-meeting.svg) no-repeat center;
+        background-size: cover;
+      }
+      @media (min-width: 992px) {
+        padding-top: 25%;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .button {
+          padding: 12px 36px;
+          border-radius: 30px;
+          background: #000000;
+          color: #ffffff;
+          cursor: pointer;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
   .card-deck {
     display: flex;
     flex-direction: column;
