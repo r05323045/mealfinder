@@ -26,6 +26,7 @@ const userController = require('../controllers/userController')
 const restaurantController = require('../controllers/restaurantController')
 const commentController = require('../controllers/commentController.js')
 const reservationController = require('../controllers/reservationController')
+const cartController = require('../controllers/cartController')
 
 // login,logout,signup
 router.post('/signin', userController.signIn)
@@ -56,6 +57,9 @@ router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 //userController_Order model
 router.get('/user/:id/purchase', authenticated, userController.getPurchases)
 router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.getPurchase)
+
+//cartController_Cart model
+router.get('/cart', cartController.getCart)
 
 // couponController_Coupon model
 router.get('/coupons/:couponId', couponController.getCoupon)

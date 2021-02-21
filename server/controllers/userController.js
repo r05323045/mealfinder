@@ -13,7 +13,7 @@ const Coupon = db.Coupon
 const Like = db.Like
 const Order = db.Order
 const orderItem = db.orderItem
-const Coupon = db.Coupon
+
 
 // JWT
 const jwt = require('jsonwebtoken')
