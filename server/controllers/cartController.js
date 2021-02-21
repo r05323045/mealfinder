@@ -34,7 +34,7 @@ const cartController = {
       .then((cartItem) => {
         req.session.cartId = cart.id
         return req.session.save(() => {
-          return res.json({ status: 'success' })
+          return res.json({ status: 'success', message: 'add coupon to cart' })
         })
       })
   },
