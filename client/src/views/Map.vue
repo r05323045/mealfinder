@@ -78,7 +78,7 @@
           </div>
           <GmapMap
             :center="mapCenter"
-            :zoom="12"
+            :zoom="13"
             map-type-id="terrain"
             style="width: 100%; height: 100%; display: block"
             ref="gmap"
@@ -212,6 +212,16 @@ export default {
     ChangeDistrict
   },
   created () {
+    if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
+      if (this.$route.query.category && this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+      } else if (this.$route.query.category && !this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+      } else if (!this.$route.query.category && this.$route.query.district) {
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+      }
+    }
   },
   mounted () {
     this.fetchNearByRestaurants()
@@ -229,32 +239,29 @@ export default {
       if (isEditing) {
         this.categoriesFilter = cateFilter
         this.districtsFilter = distFilter
-        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
       }
       this.restaurants = []
       this.numOfPage = 1
-      this.fetchNearByRestaurants(this.filter)
+      this.fetchNearByRestaurants()
     },
 
     completeAdding (isAdding, filter) {
       this.showAddModal = false
       if (isAdding) {
         this.categoriesFilter = filter
-        this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item), ...filter.map(item => 'category=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
       }
       this.restaurants = []
       this.numOfPage = 1
-      this.fetchNearByRestaurants(this.filter)
+      this.fetchNearByRestaurants()
     },
     completeChanging (isChanging, filter) {
       this.showChangeModal = false
       if (isChanging) {
         this.districtsFilter = filter
-        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...filter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
       }
       this.restaurants = []
       this.numOfPage = 1
-      this.fetchNearByRestaurants(this.filter)
+      this.fetchNearByRestaurants()
     },
     closeInfoWindow () {
       if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
@@ -273,6 +280,8 @@ export default {
             this.mapCenter = { lat: this.$refs.gmap.$mapObject.getCenter().lat(), lng: this.$refs.gmap.$mapObject.getCenter().lng() }
           }
           this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+        } else {
+          this.filter = [...this.filter, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
         }
         if (!hasPage) {
           this.numOfPage = 1
@@ -771,7 +780,7 @@ $darkred: #c13515;
           cursor: pointer;
           position: absolute;
           top: 24px;
-          left: calc(50% - 40px);
+          left: calc(50% - 54px);
           height: 28px;
           z-index: 998;
           background: #000000;
