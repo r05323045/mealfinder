@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     CouponId: DataTypes.INTEGER,
     purchased_price: DataTypes.INTEGER,
     uniqueId: DataTypes.STRING,
-    isUsed: DataTypes.BOOLEAN
+    isUsed: DataTypes.BOOLEAN,
+    quantity: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'orderItem',

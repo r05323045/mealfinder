@@ -1,7 +1,8 @@
 const db = require('../models')
 const Cart = db.Cart
 const CartItem = db.CartItem
-const OrderItem = db.OrderItem
+const OrderItem = db.orderItem
+const Order = db.Order
 
 const cartController = {
   getCart: (req, res) => {
@@ -78,6 +79,37 @@ const cartController = {
         let totalPrice = cart.items.length > 0 ? cart.items.map(d => d.price * d.CartItem.quantity).reduce((a, b) => a + b) : 0
         let totalQuantity = cart.items.length
         return res.json({ totalQuantity, totalPrice })
+      })
+  },
+
+  postOrder: (req, res) => {
+    const UserId = req.user.id
+    const { totalPrice } = req.body
+    return Cart.findByPk(req.session.cartId, { include: 'items' })
+      .then(cart => {
+        Order.create({
+          UserId,
+          total_amount: totalPrice
+        })
+          .then((order) => {
+            const orderitems = cart.items.map(data => {
+              let uniqueId = Math.floor(Math.random() * 1000000000000) + 1
+              const { id, price, CartItem: { quantity } } = data.dataValues
+              OrderItem.create({
+                OrderId: order.id,
+                CouponId: id,
+                purchased_price: price,
+                quantity,
+                uniqueId,
+                isUsed: 0
+              })
+            })
+            return Promise.all(orderitems)
+              .then(() => {
+                return res.json({ status: 'success', message: 'post a order' })
+              })
+
+          })
       })
   },
 
