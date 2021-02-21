@@ -60,6 +60,15 @@ const cartController = {
         })
     })
   },
+
+  deleteCartItem: (req, res) => {
+    CartItem.findByPk(req.params.id).then(cartItem => {
+      cartItem.destroy()
+        .then(() => {
+          return res.json({ status: 'success', message: 'delete item in cart' })
+        })
+    })
+  }
 }
 
 module.exports = cartController
