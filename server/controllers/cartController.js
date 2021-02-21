@@ -140,13 +140,10 @@ const cartController = {
   },
 
   getPayment: (req, res) => {
-    console.log('==========payment==========')
-    console.log(req.params.id)
-    console.log('===========================')
-    return Order.findByPk(req.params.id)
+    Order.findByPk(req.params.id)
       .then(order => {
         const { total_amount, id } = order
-        res.json({ total_amount, id })
+        return res.json({ total_amount, id })
       })
   },
 
