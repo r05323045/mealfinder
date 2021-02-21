@@ -2,40 +2,105 @@
   <div class="map-page" ref="map-page">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="map-searchbar-wrapper">
-      <div class="back-wrapper" @click="$router.go(-1)">
+      <div class="back-wrapper" @click="$router.push('/restaurants')">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
           <div class="text">
+            清單搜尋
           </div>
         </div>
+      </div>
+      <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 5 }" @click="showModal = !showModal">
+        <div class="icon filter"></div>
       </div>
     </div>
     <div class="map-container">
       <div class="map-wrapper">
-        <div class="restaurants-list"></div>
+        <div class="restaurants-list" ref="restaurants-list" :class="{ leaveTop: this.scrollY > 0}">
+          <div class="title">所選區域的餐廳</div>
+          <div class="filter-button-wrapper">
+            <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
+            <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
+            <div class="filter-button">預算</div>
+          </div>
+          <div class="sub-title">
+            <img class="sub-title-img" src="../assets/diet.svg">
+            收錄台北市數千家餐廳，探索你週邊的美食
+          </div>
+          <div class="restaurant-list-card">
+            <div class="card-content">
+              <div class="item-wrapper"
+                v-for="(r, index) in restaurants"
+                :key="`${index}`"
+                @click="$router.push(`restaurants/${r.id}`)"
+                @mouseover="hoverRestaurant(r)"
+              >
+                <div class="container">
+                  <div class="image-container">
+                    <div class="image-wrapper">
+                      <div class="image" :style="`background: url(${r.picture}) no-repeat center / cover`"></div>
+                    </div>
+                  </div>
+                  <div class="card-right-wrapper">
+                    <div class="top-wrapper">
+                      <div class="restaurant-name"><span>{{ r.name }}</span></div>
+                      <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="r.isFavorited ? deleteFavorite(Number(r.id)) : addFavorite(Number(r.id))">
+                        <div class="icon heart" :class="{ isFavorited: r.isFavorited }"></div>
+                      </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-text">{{ r.Category.name }}</div>
+                    <div class="card-text">{{ r.description }}</div>
+                    <div class="rating-wrapper">
+                      <svg class="icon star"></svg>
+                      <div class="rating" v-if="r.rating">
+                        <span class="number"><span>{{ r.rating.padEnd(3, '.0') }}</span></span>
+                        <span class="count"><span>({{ r.CommentsCount }})</span></span>
+                      </div>
+                    </div>
+                    <div class="expense" v-if="r.average_consumption">{{ r.average_consumption | priceFormat }} / 人</div>
+                  </div>
+                </div>
+                <div class="divider"></div>
+              </div>
+            </div>
+          </div>
+          <div class="load-more">
+            <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchNearByRestaurants(hasPage=true)">搜尋更多</div>
+          </div>
+        </div>
         <div class="google-map" id="map">
+          <div class="fix-button" @click="fetchNearByRestaurants()" v-if="!infoWindow.open">
+            <div class="button-text">在此範圍搜尋</div>
+          </div>
           <GmapMap
             :center="mapCenter"
-            :zoom="12"
+            :zoom="13"
             map-type-id="terrain"
             style="width: 100%; height: 100%; display: block"
             ref="gmap"
-            @click="infoWindow.open=false"
+            @click="closeInfoWindow($event)"
+            :options="options"
           >
-            <GmapMarker
+            <gmap-custom-marker
               :key="index"
               v-for="(r, index) in restaurants"
-              :position="r.position"
-              :clickable="true"
-              @click="setCenter(r)"
-            />
+              :marker="r.position"
+              @click.native="clickMarker(r)"
+            >
+              <div class="marker-wrapper marker-item" :class="{ markerFocus: hoverOn === r.id || infoWindow.open && infoWindow.restaurant.id === r.id}">
+                <div class="marker-text marker-item">{{ r.Category.name }}</div>
+                <div class="heart-wrapper marker-item" v-if="isAuthenticated && r.isFavorited">
+                  <div class="icon heart marker-item"></div>
+                </div>
+              </div>
+            </gmap-custom-marker>
             <gmap-info-window
               :position="infoWindow.position"
               :opened="infoWindow.open"
-              @closeclick="infoWindow.open=false"
               :options="{
                 pixelOffset: {
                   width: 0,
@@ -67,7 +132,7 @@
                     <span v-if="infoWindow.restaurant.District" class="district">{{ infoWindow.restaurant.District.name }}</span>
                   </div>
                   <div class="description">{{ infoWindow.restaurant.description }}</div>
-                  <div class="expense">${{ infoWindow.restaurant.average_consumption }} / 人</div>
+                  <div class="expense" v-if="infoWindow.restaurant.average_consumption">{{ infoWindow.restaurant.average_consumption | priceFormat }} / 人</div>
                 </div>
               </div>
             </gmap-info-window>
@@ -78,49 +143,169 @@
         <Footer></Footer>
       </div>
     </div>
+    <FilterModal
+      :showModal="showModal"
+      @closeModal="closeFilter"
+      :categoriesFilter = categoriesFilter
+      :districtsFilter = districtsFilter
+    >
+    </FilterModal>
+    <AddCategory
+      :showModal="showAddModal"
+      @closeAddModal="completeAdding"
+      :categoriesFilter = categoriesFilter
+    >
+    </AddCategory>
+    <ChangeDistrict
+      :showModal="showChangeModal"
+      @closeChangeModal="completeChanging"
+      :districtsFilter = districtsFilter
+    >
+    </ChangeDistrict>
   </div>
 </template>
 
 <script>
 
+import GmapCustomMarker from 'vue2-gmap-custom-marker'
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 import usersAPI from '@/apis/users'
 import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import FilterModal from '@/components/Filter.vue'
+import AddCategory from '@/components/AddCategory.vue'
+import ChangeDistrict from '@/components/ChangeDistrict.vue'
 export default {
   data () {
     return {
+      showModal: false,
       restaurants: [],
-      mapCenter: { lat: 25.0196471, lng: 121.5334885 },
+      showAddModal: false,
+      showChangeModal: false,
+      categoriesFilter: [],
+      districtsFilter: [],
+      mobileBound: { lat: 24.96428535078719, lng: 121.47942180559336 },
+      mapCenter: { lat: 25.0469724, lng: 121.5460995 },
+      filter: ['', 'clat=25.0469724', 'clng=121.5460995', 'blat=24.96428535078719', 'blng=121.47942180559336'],
+      options: {
+        clickableIcons: false
+      },
       infoWindow: {
         position: { lat: 25.0196471, lng: 121.5334885 },
         open: false,
         restaurant: {}
-      }
+      },
+      noMoreData: false,
+      scrollY: 0,
+      numOfPage: 1,
+      hoverOn: 0
     }
   },
   components: {
+    GmapCustomMarker,
     Footer,
-    Navbar
+    Navbar,
+    FilterModal,
+    AddCategory,
+    ChangeDistrict
   },
   created () {
+    if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
+      if (this.$route.query.category && this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+      } else if (this.$route.query.category && !this.$route.query.district) {
+        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+      } else if (!this.$route.query.category && this.$route.query.district) {
+        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+      }
+    }
   },
   mounted () {
-    this.fetchRestaurants()
+    this.fetchNearByRestaurants()
+    this.$refs['map-page'].addEventListener('scroll', this.onScroll, { passive: true })
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
-    setCenter (restaurant) {
+    onScroll (e) {
+      this.scrollY = this.$refs['map-page'].scrollTop
+    },
+    closeFilter (isEditing, cateFilter, distFilter) {
+      this.showModal = false
+      if (isEditing) {
+        this.categoriesFilter = cateFilter
+        this.districtsFilter = distFilter
+      }
+      this.restaurants = []
+      this.numOfPage = 1
+      this.fetchNearByRestaurants()
+    },
+
+    completeAdding (isAdding, filter) {
+      this.showAddModal = false
+      if (isAdding) {
+        this.categoriesFilter = filter
+      }
+      this.restaurants = []
+      this.numOfPage = 1
+      this.fetchNearByRestaurants()
+    },
+    completeChanging (isChanging, filter) {
+      this.showChangeModal = false
+      if (isChanging) {
+        this.districtsFilter = filter
+      }
+      this.restaurants = []
+      this.numOfPage = 1
+      this.fetchNearByRestaurants()
+    },
+    closeInfoWindow () {
+      if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
+        this.infoWindow.open = false
+        this.hoverOn = 0
+      }
+    },
+    clickMarker (restaurant) {
       this.mapCenter = restaurant.position
       this.openInfoWindow(restaurant)
     },
+    async fetchNearByRestaurants (hasPage) {
+      try {
+        if (this.$refs.gmap.$mapObject) {
+          if (!(this.$refs.gmap.$mapObject.getCenter().lat() === this.mapCenter.lat && this.$refs.gmap.$mapObject.getCenter().lng() === this.mapCenter.lng)) {
+            this.mapCenter = { lat: this.$refs.gmap.$mapObject.getCenter().lat(), lng: this.$refs.gmap.$mapObject.getCenter().lng() }
+          }
+          this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+        } else {
+          this.filter = [...this.filter, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+        }
+        if (!hasPage) {
+          this.numOfPage = 1
+        }
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUserNearByRestaurants(this.numOfPage, this.filter) : await restaurantsAPI.getNearByRestaurants(this.numOfPage, this.filter)
+        this.noMoreData = data.data.length === 0
+        this.restaurants = data.data
+        this.restaurants.forEach(r => {
+          r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
+        })
+        this.numOfPage += 1
+        this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
+        this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
+    },
     async fetchRestaurants (filter) {
       try {
-        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1) : await restaurantsAPI.getRestaurants(this.numOfPage + 1)
         this.restaurants = data.data
         this.restaurants.forEach(r => {
           r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
@@ -181,9 +366,13 @@ export default {
       }
     },
     openInfoWindow (restaurant) {
+      this.hoverOn = restaurant.id
+      this.infoWindow.open = true
       this.infoWindow.position = restaurant.position
       this.infoWindow.restaurant = restaurant
-      this.infoWindow.open = true
+    },
+    hoverRestaurant (restaurant) {
+      this.hoverOn = restaurant.id
     }
   }
 }
@@ -204,12 +393,6 @@ $darkred: #c13515;
   position: relative;
   width: 100%;
   height: 100%;
-  .restaurant-navbar {
-    display: none;
-    @media (min-width: 768px) {
-      display: block;
-    }
-  }
   .map-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -270,6 +453,32 @@ $darkred: #c13515;
         }
       }
     }
+    .filter-wrapper {
+      padding-right: 8px;
+      width: 40px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      .icon.filter {
+        margin: auto;
+        height: 16px;
+        width: 16px;
+        background-color: #000000;
+        mask: url(../assets/filter.svg) no-repeat center;
+      }
+    }
+    .filter-wrapper.filter-on:after {
+      background-color: $red;
+      border-radius: 50%;
+      content: "";
+      height: 6px;
+      width: 6px;
+      left: 50%;
+      position: absolute;
+      top: 8px;
+    }
   }
   .map-container {
     height: 100%;
@@ -281,30 +490,369 @@ $darkred: #c13515;
       top: 0px;
     }
     .map-wrapper {
-      height: 100%;
+      height: calc(100% - 80px);
       margin: auto;
       display: flex;
       @media (min-width: 768px) {
-        padding: 80px 0;
-      }
-      @media (min-width: 992px) {
-        padding: 80px 0;
+        padding-top: 80px;
       }
       .restaurants-list {
         display: none;
         @media (min-width: 768px) {
+          overflow: scroll;
+          margin: 22px 0;
+          padding: 0 24px;
+          min-width: 720px;
           display: flex;
-          flex: 0.5;
+          flex-direction: column;
+          flex: 0.5
         }
+        @media (min-width: 1441px) {
+          flex: calc(7/16)
+        }
+        .title {
+          margin: 12px 0;
+          font-size: 22px;
+          font-weight: 700;
+          text-align: left;
+          line-height: 22px;
+          @media (min-width: 768px) {
+            font-size: 26px;
+            line-height: 30px;
+          }
+          @media (min-width: 992px) {
+            font-size: 32px;
+            line-height: 36px;
+          }
+        }
+        .filter-button-wrapper {
+          display: none;
+          @media (min-width: 768px) {
+            display: flex;
+            flex-direction: row;
+            margin: 24px 0;
+          }
+          .filter-button {
+            cursor: pointer;
+            margin-right: 16px;
+            border: 1px solid $divider;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 8px 16px;
+            border-radius: 30px;
+            &:hover {
+              font-weight: 800;
+              border: 1px solid #000000;
+              transition: ease-in-out 0.3s;
+            }
+          }
+          .filter-button.filter-on {
+            font-weight: 800;
+            border: 1px solid #000000;
+          }
+        }
+        .sub-title {
+          display: flex;
+          align-items: center;
+          margin: 12px 0;
+          text-align: left;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 20px;
+          .sub-title-img {
+            margin-right: 16px;
+            height: 40px;
+            width: 40px;
+          }
+        }
+        .restaurant-list-card {
+          width: 100%;
+          margin-bottom: 24px;
+          border-radius: 12px;
+          position: relative;
+          .card-content {
+            .item-wrapper {
+              cursor: pointer;
+              background: #ffffff;
+              position: relative;
+              padding: 15px 0;
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              .container {
+                display: flex;
+                flex-direction: column;
+                @media (min-width: 992px) {
+                  flex-direction: row;
+                }
+                .image-container {
+                  display: none;
+                  @media (min-width: 992px) {
+                    display: block;
+                  }
+                  .image-wrapper {
+                    width: 300px;
+                    padding-top: 66.7%;
+                    position: relative;
+                    .image {
+                      border-radius: 8px;
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      right: 0;
+                      bottom: 0;
+                      background: url(https://inline.imgix.net/branch/-LNTA3as3A6I5JWKglD6:inline-live-2a466--LNTA3bp4eBC0NuJ-TSc-48484d1f-999e-401f-94ae-b716e1d3abf5.jpg) no-repeat center;
+                      background-size: cover;
+                    }
+                  }
+                }
+                .card-right-wrapper {
+                  margin-left: 16px;
+                  position: relative;
+                  width: 100%;
+                  .top-wrapper {
+                    width: 100%;
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: right;
+                    .restaurant-name {
+                      text-align: left;
+                      font-size: 18px;
+                      font-weight: 600;
+                      line-height: 24px;
+                    }
+                    .heart-wrapper {
+                      z-index: 1;
+                      position: absolute;
+                      top: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      .icon.heart {
+                        cursor: pointer;
+                        margin: auto;
+                        height: 24px;
+                        width: 24px;
+                        background: url(../assets/empty-heart.svg) no-repeat center;
+                        background-size: cover;
+                      }
+                      .icon.heart.isFavorited {
+                        background: url(../assets/red-heart.svg) no-repeat center;
+                        background-size: cover;
+                      }
+                    }
+                  }
+                  .card-divider {
+                    margin: 12px 0;
+                    width: 32px;
+                    border-bottom: 1px solid $divider;
+                  }
+                  .card-text {
+                    text-align: left;
+                    font-weight: 400;
+                    line-height: 18px;
+                    font-size: 14px;
+                    margin-bottom: 12px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box !important;
+                    -webkit-line-clamp: 1 !important;
+                    -webkit-box-orient: vertical !important;
+                  }
+                  .rating-wrapper {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    font-size: 14px;
+                    font-weight: 500;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    line-height: 18px;
+                    .icon {
+                      margin: auto 0;
+                      margin-right: 4px;
+                      background-color: $red;
+                      height: 14px;
+                      width: 14px;
+                    }
+                    .icon.star {
+                      mask: url(../assets/star.svg) no-repeat center;
+                    }
+                    .rating {
+                      display: flex;
+                      flex-direction: row;
+                      .number {
+                        font-weight: 600;
+                        height: 18px;
+                        margin-right: 4px;
+                        display: flex;
+                        align-items: center;
+                        span {
+                          height: 14px;
+                        }
+                      }
+                      .count {
+                        height: 18px;
+                        display: flex;
+                        align-items: center;
+                        span {
+                          height: 14px;
+                        }
+                      }
+                    }
+                  }
+                  .expense {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    line-height: 24px;
+                    font-size: 18px;
+                    font-weight: 600;
+                  }
+                }
+              }
+            }
+          }
+          .divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: $divider;
+          }
+          .info {
+            padding: 5px 15px;
+            .item-wrapper {
+              font-size: 12px;
+              font-weight: 400;
+              padding: 8px 0;
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              line-height: 1.5;
+              .icon {
+                color: #222222;
+                height: 16px;
+                width: 16px;
+                margin-right: 16px;
+              }
+            }
+          }
+        }
+        .load-more {
+          width: 100%;
+          .load-more-button {
+            cursor: pointer;
+            width: auto;
+            margin: auto;
+            padding: 14px 24px;
+            border-radius: 8px;
+            background: #000000;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            display: inline-block;
+          }
+        }
+      }
+      .restaurants-list.leaveTop {
+        overflow: hidden;
       }
       .google-map {
         flex: 1;
-        height: 100%;
+        height: calc(100vh - 114px);
+        position: relative;
         @media (min-width: 768px) {
+          height: 100%;
           flex: 0.5;
+        }
+        @media (min-width: 1441px) {
+          flex: calc(9/16)
+        }
+        .fix-button {
+          cursor: pointer;
+          position: absolute;
+          top: 24px;
+          left: calc(50% - 54px);
+          height: 28px;
+          z-index: 998;
+          background: #000000;
+          color: #ffffff;
+          border-radius: 28px;
+          padding: 0 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          @media (min-width: 768px) {
+            top: 24px;
+            left: calc(50% - 40px);
+          }
+          .button-text {
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+        .marker-wrapper {
+          height: 28px;
+          z-index: 99;
+          background: #ffffff;
+          border-radius: 28px;
+          padding: 0 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+          .marker-text {
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 600;
+          }
+          .heart-wrapper {
+            margin-left: 4px;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon.heart {
+              margin: auto;
+              width: 18px;
+              height: 18px;
+              background: url(../assets/red-heart.svg) no-repeat center;
+              background-size: cover;
+            }
+          }
+        }
+        .marker-wrapper.markerFocus {
+          z-index: 999 !important;
+          background: #000000;
+          color: #ffffff;
+          transform: scale(1.1);
+          transition: ease-in-out 0.3s;
+          .heart-wrapper {
+            .icon.heart {
+              background: #ffffff;
+              mask: url(../assets/red-heart.svg) no-repeat center / cover;
+            }
+          }
+
+        }
+        .gmnoprint,
+        .gm-fullscreen-control {
+          display: none;
         }
         .gm-style-iw {
           padding: 0;
+          .gm-ui-hover-effect {
+            display: none !important;
+          }
           .gm-style-iw-d {
             padding: 0;
             overflow: visible !important;

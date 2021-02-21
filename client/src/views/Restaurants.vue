@@ -2,13 +2,13 @@
   <div class="restaurants" :class="{modalShow: showModal}">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="searchbar-wrapper-mobile">
-      <div class="back-wrapper" @click="$router.go(-1)">
+      <div class="back-wrapper" @click="$router.push('/map')">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">餐廳列表</div>
+          <div class="text">地圖搜尋</div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">

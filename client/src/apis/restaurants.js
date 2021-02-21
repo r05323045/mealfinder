@@ -39,5 +39,23 @@ export default {
     return apiHelper.get('/districts', {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  getNearByRestaurants (page, filter) {
+    let queryString = page ? `?page=${page}` : ''
+    if (filter && filter.length > 1) {
+      queryString += filter.join('&')
+    }
+    return apiHelper.get(`/nearby${queryString}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getUserNearByRestaurants (page, filter) {
+    let queryString = page ? `?page=${page}` : ''
+    if (filter && filter.length > 1) {
+      queryString += filter.join('&')
+    }
+    return apiHelper.get(`/nearby${queryString}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
 }
