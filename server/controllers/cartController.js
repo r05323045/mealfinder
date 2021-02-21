@@ -150,6 +150,14 @@ const cartController = {
       })
   },
 
+  spgatewayCallback: (req, res) => {
+    console.log('===== spgatewayCallback =====')
+    console.log(req.method)
+    console.log(req.query)
+    console.log(req.body)
+    console.log('==========')
+    return res.json({ status: 'success', message: 'payment success' })
+  }
 
 }
 
