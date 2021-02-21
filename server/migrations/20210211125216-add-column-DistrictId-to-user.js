@@ -8,8 +8,8 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Users', 'DistrictId', {
+    Promise.all([queryInterface.removeColumn('Users', 'DistrictId', {
       type: Sequelize.INTEGER
-    })
+    })]).then().catch()
   }
 }

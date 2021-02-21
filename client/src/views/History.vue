@@ -16,8 +16,8 @@
           <div class="divider"></div>
         </div>
         <div class="reservation-container">
-          <FutureReservation v-if="tabFuture"></FutureReservation>
-          <PastReservation v-if="!tabFuture"></PastReservation>
+          <FutureReservation v-if="tabFuture" :reservations="futureReservation"></FutureReservation>
+          <PastReservation v-if="!tabFuture" :reservations="pastReservation"></PastReservation>
         </div>
       </div>
     </div>
@@ -29,6 +29,9 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import reservationsAPI from '@/apis/reservations'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import FutureReservation from '@/components/FutureReservation.vue'
@@ -37,7 +40,10 @@ import PastReservation from '@/components/PastReservation.vue'
 export default {
   data () {
     return {
-      tabFuture: true
+      tabFuture: true,
+      reservations: [],
+      futureReservation: [],
+      pastReservation: []
     }
   },
   components: {
@@ -46,7 +52,29 @@ export default {
     FutureReservation,
     PastReservation
   },
+  created () {
+    this.fetchReservations()
+  },
   mounted () {
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
+  },
+  methods: {
+    async fetchReservations () {
+      try {
+        const { data } = await reservationsAPI.getReservations()
+        this.reservations = data.reservations
+        this.futureReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) > Date.now())
+        this.pastReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) <= Date.now())
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
+    }
   }
 }
 </script>

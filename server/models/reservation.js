@@ -16,11 +16,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Reservation.init({
-    date: DataTypes.TIME,
+    date: DataTypes.DATE,
     time: DataTypes.TIME,
     partySize_adult: DataTypes.INTEGER,
     partySize_kids: DataTypes.INTEGER,
     UserId: DataTypes.INTEGER,
+    UserName: DataTypes.STRING,
+    gender: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    email: DataTypes.STRING,
     RestaurantId: DataTypes.INTEGER,
     note: DataTypes.TEXT,
     purpose: DataTypes.STRING
