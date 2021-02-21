@@ -20,25 +20,25 @@
         <div class="booking-card-wrapper">
           <div class="booking-card">
             <div class="picture-wrapper">
-              <div class="picture"></div>
+              <div class="picture" :style="`background: url(${restaurant.picture}) no-repeat center; background-size: cover`"></div>
             </div>
             <div class="header">
               <img class="icon-restaurant" src="../assets/restaurant.svg">
-              <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+              <div class="name">{{ restaurant.name }}</div>
             </div>
             <div class="divider"></div>
             <div class="info">
               <div class="item-wrapper">
                 <img class="icon profile" src="../assets/profile.svg">
-                <div class="number">2大</div>
+                <div class="number">{{ adultNum }}大<span v-if="childNum > 0">{{ childNum }}小</span></div>
               </div>
               <div class="item-wrapper">
                 <img class="icon time" src="../assets/calendar.svg">
-                <div class="date">2021/01/23 (週六)</div>
+                <div class="date">{{ bookingDate | bookingDateFormat  }}</div>
               </div>
               <div class="item-wrapper">
                 <img class="icon time" src="../assets/clock.svg">
-                <div class="time">11:30</div>
+                <div class="time">{{ bookingTime }}</div>
               </div>
             </div>
           </div>
@@ -51,10 +51,10 @@
             </div>
           </div>
           <div class="result-button-wrapper">
-            <button class="result-button" type="submit" @click.prevent="">
+            <button class="result-button" type="submit" @click.prevent="$router.push('/users/history')">
               <div class="button">查看訂位資訊</div>
             </button>
-            <div class="home-button" @click.prevent="">
+            <div class="home-button" @click.prevent="$router.push('/')">
               <div class="button">回首頁</div>
             </div>
           </div>
@@ -69,24 +69,51 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import restaurantsAPI from '@/apis/restaurants'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   data () {
     return {
-      purpose: ['慶生', '約會', '週年慶', '家庭聚餐', '朋友聚餐', '商務聚餐'],
-      submitPurpose: []
+      restaurant: {},
+      restaurantId: 0,
+      bookingTime: '',
+      bookingDate: new Date(),
+      adultNum: 0,
+      childNum: 0
     }
   },
   components: {
     Footer,
     Navbar
   },
+  created () {
+    this.restaurantId = this.$route.query.restaurant
+    this.adultNum = Number(this.$route.query.adult)
+    this.childNum = Number(this.$route.query.child)
+    this.bookingDate = new Date(Number(this.$route.query.date))
+    this.bookingTime = this.$route.query.time
+    this.fetchRestaurant(this.restaurantId)
+  },
   mounted () {
   },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
+  },
   methods: {
-    onScroll (e) {
-
+    async fetchRestaurant (id) {
+      try {
+        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
+        this.restaurant = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
     },
     changePurpose (purpose) {
       if (this.submitPurpose.includes(purpose)) {
@@ -314,7 +341,7 @@ $primary-color: #222;
           width: 100%;
           padding-top: 50%;
           position: relative;
-          background: url(../assets/people-eating-food.svg) no-repeat center;
+          background: url(../assets/female-chatting.svg) no-repeat center;
           background-size: contain;
           .cover {
             position: absolute;
@@ -342,6 +369,7 @@ $primary-color: #222;
           width: 100%;
           background: #ffffff;
           .result-button {
+            cursor: pointer;
             border: none;
             appearance: none;
             margin-bottom: 20px;
@@ -364,6 +392,7 @@ $primary-color: #222;
             }
           }
           .home-button {
+            cursor: pointer;
             border: 1px solid #222222;
             margin-bottom: 12px;
             height: 46px;

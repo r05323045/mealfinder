@@ -13,14 +13,35 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import reservationsAPI from '@/apis/reservations'
 export default {
   data () {
     return {
     }
   },
+  created () {
+    this.fetchReservations()
+  },
   mounted () {
   },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
+  },
   methods: {
+    async fetchReservations () {
+      try {
+        const { data } = await reservationsAPI.getReservations()
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
+    }
   }
 }
 </script>
