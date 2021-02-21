@@ -66,6 +66,7 @@ router.post('/cartItem/:id/reduce', cartController.reduceCartItem)
 router.delete('/cartItem/:id', cartController.deleteCartItem)
 router.get('/order', authenticated, cartController.getOrder)
 router.post('/order', authenticated, cartController.postOrder)
+router.get('/order/:id/payment', authenticated, cartController.getPayment)
 
 // couponController_Coupon model
 router.get('/coupons/:couponId', couponController.getCoupon)
