@@ -109,7 +109,7 @@
               }"
             >
               <div class="restaurant-card"
-                @click="$router.push(`/restaurants/${infowindow.restaurant.id}`)"
+                @click="$router.push(`/restaurants/${infoWindow.restaurant.id}`)"
               >
                 <div class="card-image-wrapper">
                   <div class="heart-wrapper" v-if="isAuthenticated" @click.stop="infoWindow.restaurant.isFavorited ? deleteFavorite(Number(infoWindow.restaurant.id)) : addFavorite(Number(infoWindow.restaurant.id))">
