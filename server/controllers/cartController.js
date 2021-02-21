@@ -1,5 +1,7 @@
+const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const db = require('../models')
+const helpers = require('../helpers')
 const Cart = db.Cart
 const CartItem = db.CartItem
 const OrderItem = db.orderItem
@@ -143,9 +145,11 @@ const cartController = {
     Order.findByPk(req.params.id)
       .then(order => {
         const { total_amount, id } = order
-        return res.json({ total_amount, id })
+        const tradeInfo = helpers.getTradeInfo(total_amount, 'coupons', 'ahnochen1029@gmail.com')
+        return res.json({ total_amount, id, tradeInfo })
       })
   },
+
 
 }
 
