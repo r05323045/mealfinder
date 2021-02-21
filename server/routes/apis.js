@@ -62,6 +62,7 @@ router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.
 router.get('/cart', cartController.getCart)
 router.post('/cart', cartController.postCart)
 router.post('/cartItem/:id/add', cartController.addCartItem)
+router.post('/cartItem/:id/reduce', cartController.reduceCartItem)
 
 // couponController_Coupon model
 router.get('/coupons/:couponId', couponController.getCoupon)

@@ -48,7 +48,18 @@ const cartController = {
           return res.json({ status: 'success', message: 'update the item of quantity(add) in cart' })
         })
     })
-  }
+  },
+
+  reduceCartItem: (req, res) => {
+    CartItem.findByPk(req.params.id).then(cartItem => {
+      cartItem.update({
+        quantity: cartItem.quantity - 1 >= 1 ? cartItem.quantity - 1 : 1
+      })
+        .then((cartItem) => {
+          return res.json({ status: 'success', message: 'update the item of quantity(reduce) in cart' })
+        })
+    })
+  },
 }
 
 module.exports = cartController
