@@ -102,6 +102,7 @@ const restaurantController = {
       ]
     })
       .then(restaurant => {
+        restaurant.dataValues.isFavorited = false
         return res.json(restaurant)
       })
   },

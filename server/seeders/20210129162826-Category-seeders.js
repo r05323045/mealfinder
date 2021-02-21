@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const data = require('../category-data.json')
 
 module.exports = {
@@ -13,10 +13,10 @@ module.exports = {
         updatedAt: new Date()
       })
     }
-    await queryInterface.bulkInsert('Categories', categories, {});
+    await queryInterface.bulkInsert('Categories', categories, {})
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Categories', null, {});
+    await queryInterface.bulkDelete('Categories', null, {})
   }
-};
+}

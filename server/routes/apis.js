@@ -24,6 +24,8 @@ const couponController = require('../controllers/couponController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 const restaurantController = require('../controllers/restaurantController')
+const commentController = require('../controllers/commentController.js')
+const reservationController = require('../controllers/reservationController')
 
 // login,logout,signup
 router.post('/signin', userController.signIn)
@@ -62,6 +64,18 @@ router.get('/nearby', restaurantController.getNearByRestaurants)
 router.get('/users/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
 router.get('/users/restaurants', authenticated, restaurantController.getUsersRestaurants)
 router.get('users/nearby', authenticated, restaurantController.getUserNearByRestaurants)
+
+// reservationController_reservation model
+router.post('/user/reservation/:restaurantId', authenticated, reservationController.addReservation)
+router.delete('/user/reservation/:reservationId', authenticated, reservationController.deleteReservation)
+router.get('/user/reservations/:reservationId', authenticated, reservationController.getReservation)
+router.get('/user/reservations', authenticated, reservationController.getReservations)
+
+// commentController_Comment model
+router.get('/comments/:restaurantId', commentController.getComments)
+router.post('/comments/:restaurantId', authenticated, commentController.addComment)
+router.put('/comments/:commentId', authenticated, commentController.updateComment)
+router.delete('/comments/:commentId', authenticated, commentController.deleteComment)
 
 // restaurantController_Category model
 router.get('/categories', restaurantController.getCategories)

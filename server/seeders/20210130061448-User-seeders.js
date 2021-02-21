@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 const bcrypt = require('bcrypt')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    function randomDate(start, end) {
-      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    function randomDate (start, end) {
+      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
     }
     await queryInterface.bulkInsert('Users',
       Array.from({ length: 10 }).map((item, i) => ({
@@ -21,10 +21,10 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       }))
-      , {});
+      , {})
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Users', null, {})
   }
-};
+}
