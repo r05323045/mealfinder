@@ -85,8 +85,12 @@ const cartController = {
     Cart.findByPk(req.session.cartId, { include: 'items' })
       .then(cart => {
         cart = cart || { items: [] }
+        let totalQuantity = 0
         let totalPrice = cart.items.length > 0 ? cart.items.map(d => d.price * d.CartItem.quantity).reduce((a, b) => a + b) : 0
-        let totalQuantity = cart.items.length
+        cart.items.map(data => {
+          let qty = Number(data.dataValues.CartItem.quantity)
+          totalQuantity += qty
+        })
         return res.json({ totalQuantity, totalPrice })
       })
   },
