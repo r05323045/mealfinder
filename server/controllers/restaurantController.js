@@ -185,6 +185,44 @@ const restaurantController = {
       }))
       return res.json({ data })
     })
+  },
+  getUserNearByRestaurants: (req, res) => {
+    let offset = 0
+    const pageLimit = 24
+
+    if (req.query.page) {
+      offset = (req.query.page - 1) * pageLimit
+    }
+    const center = sequelize.literal(`ST_GeomFromText('POINT(${req.query.clat} ${req.query.clng})', 4326)`)
+    Restaurant.findAll({
+      raw: true,
+      nest: true,
+      where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
+      include: [
+        { model: Category, where: req.query.category ? { name: req.query.category } : null },
+        City,
+        { model: District, where: req.query.district ? { name: req.query.district } : null },
+        Coupon,
+        { model: User, as: 'FavoritedUsers' }
+      ],
+      attributes: {
+        include: [
+          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+          [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+        ]
+      },
+      having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
+      // order: sequelize.literal('distance ASC'),
+      offset: offset,
+      limit: pageLimit
+    }).then(restaurants => {
+      const data = restaurants.map(restaurant => ({
+        ...restaurant,
+        description: restaurant.description.substring(0, 50),
+        isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      }))
+      return res.json({ data })
+    })
   }
 }
 
