@@ -4,7 +4,7 @@
       <div class="more-title">過去沒有訂位的紀錄</div>
       <div class="illustration-wrapper">
         <div class="cover">
-          <div class="button" @click="$router.push('/restaurants')">現在就去找餐廳</div>
+          <div class="button" @click="$router.push('/map')">現在就去找餐廳</div>
         </div>
       </div>
     </div>

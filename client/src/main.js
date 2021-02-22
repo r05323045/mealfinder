@@ -135,6 +135,14 @@ Vue.filter('bookingDateFormat', function (date) {
   }
 })
 
+Vue.filter('normalDate', function (date) {
+  return `${moment(date).format('YYYY/M/DD')}`
+})
+
+Vue.filter('normalDateWithoutYear', function (date) {
+  return `${moment(date).format('M/DD')}`
+})
+
 Vue.filter('priceFormat', function (value) {
   return '$' + Number(value)
     .toString().replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/,
