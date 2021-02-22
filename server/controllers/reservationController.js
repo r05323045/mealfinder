@@ -16,7 +16,6 @@ const reservationController = {
       raw: true,
       nest: true
     }).then(reservations => {
-      console.log(reservations)
       return res.json({ reservations })
     })
   },
@@ -31,7 +30,6 @@ const reservationController = {
         ]
       }
     }).then(reservation => {
-      console.log(reservation)
       return res.json({ reservation })
     })
   },
