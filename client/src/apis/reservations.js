@@ -7,6 +7,11 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getReservation (id) {
+    return apiHelper.get(`/user/reservations/${id}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   addReservation (data) {
     return apiHelper.post('/user/reservations', data, {
       headers: { Authorization: `Bearer ${getToken()}` }

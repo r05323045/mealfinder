@@ -22,7 +22,7 @@ const commentController = {
     Reservation.findOne({
       where: {
         UserId: req.user.id,
-        RestaurantId: req.params.restaurantId
+        RestaurantId: req.body.RestaurantId
       }
     }).then(reservation => {
       if (!reservation) {
@@ -43,7 +43,7 @@ const commentController = {
           Comment.create({
             content: req.body.content,
             rating: req.body.rating,
-            RestaurantId: req.params.restaurantId,
+            RestaurantId: req.body.RestaurantId,
             UserId: req.user.id,
             ReservationId: reservation.id
           }).then(comment => {
@@ -72,6 +72,7 @@ const commentController = {
     })
   },
   updateComment: (req, res) => {
+    console.log(req.body)
     Comment.findByPk(req.params.commentId)
       .then(comment => {
         comment.update({

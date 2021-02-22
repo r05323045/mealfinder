@@ -205,7 +205,7 @@ export default {
         })
       }
     },
-    async addReservation (form) {
+    async addReservation () {
       try {
         const formData = {
           date: this.bookingDate,

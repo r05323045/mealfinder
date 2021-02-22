@@ -4,13 +4,13 @@
       <div class="more-title">還沒想好要吃什麼？</div>
       <div class="illustration-wrapper">
         <div class="cover">
-          <div class="button" @click="$router.push('/restaurants')">現在就去找餐廳</div>
+          <div class="button" @click="$router.push('/map')">現在就去找餐廳</div>
         </div>
       </div>
     </div>
     <div v-if="restaurants.length > 0">
       <div class="card-deck" v-for="i in Math.ceil(restaurants.length/cardPerDeck)" :key="`card-deck-${i}`">
-        <div class="booking-card" v-for="(restaurant, index) in restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck)" :key="restaurant.id" :class="{ 'last-card': index === 3 }" @click="$router.push(`/users/history/${restaurant.id}`)">
+        <div class="booking-card real-card" v-for="(restaurant, index) in restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck)" :key="restaurant.id" :class="{ 'last-card': index === 3 }" @click="$router.push(`/users/history/${restaurant.id}`)">
           <div class="picture-wrapper">
             <div class="picture" :style="`background: url(${restaurant.Restaurant_picture}) no-repeat center / cover`"></div>
           </div>
@@ -34,8 +34,8 @@
             </div>
           </div>
         </div>
-        <div class="booking-card" style="box-shadow: none; border: none" v-if="cardPerDeck > 1 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
-        <div class="booking-card" style="box-shadow: none; border: none" v-if="cardPerDeck > 2 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
+        <div class="booking-card" v-if="cardPerDeck > 1 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
+        <div class="booking-card" v-if="cardPerDeck > 2 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
       </div>
     </div>
   </div>
@@ -151,9 +151,6 @@ $red: rgb(255, 56, 92);
     .booking-card {
       flex: 1;
       margin-bottom: 24px;
-      border: 1px solid $divider;
-      border-radius: 12px;
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
       @media (min-width: 768px) {
         margin-right: 24px;
       }
@@ -229,6 +226,16 @@ $red: rgb(255, 56, 92);
             color: #222222;
           }
         }
+      }
+    }
+    .booking-card.real-card {
+      border: 1px solid $divider;
+      border-radius: 12px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+      cursor: pointer;
+      &:hover {
+        transform: scale(1.05);
+        transition: ease-in-out 0.3s;
       }
     }
     .booking-card.last-card {

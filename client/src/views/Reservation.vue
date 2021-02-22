@@ -2,7 +2,7 @@
   <div class="reservation-page">
     <Navbar></Navbar>
     <div class="reservation-container">
-      <div class="main-title">在2021年1月1日的訂位紀錄</div>
+      <div class="main-title">在 {{ reservation.updatedAt | bookingDateFormat }} 的訂位紀錄</div>
       <div class="info-and-comment">
         <div class="information-container">
           <div class="information-body">
@@ -11,16 +11,17 @@
                 <img class="icon restaurant" src="../assets/restaurant.svg">
                 <div class="title">餐廳名稱</div>
               </div>
-              <div class="content">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+              <div class="content">{{ reservation.Restaurant_name }}</div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
                 <img class="icon clock" src="../assets/clock.svg">
                 <div class="title">用餐時間</div>
               </div>
-              <div class="content">
-                2021/1/01(週六) 11:30
-                <span class="complete">已完成</span>
+              <div class="content" v-if="reservation.date && reservation.time">
+                {{ new Date(new Date(reservation.date.slice(0, 10)).toDateString()) | bookingDateFormat }}
+                {{ reservation.time.slice(0, 5) }}
+                <span class="complete" v-if="new Date(new Date(reservation.date.slice(0, 10)).toDateString()) < Date.now()">已完成</span>
               </div>
             </div>
             <div class="item-wrapper">
@@ -28,7 +29,7 @@
                 <img class="icon profile" src="../assets/profile.svg">
                 <div class="title">訂位人數</div>
               </div>
-              <div class="content">2大</div>
+              <div class="content">{{ reservation.partySize_adult }}大<span v-if="reservation.partySize_kids > 0">小</span></div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
@@ -36,8 +37,8 @@
                 <div class="title">訂位人姓名</div>
               </div>
               <div class="content">
-                <span class="name">XXX</span>
-                <span class="gender">先生</span>
+                <span class="name">{{ reservation.UserName }}</span>
+                <span class="gender">{{ genderTW }}</span>
               </div>
             </div>
             <div class="item-wrapper">
@@ -45,61 +46,124 @@
                 <img class="icon email" src="../assets/email.svg">
                 <div class="title">訂位人Email</div>
               </div>
-              <div class="content">user1@example.com</div>
+              <div class="content">{{ reservation.email }}</div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
                 <img class="icon phone" src="../assets/phone.svg">
                 <div class="title">訂位人手機</div>
               </div>
-              <div class="content">09000000000</div>
+              <div class="content">{{ reservation.phone }}</div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
                 <img class="icon map" src="../assets/map.svg">
                 <div class="title">用餐目的</div>
               </div>
-              <div class="content">朋友聚餐</div>
+              <div class="content">{{ reservation.purpose }}</div>
             </div>
             <div class="item-wrapper last">
               <div class="top-wrapper">
                 <img class="icon restaurant" src="../assets/restaurant.svg">
                 <div class="title">其他備註</div>
               </div>
-              <div class="content">無</div>
+              <div class="content">{{ reservation.note ? reservatio.note : '無' }}</div>
             </div>
           </div>
         </div>
         <div class="comment-card-wrapper">
-          <div class="comment-card">
-            <div class="header">
-              <div class="title">填寫評論</div>
-            </div>
-            <div class="divider"></div>
-            <div class="card-content">
-              <div class="user-info-wrapper">
-                <div class="avatar"></div>
-                <div class="user-info">
-                  <div class="name">Jim Lin</div>
-                  <div class="time">2021/01/01</div>
+          <div class="comment-card" v-if="!comments.map(c => c.UserId).includes(currentUser.id)">
+            <form>
+              <validation-observer ref="formvalidation" v-slot="{ invalid }">
+                <div class="header">
+                  <div class="title">填寫評論</div>
                 </div>
-              </div>
-              <div class="rating-container">
-                <div class="star-wrapper">
-                  <div class="star" v-for="i in 5" :key="`star-${i}`" @click="rating(i)" :class="{ rated: i <= rated }"></div>
+                <div class="divider"></div>
+                <div class="card-content">
+                  <div class="user-info-wrapper">
+                    <div class="avatar" :style="`background: url(${currentUser.avatar}) no-repeat center / cover`"></div>
+                    <div class="user-info">
+                      <div class="name">{{ currentUser.name }}</div>
+                      <div class="time">{{ new Date() | normalDate }}</div>
+                    </div>
+                  </div>
+                  <div class="rating-container">
+                    <div class="star-wrapper">
+                      <div class="star" v-for="i in 5" :key="`star-${i}`" @click="rating(i)" :class="{ rated: i <= rated }"></div>
+                    </div>
+                    <div class="text">點擊評分</div>
+                    <span v-if="rated < 1 && firstClickSubmit" class="invalid-text">評分為必填</span>
+                  </div>
+                  <validation-provider v-slot="{ errors, classes }" rules="required|max:140">
+                    <div class="text-container">
+                      <textarea type="text" id="comment-text" v-model="commentText" class="all-input text-area" placeholder="填寫你最真實的感受" :class="firstClickSubmit ? classes : ''"></textarea>
+                      <div class="note-count">({{ commentText.length }}/140)</div>
+                      <span v-if="firstClickSubmit && commentText.length === 0" class="invalid-text comment-text">評論為必填</span>
+                      <span v-if="firstClickSubmit && errors[0]" class="invalid-text comment-text">{{ errors[0].replace('comment-text ', '評論') }}</span>
+                    </div>
+                  </validation-provider>
                 </div>
-                <div class="text">點擊評分</div>
-              </div>
-              <div class="text-container">
-                <textarea v-model="commentText" class="all-input text-area" placeholder="填寫你最真實的感受"></textarea>
-                <div class="note-count">({{ commentText.length }}/140)</div>
-              </div>
-            </div>
-            <div class="write-comment">
-              <div class="button-wrapper">
-                <div class="button">填寫評論</div>
-              </div>
-            </div>
+                <div class="write-comment" v-if="reservation.date">
+                  <button
+                    type="submit"
+                    class="button-wrapper"
+                    v-if="new Date(new Date(reservation.date.slice(0, 10)).toDateString()) < Date.now()"
+                    @click.prevent="submitComment(invalid || rated < 1)"
+                  >
+                    <div class="button">填寫評論</div>
+                  </button>
+                  <button type="submit" class="button-wrapper disabled" v-if="new Date(new Date(reservation.date.slice(0, 10)).toDateString()) >= Date.now()" :disabled="invalid">
+                    <div class="button">尚未用餐</div>
+                  </button>
+                </div>
+              </validation-observer>
+            </form>
+          </div>
+          <div class="comment-card" v-if="comments.map(c => c.UserId).includes(currentUser.id)">
+            <form>
+              <validation-observer ref="formvalidation" v-slot="{ invalid }">
+                <div class="header">
+                  <div class="title">
+                    <span>在 {{ new Date(new Date(comment.updatedAt.slice(0, 10)).toDateString()) | normalDateWithoutYear }} 的評論</span>
+                    <span class="delete" @click="deleteComment">刪除</span>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="card-content">
+                  <div class="user-info-wrapper">
+                    <div class="avatar" :style="`background: url(${currentUser.avatar}) no-repeat center / cover`"></div>
+                    <div class="user-info">
+                      <div class="name">{{ currentUser.name }}</div>
+                      <div class="time">{{ new Date(new Date(comment.updatedAt.slice(0, 10)).toDateString()) | normalDate }}</div>
+                    </div>
+                  </div>
+                  <div class="rating-container">
+                    <div class="star-wrapper">
+                      <div class="star" v-for="i in 5" :key="`star-${i}`" @click="rating(i)" :class="{ rated: i <= rated }"></div>
+                    </div>
+                    <div class="text">點擊評分</div>
+                    <span v-if="rated < 1 && firstClickSubmit" class="invalid-text">評分為必填</span>
+                  </div>
+                  <validation-provider v-slot="{ errors, classes }" rules="required|max:140">
+                    <div class="text-container">
+                      <textarea type="text" id="comment-text" v-model="commentText" class="all-input text-area" placeholder="填寫你最真實的感受" :class="classes"></textarea>
+                      <div class="note-count">({{ commentText.length }}/140)</div>
+                      <span v-if="firstClickSubmit && commentText.length === 0" class="invalid-text comment-text">評論為必填</span>
+                      <span v-if="firstClickSubmit && errors[0]" class="invalid-text comment-text">{{ errors[0].replace('comment-text ', '評論') }}</span>
+                    </div>
+                  </validation-provider>
+                </div>
+                <div class="write-comment" v-if="reservation.date">
+                  <button
+                    type="submit"
+                    class="button-wrapper"
+                    @click.prevent="changeComment(invalid || rated < 1)"
+                  >
+                    <div class="button">變更評論</div>
+                  </button>
+                </div>
+              </validation-observer>
+            </form>
           </div>
         </div>
       </div>
@@ -112,6 +176,10 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import reservationsAPI from '@/apis/reservations'
+import commentsAPI from '@/apis/comments'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 
@@ -120,18 +188,144 @@ export default {
     return {
       tabFuture: true,
       rated: -1,
-      commentText: ''
+      commentText: '',
+      reservation: {},
+      genderTW: '先生',
+      firstClickSubmit: false,
+      comments: [],
+      comment: {}
     }
   },
   components: {
     Navbar,
     Footer
   },
+  created () {
+    this.fetchReservation(this.$route.params.id)
+  },
   mounted () {
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     rating (num) {
       this.rated = num
+    },
+    async fetchReservation (id) {
+      try {
+        const { data } = await reservationsAPI.getReservation(id)
+        this.reservation = data.reservation
+        switch (this.reservation.gender) {
+          case 'female':
+            this.genderTW = '小姐'
+            break
+          case 'male':
+            this.genderTW = '先生'
+            break
+          case 'other':
+            this.genderTW = ''
+            break
+        }
+        const commentData = await commentsAPI.getComments(this.reservation.RestaurantId)
+        this.comments = commentData.data.comments
+        if (this.comments.map(c => c.UserId).includes(this.currentUser.id)) {
+          this.comment = this.comments.filter(c => c.UserId === this.currentUser.id)[0]
+          this.rated = this.comment.rating
+          this.commentText = this.comment.content
+        } else {
+          this.rated = -1
+          this.commentText = ''
+          this.firstClickSubmit = false
+        }
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得餐廳，請稍候'
+        })
+      }
+    },
+    async addComment () {
+      try {
+        const formData = {
+          content: this.commentText,
+          rating: this.rated,
+          RestaurantId: this.reservation.RestaurantId
+        }
+        const { data } = await commentsAPI.addComment(formData)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.fetchReservation(this.$route.params.id)
+        Toast.fire({
+          icon: 'success',
+          title: '評論成功'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法訂評論'
+        })
+      }
+    },
+    async updateComment () {
+      try {
+        const formData = {
+          content: this.commentText,
+          rating: this.rated,
+          RestaurantId: this.reservation.RestaurantId
+        }
+        const { data } = await commentsAPI.updateComment(this.comment.id, formData)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.fetchReservation(this.$route.params.id)
+        Toast.fire({
+          icon: 'success',
+          title: '變更評論成功'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法變更'
+        })
+      }
+    },
+    async deleteComment () {
+      try {
+        const { data } = await commentsAPI.deleteComment(this.comment.id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.fetchReservation(this.$route.params.id)
+        Toast.fire({
+          icon: 'success',
+          title: '刪除評論成功'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法刪除'
+        })
+      }
+    },
+    submitComment (invalid) {
+      if (!this.firstClickSubmit) {
+        this.firstClickSubmit = true
+      }
+      if (!invalid) {
+        this.addComment()
+      }
+    },
+    changeComment (invalid) {
+      if (!invalid) {
+        this.updateComment()
+      }
+      this.fetchReservation(this.$route.params.id)
     }
   }
 }
@@ -142,6 +336,7 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
+$darkred: #c13515;
 .reservation-page {
   height: 100vh;
   overflow: scroll;
@@ -250,9 +445,15 @@ $red: rgb(255, 56, 92);
             padding: 15px;
             background: #000000;
             .title {
+              display:flex;
+              justify-content: space-between;
               font-size: 14px;
               color: #ffffff;
               font-weight: 600;
+              .delete {
+                text-decoration: underline;
+                cursor: pointer;
+              }
             }
           }
           .divider {
@@ -285,7 +486,7 @@ $red: rgb(255, 56, 92);
             .rating-container {
               width: 100%;
               position: relative;
-              margin-top: 24px;
+              margin: 12px 0;
               .star-wrapper {
                 width: 50%;
                 max-width: 120px;
@@ -317,7 +518,7 @@ $red: rgb(255, 56, 92);
               }
             }
             .text-container {
-              margin-top: 24px;
+              position: relative;
               .text-area {
                 outline: none;
                 font-size: 16px;
@@ -333,16 +534,36 @@ $red: rgb(255, 56, 92);
                 }
               }
               .note-count {
+                position: absolute;
+                right: 0;
+                top: 100%;
                 font-size: 12px;
-                color: #222;
+                line-height: 1.5;
+                color: #666;
                 font-weight: 400;
                 text-align: right;
               }
             }
+            .all-input.is-invalid {
+              border: 1px solid $darkred;
+            }
+            .invalid-text {
+              font-size: 12px;
+              line-height: 1.5;
+              color: $darkred;
+            }
+            .invalid-text.comment-text {
+              position: absolute;
+              top: 100%;
+              left: 0;
+            }
           }
           .write-comment {
-            padding: 12px 12px 36px 12px;
+            padding: 24px 12px 24px 12px;
             .button-wrapper {
+              appearance: none;
+              width: 100%;
+              cursor: pointer;
               border: 1px solid #666666;
               border-radius: 15px;
               background: #ffffff;
@@ -354,8 +575,27 @@ $red: rgb(255, 56, 92);
               align-items: center;
               justify-content: center;
               line-height: 1.5;
+              &:focus {
+                outline: none;
+              }
+              &:hover {
+                background: #222222;
+                .button {
+                  color: #ffffff;
+                }
+              }
               .button {
                 color: #222222;
+              }
+            }
+            .button-wrapper.disabled {
+              cursor: default;
+              background: #666666;
+              .button {
+                color: #ffffff;
+              }
+              &:hover {
+                background: #666666;
               }
             }
           }

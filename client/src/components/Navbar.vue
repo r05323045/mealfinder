@@ -2,7 +2,7 @@
   <div class="navbar" :class="{ openSearch: openSearch }">
     <div class="navbar-mobile">
       <div class="item-wrapper" :class="{ signIn: isAuthenticated }">
-        <div class="nav-item" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' || $route.path.includes('/restaurants') }">
+        <div class="nav-item" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' || $route.path.includes('/restaurants') || $route.path.includes('/map')}">
           <div class="wrapper">
             <div class="icon search"></div>
             <div class="text">探索</div>
@@ -74,7 +74,7 @@
               <div class="item" v-if="isAuthenticated" @click="$router.push('/users/center').catch(()=>{})">會員中心</div>
               <div class="item" v-if="isAuthenticated" @click="$router.push('/users/history').catch(()=>{})">訂位紀錄</div>
               <div class="item" v-if="isAuthenticated" @click="$router.push('/users/favorite').catch(()=>{})">我的收藏</div>
-              <div class="item" @click="$router.push('/restaurants').catch(()=>{})">探索餐廳</div>
+              <div class="item" @click="$router.push('/map').catch(()=>{})">探索餐廳</div>
               <div class="item" @click="$router.push('/coupons').catch(()=>{})">優惠</div>
               <div class="item" v-if="isAuthenticated" @click="$router.push('/users/purchase').catch(()=>{})">購物車</div>
               <div class="item" v-if="isAuthenticated" @click="$router.push('/users/notification').catch(()=>{})">通知</div>

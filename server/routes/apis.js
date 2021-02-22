@@ -89,7 +89,7 @@ router.get('/user/reservations', authenticated, reservationController.getReserva
 
 // commentController_Comment model
 router.get('/comments/:restaurantId', commentController.getComments)
-router.post('/comments/:restaurantId', authenticated, commentController.addComment)
+router.post('/comments', authenticated, commentController.addComment)
 router.put('/comments/:commentId', authenticated, commentController.updateComment)
 router.delete('/comments/:commentId', authenticated, commentController.deleteComment)
 
