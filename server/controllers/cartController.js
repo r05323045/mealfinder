@@ -99,7 +99,7 @@ const cartController = {
 
   postOrder: (req, res) => {
     const UserId = req.user.id
-    const { totalPrice, address, phone } = req.body
+    const { totalPrice, address, phone, name, email } = req.body
     return Cart.findByPk(req.session.cartId, { include: 'items' })
       .then(cart => {
         Order.create({
@@ -107,6 +107,8 @@ const cartController = {
           total_amount: totalPrice,
           phone,
           address,
+          name,
+          email,
         })
           .then((order) => {
             const orderitems = cart.items.map(data => {
