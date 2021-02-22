@@ -123,7 +123,7 @@ const cartController = {
                 isUsed: 0,
               })
             })
-            const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', 'ahnochen1029@gmail.com')
+            const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', email)
             // var mailOptions = {
             //   from: '',
             //   to: '',
