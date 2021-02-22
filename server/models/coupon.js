@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Coupon.belongsTo(models.Restaurant)
       Coupon.hasMany(models.orderItem)
+      Coupon.belongsToMany(models.Cart, {
+        through: models.CartItem,
+        foreignKey: 'CouponId',
+        as: 'carts'
+      })
     }
   };
   Coupon.init({

@@ -26,6 +26,7 @@ const userController = require('../controllers/userController')
 const restaurantController = require('../controllers/restaurantController')
 const commentController = require('../controllers/commentController.js')
 const reservationController = require('../controllers/reservationController')
+const cartController = require('../controllers/cartController')
 
 // login,logout,signup
 router.post('/signin', userController.signIn)
@@ -52,6 +53,21 @@ router.delete('/user/favorite/:restaurantId', authenticated, userController.dele
 // userController_Like model
 router.post('/like', authenticated, userController.likeComment)
 router.delete('/like/:commentId', authenticated, userController.disLikeComment)
+
+//userController_Order model
+router.get('/user/:id/purchase', authenticated, userController.getPurchases)
+router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.getPurchase)
+
+//cartController_Cart model
+router.get('/cart', cartController.getCart)
+router.post('/cart', cartController.postCart)
+router.post('/cartItem/:id/add', cartController.addCartItem)
+router.post('/cartItem/:id/reduce', cartController.reduceCartItem)
+router.delete('/cartItem/:id', cartController.deleteCartItem)
+router.get('/order', authenticated, cartController.getOrder)
+router.post('/order', authenticated, cartController.postOrder)
+router.get('/order/:id/payment', authenticated, cartController.getPayment)
+router.post('/spgateway/callback', authenticated, cartController.spgatewayCallback)
 
 // couponController_Coupon model
 router.get('/coupons/:couponId', couponController.getCoupon)
