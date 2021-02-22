@@ -156,6 +156,11 @@ const cartController = {
     console.log(req.query)
     console.log(req.body)
     console.log('==========')
+
+    const data = JSON.parse(create_mpg_aes_decrypt(req.body.TradeInfo))
+
+
+
     return res.json({ status: 'success', message: 'payment success' })
   }
 
