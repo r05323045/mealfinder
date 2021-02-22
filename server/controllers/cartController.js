@@ -99,12 +99,14 @@ const cartController = {
 
   postOrder: (req, res) => {
     const UserId = req.user.id
-    const { totalPrice } = req.body
+    const { totalPrice, address, phone } = req.body
     return Cart.findByPk(req.session.cartId, { include: 'items' })
       .then(cart => {
         Order.create({
           UserId,
-          total_amount: totalPrice
+          total_amount: totalPrice,
+          phone,
+          address,
         })
           .then((order) => {
             const orderitems = cart.items.map(data => {
@@ -116,9 +118,10 @@ const cartController = {
                 purchased_price: price,
                 quantity,
                 uniqueId,
-                isUsed: 0
+                isUsed: 0,
               })
             })
+            const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', 'ahnochen1029@gmail.com')
             // var mailOptions = {
             //   from: '',
             //   to: '',
@@ -134,19 +137,10 @@ const cartController = {
             // });
             return Promise.all(orderitems)
               .then(() => {
-                return res.json({ status: 'success', message: 'post a order' })
+                return res.json({ status: 'success', message: 'post a order', tradeInfo })
               })
 
           })
-      })
-  },
-
-  getPayment: (req, res) => {
-    Order.findByPk(req.params.id)
-      .then(order => {
-        const { total_amount, id } = order
-        const tradeInfo = helpers.getTradeInfo(total_amount, 'coupons', 'ahnochen1029@gmail.com')
-        return res.json({ total_amount, id, tradeInfo })
       })
   },
 
@@ -157,8 +151,10 @@ const cartController = {
     console.log(req.body)
     console.log('==========')
 
-    const data = JSON.parse(create_mpg_aes_decrypt(req.body.TradeInfo))
+    const data = JSON.parse(helpers.create_mpg_aes_decrypt(req.body.TradeInfo))
 
+    console.log('===== spgatewayCallback: create_mpg_aes_decrypt、data =====')
+    console.log(data)
 
 
     return res.json({ status: 'success', message: 'payment success' })
