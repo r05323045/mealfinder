@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const passportJWT = require('passport-jwt')
 const ExtractJwt = passportJWT.ExtractJwt
 const JwtStrategy = passportJWT.Strategy
+const FacebookStrategy = require('passport-facebook').Strategy
 
 let jwtOptions = {}
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -22,5 +23,18 @@ let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
 })
 
 passport.use(strategy)
+
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: 'http://localhost:3000/auth/facebook/callback',
+  profileFields: ['id', 'displayName', 'photos', 'email']
+},
+function (accessToken, refreshToken, profile, cb) {
+  User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+    return cb(err, user)
+  })
+}
+))
 
 module.exports = passport
