@@ -24,6 +24,15 @@ function create_mpg_aes_encrypt(TradeInfo) {
   return enc + encrypt.final("hex");
 }
 
+function create_mpg_aes_decrypt(TradeInfo) {
+  let decrypt = crypto.createDecipheriv("aes256", HashKey, HashIV);
+  decrypt.setAutoPadding(false);
+  let text = decrypt.update(TradeInfo, "hex", "utf8");
+  let plainText = text + decrypt.final("utf8");
+  let result = plainText.replace(/[\x00-\x20]+/g, "");
+  return result;
+}
+
 function create_mpg_sha_encrypt(TradeInfo) {
 
   let sha = crypto.createHash("sha256");
@@ -83,6 +92,7 @@ function getTradeInfo(Amt, Desc, email) {
 module.exports = {
   genDataChain,
   create_mpg_aes_encrypt,
+  create_mpg_aes_decrypt,
   create_mpg_sha_encrypt,
   getTradeInfo,
 }
