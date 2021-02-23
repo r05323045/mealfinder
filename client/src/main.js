@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import moment from 'moment'
 import zh from './zh_TW.js'
+import axios from 'axios'
 import 'default-passive-events'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
@@ -188,6 +189,8 @@ Vue.use(VueGoogleMaps, {
   },
   installComponents: true
 })
+
+axios.defaults.withCredentials = true
 
 new Vue({
   router,
