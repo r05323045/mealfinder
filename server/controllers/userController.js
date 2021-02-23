@@ -11,6 +11,9 @@ const City = db.City
 const District = db.District
 const Coupon = db.Coupon
 const Like = db.Like
+const Order = db.Order
+const orderItem = db.orderItem
+
 
 // JWT
 const jwt = require('jsonwebtoken')
@@ -263,7 +266,22 @@ const userController = {
         dislike.destroy()
           .then(() => { return res.json({ status: 'success', message: 'Disliked comment' }) })
       })
+  },
+
+  getPurchases: (req, res) => {
+    const userId = req.params.id
+    Order.findAll({ where: { UserId: userId }, include: [orderItem] })
+      .then(orders => { res.json(orders) })
+  },
+
+  getPurchase: (req, res) => {
+    const itemId = req.params.itemId
+    orderItem.findByPk(itemId, { include: [Coupon] })
+      .then(item => {
+        res.json(item)
+      })
   }
+
 
 }
 

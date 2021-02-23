@@ -17,7 +17,13 @@ const passport = require('./config/passport')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(methodOverride('_method'))
-app.use(session({ secret: 'restaurant_reservation', resave: false, saveUninitialized: false }))
+app.use(session({
+  secret: 'restaurant_reservation',
+  name: 'restaurant_reservation',
+  cookie: { maxAge: 80000 },
+  resave: false,
+  saveUninitialized: false,
+}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
