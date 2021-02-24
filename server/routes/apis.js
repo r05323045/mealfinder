@@ -56,6 +56,23 @@ router.get('/auth/facebook/callback',
     })
   }
 )
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+router.get('/auth/google/callback',
+  passport.authenticate('google', {
+    session: false,
+    failureRedirect: '/signin'
+  }), (req, res) => {
+    console.log(req.user)
+    const paylod = { id: req.user.id }
+    const token = jwt.sign(paylod, process.env.JWT_SECRET)
+    req.user.password = undefined
+    return res.json({
+      status: 'success',
+      message: 'ok',
+      token,
+      user: req.user
+    })
+  })
 
 // userController_UserModel
 router.get('/user/:id/profile', authenticated, userController.getProfile)
