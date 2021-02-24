@@ -215,6 +215,7 @@ export default {
           icon: 'success',
           title: '已新增至購物車'
         })
+        this.$router.go(-1)
       } catch (error) {
         console.log(error)
         Toast.fire({
