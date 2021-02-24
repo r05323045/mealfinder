@@ -2,6 +2,8 @@ const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const db = require('../models')
 const helpers = require('../helpers')
+const sequelize = require('sequelize')
+const Coupon = db.Coupon
 const Cart = db.Cart
 const CartItem = db.CartItem
 const OrderItem = db.orderItem
@@ -17,20 +19,45 @@ const transporter = nodemailer.createTransport({
 
 const cartController = {
   getCart: (req, res) => {
-    Cart.findByPk(req.session.cartId, { include: 'items' })
-      .then(cart => {
-        cart = cart || { items: [] }
-        let totalPrice = cart.items.length > 0 ? cart.items.map(d => d.price * d.CartItem.quantity).reduce((a, b) => a + b) : 0
-        return res.json({ cart, totalPrice })
+    CartItem.findAll({
+      raw: true,
+      nest: true,
+      where: { UserId: req.user.id },
+      include: [
+        {
+          model: Coupon,
+          attributes: {
+            include: [
+              [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+            ]
+          }
+        }
+      ]
+    })
+      .then(cartItem => {
+        const data = cartItem.map(item => ({
+          ...item,
+          subTotalPrice: Number(item.quantity) * Number(item.Coupon.price)
+        }))
+        return res.json({ data })
       })
   },
 
-  postCart: (req, res) => {
-    CartItem.create({
-      CouponId: req.body.CouponId,
-      UserId: req.user.id,
-      quantity: req.body.quantity
+  postCart: async (req, res) => {
+    const [cartItem] = await CartItem.findOrCreate({
+      where: { CouponId: req.body.CouponId, UserId: req.user.id },
+      defauts: {
+        CouponId: req.body.CouponId,
+        UserId: req.user.id,
+        quantity: req.body.quantity
+      }
     })
+    return cartItem.update(
+      {
+        UserId: req.user.id,
+        quantity: Number((cartItem.quantity || 0)) + Number(req.body.quantity)
+      }
+    )
       .then((cartItem) => {
         return res.json({ status: 'success', message: 'add coupon to cart' })
       })
