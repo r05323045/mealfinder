@@ -14,7 +14,6 @@ const Like = db.Like
 const Order = db.Order
 const orderItem = db.orderItem
 
-
 // JWT
 const jwt = require('jsonwebtoken')
 
@@ -281,8 +280,6 @@ const userController = {
         res.json(item)
       })
   }
-
-
 }
 
 module.exports = userController

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.PreferedCategory)
       User.hasMany(models.Order, { foreignKey: 'UserId' })
+      User.hasMany(models.CartItem, { foreignKey: 'UserId' })
       User.hasMany(models.Comment, { foreignKey: 'UserId' })
       User.hasMany(models.Reservation, { foreignKey: 'UserId' })
       User.belongsTo(models.District)

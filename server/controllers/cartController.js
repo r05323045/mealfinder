@@ -25,30 +25,14 @@ const cartController = {
       })
   },
 
-  postCart: async (req, res) => {
-    const [cart, created] = await Cart.findOrCreate({
-      where: {
-        id: req.session.cartId || 0,
-      },
-    })
-    const [cartItem, itemCreated] = await CartItem.findOrCreate({
-      where: {
-        CartId: cart.id,
-        CouponId: req.body.CouponId
-      },
-      default: {
-        CartId: cart.id,
-        CouponId: req.body.CouponId,
-      }
-    })
-    return cartItem.update({
-      quantity: (cartItem.quantity || 0) + 1,
+  postCart: (req, res) => {
+    CartItem.create({
+      CouponId: req.body.CouponId,
+      UserId: req.user.id,
+      quantity: req.body.quantity
     })
       .then((cartItem) => {
-        req.session.cartId = cart.id
-        return req.session.save(() => {
-          return res.json({ status: 'success', message: 'add coupon to cart' })
-        })
+        return res.json({ status: 'success', message: 'add coupon to cart' })
       })
   },
 
