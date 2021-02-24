@@ -22,7 +22,7 @@ app.use(session({
   name: 'restaurant_reservation',
   cookie: { maxAge: 80000 },
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: false
 }))
 app.use(passport.initialize())
 app.use(passport.session())
