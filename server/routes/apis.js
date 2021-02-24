@@ -5,6 +5,12 @@ const passport = require('../config/passport')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
+// JWT
+const jwt = require('jsonwebtoken')
+const passportJWT = require('passport-jwt')
+const ExtractJwt = passportJWT.ExtractJwt
+const JwtStrategy = passportJWT.Strategy
+
 const authenticated = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) {
@@ -31,6 +37,25 @@ const cartController = require('../controllers/cartController')
 // login,logout,signup
 router.post('/signin', userController.signIn)
 router.post('/signup', userController.signUp)
+router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['public_profile', 'email'] }))
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    session: false,
+    // successRedirect: 'http://localhost:8080/#',
+    failureRedirect: '/signin'
+  }), (req, res) => {
+    console.log(req.user)
+    const paylod = { id: req.user.id }
+    const token = jwt.sign(paylod, process.env.JWT_SECRET)
+    req.user.password = undefined
+    return res.json({
+      status: 'success',
+      message: 'ok',
+      token,
+      user: req.user
+    })
+  }
+)
 
 // userController_UserModel
 router.get('/user/:id/profile', authenticated, userController.getProfile)
@@ -54,11 +79,11 @@ router.delete('/user/favorite/:restaurantId', authenticated, userController.dele
 router.post('/like', authenticated, userController.likeComment)
 router.delete('/like/:commentId', authenticated, userController.disLikeComment)
 
-//userController_Order model
+// userController_Order model
 router.get('/user/:id/purchase', authenticated, userController.getPurchases)
 router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.getPurchase)
 
-//cartController_Cart model
+// cartController_Cart model
 router.get('/cart', cartController.getCart)
 router.post('/cart', cartController.postCart)
 router.post('/cartItem/:id/add', cartController.addCartItem)
