@@ -1,14 +1,14 @@
 const crypto = require('crypto')
 
 //金流參數
-const URL = 'https://e7aa7ca85b39.ngrok.io'
+const URL = 'http://0cce43891fdf.ngrok.io'
 const MerchantID = 'MS318595991'
 const HashKey = 'UTkH5cZt6nQb99Jqo8Xfcp9isYHfBCOA'
 const HashIV = 'CS54PvL1tbZnptrP'
 const PayGateWay = "https://ccore.spgateway.com/MPG/mpg_gateway"
 const ReturnURL = URL + "/spgateway/callback?from=ReturnURL"
 const NotifyURL = URL + "/spgateway/callback?from=NotifyURL"
-const ClientBackURL = URL + "/orders"
+const ClientBackURL = URL + "/users/purchase"
 
 function genDataChain(TradeInfo) {
   let results = [];

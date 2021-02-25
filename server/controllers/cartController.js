@@ -13,9 +13,9 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: '',
-    pass: '',
-  },
-});
+    pass: ''
+  }
+})
 
 const cartController = {
   getCart: (req, res) => {
@@ -111,27 +111,48 @@ const cartController = {
   postOrder: (req, res) => {
     const UserId = req.user.id
     const { totalPrice, address, phone, name, email } = req.body
-    return Cart.findByPk(req.session.cartId, { include: 'items' })
+    CartItem.findAll({
+      raw: true,
+      nest: true,
+      where: { UserId: req.user.id },
+      include: [
+        {
+          model: Coupon,
+          attributes: {
+            include: [
+              [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+            ]
+          }
+        }
+      ]
+    })
       .then(cart => {
-        Order.create({
-          UserId,
-          total_amount: totalPrice,
-          phone,
-          address,
-          name,
-          email,
-        })
-          .then((order) => {
-            const orderitems = cart.items.map(data => {
-              let uniqueId = Math.floor(Math.random() * 1000000000000) + 1
-              const { id, price, CartItem: { quantity } } = data.dataValues
-              OrderItem.create({
+        Promise.all([
+          CartItem.destroy({
+            where: { UserId: req.user.id }
+          }),
+          Order.create({
+            UserId,
+            total_amount: totalPrice,
+            phone,
+            address,
+            name,
+            email
+          })
+        ])
+          .then(([itemInCart, order]) => {
+            const orderitems = cart.map(data => {
+              const uniqueId = Math.floor(Math.random() * 1000000000000) + 1
+              const id = data.Coupon.id
+              const price = Number(data.Coupon.price)
+              const quantity = data.quantity
+              return OrderItem.create({
                 OrderId: order.id,
                 CouponId: id,
                 purchased_price: price,
                 quantity,
                 uniqueId,
-                isUsed: 0,
+                isUsed: 0
               })
             })
             const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', email)
@@ -152,7 +173,6 @@ const cartController = {
               .then(() => {
                 return res.json({ status: 'success', message: 'post a order', tradeInfo })
               })
-
           })
       })
   },
@@ -168,8 +188,6 @@ const cartController = {
 
     console.log('===== spgatewayCallback: create_mpg_aes_decrypt、data =====')
     console.log(data)
-
-
     return res.json({ status: 'success', message: 'payment success' })
   }
 
