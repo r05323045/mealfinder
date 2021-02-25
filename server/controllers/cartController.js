@@ -4,7 +4,6 @@ const db = require('../models')
 const helpers = require('../helpers')
 const sequelize = require('sequelize')
 const Coupon = db.Coupon
-const Cart = db.Cart
 const CartItem = db.CartItem
 const OrderItem = db.orderItem
 const Order = db.Order
@@ -130,16 +129,27 @@ const cartController = {
   },
 
   getOrder: (req, res) => {
-    Cart.findByPk(req.session.cartId, { include: 'items' })
-      .then(cart => {
-        cart = cart || { items: [] }
-        let totalQuantity = 0
-        let totalPrice = cart.items.length > 0 ? cart.items.map(d => d.price * d.CartItem.quantity).reduce((a, b) => a + b) : 0
-        cart.items.map(data => {
-          let qty = Number(data.dataValues.CartItem.quantity)
-          totalQuantity += qty
+    Order.findByPk(req.params.id)
+      .then(order => {
+        return OrderItem.findAll({
+          raw: true,
+          nest: true,
+          where: { OrderId: order.id },
+          include: [
+            {
+              model: Coupon,
+              attributes: {
+                include: [
+                  [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+                ]
+              }
+            }
+          ]
         })
-        return res.json({ totalQuantity, totalPrice })
+          .then((orderItems) => {
+            order.dataValues.OrderItem = orderItems
+            return res.json({ order })
+          })
       })
   },
 
