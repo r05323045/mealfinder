@@ -85,7 +85,7 @@ const routes = [
         beforeEnter: authorticated
       },
       {
-        path: '/users/purchase/:1',
+        path: '/users/purchase/:id',
         component: () => import('@/views/Record.vue'),
         beforeEnter: authorticated
       },
