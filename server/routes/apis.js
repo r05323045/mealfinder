@@ -101,12 +101,13 @@ router.get('/user/:id/purchase', authenticated, userController.getPurchases)
 router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.getPurchase)
 
 // cartController_Cart model
-router.get('/cart', cartController.getCart)
-router.post('/cart', cartController.postCart)
+router.get('/cart', authenticated, cartController.getCart)
+router.post('/cart', authenticated, cartController.postCart)
 router.post('/cartItem/:id/add', cartController.addCartItem)
 router.post('/cartItem/:id/reduce', cartController.reduceCartItem)
-router.delete('/cartItem/:id', cartController.deleteCartItem)
-router.get('/order', authenticated, cartController.getOrder)
+router.delete('/cart/:id', cartController.deleteCartItem)
+router.get('/order', authenticated, cartController.getOrders)
+router.get('/order/:id', authenticated, cartController.getOrder)
 router.post('/order', authenticated, cartController.postOrder)
 router.post('/spgateway/callback', authenticated, cartController.spgatewayCallback)
 

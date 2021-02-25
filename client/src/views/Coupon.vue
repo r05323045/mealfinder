@@ -128,8 +128,8 @@
       </div>
     </div>
     <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollY + footerHeight">
-      <div class="filter-button">
-        <div class="button">加入購物車</div>
+      <div class="filter-button" @click="productNum > 0 ? postCart() : ''" :disabled="productNum < 1" :class="{ disabled: productNum < 1 }">
+        <div class="button">{{ productNum > 0 ? '加入購物車' : '請選擇數量' }}</div>
       </div>
     </div>
   </div>
@@ -140,6 +140,7 @@
 import moment from 'moment'
 import { Toast } from '@/utils/helpers'
 import couponsAPI from '@/apis/coupons'
+import cartsAPI from '@/apis/carts'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 export default {
@@ -199,6 +200,29 @@ export default {
           this.todayBusinessHours = this.coupon.Restaurant.business_hours[idx]
         }
       })
+    },
+    async postCart () {
+      try {
+        const cartData = {
+          CouponId: this.coupon.id,
+          quantity: this.productNum
+        }
+        const { data } = await cartsAPI.postCart(cartData)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '已新增至購物車'
+        })
+        this.$router.go(-1)
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法新增至購物車'
+        })
+      }
     }
   }
 }
@@ -670,6 +694,7 @@ $primary-color: #222;
       padding: 16px 80px;
     }
     .filter-button {
+      cursor: pointer;
       margin: auto;
       max-width: 1040px;
       height: 100%;
@@ -692,6 +717,9 @@ $primary-color: #222;
         font-size: 16px;
         line-height: 20px;
       }
+    }
+    .filter-button.disabled {
+      background-color: #666;
     }
   }
 }

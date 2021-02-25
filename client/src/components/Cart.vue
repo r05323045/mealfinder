@@ -1,29 +1,37 @@
 <template>
   <div class="cart-page">
     <div class="page-container">
-      <div class="purchase-card-wrapper">
+      <div class="more-container" v-if="cart.length < 1">
+        <div class="more-title">還沒想好要買什麼？</div>
+        <div class="illustration-wrapper">
+          <div class="cover">
+            <div class="button" @click="$router.push('/coupons')">現在就去找餐券</div>
+          </div>
+        </div>
+      </div>
+      <div class="purchase-card-wrapper" v-if="cart.length > 0">
         <div class="purchase-card">
           <div class="card-content">
-            <div class="item-wrapper" v-for="i in 5" :key="i">
-              <div class="icon close"></div>
+            <div class="item-wrapper" v-for="cartItem in cart" :key="cartItem.id">
+              <div class="icon close" @click="deleteCart(cartItem.id)"></div>
               <div class="container">
                 <div class="image-container">
                   <div class="image-wrapper">
-                    <div class="image"></div>
+                    <div class="image" :style="`background: url(${cartItem.Coupon.picture}) no-repeat center / cover`"></div>
                   </div>
                 </div>
-                <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+                <div class="name" v-if="cartItem.Coupon">{{ cartItem.Coupon.description }}</div>
                 <div class="price-wrapper">
                   <div class="adjust-wrapper">
-                    <div class="icon-wrapper">
-                      <div class="icon minus"></div>
+                    <div class="icon-wrapper" :class="{ equalOne: cartItem.quantity === 1}">
+                      <div class="icon minus" v-if="cartItem.quantity > 1" @click="reduceCartItem(cartItem.id)"></div>
                     </div>
-                    <div class="number">1</div>
+                    <div class="number">{{ cartItem.quantity }}</div>
                     <div class="icon-wrapper">
-                      <div class="icon plus"></div>
+                      <div class="icon plus" @click="addCartItem(cartItem.id)"></div>
                     </div>
                   </div>
-                  <div class="price">$399</div>
+                  <div class="price">{{ cartItem.subTotalPrice | priceFormat }}</div>
                 </div>
               </div>
               <div class="divider"></div>
@@ -31,11 +39,11 @@
           </div>
           <div class="total-price-wrapper">
             <div class="text">總計</div>
-            <div class="total-price">$1995</div>
+            <div class="total-price">{{ totalPrice | priceFormat }}</div>
           </div>
         </div>
       </div>
-      <div class="order-card-wrapper">
+      <div class="order-card-wrapper" v-if="cart.length > 0">
         <div class="order-card">
           <div class="header">
             <div class="title">訂單摘要</div>
@@ -44,17 +52,17 @@
           <div class="card-content">
             <div class="item-wrapper">
               <div class="text">商品總計</div>
-              <div class="total-price">$1995</div>
+              <div class="total-price">{{ totalPrice | priceFormat }}</div>
             </div>
             <div class="item-wrapper">
               <div class="text">數量總計</div>
-              <div class="total-price">5</div>
+              <div class="total-price">{{totalQuantity }}</div>
             </div>
-            <div class="discount">使用優惠券</div>
+            <div v-if="false" class="discount">使用優惠券</div>
             <div class="divider"></div>
             <div class="item-wrapper summary">
               <div class="text">結帳總金額</div>
-              <div class="total-price">$1995</div>
+              <div class="total-price">{{ totalPrice | priceFormat }}</div>
             </div>
           </div>
           <div class="go-check">
@@ -70,14 +78,102 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import cartsAPI from '@/apis/carts'
 export default {
   data () {
     return {
+      cart: [],
+      totalPrice: 0,
+      totalQuantity: 0
     }
   },
-  mounted () {
+  created () {
+    this.fetchCart()
   },
   methods: {
+    async fetchCart () {
+      try {
+        const { data } = await cartsAPI.getCart()
+        this.cart = data.data
+        this.calculateTotalPrice()
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得購物車資訊，請稍候'
+        })
+      }
+    },
+    calculateTotalPrice () {
+      this.totalPrice = 0
+      this.totalQuantity = 0
+      this.cart.forEach(c => {
+        c.subTotalPrice = c.quantity * Number(c.Coupon.price)
+        this.totalPrice += Number(c.subTotalPrice)
+        this.totalQuantity += Number(c.quantity)
+      })
+    },
+    async deleteCart (id) {
+      try {
+        const { data } = await cartsAPI.deleteCart(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.cart = this.cart.filter(c => c.id !== id)
+        this.calculateTotalPrice()
+        Toast.fire({
+          icon: 'success',
+          title: '已移除商品'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法移除商品，請稍後'
+        })
+      }
+    },
+    async addCartItem (id) {
+      try {
+        const { data } = await cartsAPI.addCartItem(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.cart.forEach(c => {
+          if (c.id === id) {
+            c.quantity += 1
+          }
+        })
+        this.calculateTotalPrice()
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法增加數量，請稍後'
+        })
+      }
+    },
+    async reduceCartItem (id) {
+      try {
+        const { data } = await cartsAPI.reduceCartItem(id)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.cart.forEach(c => {
+          if (c.id === id) {
+            c.quantity -= 1
+          }
+        })
+        this.calculateTotalPrice()
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法增加數量，請稍後'
+        })
+      }
+    }
   }
 }
 </script>
@@ -93,6 +189,57 @@ $red: rgb(255, 56, 92);
     flex-direction: column;
     @media (min-width: 992px) {
       flex-direction: row;
+    }
+    .more-container {
+      width: 100%;
+      padding: 12px 0;
+      .divider {
+        background: $divider;
+        height: 1px;
+      }
+      .more-title {
+        margin-bottom: 24px;
+        font-size: 22px;
+        font-weight: 700;
+        text-align: left;
+        line-height: 22px;
+      }
+      .illustration-wrapper {
+        width: 100%;
+        padding-top: 66.7%;
+        position: relative;
+        background: url(../assets/drink-coffee.svg) no-repeat center;
+        background-size: cover;
+        @media (min-width: 768px) {
+          border-radius: 54px;
+          padding-top: 33.3%;
+          background: url(../assets/people-meeting.svg) no-repeat center;
+          background-size: cover;
+        }
+        @media (min-width: 992px) {
+          padding-top: 25%;
+        }
+        .cover {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .button {
+            padding: 12px 36px;
+            border-radius: 30px;
+            background: #000000;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 20px;
+          }
+        }
+      }
     }
     .purchase-card-wrapper {
       flex: 2;
@@ -113,6 +260,7 @@ $red: rgb(255, 56, 92);
             flex-direction: column;
             justify-content: flex-start;
             .icon.close {
+              cursor: pointer;
               position: absolute;
               right: 15px;
               top: 15px;
@@ -182,6 +330,7 @@ $red: rgb(255, 56, 92);
                     align-items: center;
                     justify-content: center;
                     .icon {
+                      cursor: pointer;
                       width: 12px;
                       height: 12px;
                       background: #ffffff;
@@ -193,6 +342,9 @@ $red: rgb(255, 56, 92);
                     .icon.minus {
                       mask: url(../assets/minus.svg) no-repeat center;
                     }
+                  }
+                  .icon-wrapper.equalOne {
+                    background: #ffffff;
                   }
                 }
                 .price {
@@ -241,7 +393,7 @@ $red: rgb(255, 56, 92);
           }
         }
         .total-price-wrapper {
-          padding: 15px 15px 30px 15px;
+          padding: 15px;
           font-size: 18px;
           font-weight: 600;
           display: flex;
@@ -313,6 +465,12 @@ $red: rgb(255, 56, 92);
             align-items: center;
             justify-content: center;
             line-height: 1.5;
+            &:hover {
+              background-color: #000000;
+              .button {
+                color: #ffffff;
+              }
+            }
             .button {
               color: #222222;
             }

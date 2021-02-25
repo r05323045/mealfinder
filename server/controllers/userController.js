@@ -280,8 +280,6 @@ const userController = {
         res.json(item)
       })
   }
-
-
 }
 
 module.exports = userController

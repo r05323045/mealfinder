@@ -1,21 +1,21 @@
 <template>
   <div class="past-purchase">
-    <div class="purchase-card" v-for="i in 3" :key="i">
+    <div class="purchase-card" v-for="order in orders" :key="order.id">
       <div class="header">
-        <div class="title">在2021/01/01的購買</div>
-        <div class="text" @click="$router.push(`/users/purchase/${i}`)">看詳細</div>
+        <div class="title">在 {{ order.createdAt | normalDate }} 的購買</div>
+        <div class="text" @click="$router.push(`/users/purchase/${order.id}`)">看詳細</div>
       </div>
-      <div class="card-content">
-        <div class="item-wrapper" v-for="i in 5" :key="i">
-          <div class="count-wrapper">
+      <div class="card-content" v-if="order.OrderItem">
+        <div class="item-wrapper" v-for="item in order.OrderItem" :key="item.id">
+          <div class="count-wrapper" v-if="item.Coupon">
             <div class="image-container">
               <div class="image-wrapper">
-                <div class="image"></div>
+                <div class="image" :style="`background: url(${item.Coupon.picture}) no-repeat center / cover`"></div>
               </div>
             </div>
-            <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+            <div class="name">{{ item.Coupon.description }}</div>
             <div class="count">
-              <div class="text">x1</div>
+              <div class="text">x{{ item.quantity }}</div>
             </div>
           </div>
           <div class="divider"></div>
@@ -23,7 +23,7 @@
       </div>
       <div class="total-price-wrapper">
         <div class="text">總計</div>
-        <div class="total-price">$1995</div>
+        <div class="total-price">{{ order.totalPrice | priceFormat }}</div>
       </div>
     </div>
   </div>
@@ -31,14 +31,41 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import cartsAPI from '@/apis/carts'
 export default {
   data () {
     return {
+      orders: []
     }
   },
-  mounted () {
+  created () {
+    this.fetchOrders()
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
+    async fetchOrders () {
+      try {
+        const { data } = await cartsAPI.getOrders()
+        this.orders = data.orders
+        this.orders.forEach(order => {
+          let totalPrice = 0
+          order.OrderItem.forEach(item => {
+            totalPrice += item.quantity * Number(item.Coupon.price)
+          })
+          order.totalPrice = totalPrice
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得所有歷史訂單'
+        })
+      }
+    }
   }
 }
 </script>
