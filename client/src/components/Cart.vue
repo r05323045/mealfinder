@@ -91,14 +91,11 @@ export default {
   created () {
     this.fetchCart()
   },
-  mounted () {
-  },
   methods: {
     async fetchCart () {
       try {
         const { data } = await cartsAPI.getCart()
         this.cart = data.data
-        console.log(data)
         this.calculateTotalPrice()
       } catch (error) {
         console.log(error)

@@ -26,5 +26,10 @@ export default {
     return apiHelper.post(`/cartItem/${id}/reduce`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
+  },
+  postOrder (data) {
+    return apiHelper.post('/order', data, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
   }
 }

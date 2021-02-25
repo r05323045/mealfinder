@@ -11,55 +11,81 @@
             </div>
             <div class="divider"></div>
             <div class="card-content">
-              <div class="item-wrapper">
-                <div class="text">商品總計</div>
-                <div class="total-price">$1995</div>
-              </div>
-              <div class="item-wrapper">
-                <div class="text">數量總計</div>
-                <div class="total-price">5</div>
-              </div>
-              <div class="divider"></div>
-              <div class="item-wrapper summary">
-                <div class="text">結帳總金額</div>
-                <div class="total-price">$1995</div>
-              </div>
+            <div class="item-wrapper">
+              <div class="text">商品總計</div>
+              <div class="total-price">{{ totalPrice | priceFormat }}</div>
+            </div>
+            <div class="item-wrapper">
+              <div class="text">數量總計</div>
+              <div class="total-price">{{totalQuantity }}</div>
+            </div>
+            <div v-if="false" class="discount">使用優惠券</div>
+            <div class="divider"></div>
+            <div class="item-wrapper summary">
+              <div class="text">結帳總金額</div>
+              <div class="total-price">{{ totalPrice | priceFormat }}</div>
+            </div>
             </div>
           </div>
         </div>
         <div class="contact-and-submit">
-          <div class="title">確認購買與選擇付款方式</div>
-          <div class="contact-card">
-            <div class="all-wrapper">
-              <label for="name" class="all-text">購買人姓名</label>
-              <input id="name" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="email" class="all-text">購買人 Email</label>
-              <input id="email" class="all-input">
-            </div>
-            <div class="all-wrapper">
-              <label for="purpose" class="all-text">付款方式</label>
-              <div class="button-wrapper">
-                <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" @click.prevent="submitPayby = el" :class="{select: submitPayby === el}">
-                  <span class="text">{{ el }}</span>
-                </button>
+          <validation-observer ref="formvalidation" v-slot="{ invalid }">
+            <div class="title">確認購買與選擇付款方式</div>
+            <div class="contact-card">
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="required">
+                  <label for="name" class="all-text">購買人姓名</label>
+                  <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
+                </validation-provider>
+              </div>
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="required|email">
+                  <label for="email" class="all-text">購買人電子郵件</label>
+                  <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
+                </validation-provider>
+              </div>
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="required">
+                  <label for="phone" class="all-text">購買人手機號碼</label>
+                  <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
+                </validation-provider>
+              </div>
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="required">
+                  <label for="address" class="all-text">購買人地址</label>
+                  <input id="address" type="text" class="all-input" v-model="userAddress" :class="classes">
+                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('address ', '地址') }}</span>
+                </validation-provider>
+              </div>
+              <div class="all-wrapper">
+                <label for="purpose" class="all-text">付款方式</label>
+                <div class="button-wrapper">
+                  <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" :class="{select: submitPayby === el}">
+                    <span class="text">{{ el }}</span>
+                  </button>
+                </div>
+              </div>
+              <div class="all-wrapper">
+                <validation-provider v-slot="{ errors, classes }" rules="max:140">
+                  <label for="note" class="all-text">其他備註</label>
+                  <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！" v-model="userNote" :class="classes"></textarea>
+                  <div class="note-count">({{ userNote.length }}/140)</div>
+                  <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
+                </validation-provider>
               </div>
             </div>
-            <div class="all-wrapper">
-              <label for="note" class="all-text">其他備註</label>
-              <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！"></textarea>
-              <div class="note-count">(0/140)</div>
+            <div class="submit-button-wrapper">
+              <button class="submit-button" type="submit" @click.prevent="postOrder" :disabled="invalid" :class="{ disabled: invalid }">
+                <div class="button">確認購買</div>
+              </button>
+              <div class="back-button" @click.prevent="$router.go(-1)">
+                <div class="button">回上一步</div>
+              </div>
             </div>
-          </div>
-          <div class="submit-button-wrapper">
-            <button class="submit-button" type="submit" @click="$router.push('/users/checkout/success')">
-              <div class="button">確認購買</div>
-            </button>
-            <div class="back-button" @click="$router.push('/users/purchase')">
-              <div class="button">回上一步</div>
-            </div>
-          </div>
+          </validation-observer>
         </div>
       </div>
     </div>
@@ -71,26 +97,89 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import cartsAPI from '@/apis/carts'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-
 export default {
   data () {
     return {
-      payby: ['信用卡', 'ATM轉帳'],
-      submitPayby: ''
+      payby: ['信用卡', 'ATM轉帳 (尚未提供)'],
+      submitPayby: '信用卡',
+      cart: [],
+      totalPrice: 0,
+      totalQuantity: 0,
+      userName: '',
+      userEmail: '',
+      userPhone: '',
+      userAddress: '',
+      userNote: ''
     }
   },
   components: {
     Navbar,
     Footer
   },
-  mounted () {
+  created () {
+    this.fetchCart()
+    if (this.currentUser) {
+      this.userName = this.currentUser.name
+      this.userPhone = this.currentUser.phone_number
+      this.userEmail = this.currentUser.email
+    }
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
-    rating (num) {
-      console.log(num)
-      this.rated = num
+    async fetchCart () {
+      try {
+        const { data } = await cartsAPI.getCart()
+        this.cart = data.data
+        this.calculateTotalPrice()
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得購物車資訊，請稍候'
+        })
+      }
+    },
+    calculateTotalPrice () {
+      this.totalPrice = 0
+      this.totalQuantity = 0
+      this.cart.forEach(c => {
+        c.subTotalPrice = c.quantity * Number(c.Coupon.price)
+        this.totalPrice += Number(c.subTotalPrice)
+        this.totalQuantity += Number(c.quantity)
+      })
+    },
+    async postOrder () {
+      try {
+        const orderData = {
+          totalPrice: this.totalPrice,
+          address: this.userAddress,
+          phone: this.userPhone,
+          name: this.userName,
+          email: this.userEmail
+        }
+        const { data } = await cartsAPI.postOrder(orderData)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        window.location.assign(data.tradeInfo.PayGateWay)
+        Toast.fire({
+          icon: 'success',
+          title: '訂單已成立'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法成立訂單'
+        })
+      }
     }
   }
 }
@@ -101,6 +190,7 @@ $yellow: #F5DF4D;
 $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
+$darkred: #c13515;
 .checkout-page {
   height: 100vh;
   overflow: scroll;
@@ -209,6 +299,7 @@ $red: rgb(255, 56, 92);
           .all-wrapper {
             margin-bottom: 24px;
             width: 100%;
+            position: relative;
             .all-text {
               width: 100%;
               font-size: 16px;
@@ -226,6 +317,19 @@ $red: rgb(255, 56, 92);
               border-radius: 8px;
               width: calc(100% - 24px);
             }
+            .all-input.is-invalid {
+              border: 1px solid $darkred;
+            }
+            .invalid-text {
+              font-size: 12px;
+              line-height: 1.5;
+              color: $darkred;
+            }
+            .invalid-text.note-error {
+              position: absolute;
+              top: 100%;
+              left: 0;
+            }
             .text-area {
               font-size: 14px;
               min-height: 100px;
@@ -234,7 +338,11 @@ $red: rgb(255, 56, 92);
               }
             }
             .note-count {
+              position: absolute;
+              right: 0;
+              top: 100%;
               font-size: 12px;
+              line-height: 1.5;
               color: #666;
               font-weight: 400;
               text-align: right;
@@ -243,6 +351,7 @@ $red: rgb(255, 56, 92);
               text-align: left;
               margin-top: 16px;
               .button {
+                cursor: not-allowed;
                 margin: 0 4px 16px;
                 height: 44px;
                 padding: 8px 12px;
@@ -262,6 +371,7 @@ $red: rgb(255, 56, 92);
                 }
               }
               .button.select {
+                cursor: pointer;
                 border: none;
                 background: #000000;
                 .text {
@@ -280,6 +390,7 @@ $red: rgb(255, 56, 92);
           width: 100%;
           background: #ffffff;
           .submit-button {
+            cursor: pointer;
             border: none;
             appearance: none;
             margin-bottom: 20px;
@@ -300,6 +411,10 @@ $red: rgb(255, 56, 92);
               font-size: 16px;
               line-height: 20px;
             }
+          }
+          .submit-button.disabled {
+            background-color: $ultimategray;
+            cursor: not-allowed;
           }
           .back-button {
             cursor: pointer;
