@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}
