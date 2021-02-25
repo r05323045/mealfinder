@@ -94,6 +94,41 @@ const cartController = {
     })
   },
 
+  getOrders: (req, res) => {
+    Order.findAll({
+      raw: true,
+      nest: true,
+      where: { UserId: req.user.id },
+      order: sequelize.literal('createdAt DESC')
+    })
+      .then(orders => {
+        const orderPromise = orders.map(o => {
+          return OrderItem.findAll({
+            raw: true,
+            nest: true,
+            where: { OrderId: o.id },
+            include: [
+              {
+                model: Coupon,
+                attributes: {
+                  include: [
+                    [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+                  ]
+                }
+              }
+            ]
+          })
+            .then((orderItems) => {
+              o.OrderItem = orderItems
+            })
+        })
+        return Promise.all(orderPromise)
+          .then(() => {
+            return res.json({ orders })
+          })
+      })
+  },
+
   getOrder: (req, res) => {
     Cart.findByPk(req.session.cartId, { include: 'items' })
       .then(cart => {
