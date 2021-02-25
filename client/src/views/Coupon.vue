@@ -128,8 +128,11 @@
       </div>
     </div>
     <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollY + footerHeight">
-      <div class="filter-button" @click="productNum > 0 ? postCart() : ''" :disabled="productNum < 1" :class="{ disabled: productNum < 1 }">
+      <div v-if="isAuthenticated" class="filter-button" @click="productNum > 0 ? postCart() : ''" :disabled="productNum < 1" :class="{ disabled: productNum < 1 }">
         <div class="button">{{ productNum > 0 ? '加入購物車' : '請選擇數量' }}</div>
+      </div>
+      <div v-if="!isAuthenticated" class="filter-button disabled" @click="$router.push('/signin')" disabled>
+        <div class="button">請先登入再加入購物車</div>
       </div>
     </div>
   </div>
@@ -139,6 +142,7 @@
 
 import moment from 'moment'
 import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
 import couponsAPI from '@/apis/coupons'
 import cartsAPI from '@/apis/carts'
 import Navbar from '@/components/Navbar.vue'
@@ -175,6 +179,9 @@ export default {
     productNum () {
       this.productNum = this.productNum < 0 ? 0 : this.productNum
     }
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     onScroll (e) {
