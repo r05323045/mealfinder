@@ -24,6 +24,14 @@
                 <div class="inner" :style="`width: ${profileProgress}%`"></div>
               </div>
               <div class="item-wrapper">
+                <img v-if="user.gender" class="icon" src="../assets/bold-check.svg">
+                <div v-if="!user.gender" class="icon"></div>
+                <div class="text">
+                  <span v-if="user.gender">已</span>
+                  <span v-if="!user.gender">尚未</span>填寫性別
+                </div>
+              </div>
+              <div class="item-wrapper">
                 <img v-if="user.preferedCategory && user.preferedCategory.length > 0" class="icon" src="../assets/bold-check.svg">
                 <div v-if="user.preferedCategory && !user.preferedCategory.length > 0" class="icon"></div>
                 <div class="text">
@@ -181,7 +189,7 @@
       <div class="title">專屬你的推薦餐廳</div>
       <div class="illustration-wrapper">
         <div class="cover">
-          <div class="button" @click="$router.push('/restaurants')">現在就去看看</div>
+          <div class="button" @click="$router.push('/map')">現在就去看看</div>
         </div>
       </div>
     </div>
@@ -229,8 +237,11 @@ export default {
   computed: {
     ...mapState(['currentUser', 'isAuthenticated']),
     profileProgress () {
-      let progress = 60
+      let progress = 50
       if (this.user.preferedCategory && this.user.preferedCategory.length > 0) {
+        progress += 10
+      }
+      if (this.user.gender) {
         progress += 10
       }
       if (this.user.DistrictName) {

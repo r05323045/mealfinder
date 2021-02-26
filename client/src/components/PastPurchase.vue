@@ -1,5 +1,13 @@
 <template>
   <div class="past-purchase">
+    <div class="more-container" v-if="orders.length < 1">
+      <div class="more-title">從來沒買過？</div>
+      <div class="illustration-wrapper">
+        <div class="cover">
+          <div class="button" @click="$router.push('/coupons')">現在就去找餐券</div>
+        </div>
+      </div>
+    </div>
     <div class="purchase-card" v-for="order in orders" :key="order.id">
       <div class="header">
         <div class="title">在 {{ order.createdAt | normalDate }} 的購買</div>
@@ -76,6 +84,57 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .past-purchase {
+  .more-container {
+    width: 100%;
+    padding: 12px 0;
+    .divider {
+      background: $divider;
+      height: 1px;
+    }
+    .more-title {
+      margin-bottom: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: left;
+      line-height: 22px;
+    }
+    .illustration-wrapper {
+      width: 100%;
+      padding-top: 66.7%;
+      position: relative;
+      background: url(../assets/female-chatting.svg) no-repeat center;
+      background-size: cover;
+      @media (min-width: 768px) {
+        border-radius: 54px;
+        padding-top: 33.3%;
+        background: url(../assets/summer-night.svg) no-repeat center;
+        background-size: 1920px 500px;
+      }
+      @media (min-width: 992px) {
+        padding-top: 25%;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .button {
+          padding: 12px 36px;
+          border-radius: 30px;
+          background: #000000;
+          color: #ffffff;
+          cursor: pointer;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
   .purchase-card {
     margin-bottom: 24px;
     border: 1px solid $divider;

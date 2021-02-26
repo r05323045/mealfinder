@@ -5,7 +5,7 @@ import { Toast } from '@/utils/helpers'
 
 Vue.use(VueRouter)
 
-const facebookLogin = (to, from, next) => {
+const socialMediaLogin = (to, from, next) => {
   if (to.path === '/_=_') {
     localStorage.setItem('token', to.query.token)
     store.dispatch('fetchCurrentUser')
@@ -129,7 +129,7 @@ const routes = [
     path: '*',
     name: 'NotFound',
     component: () => import('@/views/NotFound.vue'),
-    beforeEnter: facebookLogin
+    beforeEnter: socialMediaLogin
   }
 ]
 
