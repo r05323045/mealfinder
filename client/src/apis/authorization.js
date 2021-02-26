@@ -9,5 +9,11 @@ export default {
   },
   signUp (data) {
     return apiHelper.post('/signup', data)
+  },
+  signInByFacebook () {
+    return apiHelper.get('/auth/facebook')
+  },
+  callBackFromFacebook () {
+    return apiHelper.get('/auth/facebook/callback')
   }
 }

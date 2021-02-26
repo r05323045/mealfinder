@@ -41,7 +41,7 @@
                 <span>使用 Google 帳號登入</span>
               </div>
             </div>
-            <div class="social-button google" @click.prevent="">
+            <div class="social-button google" @click="signInByFacebook">
               <img src="../assets/facebook-signin.svg">
               <div class="button">
                 <span>使用 Facebook 帳號登入</span>
@@ -83,6 +83,22 @@ export default {
         localStorage.setItem('token', data.token)
         this.$store.commit('setCurrentUser', data.user)
         this.$router.push('/')
+        Toast.fire({
+          icon: 'success',
+          title: '登入成功'
+        })
+      } catch (error) {
+        this.password = ''
+        this.isProcessing = false
+        Toast.fire({
+          icon: 'warning',
+          title: '請確認您輸入了正確的電子郵件與密碼'
+        })
+      }
+    },
+    async signInByFacebook () {
+      try {
+        window.location.href = 'http://localhost:3000/api/auth/facebook'
       } catch (error) {
         this.password = ''
         this.isProcessing = false

@@ -5,7 +5,7 @@ const baseURL = 'http://localhost:3000/api'
 
 export const apiHelper = axios.create({
   baseURL,
-  credentials: true
+  withCredentials: true
 })
 
 export const Toast = Swal.mixin({
