@@ -53,19 +53,12 @@ router.get('/auth/facebook/callback',
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get('/auth/google/callback',
   passport.authenticate('google', {
-    session: false,
-    failureRedirect: '/signin'
+    session: false
   }), (req, res) => {
-    console.log(req.user)
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined
-    return res.json({
-      status: 'success',
-      message: 'ok',
-      token,
-      user: req.user
-    })
+    return res.redirect(`http://localhost:8080/#/_=_?UserId=${req.user.id}&token=${token}`)
   })
 
 // userController_UserModel

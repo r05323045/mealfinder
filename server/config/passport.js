@@ -79,10 +79,10 @@ passport.use(new GoogleStrategy({
           password: hash,
           phone_number: null,
           location: '台北市',
-          gender: profile.gender || 'N/A',
+          gender: profile.gender || null,
           birthday: null,
           avatar: picture || null,
-          DistrictId: 1
+          DistrictId: null
         }))
         .then(user => done(null, user))
         .catch(err => done(err, false))
