@@ -17,7 +17,7 @@ const restaurantController = {
     if (req.query.page) {
       offset = (req.query.page - 1) * pageLimit
     }
-    Restaurant.findAll({
+    Restaurant.findAndCountAll({
       raw: true,
       nest: true,
       where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
@@ -35,12 +35,13 @@ const restaurantController = {
       offset: offset,
       limit: pageLimit
     }).then(restaurants => {
-      const data = restaurants.map(restaurant => ({
+      const data = restaurants.rows.map(restaurant => ({
         ...restaurant,
         description: restaurant.description.substring(0, 50),
         isFavorited: isFavorited
       }))
-      return res.json({ data })
+      const count = restaurants.count
+      return res.json({ data, count })
     })
   },
   getUsersRestaurants: (req, res) => {
@@ -51,7 +52,7 @@ const restaurantController = {
       offset = (req.query.page - 1) * pageLimit
     }
 
-    return Restaurant.findAll({
+    return Restaurant.findAndCountAll({
       where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
       include: [
         { model: Category, where: req.query.category ? { name: req.query.category } : null },
@@ -68,12 +69,13 @@ const restaurantController = {
       offset: offset,
       limit: pageLimit
     }).then(restaurants => {
-      const data = restaurants.map(restaurant => ({
+      const data = restaurants.rows.map(restaurant => ({
         ...restaurant.dataValues,
         description: restaurant.dataValues.description.substring(0, 50),
         isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       }))
-      return res.json({ data })
+      const count = restaurants.count
+      return res.json({ data, count })
     })
   },
   getRestaurant: (req, res) => {
@@ -158,7 +160,7 @@ const restaurantController = {
       offset = (req.query.page - 1) * pageLimit
     }
     const center = sequelize.literal(`ST_GeomFromText('POINT(${req.query.clat} ${req.query.clng})', 4326)`)
-    Restaurant.findAll({
+    Restaurant.findAndCountAll({
       raw: true,
       nest: true,
       where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
@@ -179,12 +181,13 @@ const restaurantController = {
       offset: offset,
       limit: pageLimit
     }).then(restaurants => {
-      const data = restaurants.map(restaurant => ({
+      const data = restaurants.row.map(restaurant => ({
         ...restaurant,
         description: restaurant.description.substring(0, 50),
         isFavorited: isFavorited
       }))
-      return res.json({ data })
+      const count = restaurants.count
+      return res.json({ data, count })
     })
   },
   getUserNearByRestaurants: (req, res) => {
@@ -195,7 +198,7 @@ const restaurantController = {
       offset = (req.query.page - 1) * pageLimit
     }
     const center = sequelize.literal(`ST_GeomFromText('POINT(${req.query.clat} ${req.query.clng})', 4326)`)
-    Restaurant.findAll({
+    Restaurant.findAndCountAll({
       raw: true,
       nest: true,
       where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
@@ -217,12 +220,13 @@ const restaurantController = {
       offset: offset,
       limit: pageLimit
     }).then(restaurants => {
-      const data = restaurants.map(restaurant => ({
+      const data = restaurants.rows.map(restaurant => ({
         ...restaurant,
         description: restaurant.description.substring(0, 50),
         isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       }))
-      return res.json({ data })
+      const count = restaurants.count
+      return res.json({ data, count })
     })
   }
 }
