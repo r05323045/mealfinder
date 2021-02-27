@@ -1,8 +1,9 @@
 <template>
   <div class="home" ref="home">
-    <Navbar v-show="scrollY > 58"></Navbar>
+    <Navbar v-show="scrollY > 58 && scrollUp"></Navbar>
     <div class="page-container">
-      <div class="searchbar-wrapper-outside" v-show="scrollY > 50" :class="{ toFront: scrollUp }">
+      <div class="banner">
+        <div class="searchbar-wrapper-outside" :class="{ toFront: scrollY > 50 && scrollUp }">
         <div class="searchbar">
           <input v-if="false" class="search-input" v-show="scrollY > 50 && scrollUp">
           <div class="wrapper" v-show="scrollY > 50 && scrollUp">
@@ -11,8 +12,7 @@
           </div>
         </div>
       </div>
-      <div class="banner">
-        <div class="searchbar-wrapper-inner" v-show="scrollY <= 50">
+        <div class="searchbar-wrapper-inner">
           <div class="searchbar">
             <input v-if="false" class="search-input">
             <div class="icon-wrapper">
@@ -313,8 +313,8 @@ $red: rgb(255, 56, 92);
   .page-container {
     .searchbar-wrapper-outside {
       z-index: -999;
-      background: #ffffff;
-      position: sticky;
+      width: calc(100% - 48px);
+      position: fixed;
       padding: 16px 24px;
       top: 0;
       display: flex;
@@ -364,6 +364,7 @@ $red: rgb(255, 56, 92);
     }
     .searchbar-wrapper-outside.toFront {
       z-index: 997;
+      background: #ffffff;
       .searchbar {
         box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
       }
@@ -372,10 +373,14 @@ $red: rgb(255, 56, 92);
       background: #ffffff;
     }
     .banner {
+      overflow: hidden;
       height: 538px;
       width: 100%;
       position: relative;
+      background: url(../assets/mobile-home-background.png) no-repeat center;
+      background-size: cover;
       @media (min-width: 768px) {
+        background: none;
         height: calc(min(588/744 * 100vw, 85vh) + 50px);
       }
       @media (min-width: 992px) {
@@ -438,8 +443,6 @@ $red: rgb(255, 56, 92);
         z-index: -1;
         height: 100%;
         width: 100%;
-        background: url(https://images.unsplash.com/photo-1515668236457-83c3b8764839?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80) no-repeat center;
-        background-size: cover;
         filter: brightness(0.6);
         @media (min-width: 768px) {
           background: url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80) no-repeat center;
@@ -780,6 +783,7 @@ $red: rgb(255, 56, 92);
       }
     }
     .do-more {
+      margin-top: 24px;
       padding: 24px 0 32px 24px;
       @media (min-width: 768px) {
         padding: 40px;

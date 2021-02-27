@@ -70,7 +70,7 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper">
+          <div class="link-card-wrapper no-use">
             <div class="link-card">
             </div>
           </div>
@@ -250,6 +250,9 @@ $red: rgb(255, 56, 92);
             }
           }
         }
+        .link-card-wrapper.no-use {
+          background: none;
+        }
       }
     }
     .more-container {
@@ -274,7 +277,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         padding-top: 66.7%;
         position: relative;
-        background: url(../assets/eatNow.svg) no-repeat center;
+        background: url(../assets/drink-coffee.svg) no-repeat center;
         background-size: cover;
         @media (min-width: 768px) {
           padding-top: 33.3%;

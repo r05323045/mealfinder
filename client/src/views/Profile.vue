@@ -56,11 +56,11 @@
                 </div>
               </div>
               <div class="item-wrapper" v-if="user.avatar">
-                <img v-if="(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))" class="icon" src="../assets/bold-check.svg">
-                <div v-if="!(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))" class="icon"></div>
+                <img v-if="this.user.avatar !== 'https://i.imgur.com/oOfxL8T.png'" class="icon" src="../assets/bold-check.svg">
+                <div v-if="this.user.avatar === 'https://i.imgur.com/oOfxL8T.png'" class="icon"></div>
                 <div class="text">
-                  <span v-if="(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))">已</span>
-                  <span v-if="!(this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))">尚未</span>上傳大頭照
+                  <span v-if="this.user.avatar !== 'https://i.imgur.com/oOfxL8T.png'">已</span>
+                  <span v-if="this.user.avatar === 'https://i.imgur.com/oOfxL8T.png'">尚未</span>上傳大頭照
                 </div>
               </div>
             </div>
@@ -250,7 +250,7 @@ export default {
       if (this.user.phone_number) {
         progress += 10
       }
-      if (this.user.avatar && (this.user.avatar.includes('imgur') || this.user.avatar.includes('blob'))) {
+      if (this.user.avatar && this.user.avatar !== 'https://i.imgur.com/oOfxL8T.png') {
         progress += 10
       }
       return progress
@@ -786,7 +786,7 @@ $darkred: #c13515;
       width: 100%;
       padding-top: 66.7%;
       position: relative;
-      background: url(../assets/eatNow.svg) no-repeat center;
+      background: url(../assets/female-chatting.svg) no-repeat center;
       background-size: cover;
       @media (min-width: 768px) {
         padding-top: 33.3%;

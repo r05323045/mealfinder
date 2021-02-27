@@ -279,7 +279,9 @@ export default {
           if (!(this.$refs.gmap.$mapObject.getCenter().lat() === this.mapCenter.lat && this.$refs.gmap.$mapObject.getCenter().lng() === this.mapCenter.lng)) {
             this.mapCenter = { lat: this.$refs.gmap.$mapObject.getCenter().lat(), lng: this.$refs.gmap.$mapObject.getCenter().lng() }
           }
-          this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+          const latKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[0]
+          const lngKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[1]
+          this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds()[`${latKey}`].i}`, `blng=${this.$refs.gmap.$mapObject.getBounds()[`${lngKey}`].i}`]
         } else {
           this.filter = [...this.filter, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
         }

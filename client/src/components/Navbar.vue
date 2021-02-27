@@ -258,6 +258,9 @@ $red: rgb(255, 56, 92);
           .icon {
             background: $red;
           }
+          .icon-restaurant {
+            background: $red;
+          }
           .text {
             color: #222222;
           }
