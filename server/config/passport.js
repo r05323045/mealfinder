@@ -31,11 +31,11 @@ passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
   callbackURL: '/api/auth/facebook/callback',
-  profileFields: ['id', 'displayName', 'email', 'gender']
+  profileFields: ['id', 'displayName', 'email', 'photos', 'gender']
 }, (accessToken, refreshToken, profile, done) => {
-  // console.log(profile)
   User.findOne({ where: { email: profile._json.email } })
     .then(user => {
+      console.log(profile._json.picture.data)
       if (user) return done(null, user)
       const randomPassword = Math.random().toString(36).slice(-8)
       bcrypt
@@ -47,10 +47,10 @@ passport.use(new FacebookStrategy({
           password: hash,
           phone_number: null,
           location: '台北市',
-          gender: profile.gender || 'N/A',
+          gender: profile.gender || undefined,
           birthday: null,
-          avatar: null,
-          DistrictId: 1
+          avatar: profile._json.picture.data.url,
+          DistrictId: undefined
         }))
         .then(user => done(null, user))
         .catch(err => done(err, false))
@@ -79,10 +79,10 @@ passport.use(new GoogleStrategy({
           password: hash,
           phone_number: null,
           location: '台北市',
-          gender: profile.gender || 'N/A',
+          gender: profile.gender || null,
           birthday: null,
           avatar: picture || null,
-          DistrictId: 1
+          DistrictId: null
         }))
         .then(user => done(null, user))
         .catch(err => done(err, false))

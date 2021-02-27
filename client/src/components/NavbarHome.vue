@@ -118,7 +118,9 @@ export default {
       const parentIsSideNav = e.target.parentElement ? e.target.parentElement.classList.contains('side-nav-button') : false
       const elementIsSideNav = e.target ? e.target.classList.contains('side-nav-button') : false
       const clickButton = parentIsSideNav || elementIsSideNav
-      const clickOtherSide = !(e.target.classList.contains('menu-wrapper') || e.target.parentElement.classList.contains('menu'))
+      const clickMenuWrapper = e.target ? e.target.classList.contains('menu-wrapper') : false
+      const clickMenu = e.target.parentElement ? e.target.parentElement.classList.contains('menu') : false
+      const clickOtherSide = !(clickMenuWrapper || clickMenu)
       if (this.showMenu && clickOtherSide && !clickButton) {
         if (this.$refs['menu-wrapper']) {
           this.$refs['menu-wrapper'].style.display = 'none'

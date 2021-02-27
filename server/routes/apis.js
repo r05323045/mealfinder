@@ -37,41 +37,28 @@ const cartController = require('../controllers/cartController')
 // login,logout,signup
 router.post('/signin', userController.signIn)
 router.post('/signup', userController.signUp)
+router.get('/success', (req, res) => res.send('You have successfully logged in'))
+router.get('/error', (req, res) => res.send('error logging in'))
 router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['public_profile', 'email'] }))
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', {
-    session: false,
-    // successRedirect: 'http://localhost:8080/#',
-    failureRedirect: '/signin'
+    session: false
   }), (req, res) => {
-    console.log(req.user)
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined
-    return res.json({
-      status: 'success',
-      message: 'ok',
-      token,
-      user: req.user
-    })
+    return res.redirect(`http://localhost:8080/#/_=_?UserId=${req.user.id}&token=${token}`)
   }
 )
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get('/auth/google/callback',
   passport.authenticate('google', {
-    session: false,
-    failureRedirect: '/signin'
+    session: false
   }), (req, res) => {
-    console.log(req.user)
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined
-    return res.json({
-      status: 'success',
-      message: 'ok',
-      token,
-      user: req.user
-    })
+    return res.redirect(`http://localhost:8080/#/_=_?UserId=${req.user.id}&token=${token}`)
   })
 
 // userController_UserModel

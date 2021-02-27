@@ -266,10 +266,13 @@
         <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
       </div>
       <div class="divider"></div>
-      <div class="booking-button" :class="{ invalid: !bookingTime || adultNum < 1}" :disabled="!bookingTime || adultNum < 1" @click="bookingTime && adultNum > 0 ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
+      <div v-if="isAuthenticated" class="booking-button" :class="{ invalid: !bookingTime || adultNum < 1}" :disabled="!bookingTime || adultNum < 1" @click="bookingTime && adultNum > 0 ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
         <div class="text" v-if="bookingTime && adultNum > 0">下一步，填寫聯絡資訊</div>
         <div class="text" v-if="!bookingTime && adultNum > 0">選擇用餐時間</div>
         <div class="text" v-if="adultNum < 1">選擇用餐人數</div>
+      </div>
+      <div v-if="!isAuthenticated" class="booking-button invalid" @click="$router.push('/signin')">
+        <div class="text">請先登入再進行訂位</div>
       </div>
     </div>
   </div>
