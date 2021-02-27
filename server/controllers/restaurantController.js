@@ -160,73 +160,124 @@ const restaurantController = {
       offset = (req.query.page - 1) * pageLimit
     }
     const center = sequelize.literal(`ST_GeomFromText('POINT(${req.query.clat} ${req.query.clng})', 4326)`)
-    Restaurant.findAndCountAll({
-      raw: true,
-      nest: true,
-      where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
-      include: [
-        { model: Category, where: req.query.category ? { name: req.query.category } : null },
-        City,
-        { model: District, where: req.query.district ? { name: req.query.district } : null },
-        Coupon
-      ],
-      attributes: {
+    Promise.all([
+      Restaurant.findAll({
+        raw: true,
+        nest: true,
+        where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
         include: [
-          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-          [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
-        ]
-      },
-      having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
-      // order: sequelize.literal('distance ASC'),
-      offset: offset,
-      limit: pageLimit
-    }).then(restaurants => {
-      const data = restaurants.row.map(restaurant => ({
+          { model: Category, where: req.query.category ? { name: req.query.category } : null },
+          City,
+          { model: District, where: req.query.district ? { name: req.query.district } : null },
+          Coupon
+        ],
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+          ]
+        },
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
+        // order: sequelize.literal('distance ASC'),
+        offset: offset,
+        limit: pageLimit
+      }),
+      Restaurant.findAll({
+        raw: true,
+        nest: true,
+        where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
+        include: [
+          { model: Category, where: req.query.category ? { name: req.query.category } : null },
+          City,
+          { model: District, where: req.query.district ? { name: req.query.district } : null },
+          Coupon
+        ],
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+          ]
+        },
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
+      })
+    ]).then(([restaurants, allRestaurants]) => {
+      const data = restaurants.map(restaurant => ({
         ...restaurant,
         description: restaurant.description.substring(0, 50),
         isFavorited: isFavorited
       }))
-      const count = restaurants.count
+      const count = allRestaurants.length
       return res.json({ data, count })
     })
   },
   getUserNearByRestaurants: (req, res) => {
     let offset = 0
     const pageLimit = 24
+    const isFavorited = false
 
     if (req.query.page) {
       offset = (req.query.page - 1) * pageLimit
     }
     const center = sequelize.literal(`ST_GeomFromText('POINT(${req.query.clat} ${req.query.clng})', 4326)`)
-    Restaurant.findAndCountAll({
-      raw: true,
-      nest: true,
-      where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
-      include: [
-        { model: Category, where: req.query.category ? { name: req.query.category } : null },
-        City,
-        { model: District, where: req.query.district ? { name: req.query.district } : null },
-        Coupon,
-        { model: User, as: 'FavoritedUsers' }
-      ],
-      attributes: {
+    Promise.all([
+      Restaurant.findAll({
+        raw: true,
+        nest: true,
+        where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
         include: [
-          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-          [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
-        ]
-      },
-      having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
-      // order: sequelize.literal('distance ASC'),
-      offset: offset,
-      limit: pageLimit
-    }).then(restaurants => {
-      const data = restaurants.rows.map(restaurant => ({
+          { model: Category, where: req.query.category ? { name: req.query.category } : null },
+          City,
+          { model: District, where: req.query.district ? { name: req.query.district } : null },
+          Coupon
+        ],
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+          ]
+        },
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
+        // order: sequelize.literal('distance ASC'),
+        offset: offset,
+        limit: pageLimit
+      }),
+      Restaurant.findAll({
+        raw: true,
+        nest: true,
+        where: req.query.min && req.query.max ? { average_consumption: { [sequelize.Op.between]: [Number(req.query.min), Number(req.query.max)] } } : null,
+        include: [
+          { model: Category, where: req.query.category ? { name: req.query.category } : null },
+          City,
+          { model: District, where: req.query.district ? { name: req.query.district } : null },
+          Coupon
+        ],
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+          ]
+        },
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
+      })
+    ]).then(([restaurants, allRestaurants]) => {
+      const data = restaurants.map(restaurant => ({
         ...restaurant,
         description: restaurant.description.substring(0, 50),
         isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       }))
-      const count = restaurants.count
+      const count = allRestaurants.length
       return res.json({ data, count })
+    })
+  },
+  getAllPrices: (req, res) => {
+    Restaurant.findAll({
+      attributes: ['average_consumption'],
+      order: sequelize.literal('average_consumption ASC')
+    }).then(prices => {
+      const data = prices.filter(p => p.average_consumption).map(p => (
+        p.average_consumption
+      ))
+      return res.json({ data })
     })
   }
 }
