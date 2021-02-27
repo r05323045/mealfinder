@@ -9,6 +9,7 @@ import 'default-passive-events'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
+import HighchartsVue from 'highcharts-vue'
 
 Vue.config.productionTip = false
 
@@ -189,6 +190,8 @@ Vue.use(VueGoogleMaps, {
   },
   installComponents: true
 })
+
+Vue.use(HighchartsVue)
 
 axios.defaults.withCredentials = true
 
