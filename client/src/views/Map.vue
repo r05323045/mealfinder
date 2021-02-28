@@ -24,7 +24,7 @@
           <div class="filter-button-wrapper">
             <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
             <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
-            <div class="filter-button" :class="{ 'filter-on': true }" @click="showPriceModal = !showPriceModal">預算</div>
+            <div class="filter-button" :class="{ 'filter-on': priceFilter.length === 2 }" @click="showPriceModal = !showPriceModal">預算</div>
           </div>
           <div class="sub-title">
             <img class="sub-title-img" src="../assets/diet.svg">
@@ -165,6 +165,7 @@
     <PriceRange
       :showModal="showPriceModal"
       @closePriceModal="completePricing"
+      :priceFilter = priceFilter
     >
     </PriceRange>
   </div>
@@ -193,6 +194,8 @@ export default {
       showPriceModal: false,
       categoriesFilter: [],
       districtsFilter: [],
+      priceFilter: [],
+      priceQueryString: [],
       mobileBound: { lat: 24.96428535078719, lng: 121.47942180559336 },
       mapCenter: { lat: 25.0469724, lng: 121.5460995 },
       filter: ['', 'clat=25.0469724', 'clng=121.5460995', 'blat=24.96428535078719', 'blng=121.47942180559336'],
@@ -273,6 +276,12 @@ export default {
     },
     completePricing (isPricing, filter) {
       this.showPriceModal = false
+      if (isPricing) {
+        this.priceFilter = filter
+      }
+      this.restaurants = []
+      this.numOfPage = 1
+      this.fetchNearByRestaurants()
     },
     closeInfoWindow () {
       if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
@@ -286,15 +295,21 @@ export default {
     },
     async fetchNearByRestaurants (hasPage) {
       try {
+        if (this.priceFilter.length === 2) {
+          this.priceQueryString[0] = `min=${this.priceFilter[0]}`
+          this.priceQueryString[1] = `max=${this.priceFilter[1]}`
+        } else {
+          this.priceQueryString = []
+        }
         if (this.$refs.gmap.$mapObject) {
           if (!(this.$refs.gmap.$mapObject.getCenter().lat() === this.mapCenter.lat && this.$refs.gmap.$mapObject.getCenter().lng() === this.mapCenter.lng)) {
             this.mapCenter = { lat: this.$refs.gmap.$mapObject.getCenter().lat(), lng: this.$refs.gmap.$mapObject.getCenter().lng() }
           }
           const latKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[0]
           const lngKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[1]
-          this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds()[`${latKey}`].i}`, `blng=${this.$refs.gmap.$mapObject.getBounds()[`${lngKey}`].i}`]
+          this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds()[`${latKey}`].i}`, `blng=${this.$refs.gmap.$mapObject.getBounds()[`${lngKey}`].i}`]
         } else {
-          this.filter = [...this.filter, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+          this.filter = [...this.filter, ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
         }
         if (!hasPage) {
           this.numOfPage = 1
@@ -308,22 +323,6 @@ export default {
         this.numOfPage += 1
         this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
         this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
-      } catch (error) {
-        console.log(error)
-        Toast.fire({
-          icon: 'error',
-          title: '目前無法取得餐廳，請稍候'
-        })
-      }
-    },
-    async fetchRestaurants (filter) {
-      try {
-        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1) : await restaurantsAPI.getRestaurants(this.numOfPage + 1)
-        this.restaurants = data.data
-        this.restaurants.forEach(r => {
-          r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
-        })
-        this.numOfPage += 1
       } catch (error) {
         console.log(error)
         Toast.fire({

@@ -9,7 +9,7 @@
           </div>
           <div class="title">
             選擇價格區間
-            <div class="clear-all" @click="tempFilter = []">清除全部</div>
+            <div class="clear-all" @click="sliderValue = [sliderMin, sliderMax]">清除全部</div>
           </div>
         </div>
         <div class="filter-container">
@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="filter-button-wrapper">
-          <div class="filter-button">
+          <div class="filter-button" @click="completePricing">
             <div class="button">完成</div>
           </div>
         </div>
@@ -94,10 +94,16 @@ export default {
   props: {
     showModal: {
       type: Boolean
+    },
+    priceFilter: {
+      type: Array
     }
   },
   created () {
     this.fetchPrices()
+    if (this.priceFilter.length === 2) {
+      this.sliderValue = this.priceFilter
+    }
   },
   mounted () {
     this.createChart()
@@ -116,9 +122,11 @@ export default {
         this.sliderValue[0] = this.sliderMin
       }
       if (!this.sliderValue[1]) {
-        this.sliderValue[1] = 0
+        this.sliderValue[1] = this.sliderMax
       } else if (this.sliderValue[1] > this.sliderMax) {
         this.sliderValue[1] = this.sliderMax
+      } else if (this.sliderValue[1] < this.sliderMin + this.intervalWidth) {
+        this.sliderValue[1] = this.sliderMin + this.intervalWidth
       }
       this.sliderValue[0] = Number(this.sliderValue[0])
       this.sliderValue[1] = Number(this.sliderValue[1])
@@ -207,6 +215,19 @@ export default {
           title: '目前無法取得價格，請稍候'
         })
       }
+    },
+    completePricing () {
+      let returnValue = []
+      returnValue[0] = this.sliderValue[0]
+      if (this.sliderValue[1] === this.sliderMax) {
+        returnValue[1] = 9999
+      } else {
+        returnValue[1] = this.sliderValue[1]
+      }
+      if (returnValue[0] === this.sliderMin && returnValue[1] === 9999) {
+        returnValue = []
+      }
+      this.$emit('closePriceModal', true, returnValue)
     }
   }
 }
