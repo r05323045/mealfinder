@@ -24,7 +24,7 @@
           <div class="filter-button-wrapper">
             <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
             <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
-            <div class="filter-button">預算</div>
+            <div class="filter-button" :class="{ 'filter-on': true }" @click="showPriceModal = !showPriceModal">預算</div>
           </div>
           <div class="sub-title">
             <img class="sub-title-img" src="../assets/diet.svg">
@@ -162,6 +162,11 @@
       :districtsFilter = districtsFilter
     >
     </ChangeDistrict>
+    <PriceRange
+      :showModal="showPriceModal"
+      @closePriceModal="completePricing"
+    >
+    </PriceRange>
   </div>
 </template>
 
@@ -177,6 +182,7 @@ import Footer from '@/components/Footer.vue'
 import FilterModal from '@/components/Filter.vue'
 import AddCategory from '@/components/AddCategory.vue'
 import ChangeDistrict from '@/components/ChangeDistrict.vue'
+import PriceRange from '@/components/PriceRange.vue'
 export default {
   data () {
     return {
@@ -184,6 +190,7 @@ export default {
       restaurants: [],
       showAddModal: false,
       showChangeModal: false,
+      showPriceModal: false,
       categoriesFilter: [],
       districtsFilter: [],
       mobileBound: { lat: 24.96428535078719, lng: 121.47942180559336 },
@@ -209,7 +216,8 @@ export default {
     Navbar,
     FilterModal,
     AddCategory,
-    ChangeDistrict
+    ChangeDistrict,
+    PriceRange
   },
   created () {
     if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
@@ -262,6 +270,9 @@ export default {
       this.restaurants = []
       this.numOfPage = 1
       this.fetchNearByRestaurants()
+    },
+    completePricing (isPricing, filter) {
+      this.showPriceModal = false
     },
     closeInfoWindow () {
       if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
@@ -500,11 +511,11 @@ $darkred: #c13515;
       }
       .restaurants-list {
         display: none;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           overflow: scroll;
           margin: 22px 0;
           padding: 0 24px;
-          min-width: 720px;
+          min-width: 600px;
           display: flex;
           flex-direction: column;
           flex: 0.5
@@ -769,9 +780,9 @@ $darkred: #c13515;
       }
       .google-map {
         flex: 1;
-        height: calc(100vh - 114px);
+        height: calc(100vh - 80px);
         position: relative;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           height: 100%;
           flex: 0.5;
         }

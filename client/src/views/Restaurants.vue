@@ -194,6 +194,7 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.noMoreData = data.data.length === 0
+        console.log(data.count)
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
       } catch (error) {
