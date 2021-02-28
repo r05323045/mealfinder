@@ -21,7 +21,6 @@
         <div class="filter-button-wrapper">
           <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
           <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
-          <div class="filter-button">預算</div>
         </div>
         <div class="restaurant-card-deck-wrapper no-restaurant" v-if="coupons.length === 0"></div>
         <div v-if="coupons.length > 0" class="restaurant-card-deck-wrapper">
@@ -328,18 +327,25 @@ $red: rgb(255, 56, 92);
         max-width: 1440px;
       }
       .title {
-        margin-bottom: 24px;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
         @media (min-width: 768px) {
+          padding-top: 36px;
           font-size: 26px;
           line-height: 30px;
         }
         @media (min-width: 992px) {
+          padding-top: 50px;
           font-size: 32px;
           line-height: 36px;
+        }
+        .result-count {
+          font-size: 14px;
+          line-height: 18px;
+          padding-bottom: 8px;
+          font-weight: 400;
         }
       }
       .filter-button-wrapper {

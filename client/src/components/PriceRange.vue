@@ -321,7 +321,6 @@ $divider: #E6ECF0;
       width: calc(100% - 48px);
       padding: 12px 24px;
       .price {
-        height: 100%;
         padding: 8px 0 24px 0;
         .title {
           text-align: left;

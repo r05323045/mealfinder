@@ -17,11 +17,14 @@
     </div>
     <div class="list-container" ref="list-container">
       <div class="restaurant-list" ref="restaurant-list">
-        <div class="title">台北市各地的餐廳</div>
+        <div class="title">
+          <div class="result-count">{{ resultCount > 1000 ? '超過1,000' : resultCount }}間餐廳</div>
+          台北市各地的餐廳
+        </div>
         <div class="filter-button-wrapper">
           <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
           <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
-          <div class="filter-button">預算</div>
+          <div class="filter-button" :class="{ 'filter-on': priceFilter.length === 2 }" @click="showPriceModal = !showPriceModal">預算</div>
         </div>
         <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0"></div>
         <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
@@ -71,6 +74,7 @@
       @closeModal="closeFilter"
       :categoriesFilter = categoriesFilter
       :districtsFilter = districtsFilter
+      :priceFilter = priceFilter
     >
     </FilterModal>
     <AddCategory
@@ -85,6 +89,12 @@
       :districtsFilter = districtsFilter
     >
     </ChangeDistrict>
+    <PriceRange
+      :showModal="showPriceModal"
+      @closePriceModal="completePricing"
+      :priceFilter = priceFilter
+    >
+    </PriceRange>
   </div>
 </template>
 
@@ -99,6 +109,7 @@ import Footer from '@/components/Footer.vue'
 import FilterModal from '@/components/Filter.vue'
 import AddCategory from '@/components/AddCategory.vue'
 import ChangeDistrict from '@/components/ChangeDistrict.vue'
+import PriceRange from '@/components/PriceRange.vue'
 
 export default {
   data () {
@@ -115,9 +126,13 @@ export default {
       filter: [''],
       showAddModal: false,
       showChangeModal: false,
+      showPriceModal: false,
       categoriesFilter: [],
       districtsFilter: [],
-      noMoreData: false
+      priceFilter: [],
+      priceQueryString: [],
+      noMoreData: false,
+      resultCount: 0
     }
   },
   components: {
@@ -125,7 +140,8 @@ export default {
     Footer,
     FilterModal,
     AddCategory,
-    ChangeDistrict
+    ChangeDistrict,
+    PriceRange
   },
   created () {
     if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
@@ -156,23 +172,28 @@ export default {
   watch: {
     windowWidth () {
       this.defineCardDeck()
-    },
-    filter () {
-      this.restaurants = []
-      this.numOfPage = 0
-      this.fetchRestaurants(this.filter)
     }
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
-    closeFilter (isEditing, cateFilter, distFilter) {
+    closeFilter (isEditing, cateFilter, distFilter, pFilter) {
       this.showModal = false
       if (isEditing) {
         this.categoriesFilter = cateFilter
         this.districtsFilter = distFilter
-        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+        this.priceFilter = pFilter
+        if (this.priceFilter.length === 2) {
+          this.priceQueryString[0] = `min=${this.priceFilter[0]}`
+          this.priceQueryString[1] = `max=${this.priceFilter[1]}`
+        } else {
+          this.priceQueryString = []
+        }
+        this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+        this.restaurants = []
+        this.numOfPage = 0
+        this.fetchRestaurants(this.filter)
       }
     },
     onScroll (e) {
@@ -194,9 +215,9 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.noMoreData = data.data.length === 0
-        console.log(data.count)
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
+        this.resultCount = data.count
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -209,14 +230,38 @@ export default {
       this.showAddModal = false
       if (isAdding) {
         this.categoriesFilter = filter
-        this.filter = ['', ...this.districtsFilter.map(item => 'district=' + item), ...filter.map(item => 'category=' + item)]
+        this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+        this.restaurants = []
+        this.numOfPage = 0
+        this.fetchRestaurants(this.filter)
       }
     },
     completeChanging (isChanging, filter) {
       this.showChangeModal = false
       if (isChanging) {
         this.districtsFilter = filter
-        this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...filter.map(item => 'district=' + item)]
+        this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+        this.restaurants = []
+        this.numOfPage = 0
+        this.fetchRestaurants(this.filter)
+      }
+    },
+    completePricing (isPricing, filter) {
+      this.showPriceModal = false
+      if (isPricing) {
+        this.restaurants = []
+        this.numOfPage = 1
+        this.priceFilter = filter
+        if (this.priceFilter.length === 2) {
+          this.priceQueryString[0] = `min=${this.priceFilter[0]}`
+          this.priceQueryString[1] = `max=${this.priceFilter[1]}`
+        } else {
+          this.priceQueryString = []
+        }
+        this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+        this.restaurants = []
+        this.numOfPage = 0
+        this.fetchRestaurants(this.filter)
       }
     },
     async addFavorite (id) {
@@ -392,18 +437,25 @@ $red: rgb(255, 56, 92);
         max-width: 1440px;
       }
       .title {
-        margin-bottom: 24px;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
         @media (min-width: 768px) {
+          padding-top: 36px;
           font-size: 26px;
           line-height: 30px;
         }
         @media (min-width: 992px) {
+          padding-top: 50px;
           font-size: 32px;
           line-height: 36px;
+        }
+        .result-count {
+          font-size: 14px;
+          line-height: 18px;
+          padding-bottom: 8px;
+          font-weight: 400;
         }
       }
       .filter-button-wrapper {
@@ -430,6 +482,7 @@ $red: rgb(255, 56, 92);
         .filter-button.filter-on {
           font-weight: 800;
           border: 1px solid #000000;
+          background: rgb(247, 247, 247);
         }
       }
       .restaurant-card-deck-wrapper {

@@ -61,7 +61,7 @@
               </label>
             </div>
           </div>
-          <div class="price">
+          <div class="price" v-show="!$route.path.includes('coupons')">
             <div class="title">平均價格為 {{ averagePrice | priceFormat }} / 人</div>
             <canvas class="chart-canvas" ref="myChart"></canvas>
             <div class="slider-bar-container" ref="slider">
@@ -178,7 +178,7 @@ export default {
       if (this.districtsFilter) {
         this.tempDistrictsFilter = this.districtsFilter
       }
-      if (this.priceFilter.length === 2) {
+      if (!this.$route.path.includes('coupons') && this.priceFilter.length === 2) {
         this.sliderValue = this.priceFilter
       }
     },
@@ -496,7 +496,6 @@ $divider: #E6ECF0;
       }
     }
     .price {
-      height: 100%;
       padding: 8px 0 24px 0;
       .title {
         text-align: left;

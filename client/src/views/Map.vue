@@ -532,16 +532,17 @@ $darkred: #c13515;
           flex: calc(7/16)
         }
         .title {
-          padding-top: 50px;
           font-size: 22px;
           font-weight: 700;
           text-align: left;
           line-height: 22px;
           @media (min-width: 768px) {
+            padding-top: 36px;
             font-size: 26px;
             line-height: 30px;
           }
           @media (min-width: 992px) {
+            padding-top: 50px;
             font-size: 32px;
             line-height: 36px;
           }
