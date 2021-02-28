@@ -61,6 +61,45 @@
               </label>
             </div>
           </div>
+          <div class="price">
+            <div class="title">平均價格為 {{ averagePrice | priceFormat }} / 人</div>
+            <canvas class="chart-canvas" ref="myChart"></canvas>
+            <div class="slider-bar-container" ref="slider">
+               <vue-slider
+                v-model="sliderValue"
+                :interval="intervalNum"
+                :process="false"
+                :tooltip="'none'"
+                :max="sliderMax"
+                :min="sliderMin"
+              >
+              </vue-slider>
+            </div>
+            <div class="slider-input-container">
+              <div class="input-wrapper">
+                <div class="input-content">
+                  <div class="input-title">最低價格</div>
+                  <div class="input-text-wrapper">
+                    <div class="money-symbol">$</div>
+                    <input class="input-text" v-model="sliderValue[0]">
+                  </div>
+                </div>
+              </div>
+              <div class="input-divider-wrapper">
+                <div class="input-divider"></div>
+              </div>
+              <div class="input-wrapper">
+                <div class="input-content">
+                  <div class="input-title">最高價格</div>
+                  <div class="input-text-wrapper">
+                    <div class="money-symbol">$</div>
+                    <input class="input-text" v-model="sliderValue[1]">
+                    <div class="plus-symbol" v-if="sliderValue[1] === sliderMax">+</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="filter-button-wrapper">
           <div class="filter-button"  @click="completeEditing">
@@ -74,6 +113,9 @@
 
 <script>
 
+import Chart from 'chart.js'
+import VueSlider from 'vue-slider-component'
+import '@/assets/vue-slider-component.css'
 import { Toast } from '@/utils/helpers'
 import restaurantsAPI from '@/apis/restaurants'
 export default {
@@ -83,7 +125,18 @@ export default {
       districts: [],
       categories: [],
       tempCategoriesFilter: [],
-      tempDistrictsFilter: []
+      tempDistrictsFilter: [],
+      prices: [],
+      averagePrice: 0,
+      countArray: [],
+      labelArray: [],
+      sliderValue: [0, 100],
+      sliderMin: 0,
+      sliderMax: 10000,
+      intervalNum: 50,
+      intervalWidth: 0,
+      barColor: [],
+      myChart: {}
     }
   },
   props: {
@@ -95,14 +148,24 @@ export default {
     },
     districtsFilter: {
       type: Array
+    },
+    priceFilter: {
+      type: Array
     }
+  },
+  components: {
+    VueSlider
   },
   created () {
     return Promise.all([
       this.fetchCategories(),
-      this.fetchDistricts()
+      this.fetchDistricts(),
+      this.fetchPrices()
     ])
       .then(() => {})
+  },
+  mounted () {
+    this.createChart()
   },
   watch: {
     showModal () {
@@ -115,12 +178,41 @@ export default {
       if (this.districtsFilter) {
         this.tempDistrictsFilter = this.districtsFilter
       }
+      if (this.priceFilter.length === 2) {
+        this.sliderValue = this.priceFilter
+      }
     },
     categoriesFilter () {
       this.tempCategoriesFilter = this.categoriesFilter
     },
     districtsFilter () {
       this.tempDistrictsFilter = this.districtsFilter
+    },
+    sliderValue () {
+      this.barColor = []
+      if (!this.sliderValue[0]) {
+        this.sliderValue[0] = 0
+      } else if (this.sliderValue[0] < this.sliderMin) {
+        this.sliderValue[0] = this.sliderMin
+      }
+      if (!this.sliderValue[1]) {
+        this.sliderValue[1] = this.sliderMax
+      } else if (this.sliderValue[1] > this.sliderMax) {
+        this.sliderValue[1] = this.sliderMax
+      } else if (this.sliderValue[1] < this.sliderMin + this.intervalWidth) {
+        this.sliderValue[1] = this.sliderMin + this.intervalWidth
+      }
+      this.sliderValue[0] = Number(this.sliderValue[0])
+      this.sliderValue[1] = Number(this.sliderValue[1])
+      for (let i = this.sliderMin; i < this.sliderMax; i += this.intervalWidth) {
+        if (i >= this.sliderValue[0] && i + this.intervalWidth <= this.sliderValue[1]) {
+          this.barColor.push('rgb(176, 176, 176)')
+        } else {
+          this.barColor.push('rgb(221, 221, 221)')
+        }
+      }
+      this.myChart.data.datasets[0].backgroundColor = this.barColor
+      this.myChart.update()
     }
   },
   methods: {
@@ -151,6 +243,78 @@ export default {
         })
       }
     },
+    async fetchPrices () {
+      try {
+        const { data } = await restaurantsAPI.getPrices()
+        this.prices = data.data
+        this.pricesGrouping(this.intervalNum)
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得價格，請稍候'
+        })
+      }
+    },
+
+    createChart () {
+      const ctx = this.$refs.myChart
+      const data = {
+        labels: this.labelArray,
+        datasets: [{
+          data: this.countArray,
+          backgroundColor: this.barColor
+        }]
+      }
+      const option = {
+        tooltips: {
+          enabled: false
+        },
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [{
+            display: false
+          }],
+          xAxes: [{
+            gridLines: {
+              display: false
+            },
+            scaleLabel: {
+              display: false
+            }
+          }]
+        }
+      }
+      this.myChart = new Chart.Bar(ctx, {
+        data: data,
+        options: option
+      })
+    },
+    pricesGrouping (Num) {
+      const mean = this.prices.reduce((a, b) => a + b, 0) / this.prices.length
+      this.averagePrice = Math.ceil(mean)
+      const std = Math.sqrt(this.prices.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / this.prices.length)
+      const min = mean - 2 * std < 0 ? 0 : mean - 2 * std
+      this.sliderMin = min
+      let max = mean + 2 * std
+      this.intervalWidth = Math.ceil((max - min) / Num)
+      max = min + this.intervalWidth * Num
+      this.sliderMax = max
+      this.sliderValue = [min, max]
+      for (let i = min; i < max; i += this.intervalWidth) {
+        let count = 0
+        this.prices.forEach(p => {
+          if (p >= i && p < i + this.intervalWidth) {
+            count += 1
+          }
+        })
+        this.countArray.push(count)
+        this.labelArray.push('')
+        this.barColor.push('rgb(221, 221, 221)')
+      }
+    },
     addToFilter (item, type) {
       switch (type) {
         case 'district':
@@ -170,11 +334,22 @@ export default {
       }
     },
     completeEditing () {
-      this.$emit('closeModal', true, this.tempCategoriesFilter, this.tempDistrictsFilter)
+      let returnValue = []
+      returnValue[0] = this.sliderValue[0]
+      if (this.sliderValue[1] === this.sliderMax) {
+        returnValue[1] = 9999
+      } else {
+        returnValue[1] = this.sliderValue[1]
+      }
+      if (returnValue[0] === this.sliderMin && returnValue[1] === 9999) {
+        returnValue = []
+      }
+      this.$emit('closeModal', true, this.tempCategoriesFilter, this.tempDistrictsFilter, returnValue)
     },
     clearAll () {
       this.tempCategoriesFilter = []
       this.tempDistrictsFilter = []
+      this.sliderValue = [this.sliderMin, this.sliderMax]
     }
   }
 }
@@ -271,6 +446,150 @@ $divider: #E6ECF0;
         padding: 16px 0;
         font-size: 18px;
         font-weight: 600;
+      }
+      .item-group {
+        .item {
+          padding: 12px 4px;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          .text-wrapper {
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .input-container {
+            height: 24px;
+            width: 24px;
+            .input-wrapper {
+              width: 100%;
+              height: 100%;
+              cursor: pointer;
+              input[type=checkbox] {
+                display: none;
+              }
+              input[type=checkbox]+span {
+                border-radius: 4px;
+                display: inline-block;
+                border: 1px solid #000000;
+                user-select: none;
+              }
+              span {
+                width: 100%;
+                height: 100%;
+              }
+              input[type=checkbox]:checked+span {
+                background-color:#000000;
+                position: relative;
+                .icon.check {
+                  position: absolute;
+                  top: 4px;
+                  left: 4px;
+                  width: 16px;
+                  height: 16px;
+                  mask: url(../assets/check.svg) no-repeat center;
+                  background: #ffffff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .price {
+      height: 100%;
+      padding: 8px 0 24px 0;
+      .title {
+        text-align: left;
+        line-height: 22px;
+        padding: 16px 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .chart-canvas {
+        margin: 24px auto 0;
+        height: 180px !important;
+        width: 320px !important;
+        @media (min-width: 600px) {
+          height: 270px !important;
+          width: 480px !important;
+        }
+      }
+      .slider-bar-container {
+        margin: auto;
+        max-width: 320px !important;
+        @media (min-width: 600px) {
+          max-width: 480px !important;
+        }
+        position: relative;
+        width: 100%;
+        .vue-slider.vue-slider-ltr {
+          height: 2px !important;
+          padding: 12.5px 0 !important;
+          width: 100%;
+          position: absolute;
+          top: -48px;
+          right: 10px;
+          left: 10px;
+          @media (min-width: 600px) {
+            top: -44px;
+          }
+        }
+      }
+      .slider-input-container {
+        display: flex;
+        flex-direction: row;
+        width: 320px;
+        margin: auto;
+        @media (min-width: 600px) {
+          width: 480px;
+        }
+        .input-wrapper {
+          border-radius: 8px;
+          border: 1px solid rgb(176, 176, 176);
+          height: 100%;
+          padding: 10px 12px;
+          max-width: calc(100% - 24px);
+          cursor: pointer;
+          .input-content {
+            text-align: left;
+            .input-title {
+              font-size: 16px;
+              color: #666;
+            }
+            .input-text-wrapper {
+              font-size: 20px;
+              font-weight: 400;
+              display: flex;
+              flex-direction: row;
+              position: relative;
+              .input-text {
+                width: 100%;
+                outline: none;
+                border: none;
+                appearance: none;
+                font-size: 20px;
+                font-weight: 400;
+              }
+              .plus-symbol {
+                position: absolute;
+                left: 65px;
+              }
+            }
+          }
+        }
+        .input-divider-wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 8px;
+          width: 7px;
+          height: 56px;
+          .input-divider {
+            background: rgb(176, 176, 176);
+            width: 7px;
+            height: 1px;
+          }
+        }
       }
       .item-group {
         .item {

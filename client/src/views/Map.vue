@@ -20,7 +20,10 @@
     <div class="map-container">
       <div class="map-wrapper">
         <div class="restaurants-list" ref="restaurants-list" :class="{ leaveTop: this.scrollY > 0}">
-          <div class="title">所選區域的餐廳</div>
+          <div class="title">
+            <div class="result-count">{{ resultCount > 1000 ? '超過1,000' : resultCount }}間餐廳</div>
+            所選地圖範圍的餐廳
+          </div>
           <div class="filter-button-wrapper">
             <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
             <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
@@ -28,10 +31,12 @@
           </div>
           <div class="sub-title">
             <img class="sub-title-img" src="../assets/diet.svg">
-            收錄台北市數千家餐廳，探索你週邊的美食
+            MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
           </div>
           <div class="restaurant-list-card">
             <div class="card-content">
+              <div class="no-result" v-if="resultCount === 0">沒有結果</div>
+              <div class="no-result-sub" v-if="resultCount === 0">請試著調整搜尋條件，如移除篩選條件或縮小地圖範圍</div>
               <div class="item-wrapper"
                 v-for="(r, index) in restaurants"
                 :key="`${index}`"
@@ -148,6 +153,7 @@
       @closeModal="closeFilter"
       :categoriesFilter = categoriesFilter
       :districtsFilter = districtsFilter
+      :priceFilter = priceFilter
     >
     </FilterModal>
     <AddCategory
@@ -210,7 +216,8 @@ export default {
       noMoreData: false,
       scrollY: 0,
       numOfPage: 1,
-      hoverOn: 0
+      hoverOn: 0,
+      resultCount: 0
     }
   },
   components: {
@@ -245,43 +252,44 @@ export default {
     onScroll (e) {
       this.scrollY = this.$refs['map-page'].scrollTop
     },
-    closeFilter (isEditing, cateFilter, distFilter) {
+    closeFilter (isEditing, cateFilter, distFilter, pFilter) {
       this.showModal = false
       if (isEditing) {
         this.categoriesFilter = cateFilter
         this.districtsFilter = distFilter
+        this.priceFilter = pFilter
+        this.restaurants = []
+        this.numOfPage = 1
+        this.fetchNearByRestaurants()
       }
-      this.restaurants = []
-      this.numOfPage = 1
-      this.fetchNearByRestaurants()
     },
 
     completeAdding (isAdding, filter) {
       this.showAddModal = false
       if (isAdding) {
+        this.restaurants = []
+        this.numOfPage = 1
         this.categoriesFilter = filter
+        this.fetchNearByRestaurants()
       }
-      this.restaurants = []
-      this.numOfPage = 1
-      this.fetchNearByRestaurants()
     },
     completeChanging (isChanging, filter) {
       this.showChangeModal = false
       if (isChanging) {
+        this.restaurants = []
+        this.numOfPage = 1
         this.districtsFilter = filter
+        this.fetchNearByRestaurants()
       }
-      this.restaurants = []
-      this.numOfPage = 1
-      this.fetchNearByRestaurants()
     },
     completePricing (isPricing, filter) {
       this.showPriceModal = false
       if (isPricing) {
+        this.restaurants = []
+        this.numOfPage = 1
         this.priceFilter = filter
+        this.fetchNearByRestaurants()
       }
-      this.restaurants = []
-      this.numOfPage = 1
-      this.fetchNearByRestaurants()
     },
     closeInfoWindow () {
       if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
@@ -321,6 +329,7 @@ export default {
           r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
         })
         this.numOfPage += 1
+        this.resultCount = data.count
         this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
         this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
       } catch (error) {
@@ -523,7 +532,7 @@ $darkred: #c13515;
           flex: calc(7/16)
         }
         .title {
-          margin: 12px 0;
+          padding-top: 50px;
           font-size: 22px;
           font-weight: 700;
           text-align: left;
@@ -535,6 +544,12 @@ $darkred: #c13515;
           @media (min-width: 992px) {
             font-size: 32px;
             line-height: 36px;
+          }
+          .result-count {
+            font-size: 14px;
+            line-height: 18px;
+            padding-bottom: 8px;
+            font-weight: 400;
           }
         }
         .filter-button-wrapper {
@@ -561,6 +576,7 @@ $darkred: #c13515;
           .filter-button.filter-on {
             font-weight: 800;
             border: 1px solid #000000;
+            background: rgb(247, 247, 247);
           }
         }
         .sub-title {
@@ -583,6 +599,19 @@ $darkred: #c13515;
           border-radius: 12px;
           position: relative;
           .card-content {
+            .no-result {
+              margin-top: 32px;
+              text-align: left;
+              font-size: 22px;
+              line-height: 26px;
+              font-weight: 600;
+            }
+            .no-result-sub {
+              text-align: left;
+              margin: 4 0 32px;
+              font-size: 16px;
+              line-height: 24px;
+            }
             .item-wrapper {
               cursor: pointer;
               background: #ffffff;

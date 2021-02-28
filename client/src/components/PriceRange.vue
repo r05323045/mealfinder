@@ -76,7 +76,6 @@ export default {
       modalContentShow: false,
       prices: [],
       averagePrice: 0,
-      tempFilter: [],
       countArray: [],
       labelArray: [],
       sliderValue: [0, 100],
