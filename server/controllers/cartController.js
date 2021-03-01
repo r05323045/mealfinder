@@ -44,12 +44,7 @@ const cartController = {
 
   postCart: async (req, res) => {
     const [cartItem] = await CartItem.findOrCreate({
-      where: { CouponId: req.body.CouponId, UserId: req.user.id },
-      defauts: {
-        CouponId: req.body.CouponId,
-        UserId: req.user.id,
-        quantity: req.body.quantity
-      }
+      where: { CouponId: req.body.CouponId, UserId: req.user.id }
     })
     return cartItem.update(
       {

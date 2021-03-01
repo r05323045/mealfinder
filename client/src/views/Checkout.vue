@@ -105,7 +105,7 @@ import Footer from '@/components/Footer.vue'
 export default {
   data () {
     return {
-      payby: ['信用卡', 'ATM轉帳 (尚未提供)'],
+      payby: ['信用卡', 'ATM轉帳(未開放)'],
       submitPayby: '信用卡',
       cart: [],
       totalPrice: 0,

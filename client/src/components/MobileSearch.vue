@@ -4,64 +4,46 @@
     <div class="modal-content" v-show="showModal" :class="{ show: modalContentShow }">
       <div v-show="modalContentShow">
         <div class="top-wrapper">
-          <div class="close-wrapper" @click="closeModal">
-            <div class="icon close"></div>
+          <div class="search-icon-wrapper">
+            <div class="icon search"></div>
           </div>
-          <div class="title">篩選條件</div>
+          <div class="title">搜尋餐廳</div>
           <div class="clear-wrapper">
-            <div class="text" @click="clearAll">清除</div>
+            <div class="text" @click="clearAll">關閉</div>
           </div>
         </div>
         <div class="filter-container">
-          <div class="district">
-            <div class="title">用餐地區</div>
-            <div class="item-group">
-              <label class="item" v-for="(item, idx) in districts" :key="`district-${idx}`">
-                <div class="text-wrapper">
-                  <div class="text">{{ item.name }}</div>
-                </div>
-                <div class="input-container" :for="`checkbox-district-${idx}`">
-                  <div class="input-wrapper">
-                    <input
-                      class="input"
-                      type="checkbox"
-                      :id="`checkbox-district-${idx}`"
-                      @click="addToFilter(item.name, 'district')"
-                      :checked="tempDistrictsFilter.includes(item.name)"
-                    >
-                    <span>
-                      <span class="icon check"></span>
-                    </span>
-                  </div>
-                </div>
-              </label>
+          <div class="result-wrapper" v-if="selectDistrict">
+            <div class="result" v-if="selectDistrict">{{ selectDistrict === 'all' ? '附近地點' : selectDistrict }}</div>
+            <div class="result" v-if="selectCategory">{{ selectCategory === 'all' ? '所有料理' : selectCategory }}</div>
+            <div class="result" v-if="sliderValue.length === 2 && !(sliderValue[0] === sliderMin && sliderValue[1] === sliderMax)">{{ sliderValue[0] | priceFormat }} - {{ sliderValue[1] === sliderMax ? sliderMax : sliderValue[1] | priceFormat }}<span v-if="sliderValue[1] === sliderMax"> +</span></div>
+          </div>
+          <div class="divider" v-if="selectDistrict"></div>
+          <div class="selector-wrapper" v-show="searchStep === 1">
+            <div class="selector">
+              <div class="item-wrapper" @click.stop="completeSelectDistrict('all')">
+                <div class="item-icon near"></div>
+                <div class="item">附近地點</div>
+              </div>
+              <div class="item-wrapper" v-for="district in districts" :key="district.id" @click.stop="completeSelectDistrict(district.name)">
+                <div class="item-icon"></div>
+                <div class="item">{{ district.name }}．台北市</div>
+              </div>
             </div>
           </div>
-          <div class="category">
-            <div class="title">餐廳類型</div>
-            <div class="item-group">
-              <label class="item" v-for="(item, idx) in categories" :key="`category-${idx}`">
-                <div class="text-wrapper">
-                  <div class="text">{{ item.name }}</div>
-                </div>
-                <div class="input-container" :for="`checkbox-category-${idx}`">
-                  <div class="input-wrapper">
-                    <input
-                      class="input"
-                      type="checkbox"
-                      :id="`checkbox-category-${idx}`"
-                      @click="addToFilter(item.name, 'category')"
-                      :checked="tempCategoriesFilter.includes(item.name)"
-                    >
-                    <span>
-                      <span class="icon check"></span>
-                    </span>
-                  </div>
-                </div>
-              </label>
+          <div class="selector-wrapper" v-show="searchStep === 2">
+            <div class="selector">
+              <div class="item-wrapper" @click.stop="completeSelectCategory('all')">
+                <div class="item-icon near"></div>
+                <div class="item">所有料理</div>
+              </div>
+              <div class="item-wrapper" v-for="category in categories" :key="category.id" @click.stop="completeSelectCategory(category.name)">
+                <div class="item-icon"></div>
+                <div class="item">{{ category.name }}</div>
+              </div>
             </div>
           </div>
-          <div class="price" v-show="!$route.path.includes('coupons')">
+          <div class="price" v-show="searchStep === 3">
             <div class="title">平均價格為 {{ averagePrice | priceFormat }} / 人</div>
             <canvas class="chart-canvas" ref="myChart"></canvas>
             <div class="slider-bar-container" ref="slider">
@@ -102,8 +84,16 @@
           </div>
         </div>
         <div class="filter-button-wrapper">
-          <div class="filter-button"  @click="completeEditing">
-            <div class="button">顯示結果</div>
+          <div class="filter-button"  v-if="searchStep === 1" :class="{ disabled: !selectDistrict }">
+            <div class="button" v-if="!selectDistrict">選擇用餐地區</div>
+            <div class="button" v-if="selectDistrict" @click.stop="searchStep += 1">下一步．選擇用餐類別</div>
+          </div>
+          <div class="filter-button"  v-if="searchStep === 2" :class="{ disabled: !selectCategory }">
+            <div class="button" v-if="!selectCategory">選擇用餐類別</div>
+            <div class="button" v-if="selectCategory" @click.stop="searchStep += 1">下一步．選擇價格限制</div>
+          </div>
+          <div class="filter-button"  v-if="searchStep === 3" @click.stop="startSearching">
+            <div class="button">開始搜尋</div>
           </div>
         </div>
       </div>
@@ -124,8 +114,6 @@ export default {
       modalContentShow: false,
       districts: [],
       categories: [],
-      tempCategoriesFilter: [],
-      tempDistrictsFilter: [],
       prices: [],
       averagePrice: 0,
       countArray: [],
@@ -135,22 +123,16 @@ export default {
       sliderMax: 10000,
       intervalNum: 50,
       intervalWidth: 0,
+      selectCategory: '',
+      selectDistrict: '',
       barColor: [],
-      myChart: {}
+      myChart: {},
+      searchStep: 0
     }
   },
   props: {
     showModal: {
       type: Boolean
-    },
-    categoriesFilter: {
-      type: Array
-    },
-    districtsFilter: {
-      type: Array
-    },
-    priceFilter: {
-      type: Array
     }
   },
   components: {
@@ -162,7 +144,9 @@ export default {
       this.fetchDistricts(),
       this.fetchPrices()
     ])
-      .then(() => {})
+      .then(() => {
+        this.searchStep = 1
+      })
   },
   mounted () {
     this.createChart()
@@ -172,21 +156,6 @@ export default {
       setTimeout(() => {
         this.modalContentShow = this.showModal
       }, 100)
-      if (this.categoriesFilter) {
-        this.tempCategoriesFilter = this.categoriesFilter
-      }
-      if (this.districtsFilter) {
-        this.tempDistrictsFilter = this.districtsFilter
-      }
-      if (!this.$route.path.includes('coupons') && this.priceFilter.length === 2) {
-        this.sliderValue = this.priceFilter
-      }
-    },
-    categoriesFilter () {
-      this.tempCategoriesFilter = this.categoriesFilter
-    },
-    districtsFilter () {
-      this.tempDistrictsFilter = this.districtsFilter
     },
     sliderValue () {
       this.barColor = []
@@ -256,7 +225,6 @@ export default {
         })
       }
     },
-
     createChart () {
       const ctx = this.$refs.myChart
       const data = {
@@ -315,25 +283,27 @@ export default {
         this.barColor.push('rgb(221, 221, 221)')
       }
     },
-    addToFilter (item, type) {
-      switch (type) {
-        case 'district':
-          if (this.tempDistrictsFilter.includes(item)) {
-            this.tempDistrictsFilter.splice(this.tempDistrictsFilter.indexOf(item), 1)
-          } else {
-            this.tempDistrictsFilter = [...this.tempDistrictsFilter, item]
-          }
-          break
-        case 'category':
-          if (this.tempCategoriesFilter.includes(item)) {
-            this.tempCategoriesFilter.splice(this.tempCategoriesFilter.indexOf(item), 1)
-          } else {
-            this.tempCategoriesFilter = [...this.tempCategoriesFilter, item]
-          }
-          break
-      }
+    completeSelectDistrict (district) {
+      this.selectDistrict = district
     },
-    completeEditing () {
+    completeSelectCategory (category) {
+      this.selectCategory = category
+    },
+    clearAll () {
+      this.searchStep = 1
+      this.selectDistrict = ''
+      this.selectCategory = ''
+      this.sliderValue = [this.sliderMin, this.sliderMax]
+      this.closeModal()
+    },
+    startSearching () {
+      const queryStringArray = ['']
+      if (this.selectCategory && this.selectCategory !== 'all') {
+        queryStringArray.push(`category=${this.selectCategory}`)
+      }
+      if (this.selectDistrict && this.selectDistrict !== 'all') {
+        queryStringArray.push(`district=${this.selectDistrict}`)
+      }
       let returnValue = []
       returnValue[0] = this.sliderValue[0]
       if (this.sliderValue[1] === this.sliderMax) {
@@ -344,12 +314,15 @@ export default {
       if (returnValue[0] === this.sliderMin && returnValue[1] === 9999) {
         returnValue = []
       }
-      this.$emit('closeModal', true, this.tempCategoriesFilter, this.tempDistrictsFilter, returnValue)
-    },
-    clearAll () {
-      this.tempCategoriesFilter = []
-      this.tempDistrictsFilter = []
-      this.sliderValue = [this.sliderMin, this.sliderMax]
+      if (returnValue.length === 2) {
+        queryStringArray.push(`low=${returnValue[0]}`)
+        queryStringArray.push(`high=${returnValue[1]}`)
+      }
+      let queryString = '?page=1'
+      if (queryStringArray.length > 1) {
+        queryString += queryStringArray.join('&')
+      }
+      this.$router.push(`/map${queryString}`)
     }
   }
 }
@@ -381,6 +354,7 @@ $divider: #E6ECF0;
   opacity: 0.5;
 }
 .modal-content.show {
+  overflow: hidden;
   height: 100%;
   transform: translateY(0);
   transition: 0.5s;
@@ -394,7 +368,7 @@ $divider: #E6ECF0;
     width: calc(100vw - 32px);
     position: relative;
     border-bottom: 1px solid $divider;
-    .close-wrapper {
+    .search-icon-wrapper {
       position: absolute;
       left: 10;
       height: 32px;
@@ -402,12 +376,12 @@ $divider: #E6ECF0;
       display: flex;
       justify-content: center;
       align-items: center;
-      .icon.close {
+      .icon.search {
         line-height: 32px;
         height: 16px;
         width: 16px;
         background-color: #222222;
-        mask: url(../assets/close.svg) no-repeat center;
+        mask: url(../assets/search.svg) no-repeat center;
       }
     }
     .title {
@@ -437,65 +411,81 @@ $divider: #E6ECF0;
     height: calc(100vh - 168px);
     width: calc(100vw - 48px);
     padding: 12px 24px;
-    .category,
-    .district {
-      padding: 8px 0 24px 0;
-      .title {
-        text-align: left;
-        line-height: 22px;
-        padding: 16px 0;
-        font-size: 18px;
-        font-weight: 600;
+    .result-wrapper {
+      padding: 12px 0;
+      display: flex;
+      flex-direction: row;
+      .result {
+        margin-right: 12px;
+        background: rgb(247, 247, 247);
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 800;
+        border: 1px solid #000000;
       }
-      .item-group {
-        .item {
-          padding: 12px 4px;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: $divider;
+    }
+    .selector-wrapper {
+      position: relative;
+      @media (min-width: 1200px) {
+        max-height: 300px;
+        height: 300px;
+      }
+      .selector {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        @media (min-width: 1200px) {
+          max-height: 300px;
+          height: 300px;
+        }
+        .item-wrapper {
           display: flex;
           flex-direction: row;
-          justify-content: space-between;
-          .text-wrapper {
+          align-items: center;
+          cursor: pointer;
+          width: 100%;
+          padding: 12px 0;
+          flex: 1;
+          .item-icon {
+            margin: auto 0;
+            margin-right: 24px;
+            height: 36px;
+            width: 36px;
+            background: url(../assets/cutlery.svg) no-repeat center / cover;
+          }
+          .item-icon.near{
+            background: url(../assets/fast-food.svg) no-repeat center / cover;
+          }
+          .item {
             font-size: 16px;
             font-weight: 400;
+            text-align: left;
+            line-height: 22px;
           }
-          .input-container {
-            height: 24px;
-            width: 24px;
-            .input-wrapper {
-              width: 100%;
-              height: 100%;
-              cursor: pointer;
-              input[type=checkbox] {
-                display: none;
-              }
-              input[type=checkbox]+span {
-                border-radius: 4px;
-                display: inline-block;
-                border: 1px solid #000000;
-                user-select: none;
-              }
-              span {
-                width: 100%;
-                height: 100%;
-              }
-              input[type=checkbox]:checked+span {
-                background-color:#000000;
-                position: relative;
-                .icon.check {
-                  position: absolute;
-                  top: 4px;
-                  left: 4px;
-                  width: 16px;
-                  height: 16px;
-                  mask: url(../assets/check.svg) no-repeat center;
-                  background: #ffffff;
-                }
-              }
-            }
+        }
+        .divider-wrapper {
+          width: 100%;
+          .divider {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: $divider;
           }
         }
       }
     }
     .price {
+      overflow: hidden;
       padding: 8px 0 24px 0;
       .title {
         text-align: left;
@@ -662,6 +652,9 @@ $divider: #E6ECF0;
         color: #ffffff;
         line-height: 20px;
       }
+    }
+    .filter-button.disabled {
+      background: #919191;
     }
   }
 }

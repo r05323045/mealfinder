@@ -31,14 +31,13 @@ export default {
     })
   },
   getCategories () {
-    return apiHelper.get('/categories', {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/categories')
   },
   getDistricts () {
-    return apiHelper.get('/districts', {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/districts')
+  },
+  getPrices () {
+    return apiHelper.get('/prices')
   },
   getNearByRestaurants (page, filter) {
     let queryString = page ? `?page=${page}` : ''

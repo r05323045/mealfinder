@@ -109,6 +109,7 @@ router.get('/nearby', restaurantController.getNearByRestaurants)
 router.get('/user/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
 router.get('/user/restaurants', authenticated, restaurantController.getUsersRestaurants)
 router.get('users/nearby', authenticated, restaurantController.getUserNearByRestaurants)
+router.get('/prices', restaurantController.getAllPrices)
 
 // reservationController_reservation model
 router.post('/user/reservations', authenticated, reservationController.addReservation)
