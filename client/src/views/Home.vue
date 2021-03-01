@@ -4,7 +4,7 @@
     <div class="page-container">
       <div class="banner">
         <div class="searchbar-wrapper-outside" :class="{ toFront: scrollY > 50 && scrollUp }">
-        <div class="searchbar">
+        <div class="searchbar" @click="showModal = !showModal">
           <input v-if="false" class="search-input" v-show="scrollY > 50 && scrollUp">
           <div class="wrapper" v-show="scrollY > 50 && scrollUp">
             <div class="icon search"></div>
@@ -13,7 +13,7 @@
         </div>
       </div>
         <div class="searchbar-wrapper-inner">
-          <div class="searchbar">
+          <div class="searchbar" @click="showModal = !showModal">
             <input v-if="false" class="search-input">
             <div class="icon-wrapper">
               <div class="icon search"></div>
@@ -237,6 +237,11 @@
       </div>
       <Footer></Footer>
     </div>
+    <MobileSearch
+      :showModal="showModal"
+      @closeModal="closeFilter"
+    >
+    </MobileSearch>
   </div>
 </template>
 
@@ -244,19 +249,26 @@
 
 import Swiper from 'swiper/swiper-bundle.js'
 import 'swiper/swiper-bundle.css'
+import MobileSearch from '@/components/MobileSearch.vue'
 import Navbar from '@/components/Navbar.vue'
 import NavbarHome from '@/components/NavbarHome.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
-  components: { Navbar, Footer, NavbarHome },
+  components: {
+    Navbar,
+    Footer,
+    NavbarHome,
+    MobileSearch
+  },
   name: 'Home',
   data () {
     return {
       scrollY: 0,
       scrollUp: false,
       homeHeight: 0,
-      scrollBarHeight: 0
+      scrollBarHeight: 0,
+      showModal: false
     }
   },
   mounted () {
@@ -294,6 +306,9 @@ export default {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs.home.scrollTop
       this.scrollY = this.$refs.home.scrollTop
+    },
+    closeFilter (isEditing) {
+      this.showModal = false
     }
   }
 }
