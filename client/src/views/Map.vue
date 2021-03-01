@@ -231,13 +231,15 @@ export default {
   },
   created () {
     if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
-      if (this.$route.query.category && this.$route.query.district) {
-        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+      if (this.$route.query.district) {
         this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
-      } else if (this.$route.query.category && !this.$route.query.district) {
+      }
+      if (this.$route.query.category) {
         this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
-      } else if (!this.$route.query.category && this.$route.query.district) {
-        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+      }
+      if (this.$route.query.low && this.$route.query.high) {
+        this.priceFilter.push(Number(this.$route.query.low))
+        this.priceFilter.push(Number(this.$route.query.high))
       }
     }
   },

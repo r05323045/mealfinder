@@ -1,63 +1,50 @@
 <template>
-  <div class="modal" v-show="showModal" :class="{ show: showModal, innerShow: modalContentShow }">
-    <div class="modal-background" @click="closeModal"></div>
-    <div class="modal-content" v-show="showModal" :class="{show: modalContentShow }">
-      <div class="modal-container" v-show="modalContentShow">
-        <div class="top-wrapper">
-          <div class="close-wrapper" @click.stop="closeModal">
-            <div class="icon close"></div>
+  <div class="selector-container" v-show="showSelector">
+    <div class="selector-wrapper">
+      <div class="selector">
+        <div class="price">
+          <div class="title">平均價格為 {{ averagePrice | priceFormat }} / 人</div>
+          <canvas class="chart-canvas" ref="myChart"></canvas>
+          <div class="slider-bar-container" ref="slider">
+              <vue-slider
+              v-model="sliderValue"
+              :interval="intervalNum"
+              :process="false"
+              :tooltip="'none'"
+              :max="sliderMax"
+              :min="sliderMin"
+            >
+            </vue-slider>
           </div>
-          <div class="title">
-            選擇價格區間
-            <div class="clear-all" @click="sliderValue = [sliderMin, sliderMax]">清除全部</div>
-          </div>
-        </div>
-        <div class="filter-container">
-          <div class="price">
-            <div class="title">平均價格為 {{ averagePrice | priceFormat }} / 人</div>
-            <canvas class="chart-canvas" ref="myChart"></canvas>
-            <div class="slider-bar-container" ref="slider">
-               <vue-slider
-                v-model="sliderValue"
-                :interval="intervalNum"
-                :process="false"
-                :tooltip="'none'"
-                :max="sliderMax"
-                :min="sliderMin"
-              >
-              </vue-slider>
-            </div>
-            <div class="slider-input-container">
-              <div class="input-wrapper">
-                <div class="input-content">
-                  <div class="input-title">最低價格</div>
-                  <div class="input-text-wrapper">
-                    <div class="money-symbol">$</div>
-                    <input class="input-text" v-model="sliderValue[0]">
-                  </div>
+          <div class="slider-input-container">
+            <div class="input-wrapper">
+              <div class="input-content">
+                <div class="input-title">最低價格</div>
+                <div class="input-text-wrapper">
+                  <div class="money-symbol">$</div>
+                  <input class="input-text" v-model="sliderValue[0]">
                 </div>
               </div>
-              <div class="input-divider-wrapper">
-                <div class="input-divider"></div>
-              </div>
-              <div class="input-wrapper">
-                <div class="input-content">
-                  <div class="input-title">最高價格</div>
-                  <div class="input-text-wrapper">
-                    <div class="money-symbol">$</div>
-                    <input class="input-text" v-model="sliderValue[1]">
-                    <div class="plus-symbol" v-if="sliderValue[1] === sliderMax">+</div>
-                  </div>
+            </div>
+            <div class="input-divider-wrapper">
+              <div class="input-divider"></div>
+            </div>
+            <div class="input-wrapper">
+              <div class="input-content">
+                <div class="input-title">最高價格</div>
+                <div class="input-text-wrapper">
+                  <div class="money-symbol">$</div>
+                  <input class="input-text" v-model="sliderValue[1]">
+                  <div class="plus-symbol" v-if="sliderValue[1] === sliderMax">+</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="filter-button-wrapper">
-          <div class="filter-button" @click="completePricing">
-            <div class="button">完成</div>
-          </div>
-        </div>
+      </div>
+      <div class="button-wrapper">
+        <div class="clear-button inside-button" @click.stop="sliderValue = [sliderMin, sliderMax]">清除</div>
+        <div class="filter-button inside-button" @click.stop="completeSelect">完成</div>
       </div>
     </div>
   </div>
@@ -73,7 +60,6 @@ import restaurantsAPI from '@/apis/restaurants'
 export default {
   data () {
     return {
-      modalContentShow: false,
       prices: [],
       averagePrice: 0,
       countArray: [],
@@ -91,11 +77,8 @@ export default {
     VueSlider
   },
   props: {
-    showModal: {
+    showSelector: {
       type: Boolean
-    },
-    priceFilter: {
-      type: Array
     }
   },
   created () {
@@ -105,14 +88,6 @@ export default {
     this.createChart()
   },
   watch: {
-    showModal () {
-      setTimeout(() => {
-        this.modalContentShow = this.showModal
-      }, 100)
-      if (this.priceFilter.length === 2) {
-        this.sliderValue = this.priceFilter
-      }
-    },
     sliderValue () {
       this.barColor = []
       if (!this.sliderValue[0]) {
@@ -199,9 +174,6 @@ export default {
         this.barColor.push('rgb(221, 221, 221)')
       }
     },
-    closeModal () {
-      this.$emit('closePriceModal')
-    },
     async fetchPrices () {
       try {
         const { data } = await restaurantsAPI.getPrices()
@@ -215,7 +187,7 @@ export default {
         })
       }
     },
-    completePricing () {
+    completeSelect () {
       let returnValue = []
       returnValue[0] = this.sliderValue[0]
       if (this.sliderValue[1] === this.sliderMax) {
@@ -226,7 +198,7 @@ export default {
       if (returnValue[0] === this.sliderMin && returnValue[1] === 9999) {
         returnValue = []
       }
-      this.$emit('closePriceModal', true, returnValue)
+      this.$emit('selectPrice', returnValue)
     }
   }
 }
@@ -235,115 +207,76 @@ export default {
 <style lang="scss" scoped>
 $ultimategray: #939597;
 $divider: #E6ECF0;
-.modal.show {
-  overflow: hidden;
+$red: rgb(255, 56, 92);
+.selector-container {
   z-index: 999;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  transform: translateY(0);
-  transition: 0.1s;
-}
-.modal-background {
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
   position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: #666;
-  opacity: 0.5;
-}
-.modal-content.show {
-  height: 100%;
-  width: 100%;
-  transform: translateY(0);
-  transition: 0.5s;
-  margin: auto;
-  max-width: 600px;
-  .modal-container {
-    width: 100%;
-    height: 100%;
-    .top-wrapper {
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-      margin-top: 8px;
-      padding: 12px 16px 10px;
-      background: #ffffff;
-      height: 32px;
-      width: calc(100% - 32px);
-      position: relative;
-      border-bottom: 1px solid $divider;
-      display: flex;
-      .close-wrapper {
-        z-index: 1;
-        cursor: pointer;
-        position: absolute;
-        left: 10;
-        height: 32px;
-        width: 32px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .icon.close {
-          cursor: pointer;
-          height: 16px;
-          width: 16px;
-          background-color: #222222;
-          mask: url(../assets/close.svg) no-repeat center;
-        }
-      }
-      .title {
-        flex: 1;
-        line-height: 32px;
-        font-size: 16px;
-        font-weight: 600;
-        position: relative;
-        .clear-all {
-          cursor: pointer;
-          position: absolute;
-          top: 0;
-          right: 10px;
-          line-height: 32px;
-          font-size: 16px;
-          font-weight: 600;
-          text-decoration: underline;
-        }
-      }
+  top: 72px;
+  right: 0;
+  width: 375px;
+  height: 304px;
+  background: #ffffff;
+  border-radius: 32px;
+  max-height: 304px;
+  overflow: hidden;
+  @media (min-width: 1200px) {
+    height: 364px;
+    max-height: 364px;
+    width: 450px;
+  }
+  .selector-wrapper {
+    position: relative;
+    overflow: hidden;
+    max-height: 268px;
+    height: 268px;
+    padding: 12px 0 24px 0;
+    @media (min-width: 1200px) {
+      padding: 16px 0 48px 0;
+      max-height: 300px;
+      height: 300px;
     }
-    .filter-container {
-      overflow-y: hidden;
-      background: #ffffff;
-      height: calc(100% - 168px);
-      width: calc(100% - 48px);
-      padding: 12px 24px;
+    .selector {
+      overflow: scroll;
+      max-height: 268px;
+      height: 268px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      @media (min-width: 1200px) {
+        max-height: 300px;
+        height: 300px;
+      }
       .price {
-        padding: 8px 0 24px 0;
+        height: 100%;
+        width: 100%;
         .title {
+          width: calc(100% - 64px);
           text-align: left;
-          line-height: 22px;
-          padding: 16px 0;
-          font-size: 18px;
+          line-height: 18px;
+          padding: 8px 32px;
+          font-size: 14px;
           font-weight: 600;
+          @media (min-width: 1200px) {
+            font-size: 18px;
+            line-height: 22px;
+            padding: 8px 32px;
+          }
         }
         .chart-canvas {
-          margin: 24px auto 0;
-          height: 180px !important;
+          margin: auto;
+          height: 160px !important;
           width: 320px !important;
-          @media (min-width: 600px) {
-            height: 270px !important;
-            width: 480px !important;
+          @media (min-width: 1200px) {
+            height: 180px !important;
           }
         }
         .slider-bar-container {
           margin: auto;
           max-width: 320px !important;
-          @media (min-width: 600px) {
-            max-width: 480px !important;
-          }
           position: relative;
           width: 100%;
           .vue-slider.vue-slider-ltr {
@@ -351,12 +284,9 @@ $divider: #E6ECF0;
             padding: 12.5px 0 !important;
             width: 100%;
             position: absolute;
-            top: -48px;
+            top: -36px;
             right: 10px;
             left: 10px;
-            @media (min-width: 600px) {
-              top: -44px;
-            }
           }
         }
         .slider-input-container {
@@ -364,39 +294,60 @@ $divider: #E6ECF0;
           flex-direction: row;
           width: 320px;
           margin: auto;
-          @media (min-width: 600px) {
-            width: 480px;
+          max-height: 48px;
+          @media (min-width: 1200px) {
+            height: 100%;
           }
           .input-wrapper {
             border-radius: 8px;
             border: 1px solid rgb(176, 176, 176);
             height: 100%;
-            padding: 10px 12px;
-            max-width: calc(100% - 24px);
+            padding: 4px 8px;
+            max-width: calc(100% - 16px);
             cursor: pointer;
             .input-content {
               text-align: left;
               .input-title {
-                font-size: 16px;
+                font-size: 12px;
                 color: #666;
               }
               .input-text-wrapper {
-                font-size: 20px;
+                font-size: 14px;
                 font-weight: 400;
                 display: flex;
                 flex-direction: row;
                 position: relative;
+                line-height: 18px;
+                @media (min-width: 1200px) {
+                  padding: 4px;
+                  font-size: 18px;
+                  line-height: 24px;
+                }
+                .money-symbol {
+                  font-size: 14px;
+                  font-weight: 400;
+                  @media (min-width: 1200px) {
+                    font-size: 20px;
+                  }
+                }
                 .input-text {
+                  padding: 0;
                   width: 100%;
                   outline: none;
                   border: none;
                   appearance: none;
-                  font-size: 20px;
+                  font-size: 14px;
                   font-weight: 400;
+                  @media (min-width: 1200px) {
+                    font-size: 20px;
+                  }
                 }
                 .plus-symbol {
                   position: absolute;
-                  left: 65px;
+                  left: 50px;
+                  @media (min-width: 1200px) {
+                    left: 65px;
+                  }
                 }
               }
             }
@@ -464,42 +415,37 @@ $divider: #E6ECF0;
         }
       }
     }
-    .filter-button-wrapper {
-      border-top: 1px solid $divider;
-      position: fixed;
-      bottom: 0;
-      width: calc(100% - 48px);
-      height: 48px;
-      padding: 16px 24px;
-      background: #ffffff;
-      .filter-button {
+    .button-wrapper {
+      position: absolute;
+      bottom: 6px;
+      right: 64px;
+      height: 36px;
+      width: calc(100% - 64px);
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-end;
+      @media (min-width: 1200px) {
+        bottom: 0;
+        height: 48px;
+      }
+      .inside-button {
         cursor: pointer;
-        height: 100%;
-        width: calc(100%);
+        font-weight: 700;
+        font-size: 12px;
+        color: #ffffff;
+        line-height: 18px;
         background: #222222;
         border-radius: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .button {
-          cursor: pointer;
-          font-weight: 700;
-          font-size: 16px;
-          color: #ffffff;
-          line-height: 20px;
-        }
+        padding: 6px 12px;
+      }
+      .clear-button {
+        margin-right: 16px;
+        color: #222222;
+        background: #ffffff;
+        text-decoration: underline;
       }
     }
   }
-}
-.modal.innerShow {
-  transition: 0.3;
-  opacity: 100%;
-}
-.modal{
-  transform: translateY(100%);
-}
-.modal-content {
-  transform: translateY(100%);
 }
 </style>

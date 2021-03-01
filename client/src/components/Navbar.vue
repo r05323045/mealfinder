@@ -42,11 +42,11 @@
         </div>
         <div class="tab-wrapper" v-show="openSearch">
           <div class="condition-wrapper">
-            <div class="condition">條件</div>
+            <div class="condition">餐廳</div>
             <div class="divider"></div>
           </div>
-          <div class="name-wrapper">
-            <div class="name">名稱</div>
+          <div class="name-wrapper" @click="$router.push('/coupons').catch(()=>{})">
+            <div class="name">優惠</div>
             <div class="divider"></div>
           </div>
         </div>
@@ -90,11 +90,11 @@
       <div class="navbar-desktop-middle" v-show="openSearch">
         <div class="tab-wrapper">
           <div class="condition-wrapper">
-            <div class="condition">條件</div>
+            <div class="condition">餐廳</div>
             <div class="divider"></div>
           </div>
-          <div class="name-wrapper">
-            <div class="name">名稱</div>
+          <div class="name-wrapper" @click="$router.push('/coupons').catch(()=>{})">
+            <div class="name">優惠</div>
             <div class="divider"></div>
           </div>
         </div>
