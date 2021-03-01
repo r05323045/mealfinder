@@ -213,7 +213,6 @@ const restaurantController = {
   getUserNearByRestaurants: (req, res) => {
     let offset = 0
     const pageLimit = 24
-    const isFavorited = false
 
     if (req.query.page) {
       offset = (req.query.page - 1) * pageLimit
