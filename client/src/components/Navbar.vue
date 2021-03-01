@@ -64,25 +64,25 @@
           </div>
         </div>
         <div class="side-nav">
-          <div class="side-nav-button" @click="showMenu = !showMenu">
-            <img class="icon hamburger" src="../assets/hamburger.svg">
-            <img class="icon profile" v-if="!isAuthenticated" src="../assets/default-profile.svg">
-            <img class="icon profile" v-if="isAuthenticated" :src="currentUser.avatar">
+          <div class="side-nav-button side-nav-element" @click="showMenu = !showMenu">
+            <img class="icon hamburger side-nav-element" src="../assets/hamburger.svg">
+            <img class="icon profile side-nav-element" v-if="!isAuthenticated" src="../assets/default-profile.svg">
+            <img class="icon profile side-nav-element" v-if="isAuthenticated" :src="currentUser.avatar">
           </div>
-          <div ref="menu-wrapper" class="menu-wrapper" v-show="showMenu">
+          <div ref="menu-wrapper" class="menu-wrapper side-nav-element" v-show="showMenu">
             <div class="menu">
-              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/center').catch(()=>{})">會員中心</div>
-              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/history').catch(()=>{})">訂位紀錄</div>
-              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/favorite').catch(()=>{})">我的收藏</div>
-              <div class="item" @click="$router.push('/map').catch(()=>{})">探索餐廳</div>
-              <div class="item" @click="$router.push('/coupons').catch(()=>{})">優惠</div>
-              <div class="item" v-if="isAuthenticated" @click="$router.push('/users/purchase').catch(()=>{})">購物車</div>
-              <div class="divider-wrapper" v-if="isAuthenticated">
-                <div class="divider"></div>
+              <div class="item side-nav-element" v-if="isAuthenticated" @click="$router.push('/users/center').catch(()=>{})">會員中心</div>
+              <div class="item side-nav-element" v-if="isAuthenticated" @click="$router.push('/users/history').catch(()=>{})">訂位紀錄</div>
+              <div class="item side-nav-element" v-if="isAuthenticated" @click="$router.push('/users/favorite').catch(()=>{})">我的收藏</div>
+              <div class="item side-nav-element" @click="$router.push('/map').catch(()=>{})">探索餐廳</div>
+              <div class="item side-nav-element" @click="$router.push('/coupons').catch(()=>{})">優惠</div>
+              <div class="item side-nav-element" v-if="isAuthenticated" @click="$router.push('/users/purchase').catch(()=>{})">購物車</div>
+              <div class="divider-wrapper side-nav-element" v-if="isAuthenticated">
+                <div class="divider side-nav-element"></div>
               </div>
-              <div class="item" v-if="!isAuthenticated" @click="$router.push('/signin').catch(()=>{})">登入</div>
-              <div class="item" v-if="!isAuthenticated" @click="$router.push('/signup').catch(()=>{})">註冊</div>
-              <div class="item" v-if="isAuthenticated" @click="signout">登出</div>
+              <div class="item side-nav-element" v-if="!isAuthenticated" @click="$router.push('/signin').catch(()=>{})">登入</div>
+              <div class="item side-nav-element" v-if="!isAuthenticated" @click="$router.push('/signup').catch(()=>{})">註冊</div>
+              <div class="item side-nav-element" v-if="isAuthenticated" @click="signout">登出</div>
             </div>
           </div>
         </div>
@@ -100,28 +100,43 @@
         </div>
       </div>
       <div class="navbar-desktop-outer" v-show="openSearch">
-        <div class="searchbar-wrapper">
-          <div class="district-wrapper">
+        <div class="searchbar-wrapper search-input-element">
+          <div class="district-wrapper search-input-element" @click.stop="openSelector('district')">
             <div class="search-input">
-              <div class="title">地區</div>
-              <div class="text">選擇地區</div>
+              <div class="title search-input-element">地區</div>
+              <div class="text search-input-element">{{ selectDistrict ? selectDistrict : '附近的地區' }}</div>
             </div>
+            <SelectDistrict
+              :showSelector="showSelectorDistrict"
+              @selectDistrict="getDistrict"
+            >
+            </SelectDistrict>
           </div>
-          <div class="category-wrapper">
+          <div class="category-wrapper search-input-element" @click.stop="openSelector('category')">
+            <div class="divider search-input-element"></div>
+            <div class="search-input search-input-element">
+              <div class="title search-input-element">類型</div>
+              <div class="text search-input-element">{{ selectCategory ? selectCategory : '所有類型' }}</div>
+            </div>
+            <SelectCategory
+              :showSelector="showSelectorCategory"
+              @selectCategory="getCategory"
+            >
+            </SelectCategory>
+          </div>
+          <div class="budget-wrapper search-input-element" @click.stop="openSelector('price')">
             <div class="divider"></div>
-            <div class="search-input">
-              <div class="title">類型</div>
-              <div class="text">選擇類型</div>
+            <div class="search-input search-input-element">
+              <div class="title search-input-element">預算</div>
+              <div class="text search-input-element" v-if="selectPrice.length !== 2">價格不限</div>
+              <div class="text search-input-element" v-if="selectPrice.length === 2">{{ selectPrice[0] | priceFormat }} - {{ selectPrice[1] === 9999 ? 1500 : selectPrice[1] | priceFormat }}<span v-if="selectPrice[1] === 9999"> +</span></div>
             </div>
+            <SelectPrices
+              :showSelector="showSelectorPrice"
+              @selectPrice="getPrice">
+            </SelectPrices>
           </div>
-          <div class="budget-wrapper">
-            <div class="divider"></div>
-            <div class="search-input">
-              <div class="title">預算</div>
-              <div class="text">選擇預算</div>
-            </div>
-          </div>
-          <div class="icon-wrapper">
+          <div class="icon-wrapper" @click="startSearching">
             <div class="icon search"></div>
           </div>
         </div>
@@ -133,14 +148,28 @@
 
 <script>
 
+import SelectDistrict from '@/components/SelectDistrict.vue'
+import SelectCategory from '@/components/SelectCategory.vue'
+import SelectPrices from '@/components/SelectPrice.vue'
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
       openSearch: false,
-      showMenu: false
+      showMenu: false,
+      showSelectorDistrict: false,
+      showSelectorCategory: false,
+      showSelectorPrice: false,
+      selectPrice: [],
+      selectCategory: '',
+      selectDistrict: ''
     }
+  },
+  components: {
+    SelectDistrict,
+    SelectCategory,
+    SelectPrices
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
@@ -161,6 +190,25 @@ export default {
     })
   },
   methods: {
+    clickSearchBar () {
+      this.openSearch = !this.openSearch
+      this.clickSearch = !this.clickSearch
+    },
+    openSelector (target) {
+      if (target === 'district') {
+        this.showSelectorDistrict = true
+        this.showSelectorCategory = false
+        this.showSelectorPrice = false
+      } else if (target === 'category') {
+        this.showSelectorCategory = true
+        this.showSelectorDistrict = false
+        this.showSelectorPrice = false
+      } else if (target === 'price') {
+        this.showSelectorPrice = true
+        this.showSelectorDistrict = false
+        this.showSelectorCategory = false
+      }
+    },
     signout () {
       this.$store.commit('revokeAuthentication')
       this.showMenu = false
@@ -175,6 +223,36 @@ export default {
         icon: 'success',
         title: '成功登出'
       })
+    },
+    getCategory (category) {
+      this.selectCategory = category
+      this.showSelectorCategory = false
+    },
+    getDistrict (district) {
+      this.selectDistrict = district
+      this.showSelectorDistrict = false
+    },
+    getPrice (price) {
+      this.selectPrice = price
+      this.showSelectorPrice = false
+    },
+    startSearching () {
+      const queryStringArray = ['']
+      if (this.selectCategory) {
+        queryStringArray.push(`category=${this.selectCategory}`)
+      }
+      if (this.selectDistrict) {
+        queryStringArray.push(`district=${this.selectDistrict}`)
+      }
+      if (this.selectPrice.length === 2) {
+        queryStringArray.push(`low=${this.selectPrice[0]}`)
+        queryStringArray.push(`high=${this.selectPrice[1]}`)
+      }
+      let queryString = '?page=1'
+      if (queryStringArray.length > 1) {
+        queryString += queryStringArray.join('&')
+      }
+      this.$router.push(`/map${queryString}`)
     }
   }
 }
