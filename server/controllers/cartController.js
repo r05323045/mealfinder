@@ -43,18 +43,20 @@ const cartController = {
   },
 
   postCart: async (req, res) => {
+    const { CouponId, quantity } = req.body
+    const UserId = req.user.id
     const [cartItem] = await CartItem.findOrCreate({
-      where: { CouponId: req.body.CouponId, UserId: req.user.id },
+      where: { CouponId, UserId },
       defauts: {
-        CouponId: req.body.CouponId,
-        UserId: req.user.id,
-        quantity: req.body.quantity
+        CouponId,
+        UserId,
+        quantity
       }
     })
     return cartItem.update(
       {
-        UserId: req.user.id,
-        quantity: Number((cartItem.quantity || 0)) + Number(req.body.quantity)
+        UserId,
+        quantity: Number((cartItem.quantity || 0)) + Number(quantity)
       }
     )
       .then((cartItem) => {
@@ -85,7 +87,9 @@ const cartController = {
   },
 
   deleteCartItem: (req, res) => {
-    CartItem.findByPk(req.params.id).then(cartItem => {
+    const UserId = req.user.id
+    const CouponId = req.params.id
+    CartItem.findOne({ where: { UserId, CouponId } }).then(cartItem => {
       cartItem.destroy()
         .then(() => {
           return res.json({ status: 'success', message: 'delete item in cart' })
@@ -187,7 +191,8 @@ const cartController = {
         ])
           .then(([itemInCart, order]) => {
             const orderitems = cart.map(data => {
-              const uniqueId = Math.floor(Math.random() * 1000000000000) + 1
+              const { NO } = data.Coupon
+              const uniqueId = helpers.getRandom(NO)
               const id = data.Coupon.id
               const price = Number(data.Coupon.price)
               const quantity = data.quantity

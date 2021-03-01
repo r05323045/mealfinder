@@ -89,10 +89,30 @@ function getTradeInfo(Amt, Desc, email) {
   return tradeInfo
 }
 
+function getRandom(NO) {
+  const nubmerArr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+  const letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+  let left = ""
+  let right = ""
+
+  for (let i = 0; i < 8; i++) {
+    const index = Math.floor(Math.random() * 26)
+    left += String(letter[index])
+  }
+
+  for (let i = 0; i < 8; i++) {
+    const index = Math.floor(Math.random() * 10)
+    right += String(nubmerArr[index])
+  }
+
+  return (NO + '#' + left + right)
+}
+
 module.exports = {
   genDataChain,
   create_mpg_aes_encrypt,
   create_mpg_aes_decrypt,
   create_mpg_sha_encrypt,
   getTradeInfo,
+  getRandom,
 }
