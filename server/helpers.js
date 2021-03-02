@@ -10,12 +10,12 @@ const ReturnURL = URL + "/spgateway/callback?from=ReturnURL"
 const NotifyURL = URL + "/spgateway/callback?from=NotifyURL"
 const ClientBackURL = URL + "/users/purchase"
 
-function genDataChain(TradeInfo) {
-  let results = [];
+function genDataChain (TradeInfo) {
+  let results = []
   for (let kv of Object.entries(TradeInfo)) {
-    results.push(`${kv[0]}=${kv[1]}`);
+    results.push(`${kv[0]}=${kv[1]}`)
   }
-  return results.join("&");
+  return results.join("&")
 }
 
 function create_mpg_aes_encrypt(TradeInfo) {
