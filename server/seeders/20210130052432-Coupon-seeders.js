@@ -4,7 +4,7 @@ const restaurantData = require('../test-restaurant-data.json')
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const coupons = []
-    for (let i = 0; i < restaurantData.length; i++) {
+    for (let i = 0; i < restaurantData.data.length; i++) {
       coupons.push({
         id: i * 10 + 1,
         NO: `AA${i * 10 + 1}`,
