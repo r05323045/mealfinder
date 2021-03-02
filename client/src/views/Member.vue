@@ -70,7 +70,7 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper">
+          <div class="link-card-wrapper no-use">
             <div class="link-card">
             </div>
           </div>
@@ -170,17 +170,29 @@ $red: rgb(255, 56, 92);
       }
       .account-wrapper {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         margin-top: 8px;
         font-size: 18px;
         font-weight: 400;
         line-height: 1.5;
+        @media (min-width: 768px) {
+          flex-direction: row;
+        }
         .name {
-          margin-right: 12px;
+          margin: 0 0 12px 0;
           font-weight: 600;
+          @media (min-width: 768px) {
+            margin: 0 12px 0 0;
+          }
         }
         .account {
+          font-size: 14px;
           color: #666;
+          margin-bottom: 12px;
+          @media (min-width: 768px) {
+            margin-bottom: 0;
+            font-size: 18px;
+          }
         }
       }
       .link-wrapper {
@@ -238,6 +250,9 @@ $red: rgb(255, 56, 92);
             }
           }
         }
+        .link-card-wrapper.no-use {
+          background: none;
+        }
       }
     }
     .more-container {
@@ -262,7 +277,7 @@ $red: rgb(255, 56, 92);
         width: 100%;
         padding-top: 66.7%;
         position: relative;
-        background: url(../assets/eatNow.svg) no-repeat center;
+        background: url(../assets/drink-coffee.svg) no-repeat center;
         background-size: cover;
         @media (min-width: 768px) {
           padding-top: 33.3%;

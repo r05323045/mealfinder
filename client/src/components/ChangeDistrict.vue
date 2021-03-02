@@ -109,7 +109,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: 'error',
-          title: '目前無法取得類別，請稍候'
+          title: '目前無法取得地區，請稍候'
         })
       }
     },

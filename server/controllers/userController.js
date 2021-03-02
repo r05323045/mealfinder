@@ -80,7 +80,7 @@ const userController = {
               name,
               email,
               password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),
-              avatar: 'https://cdn.pixabay.com/photo/2018/04/18/18/56/user-3331256__340.png'
+              avatar: 'https://i.imgur.com/oOfxL8T.png'
             })
               .then(() => {
                 return res.json({
@@ -280,8 +280,6 @@ const userController = {
         res.json(item)
       })
   }
-
-
 }
 
 module.exports = userController

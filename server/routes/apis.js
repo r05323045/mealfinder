@@ -37,39 +37,28 @@ const cartController = require('../controllers/cartController')
 // login,logout,signup
 router.post('/signin', userController.signIn)
 router.post('/signup', userController.signUp)
+router.get('/success', (req, res) => res.send('You have successfully logged in'))
+router.get('/error', (req, res) => res.send('error logging in'))
 router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['public_profile', 'email'] }))
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', {
-    session: false,
-    failureRedirect: '/signin'
+    session: false
   }), (req, res) => {
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined
-    return res.json({
-      status: 'success',
-      message: 'ok',
-      token,
-      user: req.user
-    })
+    return res.redirect(`http://localhost:8080/#/_=_?UserId=${req.user.id}&token=${token}`)
   }
 )
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get('/auth/google/callback',
   passport.authenticate('google', {
-    session: false,
-    failureRedirect: '/signin'
+    session: false
   }), (req, res) => {
-    console.log(req.user)
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined
-    return res.json({
-      status: 'success',
-      message: 'ok',
-      token,
-      user: req.user
-    })
+    return res.redirect(`http://localhost:8080/#/_=_?UserId=${req.user.id}&token=${token}`)
   })
 
 // userController_UserModel
@@ -99,12 +88,13 @@ router.get('/user/:id/purchase', authenticated, userController.getPurchases)
 router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.getPurchase)
 
 // cartController_Cart model
-router.get('/cart', cartController.getCart)
-router.post('/cart', cartController.postCart)
+router.get('/cart', authenticated, cartController.getCart)
+router.post('/cart', authenticated, cartController.postCart)
 router.post('/cartItem/:id/add', cartController.addCartItem)
 router.post('/cartItem/:id/reduce', cartController.reduceCartItem)
-router.delete('/cartItem/:id', cartController.deleteCartItem)
-router.get('/order', authenticated, cartController.getOrder)
+router.delete('/cart/:id', cartController.deleteCartItem)
+router.get('/order', authenticated, cartController.getOrders)
+router.get('/order/:id', authenticated, cartController.getOrder)
 router.post('/order', authenticated, cartController.postOrder)
 router.post('/spgateway/callback', authenticated, cartController.spgatewayCallback)
 
@@ -119,6 +109,7 @@ router.get('/nearby', restaurantController.getNearByRestaurants)
 router.get('/user/restaurants/:restaurantId', authenticated, restaurantController.getUsersRestaurant)
 router.get('/user/restaurants', authenticated, restaurantController.getUsersRestaurants)
 router.get('users/nearby', authenticated, restaurantController.getUserNearByRestaurants)
+router.get('/prices', restaurantController.getAllPrices)
 
 // reservationController_reservation model
 router.post('/user/reservations', authenticated, reservationController.addReservation)

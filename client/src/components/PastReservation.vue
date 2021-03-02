@@ -150,6 +150,7 @@ $red: rgb(255, 56, 92);
       flex-direction: row;
     }
     .booking-card {
+      cursor: pointer;
       flex: 1;
       margin-bottom: 24px;
       border: 1px solid $divider;

@@ -2,18 +2,18 @@
   <div class="record-page">
     <Navbar></Navbar>
     <div class="record-container">
-      <div class="main-title">在2021年1月1日的訂單紀錄</div>
+      <div class="main-title">在 {{ order.createdAt | normalDate }} 的訂單紀錄</div>
       <div class="info-and-comment">
         <div class="information-container">
           <div class="information-body">
-            <div class="item-wrapper product">
+            <div class="item-wrapper product" v-if="order.OrderItem">
               <div class="top-wrapper">
                 <img class="icon restaurant" src="../assets/restaurant.svg">
                 <div class="title">商品名稱</div>
               </div>
-              <div class="content-wrapper" v-for="i in 5" :key="i">
-                <div class="content">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排 - 安格斯牛排即享券</div>
-                <div class="count">x1</div>
+              <div class="content-wrapper" v-for="item in order.OrderItem" :key="item.id">
+                <div class="content">{{ item.Coupon.description }}</div>
+                <div class="count">x {{ item.quantity }}</div>
               </div>
             </div>
             <div class="item-wrapper">
@@ -22,7 +22,7 @@
                 <div class="title">使用期限</div>
               </div>
               <div class="content">
-                2022/1/01
+                {{ expireData | normalDate }}
               </div>
             </div>
             <div class="item-wrapper">
@@ -30,7 +30,7 @@
                 <img class="icon profile" src="../assets/profile.svg">
                 <div class="title">商品數量</div>
               </div>
-              <div class="content">2</div>
+              <div class="content" v-if="order.OrderItem">{{ order.OrderItem.map(item => item.quantity).reduce((a, b)=> a + b, 0) }}</div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
@@ -38,7 +38,7 @@
                 <div class="title">購買人姓名</div>
               </div>
               <div class="content">
-                <span class="name">XXX</span>
+                <span class="name">{{ order.name }}</span>
               </div>
             </div>
             <div class="item-wrapper">
@@ -46,7 +46,7 @@
                 <img class="icon email" src="../assets/email.svg">
                 <div class="title">購買人Email</div>
               </div>
-              <div class="content">user1@example.com</div>
+              <div class="content">{{ order.email }}</div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
@@ -60,39 +60,7 @@
                 <img class="icon map" src="../assets/map.svg">
                 <div class="title">付款金額</div>
               </div>
-              <div class="content">$1995</div>
-            </div>
-          </div>
-        </div>
-        <div class="comment-card-wrapper">
-          <div class="comment-card">
-            <div class="header">
-              <div class="title">填寫建議</div>
-            </div>
-            <div class="divider"></div>
-            <div class="card-content">
-              <div class="user-info-wrapper">
-                <div class="avatar"></div>
-                <div class="user-info">
-                  <div class="name">Jim Lin</div>
-                  <div class="time">2021/01/01</div>
-                </div>
-              </div>
-              <div class="rating-container">
-                <div class="star-wrapper">
-                  <div class="star" v-for="i in 5" :key="`star-${i}`" @click="rating(i)" :class="{ rated: i <= rated }"></div>
-                </div>
-                <div class="text">點擊評分</div>
-              </div>
-              <div class="text-container">
-                <textarea class="all-input text-area" placeholder="填寫你對商品的體驗"></textarea>
-                <div class="note-count">(0/140)</div>
-              </div>
-            </div>
-            <div class="write-comment">
-              <div class="button-wrapper">
-                <div class="button">填寫建議</div>
-              </div>
+              <div class="content">{{ order.total_amount | priceFormat }}</div>
             </div>
           </div>
         </div>
@@ -106,6 +74,9 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import cartsAPI from '@/apis/carts'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 
@@ -113,19 +84,36 @@ export default {
   data () {
     return {
       tabFuture: true,
-      rated: -1
+      order: {},
+      expireData: new Date()
     }
   },
   components: {
     Navbar,
     Footer
   },
-  mounted () {
+  created () {
+    this.fetchOrder()
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
-    rating (num) {
-      console.log(num)
-      this.rated = num
+    async fetchOrder () {
+      try {
+        const { data } = await cartsAPI.getOrder(this.$route.params.id)
+        this.order = data.order
+        const year = new Date(this.order.createdAt).getFullYear()
+        const month = new Date(this.order.createdAt).getMonth()
+        const day = new Date(this.order.createdAt).getDate()
+        this.expireData = new Date(year + 1, month, day)
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得所有歷史訂單'
+        })
+      }
     }
   }
 }

@@ -1,19 +1,19 @@
 <template>
   <div class="home" ref="home">
-    <Navbar v-show="scrollY > 58"></Navbar>
+    <Navbar v-show="scrollY > 58 && scrollUp"></Navbar>
     <div class="page-container">
-      <div class="searchbar-wrapper-outside" v-show="scrollY > 50">
-        <div class="searchbar">
-          <input v-if="false" class="search-input">
-            <div class="wrapper">
-              <div class="icon search"></div>
-              <div class="text">想吃什麼？</div>
-            </div>
+      <div class="banner">
+        <div class="searchbar-wrapper-outside" :class="{ toFront: scrollY > 50 && scrollUp }">
+        <div class="searchbar" @click="showModal = !showModal">
+          <input v-if="false" class="search-input" v-show="scrollY > 50 && scrollUp">
+          <div class="wrapper" v-show="scrollY > 50 && scrollUp">
+            <div class="icon search"></div>
+            <div class="text">想吃什麼？</div>
+          </div>
         </div>
       </div>
-      <div class="banner">
-        <div class="searchbar-wrapper-inner" v-show="scrollY <= 50">
-          <div class="searchbar">
+        <div class="searchbar-wrapper-inner">
+          <div class="searchbar" @click="showModal = !showModal">
             <input v-if="false" class="search-input">
             <div class="icon-wrapper">
               <div class="icon search"></div>
@@ -38,7 +38,7 @@
         <div class="district-deck">
           <div class="district" @click="$router.push('/map?district=大安區')">
             <div class="background">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1597413097376-a3fff34811f2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1597413097376-a3fff34811f2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">大安區</span>
               </div>
@@ -46,7 +46,7 @@
           </div>
           <div class="district" @click="$router.push('/map?district=中山區')">
             <div class="background">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1594614296789-8080214c6fca?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1594614296789-8080214c6fca?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">中山區</span>
               </div>
@@ -56,7 +56,7 @@
         <div class="district-deck">
           <div class="district" @click="$router.push('/map?district=信義區')">
             <div class="background">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">信義區</span>
               </div>
@@ -64,7 +64,7 @@
           </div>
           <div class="district" @click="$router.push('/map?district=中正區')">
             <div class="background">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">中正區</span>
               </div>
@@ -74,7 +74,7 @@
         <div class="district-deck">
           <div class="district" @click="$router.push('/map?district=松山區')">
             <div class="background">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1552993873-0dd1110e025f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1552993873-0dd1110e025f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">松山區</span>
               </div>
@@ -82,7 +82,7 @@
           </div>
           <div class="district"  @click="$router.push('/map')">
             <div class="background">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">更多地區</span>
               </div>
@@ -92,7 +92,7 @@
         <div class="district-deck-desktop">
           <div class="district" @click="$router.push('/map?district=大安區')">
             <div class="background top">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1597413097376-a3fff34811f2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1597413097376-a3fff34811f2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">大安區</span>
               </div>
@@ -100,7 +100,7 @@
           </div>
           <div class="district" @click="$router.push('/map?district=松山區')">
             <div class="background top">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1552993873-0dd1110e025f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1552993873-0dd1110e025f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">松山區</span>
               </div>
@@ -110,7 +110,7 @@
         <div class="district-deck-desktop">
           <div class="district" @click="$router.push('/map?district=信義區')">
             <div class="background bottom">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">信義區</span>
               </div>
@@ -118,7 +118,7 @@
           </div>
           <div class="district" @click="$router.push('/map?district=中正區')">
             <div class="background bottom">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1547211453-719b1bdec5f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">中正區</span>
               </div>
@@ -126,7 +126,7 @@
           </div>
           <div class="district"  @click="$router.push('/map')">
             <div class="background bottom">
-              <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+              <div class="image" style="background: url(https://images.unsplash.com/photo-1502951364727-7acb8ea79a39?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
               <div class="text-wrapper">
                 <span class="text">更多地區</span>
               </div>
@@ -143,7 +143,7 @@
               <div class="swiper-slide" @click="$router.push('/map?category=日式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1496112774951-bf41010eed5e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1496112774951-bf41010eed5e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
                   </div>
                 </div>
                 <div class="category-name">日式料理</div>
@@ -152,7 +152,7 @@
               <div class="swiper-slide" @click="$router.push('/map?category=港式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1562492901-e7021f6af8c2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1562492901-e7021f6af8c2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
                   </div>
                 </div>
                 <div class="category-name">港式料理</div>
@@ -161,7 +161,7 @@
               <div class="swiper-slide" @click="$router.push('/map?category=韓式料理')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1498654896293-37aacf113fd9?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1498654896293-37aacf113fd9?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
                   </div>
                 </div>
                 <div class="category-name">韓式料理</div>
@@ -170,7 +170,7 @@
               <div class="swiper-slide" @click="$router.push('/map?category=早午餐')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1455853739633-8c94c03d8121?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1455853739633-8c94c03d8121?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
                   </div>
                 </div>
                 <div class="category-name">早午餐</div>
@@ -179,7 +179,7 @@
               <div class="swiper-slide" @click="$router.push('/map?category=餐酒館')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1468072114808-903e572b8ead?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1468072114808-903e572b8ead?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
                   </div>
                 </div>
                 <div class="category-name">餐酒館</div>
@@ -188,7 +188,7 @@
               <div class="swiper-slide" @click="$router.push('/map')">
                 <div class="inner-wrapper">
                   <div class="background">
-                    <div class="image" style="background: url(https://images.unsplash.com/photo-1543992321-cefacfc2322e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1332&q=80) no-repeat center; background-size: cover"></div>
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1543992321-cefacfc2322e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1332&q=80) no-repeat center / cover"></div>
                   </div>
                 </div>
                 <div class="category-name">更多類型</div>
@@ -200,35 +200,48 @@
           </div>
         </div>
       </div>
-      <div class="find-more">
-        <div class="title">尋找更多</div>
-        <div class="container">
-          <div class="illustration-wrapper">
-            <div class="cover">
-              <div class="button-wrapper">
-                <div class="button" @click="$router.push('/restaurants')">餐廳清單</div>
+      <div class="do-more">
+        <div class="category-container">
+          <div class="title">尋找更多</div>
+          <div class="swiper-container">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" @click="$router.push('/coupons')">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1513639776629-7b61b0ac49cb?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb21vdGlvbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
+                  </div>
+                </div>
+                <div class="category-name">購買餐券</div>
               </div>
-              <div class="button-wrapper">
-                <div class="button map" @click="$router.push('/map')">地圖探索</div>
+              <div class="swiper-slide" @click="$router.push('/map')">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1548345680-f5475ea5df84?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
+                  </div>
+                </div>
+                <div class="category-name">地圖探索</div>
+              </div>
+              <div class="swiper-slide" @click="$router.push('/restaurants')">
+                <div class="inner-wrapper">
+                  <div class="background">
+                    <div class="image" style="background: url(https://images.unsplash.com/photo-1556155092-490a1ba16284?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
+                  </div>
+                </div>
+                <div class="category-name">餐廳清單</div>
               </div>
             </div>
-          </div>
-          <div class="item-group">
-            <div class="item-wrapper">
-              <div class="item" @click="$router.push('/restaurants')">
-                <div class="background restaurant-background"></div>
-                <span class="text">餐廳清單</span>
-              </div>
-              <div class="item" @click="$router.push('/map')">
-                <div class="background map-background"></div>
-                <span class="text">地圖探索</span>
-              </div>
-            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
           </div>
         </div>
       </div>
       <Footer></Footer>
     </div>
+    <MobileSearch
+      :showModal="showModal"
+      @closeModal="closeFilter"
+    >
+    </MobileSearch>
   </div>
 </template>
 
@@ -236,19 +249,26 @@
 
 import Swiper from 'swiper/swiper-bundle.js'
 import 'swiper/swiper-bundle.css'
+import MobileSearch from '@/components/MobileSearch.vue'
 import Navbar from '@/components/Navbar.vue'
 import NavbarHome from '@/components/NavbarHome.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
-  components: { Navbar, Footer, NavbarHome },
+  components: {
+    Navbar,
+    Footer,
+    NavbarHome,
+    MobileSearch
+  },
   name: 'Home',
   data () {
     return {
       scrollY: 0,
       scrollUp: false,
       homeHeight: 0,
-      scrollBarHeight: 0
+      scrollBarHeight: 0,
+      showModal: false
     }
   },
   mounted () {
@@ -286,6 +306,9 @@ export default {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs.home.scrollTop
       this.scrollY = this.$refs.home.scrollTop
+    },
+    closeFilter (isEditing) {
+      this.showModal = false
     }
   }
 }
@@ -304,9 +327,9 @@ $red: rgb(255, 56, 92);
   position: relative;
   .page-container {
     .searchbar-wrapper-outside {
-      z-index: 997;
-      background: #ffffff;
-      position: sticky;
+      z-index: -999;
+      width: calc(100% - 48px);
+      position: fixed;
       padding: 16px 24px;
       top: 0;
       display: flex;
@@ -316,7 +339,6 @@ $red: rgb(255, 56, 92);
         display: none;
       }
       .searchbar {
-        box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
         padding: 0 4px 0 12px;
         background: #ffffff;
         width: 100%;
@@ -355,14 +377,25 @@ $red: rgb(255, 56, 92);
         }
       }
     }
+    .searchbar-wrapper-outside.toFront {
+      z-index: 997;
+      background: #ffffff;
+      .searchbar {
+        box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+      }
+    }
     .searchbar-wrapper.leave-top {
       background: #ffffff;
     }
     .banner {
+      overflow: hidden;
       height: 538px;
       width: 100%;
       position: relative;
+      background: url(../assets/mobile-home-background.png) no-repeat center;
+      background-size: cover;
       @media (min-width: 768px) {
+        background: none;
         height: calc(min(588/744 * 100vw, 85vh) + 50px);
       }
       @media (min-width: 992px) {
@@ -425,8 +458,6 @@ $red: rgb(255, 56, 92);
         z-index: -1;
         height: 100%;
         width: 100%;
-        background: url(https://images.unsplash.com/photo-1515668236457-83c3b8764839?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80) no-repeat center;
-        background-size: cover;
         filter: brightness(0.6);
         @media (min-width: 768px) {
           background: url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80) no-repeat center;
@@ -762,6 +793,89 @@ $red: rgb(255, 56, 92);
           }
           .swiper-button-prev {
             left: 0;
+          }
+        }
+      }
+    }
+    .do-more {
+      margin-top: 24px;
+      padding: 24px 0 32px 24px;
+      @media (min-width: 768px) {
+        padding: 40px;
+      }
+      @media (min-width: 992px) {
+        padding: 40px 80px 40px 80px;
+      }
+      .category-container {
+        width: 100%;
+        max-width: 1440px;
+        margin: auto;
+        .title {
+          height: 40px;
+          font-size: 22px;
+          font-weight: 700;
+          text-align: left;
+          line-height: 22px;
+          @media (min-width: 992px) {
+            padding-bottom: 16px;
+            font-size: 32px;
+            line-height: 36px;
+            margin-bottom: 8px;
+          }
+        }
+        .swiper-container {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          overflow: hidden;
+          .swiper-wrapper {
+            height: 100%;
+            .swiper-slide {
+              text-align: center;
+              font-size: 18px;
+              width: 50%;
+              .inner-wrapper {
+                cursor: pointer;
+                width: 100%;
+                .background {
+                  padding-bottom: 66.7%;
+                  position: relative;
+                  .image {
+                    background: url(https://images.unsplash.com/photo-1496113912021-34ed23aad177?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80) no-repeat center;
+                    background-size: cover;
+                    border-radius: 8px;
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                    left:0;
+                    @media (min-width: 768px) {
+                      filter: brightness(0.8);
+                    }
+                  }
+                }
+                &:hover {
+                  transform: scale(1.02);
+                  transition: ease-in-out 0.3s;
+                  .background {
+                    .image {
+                      filter: brightness(1);
+                    }
+                  }
+                }
+              }
+              .category-name {
+                margin-top: 8px;
+                text-align: left;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 22px;
+              }
+            }
+          }
+          .swiper-button-next,
+          .swiper-button-prev {
+            display: none;
           }
         }
       }

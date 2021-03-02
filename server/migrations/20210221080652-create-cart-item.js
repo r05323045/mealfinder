@@ -11,7 +11,7 @@ module.exports = {
       CouponId: {
         type: Sequelize.INTEGER
       },
-      CartId: {
+      UserId: {
         type: Sequelize.INTEGER
       },
       quantity: {

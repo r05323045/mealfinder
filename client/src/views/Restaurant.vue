@@ -129,7 +129,7 @@
           </div>
           <div class="time-wrapper">
             <div class="title">用餐時段</div>
-            <div class="explain">*灰色表示該時間已客滿，可點選其他可訂位日期</div>
+            <div class="explain">*灰色表示該時間已客滿或已過用餐時間，請點選其他可訂位日期</div>
             <div class="book-container">
               <div class="divider-wrapper" v-if="businessHoursObj[pickDateName] && businessHoursObj[pickDateName].noon.length > 0">
                 <div class="text">中午</div>
@@ -137,7 +137,7 @@
               </div>
               <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
                 <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].noon.length/3)" :key="`noon-wrapper-${i}`">
-                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].noon.slice((i - 1) * 3, i * 3)" :key="`noon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].noon.slice((i - 1) * 3, i * 3)" :key="`noon-${idx}`" :class="{ active: bookingTime === el, disabled: checkBookingIsLate(el) }" @click="bookingTime = el" :disabled="checkBookingIsLate(el)">
                     <span class="text">{{ el }}</span>
                   </button>
                 </div>
@@ -148,7 +148,7 @@
               </div>
               <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
                 <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].afternoon.length/3)" :key="`afternoon-wrapper-${i}`">
-                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].afternoon.slice((i - 1) * 3, i * 3)" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].afternoon.slice((i - 1) * 3, i * 3)" :key="`afternoon-${idx}`" :class="{ active: bookingTime === el, disabled: checkBookingIsLate(el) }" @click="bookingTime = el" :disabled="checkBookingIsLate(el)">
                     <span class="text">{{ el }}</span>
                   </button>
                 </div>
@@ -159,7 +159,7 @@
               </div>
               <div class="button-wrapper" v-if="businessHoursObj[pickDateName]">
                 <div class="button-row" v-for="i in Math.ceil(businessHoursObj[pickDateName].night.length/3)" :key="`night-wrapper-${i}`">
-                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].night.slice((i - 1) * 3, i * 3)" :key="`night-${idx}`" :class="{ active: bookingTime === el}" @click="bookingTime = el">
+                  <button class="button" v-for="(el, idx) in businessHoursObj[pickDateName].night.slice((i - 1) * 3, i * 3)" :key="`night-${idx}`" :class="{ active: bookingTime === el, disabled: checkBookingIsLate(el) }" @click="bookingTime = el" :disabled="checkBookingIsLate(el)">
                     <span class="text">{{ el }}</span>
                   </button>
                 </div>
@@ -266,10 +266,13 @@
         <div v-if="bookingTime" class="booking-info">{{ bookingTime }}</div>
       </div>
       <div class="divider"></div>
-      <div class="booking-button" :class="{ invalid: !bookingTime || adultNum < 1}" :disabled="!bookingTime || adultNum < 1" @click="bookingTime && adultNum > 0 ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
+      <div v-if="isAuthenticated" class="booking-button" :class="{ invalid: !bookingTime || adultNum < 1}" :disabled="!bookingTime || adultNum < 1" @click="bookingTime && adultNum > 0 ? $router.push(`/booking?restaurant=${$route.params.id}&adult=${adultNum}&child=${childNum}&date=${new Date(pickDate).getTime()}&time=${bookingTime}`) : ''">
         <div class="text" v-if="bookingTime && adultNum > 0">下一步，填寫聯絡資訊</div>
         <div class="text" v-if="!bookingTime && adultNum > 0">選擇用餐時間</div>
         <div class="text" v-if="adultNum < 1">選擇用餐人數</div>
+      </div>
+      <div v-if="!isAuthenticated" class="booking-button invalid" @click="$router.push('/signin')">
+        <div class="text">請先登入再進行訂位</div>
       </div>
     </div>
   </div>
@@ -383,6 +386,9 @@ export default {
           title: '目前無法取得餐廳，請稍候'
         })
       }
+    },
+    checkBookingIsLate (time) {
+      return new Date(`${moment(this.pickDate).format('YYYY/MM/DD')} ${time}`) < new Date()
     },
     findTodayBusinessHours () {
       this.restaurant.business_hours.forEach((b, idx) => {
@@ -1086,6 +1092,11 @@ $primary-color: #222;
                       color: #ffffff
                     }
                   }
+                }
+                .button.disabled {
+                  color: #ffffff;
+                  background: #919191;
+                  cursor: not-allowed;
                 }
                 .button:focus {
                   outline: none;

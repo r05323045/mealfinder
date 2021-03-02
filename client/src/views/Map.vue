@@ -20,18 +20,23 @@
     <div class="map-container">
       <div class="map-wrapper">
         <div class="restaurants-list" ref="restaurants-list" :class="{ leaveTop: this.scrollY > 0}">
-          <div class="title">所選區域的餐廳</div>
+          <div class="title">
+            <div class="result-count">{{ resultCount > 1000 ? '超過1,000' : resultCount }}間餐廳</div>
+            所選地圖範圍的餐廳
+          </div>
           <div class="filter-button-wrapper">
             <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
             <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
-            <div class="filter-button">預算</div>
+            <div class="filter-button" :class="{ 'filter-on': priceFilter.length === 2 }" @click="showPriceModal = !showPriceModal">預算</div>
           </div>
           <div class="sub-title">
             <img class="sub-title-img" src="../assets/diet.svg">
-            收錄台北市數千家餐廳，探索你週邊的美食
+            MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
           </div>
           <div class="restaurant-list-card">
             <div class="card-content">
+              <div class="no-result" v-if="resultCount === 0">沒有結果</div>
+              <div class="no-result-sub" v-if="resultCount === 0">請試著調整搜尋條件，如移除篩選條件或縮小地圖範圍</div>
               <div class="item-wrapper"
                 v-for="(r, index) in restaurants"
                 :key="`${index}`"
@@ -148,6 +153,7 @@
       @closeModal="closeFilter"
       :categoriesFilter = categoriesFilter
       :districtsFilter = districtsFilter
+      :priceFilter = priceFilter
     >
     </FilterModal>
     <AddCategory
@@ -162,6 +168,12 @@
       :districtsFilter = districtsFilter
     >
     </ChangeDistrict>
+    <PriceRange
+      :showModal="showPriceModal"
+      @closePriceModal="completePricing"
+      :priceFilter = priceFilter
+    >
+    </PriceRange>
   </div>
 </template>
 
@@ -177,6 +189,7 @@ import Footer from '@/components/Footer.vue'
 import FilterModal from '@/components/Filter.vue'
 import AddCategory from '@/components/AddCategory.vue'
 import ChangeDistrict from '@/components/ChangeDistrict.vue'
+import PriceRange from '@/components/PriceRange.vue'
 export default {
   data () {
     return {
@@ -184,8 +197,11 @@ export default {
       restaurants: [],
       showAddModal: false,
       showChangeModal: false,
+      showPriceModal: false,
       categoriesFilter: [],
       districtsFilter: [],
+      priceFilter: [],
+      priceQueryString: [],
       mobileBound: { lat: 24.96428535078719, lng: 121.47942180559336 },
       mapCenter: { lat: 25.0469724, lng: 121.5460995 },
       filter: ['', 'clat=25.0469724', 'clng=121.5460995', 'blat=24.96428535078719', 'blng=121.47942180559336'],
@@ -200,7 +216,8 @@ export default {
       noMoreData: false,
       scrollY: 0,
       numOfPage: 1,
-      hoverOn: 0
+      hoverOn: 0,
+      resultCount: 0
     }
   },
   components: {
@@ -209,17 +226,20 @@ export default {
     Navbar,
     FilterModal,
     AddCategory,
-    ChangeDistrict
+    ChangeDistrict,
+    PriceRange
   },
   created () {
     if (!(Object.keys(this.$route.query).length === 0 && this.$route.query.constructor === Object)) {
-      if (this.$route.query.category && this.$route.query.district) {
-        this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
+      if (this.$route.query.district) {
         this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
-      } else if (this.$route.query.category && !this.$route.query.district) {
+      }
+      if (this.$route.query.category) {
         this.categoriesFilter = typeof this.$route.query.category === 'string' ? [this.$route.query.category] : [...this.$route.query.category]
-      } else if (!this.$route.query.category && this.$route.query.district) {
-        this.districtsFilter = typeof this.$route.query.district === 'string' ? [this.$route.query.district] : [...this.$route.query.district]
+      }
+      if (this.$route.query.low && this.$route.query.high) {
+        this.priceFilter.push(Number(this.$route.query.low))
+        this.priceFilter.push(Number(this.$route.query.high))
       }
     }
   },
@@ -234,34 +254,44 @@ export default {
     onScroll (e) {
       this.scrollY = this.$refs['map-page'].scrollTop
     },
-    closeFilter (isEditing, cateFilter, distFilter) {
+    closeFilter (isEditing, cateFilter, distFilter, pFilter) {
       this.showModal = false
       if (isEditing) {
         this.categoriesFilter = cateFilter
         this.districtsFilter = distFilter
+        this.priceFilter = pFilter
+        this.restaurants = []
+        this.numOfPage = 1
+        this.fetchNearByRestaurants()
       }
-      this.restaurants = []
-      this.numOfPage = 1
-      this.fetchNearByRestaurants()
     },
 
     completeAdding (isAdding, filter) {
       this.showAddModal = false
       if (isAdding) {
+        this.restaurants = []
+        this.numOfPage = 1
         this.categoriesFilter = filter
+        this.fetchNearByRestaurants()
       }
-      this.restaurants = []
-      this.numOfPage = 1
-      this.fetchNearByRestaurants()
     },
     completeChanging (isChanging, filter) {
       this.showChangeModal = false
       if (isChanging) {
+        this.restaurants = []
+        this.numOfPage = 1
         this.districtsFilter = filter
+        this.fetchNearByRestaurants()
       }
-      this.restaurants = []
-      this.numOfPage = 1
-      this.fetchNearByRestaurants()
+    },
+    completePricing (isPricing, filter) {
+      this.showPriceModal = false
+      if (isPricing) {
+        this.restaurants = []
+        this.numOfPage = 1
+        this.priceFilter = filter
+        this.fetchNearByRestaurants()
+      }
     },
     closeInfoWindow () {
       if (!event.target.classList.contains('marker-item') && this.infoWindow.open) {
@@ -275,13 +305,21 @@ export default {
     },
     async fetchNearByRestaurants (hasPage) {
       try {
+        if (this.priceFilter.length === 2) {
+          this.priceQueryString[0] = `min=${this.priceFilter[0]}`
+          this.priceQueryString[1] = `max=${this.priceFilter[1]}`
+        } else {
+          this.priceQueryString = []
+        }
         if (this.$refs.gmap.$mapObject) {
           if (!(this.$refs.gmap.$mapObject.getCenter().lat() === this.mapCenter.lat && this.$refs.gmap.$mapObject.getCenter().lng() === this.mapCenter.lng)) {
             this.mapCenter = { lat: this.$refs.gmap.$mapObject.getCenter().lat(), lng: this.$refs.gmap.$mapObject.getCenter().lng() }
           }
-          this.filter = ['', ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds().Wa.i}`, `blng=${this.$refs.gmap.$mapObject.getBounds().Qa.i}`]
+          const latKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[0]
+          const lngKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[1]
+          this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds()[`${latKey}`].i}`, `blng=${this.$refs.gmap.$mapObject.getBounds()[`${lngKey}`].i}`]
         } else {
-          this.filter = [...this.filter, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
+          this.filter = [...this.filter, ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
         }
         if (!hasPage) {
           this.numOfPage = 1
@@ -293,24 +331,9 @@ export default {
           r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
         })
         this.numOfPage += 1
+        this.resultCount = data.count
         this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
         this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
-      } catch (error) {
-        console.log(error)
-        Toast.fire({
-          icon: 'error',
-          title: '目前無法取得餐廳，請稍候'
-        })
-      }
-    },
-    async fetchRestaurants (filter) {
-      try {
-        const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1) : await restaurantsAPI.getRestaurants(this.numOfPage + 1)
-        this.restaurants = data.data
-        this.restaurants.forEach(r => {
-          r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
-        })
-        this.numOfPage += 1
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -498,11 +521,11 @@ $darkred: #c13515;
       }
       .restaurants-list {
         display: none;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           overflow: scroll;
           margin: 22px 0;
           padding: 0 24px;
-          min-width: 720px;
+          min-width: 600px;
           display: flex;
           flex-direction: column;
           flex: 0.5
@@ -511,18 +534,25 @@ $darkred: #c13515;
           flex: calc(7/16)
         }
         .title {
-          margin: 12px 0;
           font-size: 22px;
           font-weight: 700;
           text-align: left;
           line-height: 22px;
           @media (min-width: 768px) {
+            padding-top: 36px;
             font-size: 26px;
             line-height: 30px;
           }
           @media (min-width: 992px) {
+            padding-top: 50px;
             font-size: 32px;
             line-height: 36px;
+          }
+          .result-count {
+            font-size: 14px;
+            line-height: 18px;
+            padding-bottom: 8px;
+            font-weight: 400;
           }
         }
         .filter-button-wrapper {
@@ -549,6 +579,7 @@ $darkred: #c13515;
           .filter-button.filter-on {
             font-weight: 800;
             border: 1px solid #000000;
+            background: rgb(247, 247, 247);
           }
         }
         .sub-title {
@@ -571,6 +602,19 @@ $darkred: #c13515;
           border-radius: 12px;
           position: relative;
           .card-content {
+            .no-result {
+              margin-top: 32px;
+              text-align: left;
+              font-size: 22px;
+              line-height: 26px;
+              font-weight: 600;
+            }
+            .no-result-sub {
+              text-align: left;
+              margin: 4 0 32px;
+              font-size: 16px;
+              line-height: 24px;
+            }
             .item-wrapper {
               cursor: pointer;
               background: #ffffff;
@@ -767,9 +811,9 @@ $darkred: #c13515;
       }
       .google-map {
         flex: 1;
-        height: calc(100vh - 114px);
+        height: calc(100vh - 80px);
         position: relative;
-        @media (min-width: 768px) {
+        @media (min-width: 992px) {
           height: 100%;
           flex: 0.5;
         }

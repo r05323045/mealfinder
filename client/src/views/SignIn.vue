@@ -35,13 +35,13 @@
           </validation-observer>
           <div class="social-media-signin">
             <div class="text">使用社群帳號快速登入</div>
-            <div class="social-button google" @click.prevent="">
+            <div class="social-button google" @click="signInByGoogle">
               <img src="../assets/google-signin.svg">
               <div class="button">
                 <span>使用 Google 帳號登入</span>
               </div>
             </div>
-            <div class="social-button google" @click.prevent="">
+            <div class="social-button google" @click="signInByFacebook">
               <img src="../assets/facebook-signin.svg">
               <div class="button">
                 <span>使用 Facebook 帳號登入</span>
@@ -83,12 +83,36 @@ export default {
         localStorage.setItem('token', data.token)
         this.$store.commit('setCurrentUser', data.user)
         this.$router.push('/')
+        Toast.fire({
+          icon: 'success',
+          title: '登入成功'
+        })
       } catch (error) {
         this.password = ''
         this.isProcessing = false
         Toast.fire({
           icon: 'warning',
           title: '請確認您輸入了正確的電子郵件與密碼'
+        })
+      }
+    },
+    async signInByFacebook () {
+      try {
+        window.location.href = 'http://localhost:3000/api/auth/facebook'
+      } catch (error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '暫時無法使用 Facebook 帳號登入'
+        })
+      }
+    },
+    async signInByGoogle () {
+      try {
+        window.location.href = 'http://localhost:3000/api/auth/google'
+      } catch (error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '暫時無法使用 Google 帳號登入'
         })
       }
     }

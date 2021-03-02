@@ -1,8 +1,22 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from './../store'
+import { Toast } from '@/utils/helpers'
 
 Vue.use(VueRouter)
+
+const socialMediaLogin = (to, from, next) => {
+  if (to.path === '/_=_') {
+    localStorage.setItem('token', to.query.token)
+    store.dispatch('fetchCurrentUser')
+    next('/')
+    Toast.fire({
+      icon: 'success',
+      title: '登入成功'
+    })
+  }
+  next()
+}
 
 const authorticated = (to, from, next) => {
   if (!store.state.isAuthenticated) {
@@ -85,7 +99,7 @@ const routes = [
         beforeEnter: authorticated
       },
       {
-        path: '/users/purchase/:1',
+        path: '/users/purchase/:id',
         component: () => import('@/views/Record.vue'),
         beforeEnter: authorticated
       },
@@ -114,7 +128,8 @@ const routes = [
   {
     path: '*',
     name: 'NotFound',
-    component: () => import('@/views/NotFound.vue')
+    component: () => import('@/views/NotFound.vue'),
+    beforeEnter: socialMediaLogin
   }
 ]
 

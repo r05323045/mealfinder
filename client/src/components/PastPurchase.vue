@@ -1,21 +1,29 @@
 <template>
   <div class="past-purchase">
-    <div class="purchase-card" v-for="i in 3" :key="i">
-      <div class="header">
-        <div class="title">在2021/01/01的購買</div>
-        <div class="text" @click="$router.push(`/users/purchase/${i}`)">看詳細</div>
+    <div class="more-container" v-if="orders.length < 1">
+      <div class="more-title">從來沒買過？</div>
+      <div class="illustration-wrapper">
+        <div class="cover">
+          <div class="button" @click="$router.push('/coupons')">現在就去找餐券</div>
+        </div>
       </div>
-      <div class="card-content">
-        <div class="item-wrapper" v-for="i in 5" :key="i">
-          <div class="count-wrapper">
+    </div>
+    <div class="purchase-card" v-for="order in orders" :key="order.id">
+      <div class="header">
+        <div class="title">在 {{ order.createdAt | normalDate }} 的購買</div>
+        <div class="text" @click="$router.push(`/users/purchase/${order.id}`)">看詳細</div>
+      </div>
+      <div class="card-content" v-if="order.OrderItem">
+        <div class="item-wrapper" v-for="item in order.OrderItem" :key="item.id">
+          <div class="count-wrapper" v-if="item.Coupon">
             <div class="image-container">
               <div class="image-wrapper">
-                <div class="image"></div>
+                <div class="image" :style="`background: url(${item.Coupon.picture}) no-repeat center / cover`"></div>
               </div>
             </div>
-            <div class="name">ToTsuZen Steak 現切現煎以克計價濕式熟成牛排</div>
+            <div class="name">{{ item.Coupon.description }}</div>
             <div class="count">
-              <div class="text">x1</div>
+              <div class="text">x{{ item.quantity }}</div>
             </div>
           </div>
           <div class="divider"></div>
@@ -23,7 +31,7 @@
       </div>
       <div class="total-price-wrapper">
         <div class="text">總計</div>
-        <div class="total-price">$1995</div>
+        <div class="total-price">{{ order.totalPrice | priceFormat }}</div>
       </div>
     </div>
   </div>
@@ -31,14 +39,41 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import cartsAPI from '@/apis/carts'
 export default {
   data () {
     return {
+      orders: []
     }
   },
-  mounted () {
+  created () {
+    this.fetchOrders()
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
+    async fetchOrders () {
+      try {
+        const { data } = await cartsAPI.getOrders()
+        this.orders = data.orders
+        this.orders.forEach(order => {
+          let totalPrice = 0
+          order.OrderItem.forEach(item => {
+            totalPrice += item.quantity * Number(item.Coupon.price)
+          })
+          order.totalPrice = totalPrice
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得所有歷史訂單'
+        })
+      }
+    }
   }
 }
 </script>
@@ -49,6 +84,57 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .past-purchase {
+  .more-container {
+    width: 100%;
+    padding: 12px 0;
+    .divider {
+      background: $divider;
+      height: 1px;
+    }
+    .more-title {
+      margin-bottom: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: left;
+      line-height: 22px;
+    }
+    .illustration-wrapper {
+      width: 100%;
+      padding-top: 66.7%;
+      position: relative;
+      background: url(../assets/female-chatting.svg) no-repeat center;
+      background-size: cover;
+      @media (min-width: 768px) {
+        border-radius: 54px;
+        padding-top: 33.3%;
+        background: url(../assets/summer-night.svg) no-repeat center;
+        background-size: 1920px 500px;
+      }
+      @media (min-width: 992px) {
+        padding-top: 25%;
+      }
+      .cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .button {
+          padding: 12px 36px;
+          border-radius: 30px;
+          background: #000000;
+          color: #ffffff;
+          cursor: pointer;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
   .purchase-card {
     margin-bottom: 24px;
     border: 1px solid $divider;
