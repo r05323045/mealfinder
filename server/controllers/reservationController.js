@@ -56,7 +56,8 @@ const reservationController = {
         attributes: {
           include: [
             [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
-            [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_name']
+            [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
+            [sequelize.literal('(SELECT email FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_email']
           ]
         }
       }).then(reservation => {
@@ -78,6 +79,7 @@ const reservationController = {
         // Step 2: 撰寫信件內容
         const emailData = {
           User_name: reservation.User_name,
+          User_email: reservation.User_email,
           Restaurant_name: reservation.Restaurant_name,
           date: moment(reservation.date).locale('zh-tw').format('MMMDo[(]dddd[)]'),
           time: reservation.time.slice(0, 5),
@@ -104,7 +106,7 @@ const reservationController = {
 
         let mailOptions = {
           from: process.env.GMAIL_ACCOUNT,
-          to: '402070512@gapp.fju.edu.tw',
+          to: emailData.User_email,
           subject: `您在 ${reservation.Restaurant_name} 預定${moment(reservation.date).locale('zh-tw').format('MM[/]DD[(]dddd[)]')} ${reservation.time.slice(0, 5)} ${reservation.partySize_adult + reservation.partySize_kids}人。`,
           html: emailInfo,
           auth: {
