@@ -103,12 +103,12 @@ const reservationController = {
           `
 
         let mailOptions = {
-          from: '402070512@gapp.fju.edu.tw',
+          from: process.env.GMAIL_ACCOUNT,
           to: '402070512@gapp.fju.edu.tw',
           subject: `您在 ${reservation.Restaurant_name} 預定${moment(reservation.date).locale('zh-tw').format('MM[/]DD[(]dddd[)]')} ${reservation.time.slice(0, 5)} ${reservation.partySize_adult + reservation.partySize_kids}人。`,
           html: emailInfo,
           auth: {
-            user: '402070512@gapp.fju.edu.tw',
+            user: process.env.GMAIL_ACCOUNT,
             refreshToken: process.env.OAUTH_REFRESH_TOKEN,
             accessToken: process.env.OAUTH_ACCESS_TOKEN
           }
