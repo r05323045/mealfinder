@@ -41,10 +41,8 @@ router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['public
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', {
     session: false,
-    // successRedirect: 'http://localhost:8080/#',
     failureRedirect: '/signin'
   }), (req, res) => {
-    console.log(req.user)
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined

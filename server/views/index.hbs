@@ -1,0 +1,51 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+  <!-- include googleFont stylesheets -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rochester&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container bg-light">
+    <div class="row">
+      <div class="col-10 col-md-8 mx-auto m-4">
+        <div class="card">
+          <div class="card-body text-center">
+            <img src="./../public/success.svg" style="width: 10%" />
+            <h5 class="card-subtitle mt-4">{{User_name}}你好，</h5>
+            <h5 class="card-subtitle m-2">已為您安排 {{Restaurant_name}} 訂位。</h5>
+            <div>
+              <button type="button" class="mt-2 mb-4"
+                style="width:140px;height:32px;border-radius:20px;padding:2px;border:0.5px;color:#347AE8;font-size:12px">查看訂位資料</button>
+            </div>
+            <div class="border"
+              style="width:250px;border-color:#B5B5B5;padding:10px;margin-left:auto;margin-right: auto;">
+              <div>
+                <h4 style="font-weight:350;letter-spacing:2px;margin-top:2px">
+                  {{date}}</h4>
+                <h1 style="font-weight:500;letter-spacing:2px;">{{time}}</h1>
+                <p class="text-muted" style="letter-spacing:3px;">
+                  {{partySize_adult}}大{{partySize_kids}}小</p>
+                <div>
+                  <button type="button" class="mb-2"
+                    style="width:140px;height:32px;border-radius:20px;padding:2px;border:0.5px;color:#D2691E;font-size:12px;letter-spacing:2px;">看餐廳</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"></script>
+</body>

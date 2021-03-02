@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 
-//金流參數
+// 金流參數
 const URL = 'https://e7aa7ca85b39.ngrok.io'
 const MerchantID = 'MS318595991'
 const HashKey = 'UTkH5cZt6nQb99Jqo8Xfcp9isYHfBCOA'
@@ -10,12 +10,12 @@ const ReturnURL = URL + "/spgateway/callback?from=ReturnURL"
 const NotifyURL = URL + "/spgateway/callback?from=NotifyURL"
 const ClientBackURL = URL + "/orders"
 
-function genDataChain(TradeInfo) {
-  let results = [];
+function genDataChain (TradeInfo) {
+  let results = []
   for (let kv of Object.entries(TradeInfo)) {
-    results.push(`${kv[0]}=${kv[1]}`);
+    results.push(`${kv[0]}=${kv[1]}`)
   }
-  return results.join("&");
+  return results.join("&")
 }
 
 function create_mpg_aes_encrypt(TradeInfo) {
