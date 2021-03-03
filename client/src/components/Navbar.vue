@@ -38,7 +38,7 @@
     <div class="navbar-desktop" :class="{ openSearch: openSearch, atMap: $route.path.includes('/map') }">
       <div class="navbar-desktop-inner">
         <div class="logo-wrapper" @click="$router.push('/').catch(()=>{})">
-          <div class="logo"></div>
+          <div class="logo">M</div>
         </div>
         <div class="tab-wrapper" v-show="openSearch">
           <div class="condition-wrapper">
@@ -441,10 +441,12 @@ $red: rgb(255, 56, 92);
           }
           .logo {
             height: 32px;
-            width: 30px;
-            mask: url(../assets/logo.svg) no-repeat center;
-            mask-size: cover;
-            background: $red;
+            width: 32px;
+            font-family: 'Bungee Outline', cursive;
+            font-size: 32px;
+            line-height: 32px;
+            color: $red;
+            font-weight: 800;
           }
         }
         .searchbar-wrapper {
