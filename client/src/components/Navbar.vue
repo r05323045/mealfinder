@@ -38,7 +38,7 @@
     <div class="navbar-desktop" :class="{ openSearch: openSearch, atMap: $route.path.includes('/map') }">
       <div class="navbar-desktop-inner">
         <div class="logo-wrapper" @click="$router.push('/').catch(()=>{})">
-          <div class="logo">M</div>
+          <div class="logo"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
         </div>
         <div class="tab-wrapper" v-show="openSearch">
           <div class="condition-wrapper">
@@ -440,13 +440,16 @@ $red: rgb(255, 56, 92);
             flex: 1;
           }
           .logo {
-            height: 32px;
-            width: 32px;
-            font-family: 'Bungee Outline', cursive;
-            font-size: 32px;
-            line-height: 32px;
+            font-size: 24px;
+            line-height: 24px;
             color: $red;
             font-weight: 800;
+            text-align: left;
+            height: 24px;
+            .company-last-name {
+              color: #000000;
+              margin-left: 4px;
+            }
           }
         }
         .searchbar-wrapper {
