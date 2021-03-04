@@ -14,9 +14,11 @@
     "dialect": "mysql"
   },
   "production": {
-    "use_env_variable": "JAWSDB_URL",
-    "dialectOptions":{
-      "ssl":{
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "protocol": "postgres",
+    "dialectOptions": {
+      "ssl": {
         "rejectUnauthorized": false
       }
     }
