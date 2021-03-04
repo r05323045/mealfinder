@@ -32,7 +32,14 @@
           <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
           <div class="filter-button" :class="{ 'filter-on': priceFilter.length === 2 }" @click="showPriceModal = !showPriceModal">預算</div>
         </div>
-        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0"></div>
+        <div class="sub-title">
+          <img class="sub-title-img" src="../assets/diet.svg">
+          MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
+        </div>
+        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0">
+          <div class="no-result" v-if="resultCount === 0">沒有結果</div>
+          <div class="no-result-sub" v-if="resultCount === 0">請試著調整搜尋條件，如移除篩選條件或縮小地圖範圍</div>
+        </div>
         <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
@@ -495,8 +502,35 @@ $red: rgb(255, 56, 92);
           background: rgb(247, 247, 247);
         }
       }
+      .sub-title {
+        display: flex;
+        align-items: center;
+        margin: 12px 0;
+        text-align: left;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+        .sub-title-img {
+          margin-right: 16px;
+          height: 40px;
+          width: 40px;
+        }
+      }
       .restaurant-card-deck-wrapper {
         min-height: 600px;
+        .no-result {
+          margin-top: 32px;
+          text-align: left;
+          font-size: 22px;
+          line-height: 26px;
+          font-weight: 600;
+        }
+        .no-result-sub {
+          text-align: left;
+          margin: 4 0 32px;
+          font-size: 16px;
+          line-height: 24px;
+        }
         .restaurant-card-deck {
           width: 100%;
           @media (min-width: 768px) {
