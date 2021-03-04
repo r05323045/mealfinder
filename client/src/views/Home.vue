@@ -876,6 +876,38 @@ $red: rgb(255, 56, 92);
           .swiper-button-next,
           .swiper-button-prev {
             display: none;
+            @media (min-width: 768px) {
+              display: block;
+              position: absolute;
+              right: 0rem;
+              top: calc(50% - 1.5rem);
+              background: #ffffff;
+              border-radius: 50%;
+              box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.2);
+              width: 3rem;
+              height: 3rem;
+              &:hover {
+                transform: scale(1.05);
+                transition: ease-in-out 0.3s;
+              }
+              &:focus {
+                outline: none;
+              }
+              &::after {
+                width: 3rem;
+                height: 3rem;
+                line-height: 3rem;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: $ultimategray;
+              }
+            }
+            @media (min-width: 992px) {
+              display: none;
+            }
+          }
+          .swiper-button-prev {
+            left: 0;
           }
         }
       }

@@ -322,6 +322,7 @@ $red: rgb(255, 56, 92);
             flex: 1;
           }
           .logo {
+            cursor: default;
             font-size: 24px;
             line-height: 24px;
             color: #ffffff;

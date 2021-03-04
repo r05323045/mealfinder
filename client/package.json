@@ -15,6 +15,7 @@
     "highcharts": "^9.0.1",
     "htmlparser2": "^6.0.0",
     "loadsh": "0.0.4",
+    "mailtoui": "^1.0.3",
     "moment": "^2.29.1",
     "standard": "^16.0.3",
     "sweetalert2": "^10.14.0",

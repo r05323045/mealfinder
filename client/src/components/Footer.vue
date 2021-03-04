@@ -1,20 +1,21 @@
 <template>
   <div class="footer" :class="{ atMap: $route.path.includes('/map') }">
-    <div class="logo"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
+    <div class="logo" @click="$router.push('/').catch(() => {})">
+      <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
     <div class="wrapper">
-      <div class="item">關於 Meal Finder</div>
-      <div class="item">聯絡我們</div>
-      <div class="item">關於我們</div>
+      <div class="item"><a href="#/map">關於 Meal Finder</a></div>
+      <div class="item"><a class="mailtoui" href="mailto:mealfinder2021@gmail.com">聯絡我們</a></div>
+      <div class="item"><a href="https://github.com/r05323045/mealfinder">技術文件</a></div>
     </div>
     <hr>
     <div class="social-policy">
       <div class="icon-wrapper">
-        <div class="icon facebook"></div>
-        <div class="icon twitter"></div>
-        <div class="icon github"></div>
+        <a href="https://www.facebook.com/"><div class="icon facebook"></div></a>
+        <a href="https://twitter.com/"><div class="icon twitter"></div></a>
+        <a href="https://github.com/r05323045/mealfinder"><div class="icon github"></div></a>
       </div>
       <div class="policy">
-        <div class="item">隱私權</div>
+        <div class="item"><a href="https://policies.google.com/privacy">隱私權</a></div>
         <div class="item">© 2021 Meal Finder. All Rights Reserved</div>
       </div>
     </div>
@@ -29,6 +30,7 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .footer {
+  text-align: left;
   padding: 54px 16px 80px 16px;
   background: rgb(247, 247, 247);
   @media (min-width: 768px) {
@@ -44,6 +46,8 @@ $red: rgb(255, 56, 92);
     width: 100%;
   }
   .logo {
+    cursor: pointer;
+    display: inline-block;
     font-size: 24px;
     line-height: 24px;
     color: $red;
@@ -64,6 +68,13 @@ $red: rgb(255, 56, 92);
       line-height: 24px;
       font-size: 16px;
       margin-bottom: 16px;
+      a {
+        color: #222222;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
   hr {
@@ -80,6 +91,7 @@ $red: rgb(255, 56, 92);
         background-color: #000000;
         height: 16px;
         width: 16px;
+        cursor: pointer;
       }
       .icon.facebook {
         mask: url(../assets/facebook.svg) no-repeat center;
@@ -97,6 +109,14 @@ $red: rgb(255, 56, 92);
     .policy {
       text-align: left;
       margin-bottom: 40px;
+      a {
+        cursor: pointer;
+        color: #222222;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
       .item {
         font-weight: 500;
         line-height: 18px;

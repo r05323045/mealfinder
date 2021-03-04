@@ -337,7 +337,9 @@ export default {
     this.fetchRestaurant(this.$route.params.id)
   },
   mounted () {
-    this.$refs.restaurant.addEventListener('scroll', this.onScroll, { passive: true })
+    this.$nextTick(() => {
+      this.$refs.restaurant.addEventListener('scroll', this.onScroll, { passive: true })
+    })
     this.footerHeight = this.$refs.footer.offsetHeight
     this.restaurantInfoHeight = this.$refs.restaurant.scrollHeight
     this.scrollBarHeight = this.$refs.restaurant.clientHeight
@@ -399,7 +401,13 @@ export default {
       }
     },
     checkBookingIsLate (time) {
-      return new Date(`${moment(this.pickDate).format('YYYY/MM/DD')} ${time}`) < new Date()
+      const momentToday = moment(this.pickDate).format('YYYY/MM/DD')
+      if (new Date(`${momentToday} ${time}`) < new Date(new Date(`${momentToday} 6:00`))) {
+        const tomorrow = new Date(`${moment(this.pickDate).format('YYYY/MM/DD')} ${time}`)
+        tomorrow.setDate(new Date(`${moment(this.pickDate).format('YYYY/MM/DD')} ${time}`).getDate() + 1)
+        return new Date(`${moment(tomorrow).format('YYYY/MM/DD')} ${time}`) < new Date()
+      }
+      return new Date(`${momentToday} ${time}`) < new Date()
     },
     findTodayBusinessHours () {
       this.restaurant.business_hours.forEach((b, idx) => {

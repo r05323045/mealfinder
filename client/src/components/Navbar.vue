@@ -425,7 +425,6 @@ $red: rgb(255, 56, 92);
         }
         .logo-wrapper {
           cursor: pointer;
-          width: 30px;
           height: 100%;
           display: flex;
           align-items: center;
