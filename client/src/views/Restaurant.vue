@@ -8,12 +8,16 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text"></div>
+          <div class="text">返回</div>
         </div>
       </div>
       <div class="icon-container">
         <div class="share-wrapper">
-          <div class="icon share"></div>
+          <div class="icon share"
+            v-clipboard:copy="copyPath"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError">
+          </div>
         </div>
         <div class="favorite-wrapper">
           <div
@@ -36,7 +40,11 @@
         <div class="title-wrapper">
           <div class="icon-container">
             <div class="share-wrapper">
-              <div class="icon share"></div>
+              <div class="icon share"
+                v-clipboard:copy="copyPath"
+                v-clipboard:success="onCopy"
+                v-clipboard:error="onError">
+              </div>
             </div>
             <div class="favorite-wrapper">
               <div
@@ -215,7 +223,7 @@
             </div>
           </div>
         </div>
-        <div class="menu-wrapper">
+        <div class="menu-wrapper" v-if="false">
           <div class="divider"></div>
           <div class="title">菜單</div>
           <div class="img-wrapper">
@@ -335,7 +343,10 @@ export default {
     this.scrollBarHeight = this.$refs.restaurant.clientHeight
   },
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    ...mapState(['currentUser', 'isAuthenticated']),
+    copyPath () {
+      return `${window.location}`
+    }
   },
   watch: {
     pickDate () {
@@ -501,7 +512,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: 'error',
-          title: '目前無法收藏餐廳，請稍後'
+          title: '目前無法按讚評論，請稍後'
         })
       }
     },
@@ -521,7 +532,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: 'error',
-          title: '目前無法收藏餐廳，請稍後'
+          title: '目前無法取消按讚評論，請稍後'
         })
       }
     },
@@ -532,6 +543,10 @@ export default {
           throw new Error(data.message)
         }
         this.restaurant.isFavorited = true
+        Toast.fire({
+          icon: 'success',
+          title: '已加入我的收藏'
+        })
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -547,6 +562,10 @@ export default {
           throw new Error(data.message)
         }
         this.restaurant.isFavorited = false
+        Toast.fire({
+          icon: 'success',
+          title: '已移除收藏'
+        })
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -554,6 +573,18 @@ export default {
           title: '目前無法取消收藏餐廳，請稍後'
         })
       }
+    },
+    onCopy: function (e) {
+      Toast.fire({
+        icon: 'success',
+        title: '複製到剪貼簿'
+      })
+    },
+    onError: function (e) {
+      Toast.fire({
+        icon: 'error',
+        title: '目前無法複製，請稍候'
+      })
     }
   }
 }
@@ -710,7 +741,7 @@ $primary-color: #222;
       }
     }
     .restaurant-info {
-      margin: auto;
+      margin: 0 auto 40px;
       max-width: 1040px;
       padding: 0 24px;
       @media (min-width: 768px) {

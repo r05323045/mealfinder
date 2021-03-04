@@ -2,13 +2,19 @@
   <div class="restaurants" :class="{modalShow: showModal}">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="searchbar-wrapper-mobile">
-      <div class="back-wrapper" @click="$router.push('/map')">
-        <div class="icon back"></div>
-      </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">地圖搜尋</div>
+          <div class="tab-container">
+            <div class="tab active">
+              清單搜尋
+              <div class="active-line"></div>
+            </div>
+            <div class="tab" @click="$router.push('/map')">
+              地圖模式
+              <div class="active-line" v-show="false"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
@@ -337,22 +343,8 @@ $red: rgb(255, 56, 92);
     @media (min-width: 768px) {
       display: none;
     }
-    .back-wrapper {
-      padding-left: 8px;
-      width: 40px;
-      height: 48px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .icon.back {
-        margin: auto;
-        height: 16px;
-        width: 16px;
-        background-color: #000000;
-        mask: url(../assets/back.svg) no-repeat center;
-      }
-    }
     .searchbar {
+      padding-left: 8px;
       background: #ffffff;
       width: 100%;
       border-radius: 100px;
@@ -360,31 +352,49 @@ $red: rgb(255, 56, 92);
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      .search-input {
-        border: none;
-        &:focus {
-          outline: none;
-        }
-      }
       .wrapper {
         border-right: 1px solid $divider;
         width: 100%;
         display: flex;
         flex-direction: row;
         line-height: 18px;
-        .icon {
-          margin: auto 0;
-          padding-right: 8px;
-          background-color: $ultimategray;
-          height: 16px;
-          width: 16px;
-        }
-        .icon.search {
-          mask: url(../assets/search.svg) no-repeat center;
-        }
-        .text {
-          font-size: 14px;
-          font-weight: 600;
+        margin-left: 12px;
+        .tab-container {
+          position: relative;
+          margin: 12px -12px;
+          display: flex;
+          flex-direction: row;
+          .divider {
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            top: 100%;
+            height: 1px;
+            background: $divider;
+          }
+          .tab {
+            color: #666;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 600;
+            position: relative;
+          }
+          .tab.active {
+            color: #222222;
+            position: relative;
+            .active-line {
+              z-index: 2;
+              position: absolute;
+              bottom: -1px;
+              left: 16px;
+              right: 16px;
+              height: 3px;
+              background: #222222;
+            }
+          }
         }
       }
     }

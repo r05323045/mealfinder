@@ -20,12 +20,6 @@
             <div class="text">訂位</div>
           </div>
         </div>
-        <div class="nav-item" v-if="isAuthenticated" @click="$router.push('/users/notification').catch(()=>{})" :class="{ active: $route.path === '/users/notification' }">
-          <div class="wrapper">
-            <div class="icon noti"></div>
-            <div class="text">通知</div>
-          </div>
-        </div>
         <div class="nav-item" @click="isAuthenticated ? $router.push('/users/center').catch(()=>{}) : $router.push('/signin').catch(()=>{})" :class="{ active: $route.path.includes === '/sign' || ($route.path.includes('/users') && !$route.path.includes('/users/notification') && !$route.path.includes('/users/history')) }">
           <div class="wrapper">
             <div class="icon user"></div>

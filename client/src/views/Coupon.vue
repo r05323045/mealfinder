@@ -13,7 +13,11 @@
       </div>
       <div class="icon-container">
         <div class="share-wrapper">
-          <div class="icon share"></div>
+          <div class="icon share"
+            v-clipboard:copy="copyPath"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError">
+          </div>
         </div>
       </div>
     </div>
@@ -33,7 +37,11 @@
             <div class="price-wrapper">
               <div class="icon-container">
                 <div class="share-wrapper">
-                  <div class="icon share"></div>
+                  <div class="icon share"
+                    v-clipboard:copy="copyPath"
+                    v-clipboard:success="onCopy"
+                    v-clipboard:error="onError">
+                  </div>
                 </div>
               </div>
               <div class="price">{{ coupon.price | priceFormat }}</div>
@@ -181,7 +189,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    ...mapState(['currentUser', 'isAuthenticated']),
+    copyPath () {
+      return `${window.location}`
+    }
   },
   methods: {
     onScroll (e) {
@@ -230,6 +241,18 @@ export default {
           title: '目前無法新增至購物車'
         })
       }
+    },
+    onCopy: function (e) {
+      Toast.fire({
+        icon: 'success',
+        title: '複製到剪貼簿'
+      })
+    },
+    onError: function (e) {
+      Toast.fire({
+        icon: 'error',
+        title: '目前無法複製，請稍候'
+      })
     }
   }
 }

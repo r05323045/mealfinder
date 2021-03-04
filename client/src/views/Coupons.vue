@@ -372,6 +372,7 @@ $red: rgb(255, 56, 92);
         .filter-button.filter-on {
           font-weight: 800;
           border: 1px solid #000000;
+          background: rgb(247, 247, 247);
         }
       }
       .restaurant-card-deck-wrapper {

@@ -5,6 +5,7 @@ import store from './store'
 import moment from 'moment'
 import zh from './zh_TW.js'
 import axios from 'axios'
+import VueClipboard from 'vue-clipboard2'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
@@ -188,6 +189,8 @@ Vue.use(VueGoogleMaps, {
   },
   installComponents: true
 })
+
+Vue.use(VueClipboard)
 
 axios.defaults.withCredentials = true
 

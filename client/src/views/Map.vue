@@ -2,14 +2,18 @@
   <div class="map-page" ref="map-page">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="map-searchbar-wrapper">
-      <div class="back-wrapper" @click="$router.push('/restaurants')">
-        <div class="icon back"></div>
-      </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">
-            清單搜尋
+          <div class="tab-container">
+            <div class="tab" @click="$router.push('/restaurants')">
+              清單搜尋
+              <div class="active-line" v-show="false"></div>
+            </div>
+            <div class="tab active">
+              地圖模式
+              <div class="active-line"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -447,6 +451,7 @@ $darkred: #c13515;
       }
     }
     .searchbar {
+      padding-left: 8px;
       background: #ffffff;
       width: 100%;
       border-radius: 100px;
@@ -465,14 +470,43 @@ $darkred: #c13515;
         display: flex;
         flex-direction: row;
         line-height: 18px;
-        .text {
-          margin-right: 20%;
-          font-size: 14px;
-          font-weight: 600;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
+        margin-left: 12px;
+        .tab-container {
+          position: relative;
+          margin: 12px -12px;
+          display: flex;
+          flex-direction: row;
+          .divider {
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            top: 100%;
+            height: 1px;
+            background: $divider;
+          }
+          .tab {
+            color: #666;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 600;
+            position: relative;
+          }
+          .tab.active {
+            color: #222222;
+            position: relative;
+            .active-line {
+              z-index: 2;
+              position: absolute;
+              bottom: -1px;
+              left: 16px;
+              right: 16px;
+              height: 3px;
+              background: #222222;
+            }
+          }
         }
       }
     }
@@ -665,6 +699,15 @@ $darkred: #c13515;
                       font-size: 18px;
                       font-weight: 600;
                       line-height: 24px;
+                      max-width: 250px;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      display: -webkit-box !important;
+                      -webkit-line-clamp: 1 !important;
+                      -webkit-box-orient: vertical !important;
+                      @media (min-width: 1440px) {
+                        max-width: 250px;
+                      }
                     }
                     .heart-wrapper {
                       z-index: 1;
