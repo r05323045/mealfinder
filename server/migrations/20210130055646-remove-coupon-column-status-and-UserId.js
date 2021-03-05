@@ -8,14 +8,12 @@ module.exports = {
     ])
   },
 
-  down: (queryInterface, Sequelize) => {
-    return Promise.all([
-      queryInterface.addColumn('Coupons', 'status', {
-        type: Sequelize.STRING
-      }),
-      queryInterface.addColumn('Coupons', 'UserId', {
-        type: Sequelize.INTEGER
-      })
-    ])
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.addColumn('Coupons', 'status', {
+      type: Sequelize.STRING
+    });
+    await queryInterface.addColumn('Coupons', 'UserId', {
+      type: Sequelize.INTEGER
+    });
   }
 };

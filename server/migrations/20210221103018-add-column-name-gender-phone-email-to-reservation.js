@@ -17,14 +17,19 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    Promise.all([queryInterface.removeColumn('Reservations', 'UserName', {
-      type: Sequelize.STRING
-    }), queryInterface.removeColumn('Reservations', 'gender', {
-      type: Sequelize.STRING
-    }), queryInterface.removeColumn('Reservations', 'phone', {
-      type: Sequelize.STRING
-    }), queryInterface.removeColumn('Reservations', 'email', {
-      type: Sequelize.STRING
-    })]).then().catch()
+    try {
+      await queryInterface.removeColumn('Reservations', 'UserName', {
+        type: Sequelize.STRING
+      })
+      await queryInterface.removeColumn('Reservations', 'gender', {
+        type: Sequelize.STRING
+      })
+      await queryInterface.removeColumn('Reservations', 'phone', {
+        type: Sequelize.STRING
+      })
+      await queryInterface.removeColumn('Reservations', 'email', {
+        type: Sequelize.STRING
+      })
+    } catch (e) {}
   }
 }

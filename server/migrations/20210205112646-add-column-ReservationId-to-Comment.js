@@ -13,6 +13,15 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Comments', 'ReservationId')
+    try {
+      await queryInterface.addColumn('Comments', 'ReservationId', {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        reference: {
+          model: 'Reservations',
+          key: 'id'
+        }
+      })
+    } catch (e) {}
   }
 };

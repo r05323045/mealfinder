@@ -35,6 +35,10 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+
+      DistrictId: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
