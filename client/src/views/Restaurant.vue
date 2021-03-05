@@ -380,6 +380,7 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
         this.restaurant = data
+        this.restaurant.business_hours = JSON.parse(this.restaurant.business_hours)
         this.findTodayBusinessHours()
         this.businessHoursProcessor()
         if (this.closeDate.includes(moment(this.pickDate).format('dddd'))) {

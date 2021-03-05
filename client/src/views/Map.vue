@@ -332,7 +332,7 @@ export default {
         this.noMoreData = data.data.length === 0
         this.restaurants = data.data
         this.restaurants.forEach(r => {
-          r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
+          r.position = { lat: r.latitude, lng: r.longitude }
         })
         this.numOfPage += 1
         this.resultCount = data.count
