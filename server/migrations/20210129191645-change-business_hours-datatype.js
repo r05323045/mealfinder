@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.changeColumn('Restaurants', 'business_hours', {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
     });
   },
 

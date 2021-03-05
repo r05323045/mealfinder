@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     coordinates: DataTypes.STRING,
     picture: DataTypes.STRING,
-    business_hours: DataTypes.STRING,
+    business_hours: DataTypes.TEXT,
     google_map_url: DataTypes.STRING,
     day_off: DataTypes.STRING,
     longitude: DataTypes.STRING,
