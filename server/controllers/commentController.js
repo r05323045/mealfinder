@@ -10,7 +10,7 @@ const commentController = {
       where: { RestaurantId: req.params.restaurantId },
       attributes: {
         include: [
-          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = restaurantId)'), 'CommentsCount']
+          [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = restaurantId)'), 'CommentsCount']
         ]
       }
     }).then(comments => {
