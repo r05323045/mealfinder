@@ -2,8 +2,12 @@
   <div class="signin">
     <div class="signin-form">
       <div class="signin-container">
-        <div class="logo-wrapper">
-          <div class="logo"></div>
+        <div class="logo-container">
+          <div class="logo-wrapper">
+            <div class="logo" @click="$router.push('/').catch(() => {})">
+              <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
+            </div>
+          </div>
         </div>
         <div class="signin-card">
           <validation-observer ref="formvalidation" v-slot="{ invalid }">
@@ -127,32 +131,45 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .signin {
-  height: 100%;
+  height: 100vh;
   overflow-x: hidden;
   position: relative;
   width: 100%;
   .signin-form {
-    height: 100%;
+    height: calc(100% - 48px);
     display: flex;
     justify-content: center;
     align-items: center;
-    scroll-behavior: smooth;
     padding: 24px;
     .signin-container {
       flex: 1;
       max-width: 500px;
-      .logo-wrapper {
-        padding-top: 25%;
+      .logo-container {
+        padding-top: 12.5%;
         position: relative;
         margin-bottom: 24px;
-        .logo {
+        .logo-wrapper {
           position: absolute;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background: url(../assets/people-eating-food.svg) no-repeat center;
-          background-size: cover;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .logo {
+            cursor: pointer;
+            display: inline-block;
+            font-size: 48px;
+            line-height: 48px;
+            color: $red;
+            font-weight: 800;
+            text-align: left;
+            .company-last-name {
+              color: #000000;
+              margin-left: 8px;
+            }
+          }
         }
       }
       .signin-card {

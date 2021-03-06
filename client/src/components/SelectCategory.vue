@@ -7,7 +7,7 @@
           <div class="item">所有料理</div>
         </div>
         <div class="item-wrapper" v-for="category in categories" :key="category.id" @click.stop="completeSelect(category.name)">
-          <div class="item-icon"></div>
+          <img class="item-icon" :src="require(`../assets/category/${category.picture}.svg`)">
           <div class="item">{{ category.name }}</div>
         </div>
       </div>
@@ -121,10 +121,9 @@ $red: rgb(255, 56, 92);
           margin-right: 24px;
           height: 36px;
           width: 36px;
-          background: url(../assets/cutlery.svg) no-repeat center / cover;
         }
         .item-icon.near{
-          background: url(../assets/fast-food.svg) no-repeat center / cover;
+          background: url(../assets/cutlery.svg) no-repeat center / cover;
         }
         .item {
           font-size: 16px;

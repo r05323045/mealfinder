@@ -184,7 +184,7 @@ Vue.component('ValidationObserver', ValidationObserver)
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk',
+    key: process.env.VUE_APP_GOOGLE_MAP_API_KEY,
     libraries: 'places'
   },
   installComponents: true

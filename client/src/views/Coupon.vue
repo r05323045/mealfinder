@@ -79,7 +79,7 @@
           <div class="title">餐廳資訊</div>
           <div class="info-and-map" v-if="coupon.Restaurant">
             <div class="map-wrapper">
-              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=place_id:${coupon.Restaurant.place_id}`" class="google-map"></iframe>
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAP_API_KEY}&q=${coupon.Restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -192,6 +192,9 @@ export default {
     ...mapState(['currentUser', 'isAuthenticated']),
     copyPath () {
       return `${window.location}`
+    },
+    GOOGLE_MAP_API_KEY () {
+      return process.env.VUE_APP_GOOGLE_MAP_API_KEY
     }
   },
   methods: {
@@ -203,6 +206,7 @@ export default {
       try {
         const { data } = await couponsAPI.getCoupon(id)
         this.coupon = data
+        this.coupon.Restaurant.business_hours = JSON.parse(this.coupon.Restaurant.business_hours)
         this.findTodayBusinessHours()
       } catch (error) {
         console.log(error)

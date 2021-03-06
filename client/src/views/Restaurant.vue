@@ -181,7 +181,7 @@
           <div class="title">餐廳資訊</div>
           <div class="info-and-map">
             <div class="map-wrapper" v-if="restaurant.google_map_url">
-              <iframe :src="`${restaurant.google_map_url.split('&q=')[0].split('key=')[0]}key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=${restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
+              <iframe :src="`${restaurant.google_map_url.split('&q=')[0].split('key=')[0]}key=${GOOGLE_MAP_API_KEY}&q=${restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -348,6 +348,9 @@ export default {
     ...mapState(['currentUser', 'isAuthenticated']),
     copyPath () {
       return `${window.location}`
+    },
+    GOOGLE_MAP_API_KEY () {
+      return process.env.VUE_APP_GOOGLE_MAP_API_KEY
     }
   },
   watch: {
