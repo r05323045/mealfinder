@@ -29,7 +29,7 @@ const restaurantController = {
       ],
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = Restaurant.id)`), 'CommentsCount']
+          [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
         ]
       },
       offset: offset,
