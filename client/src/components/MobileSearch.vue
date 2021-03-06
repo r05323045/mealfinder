@@ -22,11 +22,11 @@
           <div class="selector-wrapper" v-show="searchStep === 1">
             <div class="selector">
               <div class="item-wrapper" @click.stop="completeSelectDistrict('all')">
-                <div class="item-icon near"></div>
+                <div class="item-icon near district"></div>
                 <div class="item">附近地點</div>
               </div>
               <div class="item-wrapper" v-for="district in districts" :key="district.id" @click.stop="completeSelectDistrict(district.name)">
-                <div class="item-icon"></div>
+                <img class="item-icon" :src="require(`../assets/district/${district.picture}.svg`)">
                 <div class="item">{{ district.name }}．台北市</div>
               </div>
             </div>
@@ -34,11 +34,11 @@
           <div class="selector-wrapper" v-show="searchStep === 2">
             <div class="selector">
               <div class="item-wrapper" @click.stop="completeSelectCategory('all')">
-                <div class="item-icon near"></div>
+                <div class="item-icon near category"></div>
                 <div class="item">所有料理</div>
               </div>
               <div class="item-wrapper" v-for="category in categories" :key="category.id" @click.stop="completeSelectCategory(category.name)">
-                <div class="item-icon"></div>
+                <img class="item-icon" :src="require(`../assets/category/${category.picture}.svg`)">
                 <div class="item">{{ category.name }}</div>
               </div>
             </div>
@@ -460,10 +460,13 @@ $divider: #E6ECF0;
             margin-right: 24px;
             height: 36px;
             width: 36px;
-            background: url(../assets/cutlery.svg) no-repeat center / cover;
-          }
-          .item-icon.near{
             background: url(../assets/fast-food.svg) no-repeat center / cover;
+          }
+          .item-icon.near.district {
+            background: url(../assets/city-night.svg) no-repeat center / cover;
+          }
+          .item-icon.near.category {
+            background: url(../assets/cutlery.svg) no-repeat center / cover;
           }
           .item {
             font-size: 16px;
