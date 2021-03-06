@@ -62,7 +62,7 @@
                     </div>
                     <div class="card-divider"></div>
                     <div class="card-text">{{ r.Category.name }}</div>
-                    <div class="card-text">{{ r.description }}</div>
+                    <div class="card-text">{{ r.address }}</div>
                     <div class="rating-wrapper">
                       <svg class="icon star"></svg>
                       <div class="rating" v-if="r.rating">
@@ -140,7 +140,7 @@
                     <span class="bullet">·</span>
                     <span v-if="infoWindow.restaurant.District" class="district">{{ infoWindow.restaurant.District.name }}</span>
                   </div>
-                  <div class="description">{{ infoWindow.restaurant.description }}</div>
+                  <div class="description">{{ infoWindow.restaurant.address }}</div>
                   <div class="expense" v-if="infoWindow.restaurant.average_consumption">{{ infoWindow.restaurant.average_consumption | priceFormat }} / 人</div>
                 </div>
               </div>
@@ -332,7 +332,7 @@ export default {
         this.noMoreData = data.data.length === 0
         this.restaurants = data.data
         this.restaurants.forEach(r => {
-          r.position = { lat: r.latitude, lng: r.longitude }
+          r.position = { lat: Number(r.latitude), lng: Number(r.longitude) }
         })
         this.numOfPage += 1
         this.resultCount = data.count

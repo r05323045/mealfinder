@@ -2,13 +2,13 @@
   <div class="coupon" ref="coupon">
     <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
     <div class="coupon-searchbar-wrapper">
-      <div class="back-wrapper" @click="$router.go(-1)">
+      <div class="back-wrapper" @click="$router.push('/coupons')">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text"></div>
+          <div class="text">餐券列表</div>
         </div>
       </div>
       <div class="icon-container">

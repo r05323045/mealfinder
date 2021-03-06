@@ -8,7 +8,7 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">餐券列表</div>
+          <div class="text">返回</div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">

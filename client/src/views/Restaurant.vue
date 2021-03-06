@@ -85,7 +85,7 @@
           <div class="divider"></div>
           <div class="title">餐廳簡介</div>
           <div class="description">
-            {{ restaurant.description }}
+            尚未提供
           </div>
         </div>
         <div class="rule-wrapper">
@@ -550,15 +550,22 @@ export default {
     },
     async addFavorite (id) {
       try {
-        const { data } = await usersAPI.addFavorite(id)
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (this.isAuthenticated) {
+          const { data } = await usersAPI.addFavorite(id)
+          if (data.status !== 'success') {
+            throw new Error(data.message)
+          }
+          this.restaurant.isFavorited = true
+          Toast.fire({
+            icon: 'success',
+            title: '已加入我的收藏'
+          })
+        } else {
+          Toast.fire({
+            icon: 'warning',
+            title: '請先登入'
+          })
         }
-        this.restaurant.isFavorited = true
-        Toast.fire({
-          icon: 'success',
-          title: '已加入我的收藏'
-        })
       } catch (error) {
         console.log(error)
         Toast.fire({
