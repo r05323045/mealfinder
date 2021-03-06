@@ -2,15 +2,13 @@
   <div class="booking-success">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="booking-success-searchbar-wrapper">
-      <div class="back-wrapper">
+      <div class="back-wrapper" @click="$router.push(`/restaurants/${restaurantId}`)">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">
-            ToTsuZen Steak 現切現煎以克計價濕式熟成牛排
-          </div>
+          <div class="text">返回餐廳</div>
         </div>
       </div>
     </div>

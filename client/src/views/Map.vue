@@ -34,7 +34,7 @@
             <div class="filter-button" :class="{ 'filter-on': priceFilter.length === 2 }" @click="showPriceModal = !showPriceModal">預算</div>
           </div>
           <div class="sub-title">
-            <img class="sub-title-img" src="../assets/diet.svg">
+            <img class="sub-title-img" src="../assets/ramen.svg">
             MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
           </div>
           <div class="restaurant-list-card">
