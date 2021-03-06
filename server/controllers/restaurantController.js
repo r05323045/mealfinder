@@ -63,7 +63,7 @@ const restaurantController = {
       ],
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = Restaurant.id)`), 'CommentsCount']
+          [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
         ]
       },
       offset: offset,
@@ -82,7 +82,7 @@ const restaurantController = {
     return Restaurant.findByPk(req.params.restaurantId, {
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
+          [sequelize.literal(`(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
         ]
       },
       include: [
@@ -95,9 +95,9 @@ const restaurantController = {
           model: Comment,
           attributes: {
             include: [
-              [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Likes WHERE Likes.CommentId = Comments.id)`), 'LikesCount'],
-              [sequelize.literal(`(SELECT name FROM ${process.env.DEFAULT_SCHEMA}.Users WHERE Users.id = Comments.UserId)`), 'name'],
-              [sequelize.literal(`(SELECT avatar FROM ${process.env.DEFAULT_SCHEMA}.Users WHERE Users.id = Comments.UserId)`), 'avatar']
+              [sequelize.literal('(SELECT COUNT(*) FROM Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Comments.UserId)'), 'avatar']
             ]
           }
         }
@@ -112,7 +112,7 @@ const restaurantController = {
     return Restaurant.findByPk(req.params.restaurantId, {
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
+          [sequelize.literal(`(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
         ]
       },
       include: [
@@ -125,10 +125,10 @@ const restaurantController = {
           model: Comment,
           attributes: {
             include: [
-              [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Likes WHERE Likes.CommentId = Comments.id)`), 'LikesCount'],
-              [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Likes WHERE Likes.UserId = ${req.user.id})`), 'isLiked'],
-              [sequelize.literal(`(SELECT name FROM ${process.env.DEFAULT_SCHEMA}.Users WHERE Users.id = Comments.UserId)`), 'name'],
-              [sequelize.literal(`(SELECT avatar FROM ${process.env.DEFAULT_SCHEMA}.Users WHERE Users.id = Comments.UserId)`), 'avatar']
+              [sequelize.literal('(SELECT COUNT(*) FROM Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal(`(SELECT COUNT(*) FROM Likes WHERE Likes.UserId = ${req.user.id})`), 'isLiked'],
+              [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Comments.UserId)'), 'avatar']
             ]
           }
         }
@@ -173,7 +173,7 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = Restaurant.id)`), 'CommentsCount'],
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
             [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
@@ -194,7 +194,7 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = Restaurant.id)`), 'CommentsCount'],
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
             [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
@@ -231,7 +231,7 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = Restaurant.id)`), 'CommentsCount'],
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
             [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
@@ -252,7 +252,7 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal(`(SELECT COUNT(*) FROM ${process.env.DEFAULT_SCHEMA}.Comments WHERE Comments.RestaurantId = Restaurant.id)`), 'CommentsCount'],
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
             [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
