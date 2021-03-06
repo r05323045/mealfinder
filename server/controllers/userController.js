@@ -105,7 +105,7 @@ const userController = {
         where: { id: req.params.id },
         attributes: {
           include: [
-            [sequelize.literal('(SELECT name FROM restaurant_reservation.Districts WHERE Districts.id = User.DistrictId)'), 'DistrictName']
+            [sequelize.literal('(SELECT name FROM Districts WHERE Districts.id = User.DistrictId)'), 'DistrictName']
           ]
         }
       }),
@@ -113,7 +113,7 @@ const userController = {
         where: { UserId: req.params.id },
         attributes: {
           include: [
-            [sequelize.literal('(SELECT name FROM restaurant_reservation.Categories WHERE Categories.id = PreferedCategory.CategoryId)'), 'CategorytName']
+            [sequelize.literal('(SELECT name FROM Categories WHERE Categories.id = PreferedCategory.CategoryId)'), 'CategorytName']
           ]
         }
       })
@@ -215,7 +215,7 @@ const userController = {
           ],
           attributes: {
             include: [
-              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
+              [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
             ]
           },
           offset: offset,

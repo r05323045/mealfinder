@@ -52,10 +52,11 @@ if (process.env.NODE_ENV === 'production') {
   app.get(/.*/, (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')))
 }
 
+require('./routes')(app)
+
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`)
 })
 
-require('./routes')(app)
 
 module.exports = app
