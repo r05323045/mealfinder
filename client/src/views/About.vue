@@ -147,7 +147,6 @@ $primary-color: #222;
   }
 
   .about-content {
-    scroll-behavior: smooth;
     padding: 0px 24px 22px 24px;
     margin: 60px auto 0;
     max-width: 1040px;

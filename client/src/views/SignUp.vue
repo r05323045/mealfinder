@@ -117,25 +117,20 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .signup {
-  height: 100vh;
-  overflow-x: hidden;
+  height: 100%;
+  overflow: auto;
   position: relative;
   width: 100%;
   .signup-form {
-    overflow: scroll;
-    height: calc(100% - 48px);
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    scroll-behavior: smooth;
-    padding: 24px;
     .signup-container {
-      margin-top: 100px;
-      flex: 1;
+      overflow: auto;
+      padding: 48px 24px;
+      width: calc(100% - 48px);
       max-width: 500px;
-      @media (min-width: 768px) {
-        margin-top: 0;
-      }
       .logo-container {
         padding-top: 12.5%;
         position: relative;
