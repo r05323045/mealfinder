@@ -8,6 +8,7 @@ node_modules
 .env.local
 .env.*.local
 ./server/.env
+./client/.env
 
 # Log files
 npm-debug.log*
