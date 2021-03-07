@@ -35,8 +35,8 @@ const couponController = {
               where: filters,
               attributes: {
                 include: [
-                  [sequelize.literal('(SELECT name FROM restaurant_reservation.Categories WHERE Categories.id = Restaurant.CategoryId)'), 'CategoryName'],
-                  [sequelize.literal('(SELECT name FROM restaurant_reservation.Districts WHERE Districts.id = Restaurant.DistrictId)'), 'DistrictName']
+                  [sequelize.literal('(SELECT name FROM Categories WHERE Categories.id = Restaurant.CategoryId)'), 'CategoryName'],
+                  [sequelize.literal('(SELECT name FROM Districts WHERE Districts.id = Restaurant.DistrictId)'), 'DistrictName']
                 ]
               }
             }
@@ -63,8 +63,8 @@ const couponController = {
             model: Restaurant,
             attributes: {
               include: [
-                [sequelize.literal('(SELECT name FROM restaurant_reservation.Categories WHERE Categories.id = Restaurant.CategoryId)'), 'CategoryName'],
-                [sequelize.literal('(SELECT name FROM restaurant_reservation.Districts WHERE Districts.id = Restaurant.DistrictId)'), 'DistrictName']
+                [sequelize.literal('(SELECT name FROM Categories WHERE Categories.id = Restaurant.CategoryId)'), 'CategoryName'],
+                [sequelize.literal('(SELECT name FROM Districts WHERE Districts.id = Restaurant.DistrictId)'), 'DistrictName']
               ]
             }
           }

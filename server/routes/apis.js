@@ -47,7 +47,7 @@ router.get('/auth/facebook/callback',
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined
-    return res.redirect(`http://localhost:8080/#/_=_?UserId=${req.user.id}&token=${token}`)
+    return res.redirect(`${process.env.BASE_URL}/#/_=_?UserId=${req.user.id}&token=${token}`)
   }
 )
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
@@ -58,7 +58,7 @@ router.get('/auth/google/callback',
     const paylod = { id: req.user.id }
     const token = jwt.sign(paylod, process.env.JWT_SECRET)
     req.user.password = undefined
-    return res.redirect(`http://localhost:8080/#/_=_?UserId=${req.user.id}&token=${token}`)
+    return res.redirect(`${process.env.BASE_URL}/#/_=_?UserId=${req.user.id}&token=${token}`)
   })
 
 // userController_UserModel

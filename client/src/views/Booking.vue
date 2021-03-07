@@ -44,7 +44,7 @@
           </div>
         </div>
         <div class="contact-card-wrapper">
-          <validation-observer ref="formvalidation" v-slot="{ handleSubmit }">
+          <validation-observer ref="formvalidation" v-slot="{ handleSubmit, invalid }">
             <form @submit.prevent="handleSubmit(submitReservation(invalid || !submitPurpose))">
               <div class="title">確認訂位與填寫聯絡資訊</div>
               <div class="contact-card">
@@ -247,7 +247,6 @@ export default {
       }
     },
     submitReservation (invalid) {
-      console.log('hi')
       if (!this.firstClickSubmit) {
         this.firstClickSubmit = true
       }

@@ -11,8 +11,8 @@ const reservationController = {
       where: { UserId: req.user.id },
       attributes: {
         include: [
-          [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
-          [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_picture']
+          [sequelize.literal('(SELECT name FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+          [sequelize.literal('(SELECT picture FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_picture']
         ]
       },
       raw: true,
@@ -25,10 +25,10 @@ const reservationController = {
     Reservation.findByPk(req.params.reservationId, {
       attributes: {
         include: [
-          [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
-          [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
-          [sequelize.literal('(SELECT email FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_email'],
-          [sequelize.literal('(SELECT phone_number FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_phone_number']
+          [sequelize.literal('(SELECT name FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+          [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
+          [sequelize.literal('(SELECT email FROM Users WHERE Users.id = Reservation.UserId)'), 'User_email'],
+          [sequelize.literal('(SELECT phone_number FROM Users WHERE Users.id = Reservation.UserId)'), 'User_phone_number']
         ]
       }
     }).then(reservation => {
@@ -55,8 +55,9 @@ const reservationController = {
         nest: true,
         attributes: {
           include: [
-            [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
-            [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_name']
+            [sequelize.literal('(SELECT name FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+            [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
+            [sequelize.literal('(SELECT email FROM Users WHERE Users.id = Reservation.UserId)'), 'User_email']
           ]
         }
       }).then(reservation => {
@@ -78,6 +79,7 @@ const reservationController = {
         // Step 2: 撰寫信件內容
         const emailData = {
           User_name: reservation.User_name,
+          User_email: reservation.User_email,
           Restaurant_name: reservation.Restaurant_name,
           date: moment(reservation.date).locale('zh-tw').format('MMMDo[(]dddd[)]'),
           time: reservation.time.slice(0, 5),
@@ -107,7 +109,7 @@ const reservationController = {
 
         const mailOptions = {
           from: process.env.GMAIL_ACCOUNT,
-          to: reservation.email,
+          to: emailData.User_email,
           subject: `您在 ${reservation.Restaurant_name} 預定${moment(reservation.date).locale('zh-tw').format('MM[/]DD[(]dddd[)]')} ${reservation.time.slice(0, 5)} ${reservation.partySize_adult + reservation.partySize_kids}人。`,
           html: emailInfo,
           auth: {
