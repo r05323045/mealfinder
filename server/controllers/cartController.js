@@ -27,7 +27,7 @@ const cartController = {
           model: Coupon,
           attributes: {
             include: [
-              [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+              [sequelize.literal('(SELECT picture FROM Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
             ]
           }
         }
