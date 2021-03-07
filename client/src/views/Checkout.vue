@@ -99,6 +99,7 @@
 
 <script>
 
+import axios from 'axios'
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 import cartsAPI from '@/apis/carts'
@@ -176,10 +177,17 @@ export default {
         if (data.status !== 'success') {
           throw new Error(data.message)
         }
-        window.location.assign(data.tradeInfo.PayGateWay)
-        Toast.fire({
-          icon: 'success',
-          title: '訂單已成立'
+        const tradeInfo = data.tradeInfo
+        console.log(data)
+        axios({
+          method: 'post',
+          url: tradeInfo.PayGateWay,
+          data: {
+            MerchantID: tradeInfo.MerchantID,
+            TradeInfo: tradeInfo.TradeInfo,
+            TradeSha: tradeInfo.TradeSha,
+            Version: tradeInfo.Version
+          }
         })
       } catch (error) {
         console.log(error)

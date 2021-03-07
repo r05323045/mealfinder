@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 
 //金流參數
-const URL = 'http://0cce43891fdf.ngrok.io'
+const URL = 'https://mealfinder2021.herokuapp.com'
 const MerchantID = 'MS318595991'
 const HashKey = 'UTkH5cZt6nQb99Jqo8Xfcp9isYHfBCOA'
 const HashIV = 'CS54PvL1tbZnptrP'
