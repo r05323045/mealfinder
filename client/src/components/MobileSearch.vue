@@ -331,7 +331,7 @@ export default {
 <style lang="scss" scoped>
 $ultimategray: #939597;
 $divider: #E6ECF0;
-.modal.show {
+.modal {
   overflow: hidden;
   z-index: 999;
   position: fixed;
@@ -343,7 +343,7 @@ $divider: #E6ECF0;
   flex-direction: column;
   align-items: flex-start;
   transition: 0.1s;
-  transform: translateY(0);
+  transform: translateY(100%);
 }
 .modal-background {
   position: absolute;
@@ -353,10 +353,10 @@ $divider: #E6ECF0;
   background: #666;
   opacity: 0.5;
 }
-.modal-content.show {
+.modal-content {
   overflow: hidden;
   height: 100%;
-  transform: translateY(0);
+  transform: translateY(100%);
   transition: 0.5s;
   .top-wrapper {
     border-top-left-radius: 15px;
@@ -665,11 +665,11 @@ $divider: #E6ECF0;
   transition: 0.3;
   opacity: 100%;
 }
-.modal {
-  transform: translateY(100%);
+.modal.show {
+  transform: translateY(0);
 }
 .modal-content {
-  transform: translateY(100%);
+  transform: translateY(0);
 }
 
 </style>
