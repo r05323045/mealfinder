@@ -16,7 +16,7 @@
       </div>
       <div class="policy">
         <div class="item"><a href="https://policies.google.com/privacy">隱私權</a></div>
-        <div class="item">© 2021 Meal Finder. All Rights Reserved</div>
+        <div class="item">© 2021 MealFinder. All Rights Reserved</div>
       </div>
     </div>
   </div>

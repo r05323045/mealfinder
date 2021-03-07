@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/mealfinder',
+  publicPath: '/',
   devServer: {
     headers: { 'Access-Control-Allow-Origin': '*' },
     proxy: {
