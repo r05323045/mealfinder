@@ -44,85 +44,87 @@
           </div>
         </div>
         <div class="contact-card-wrapper">
-          <validation-observer ref="formvalidation" v-slot="{ invalid }">
-            <div class="title">確認訂位與填寫聯絡資訊</div>
-            <div class="contact-card">
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="name" class="all-text">訂位人姓名</label>
-                  <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
-                </validation-provider>
-                <div class="gender">
-                  <span class="item-wrapper">
-                    <label for="gender-female" class="item">
-                      <span class="radio-input">
-                        <input name="gender" id="gender-female" role="radio" value="female" type="radio" checked v-model="userGender">
-                        <span class="radio-control"></span>
-                      </span>
-                      <span class="text">小姐</span>
-                    </label>
-                  </span>
-                  <span class="item-wrapper">
-                    <label for="gender-male" class="item">
-                      <span class="radio-input">
-                        <input name="gender" id="gender-male" role="radio" value="male" type="radio" v-model="userGender">
-                        <span class="radio-control"></span>
-                      </span>
-                      <span class="text">先生</span>
-                    </label>
-                  </span>
-                  <span class="item-wrapper">
-                    <label for="gender-other" class="item">
-                      <span class="radio-input">
-                        <input name="gender" id="gender-other" role="radio" value="other" type="radio" v-model="userGender">
-                        <span class="radio-control"></span>
-                      </span>
-                      <span class="text">其他</span>
-                    </label>
-                  </span>
+          <validation-observer ref="formvalidation" v-slot="{ handleSubmit }">
+            <form @submit.prevent="handleSubmit(submitReservation(invalid || !submitPurpose))">
+              <div class="title">確認訂位與填寫聯絡資訊</div>
+              <div class="contact-card">
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="name" class="all-text">訂位人姓名</label>
+                    <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
+                  </validation-provider>
+                  <div class="gender">
+                    <span class="item-wrapper">
+                      <label for="gender-female" class="item">
+                        <span class="radio-input">
+                          <input name="gender" id="gender-female" role="radio" value="female" type="radio" checked v-model="userGender">
+                          <span class="radio-control"></span>
+                        </span>
+                        <span class="text">小姐</span>
+                      </label>
+                    </span>
+                    <span class="item-wrapper">
+                      <label for="gender-male" class="item">
+                        <span class="radio-input">
+                          <input name="gender" id="gender-male" role="radio" value="male" type="radio" v-model="userGender">
+                          <span class="radio-control"></span>
+                        </span>
+                        <span class="text">先生</span>
+                      </label>
+                    </span>
+                    <span class="item-wrapper">
+                      <label for="gender-other" class="item">
+                        <span class="radio-input">
+                          <input name="gender" id="gender-other" role="radio" value="other" type="radio" v-model="userGender">
+                          <span class="radio-control"></span>
+                        </span>
+                        <span class="text">其他</span>
+                      </label>
+                    </span>
+                  </div>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="phone" class="all-text">訂位人手機號碼</label>
+                    <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required|email">
+                    <label for="email" class="all-text">訂位人電子郵件</label>
+                    <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <label for="purpose" class="all-text">用餐目的</label>
+                  <div class="button-wrapper">
+                    <button class="button" v-for="(el, idx) in purpose" :key="`purpose-${idx}`" @click.prevent="changePurpose(el)" :class="{select: submitPurpose.includes(el)}">
+                      <span class="text">{{ el }}</span>
+                    </button>
+                    <span v-if="!submitPurpose && firstClickSubmit" class="invalid-text">請選擇用餐目的</span>
+                  </div>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="max:140">
+                    <label for="note" class="all-text">其他備註</label>
+                    <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！（例如：行動不便、過敏）" v-model="userNote" :class="classes"></textarea>
+                    <div class="note-count">({{ userNote.length }}/140)</div>
+                    <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
+                  </validation-provider>
                 </div>
               </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="phone" class="all-text">訂位人手機號碼</label>
-                  <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required|email">
-                  <label for="email" class="all-text">訂位人電子郵件</label>
-                  <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <label for="purpose" class="all-text">用餐目的</label>
-                <div class="button-wrapper">
-                  <button class="button" v-for="(el, idx) in purpose" :key="`purpose-${idx}`" @click.prevent="changePurpose(el)" :class="{select: submitPurpose.includes(el)}">
-                    <span class="text">{{ el }}</span>
-                  </button>
-                  <span v-if="!submitPurpose && firstClickSubmit" class="invalid-text">請選擇用餐目的</span>
+              <div class="submit-button-wrapper">
+                <button class="submit-button" type="submit">
+                  <div class="button">確認訂位</div>
+                </button>
+                <div class="back-button" @click.prevent="$router.go(-1)">
+                  <div class="button">回上一步</div>
                 </div>
               </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="max:140">
-                  <label for="note" class="all-text">其他備註</label>
-                  <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！（例如：行動不便、過敏）" v-model="userNote" :class="classes"></textarea>
-                  <div class="note-count">({{ userNote.length }}/140)</div>
-                  <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
-                </validation-provider>
-              </div>
-            </div>
-            <div class="submit-button-wrapper">
-              <button class="submit-button" type="submit" @click.prevent="submitReservation(invalid || !submitPurpose)" :disabled="invalid">
-                <div class="button">確認訂位</div>
-              </button>
-              <div class="back-button" @click.prevent="$router.go(-1)">
-                <div class="button">回上一步</div>
-              </div>
-            </div>
+            </form>
           </validation-observer>
         </div>
       </div>
@@ -239,6 +241,7 @@ export default {
       }
     },
     submitReservation (invalid) {
+      console.log('hi')
       if (!this.firstClickSubmit) {
         this.firstClickSubmit = true
       }

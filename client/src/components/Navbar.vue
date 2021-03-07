@@ -207,6 +207,8 @@ export default {
       this.$store.commit('revokeAuthentication')
       this.showMenu = false
       if (this.$route.path.includes('/users')) {
+        this.$router.push('/signin').catch(() => {})
+      } else {
         this.$router.push('/').catch(() => {})
       }
       window.scrollTo({

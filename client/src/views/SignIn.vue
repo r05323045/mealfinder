@@ -11,8 +11,8 @@
             </div>
           </div>
           <div class="signin-card">
-            <validation-observer ref="formvalidation" v-slot="{ invalid }">
-              <form class="signin-content">
+            <validation-observer v-slot="{ handleSubmit }">
+              <form @submit.prevent="handleSubmit(signin)" class="signin-content">
                 <div class="all-wrapper">
                   <validation-provider v-slot="{ errors, classes }" rules="required|email">
                     <label for="email" class="all-text">電子郵件</label>
@@ -28,7 +28,7 @@
                   </validation-provider>
                 </div>
                 <div class="submit-button-wrapper">
-                  <button class="submit-button" type="submit" @click.prevent="signin" :disabled="invalid">
+                  <button class="submit-button" type="submit">
                     <div class="button">登入</div>
                   </button>
                 </div>

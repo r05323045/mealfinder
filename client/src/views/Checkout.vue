@@ -29,62 +29,64 @@
           </div>
         </div>
         <div class="contact-and-submit">
-          <validation-observer ref="formvalidation" v-slot="{ invalid }">
-            <div class="title">確認購買與選擇付款方式</div>
-            <div class="contact-card">
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="name" class="all-text">購買人姓名</label>
-                  <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required|email">
-                  <label for="email" class="all-text">購買人電子郵件</label>
-                  <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="phone" class="all-text">購買人手機號碼</label>
-                  <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="address" class="all-text">購買人地址</label>
-                  <input id="address" type="text" class="all-input" v-model="userAddress" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('address ', '地址') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <label for="purpose" class="all-text">付款方式</label>
-                <div class="button-wrapper">
-                  <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" :class="{select: submitPayby === el}">
-                    <span class="text">{{ el }}</span>
-                  </button>
+          <validation-observer ref="formvalidation" v-slot="{ handleSubmit, invalid }">
+            <form @submit.prevent="handleSubmit(postOrder)" >
+              <div class="title">確認購買與選擇付款方式</div>
+              <div class="contact-card">
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="name" class="all-text">購買人姓名</label>
+                    <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required|email">
+                    <label for="email" class="all-text">購買人電子郵件</label>
+                    <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="phone" class="all-text">購買人手機號碼</label>
+                    <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="address" class="all-text">購買人地址</label>
+                    <input id="address" type="text" class="all-input" v-model="userAddress" :class="classes">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('address ', '地址') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <label for="purpose" class="all-text">付款方式</label>
+                  <div class="button-wrapper">
+                    <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" :class="{select: submitPayby === el}">
+                      <span class="text">{{ el }}</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="max:140">
+                    <label for="note" class="all-text">其他備註</label>
+                    <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！" v-model="userNote" :class="classes"></textarea>
+                    <div class="note-count">({{ userNote.length }}/140)</div>
+                    <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
+                  </validation-provider>
                 </div>
               </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="max:140">
-                  <label for="note" class="all-text">其他備註</label>
-                  <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！" v-model="userNote" :class="classes"></textarea>
-                  <div class="note-count">({{ userNote.length }}/140)</div>
-                  <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
-                </validation-provider>
+              <div class="submit-button-wrapper">
+                <button class="submit-button" type="submit" :class="{ disabled: invalid }">
+                  <div class="button">確認購買</div>
+                </button>
+                <div class="back-button" @click.prevent="$router.go(-1)">
+                  <div class="button">回上一步</div>
+                </div>
               </div>
-            </div>
-            <div class="submit-button-wrapper">
-              <button class="submit-button" type="submit" @click.prevent="postOrder" :disabled="invalid" :class="{ disabled: invalid }">
-                <div class="button">確認購買</div>
-              </button>
-              <div class="back-button" @click.prevent="$router.go(-1)">
-                <div class="button">回上一步</div>
-              </div>
-            </div>
+            </form>
           </validation-observer>
         </div>
       </div>
@@ -415,6 +417,9 @@ $darkred: #c13515;
           .submit-button.disabled {
             background-color: $ultimategray;
             cursor: not-allowed;
+            .button {
+              cursor: not-allowed;
+            }
           }
           .back-button {
             cursor: pointer;

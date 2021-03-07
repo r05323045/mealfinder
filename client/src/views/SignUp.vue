@@ -10,8 +10,8 @@
           </div>
         </div>
         <div class="signup-card">
-          <validation-observer ref="formvalidation" v-slot="{ invalid }">
-            <form class="signup-content">
+          <validation-observer ref="formvalidation" v-slot="{ handleSubmit }">
+            <form class="signup-content" @submit.prevent="handleSubmit(signup)">
               <validation-provider v-slot="{ errors, classes }" rules="required">
                 <div class="all-wrapper">
                   <label for="name" class="all-text">名稱</label>
@@ -41,7 +41,7 @@
                 </div>
               </validation-provider>
               <div class="submit-button-wrapper">
-                <button class="submit-button" type="submit" @click.prevent="signup" :disabled="invalid">
+                <button class="submit-button" type="submit">
                   <div class="button">註冊</div>
                 </button>
               </div>
