@@ -40,7 +40,7 @@
           <div class="no-result" v-if="resultCount === 0">沒有結果</div>
           <div class="no-result-sub" v-if="resultCount === 0">請試著調整搜尋條件，如移除篩選條件或縮小地圖範圍</div>
         </div>
-        <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
+        <div v-if="restaurants.length > 0" ref="restaurant-card-deck-wrapper" class="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
               <div class="restaurant-card"
@@ -224,13 +224,20 @@ export default {
       }
     },
     async fetchRestaurants (filter) {
+      const loader = this.$loading.show({
+        container: this.$refs['restaurant-card-deck-wrapper'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.noMoreData = data.data.length === 0
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
         this.resultCount = data.count
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

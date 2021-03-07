@@ -37,7 +37,7 @@
             <img class="sub-title-img" src="../assets/ramen.svg">
             MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
           </div>
-          <div class="restaurant-list-card">
+          <div class="restaurant-list-card" ref="restaurant-list-card">
             <div class="card-content">
               <div class="no-result" v-if="resultCount === 0">沒有結果</div>
               <div class="no-result-sub" v-if="resultCount === 0">請試著調整搜尋條件，如移除篩選條件或縮小地圖範圍</div>
@@ -308,6 +308,10 @@ export default {
       this.openInfoWindow(restaurant)
     },
     async fetchNearByRestaurants (hasPage) {
+      const loader = this.$loading.show({
+        container: this.$refs['restaurant-list-card'],
+        opacity: 1
+      })
       try {
         if (this.priceFilter.length === 2) {
           this.priceQueryString[0] = `min=${this.priceFilter[0]}`
@@ -336,9 +340,11 @@ export default {
         })
         this.numOfPage += 1
         this.resultCount = data.count
+        loader.hide()
         this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
         this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

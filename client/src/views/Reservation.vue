@@ -213,6 +213,10 @@ export default {
       this.rated = num
     },
     async fetchReservation (id) {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = await reservationsAPI.getReservation(id)
         this.reservation = data.reservation
@@ -238,7 +242,9 @@ export default {
           this.commentText = ''
           this.firstClickSubmit = false
         }
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

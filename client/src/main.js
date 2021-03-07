@@ -9,6 +9,9 @@ import VueClipboard from 'vue-clipboard2'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import { ValidationObserver, ValidationProvider, localize, configure, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+import MyLoading from '@/components/MyLoading'
 
 Vue.config.productionTip = false
 
@@ -191,6 +194,18 @@ Vue.use(VueGoogleMaps, {
 })
 
 Vue.use(VueClipboard)
+
+Vue.component('MyLoading', MyLoading)
+Vue.component('Loading', Loading)
+
+Vue.use(Loading, {
+  loader: 'dots',
+  opacity: 0.8,
+  isFullPage: false,
+  height: 64,
+  width: 64,
+  color: 'rgb(255, 56, 92)'
+})
 
 axios.defaults.withCredentials = true
 

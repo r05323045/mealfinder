@@ -136,11 +136,17 @@ export default {
   },
   methods: {
     async fetchCart () {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = await cartsAPI.getCart()
         this.cart = data.data
         this.calculateTotalPrice()
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

@@ -19,11 +19,11 @@
           <img class="sub-title-img" src="../assets/diet.svg">
           MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
         </div>
-        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0">
+        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0" ref="restaurant-card-deck-wrapper">
           <div class="no-result">沒有任何收藏的餐廳</div>
           <div class="no-result-sub">使用 <a href="#/map">地圖模式</a> 或 <a href="#/restaurants">清單搜尋</a> 探索喜歡的餐廳</div>
         </div>
-        <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
+        <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper" ref="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
               <div class="restaurant-card"
@@ -172,11 +172,18 @@ export default {
       }
     },
     async fetchFavorites (filter) {
+      const loader = this.$loading.show({
+        container: this.$refs['restaurant-card-deck-wrapper'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = await usersAPI.getFavorites(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

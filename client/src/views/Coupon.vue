@@ -203,12 +203,18 @@ export default {
       this.scrollY = this.$refs.coupon.scrollTop
     },
     async fetchCoupon (id) {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = await couponsAPI.getCoupon(id)
         this.coupon = data
         this.coupon.Restaurant.business_hours = JSON.parse(this.coupon.Restaurant.business_hours)
         this.findTodayBusinessHours()
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

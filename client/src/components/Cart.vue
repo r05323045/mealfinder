@@ -1,6 +1,6 @@
 <template>
   <div class="cart-page">
-    <div class="page-container">
+    <div class="page-container" ref="page-container">
       <div class="more-container" v-if="cart.length < 1">
         <div class="more-title">還沒想好要買什麼？</div>
         <div class="illustration-wrapper">
@@ -93,11 +93,18 @@ export default {
   },
   methods: {
     async fetchCart () {
+      const loader = this.$loading.show({
+        container: this.$refs['page-container'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = await cartsAPI.getCart()
         this.cart = data.data
         this.calculateTotalPrice()
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

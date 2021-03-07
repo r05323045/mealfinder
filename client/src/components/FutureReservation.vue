@@ -35,6 +35,7 @@
           </div>
         </div>
         <div class="booking-card" v-if="cardPerDeck > 1 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
+        <div class="booking-card" v-if="cardPerDeck > 2 && restaurants.slice((i - 1) * cardPerDeck, i * cardPerDeck).length < cardPerDeck"></div>
       </div>
     </div>
   </div>

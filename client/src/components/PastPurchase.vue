@@ -1,5 +1,5 @@
 <template>
-  <div class="past-purchase">
+  <div class="past-purchase" ref="past-purchase">
     <div class="more-container" v-if="orders.length < 1">
       <div class="more-title">從來沒買過？</div>
       <div class="illustration-wrapper">
@@ -56,6 +56,11 @@ export default {
   },
   methods: {
     async fetchOrders () {
+      const loader = this.$loading.show({
+        container: this.$refs['past-purchase'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = await cartsAPI.getOrders()
         this.orders = data.orders
@@ -66,7 +71,9 @@ export default {
           })
           order.totalPrice = totalPrice
         })
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
