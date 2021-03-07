@@ -182,6 +182,11 @@ export default {
       }
       e.stopPropagation()
     })
+    window.addEventListener('load', function () {
+      setTimeout(() => {
+        window.scrollTo(0, 1)
+      }, 0)
+    })
   },
   methods: {
     clickSearchBar () {
