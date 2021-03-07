@@ -78,7 +78,7 @@
                   </validation-provider>
                 </div>
               </div>
-              <div class="submit-button-wrapper">
+              <div class="submit-button-wrapper" v-if="!tradeInfo.PayGateWay">
                 <button class="submit-button" type="submit" :class="{ disabled: invalid }">
                   <div class="button">確認購買</div>
                 </button>
@@ -88,6 +88,18 @@
               </div>
             </form>
           </validation-observer>
+          <form name='Spgateway' :action='tradeInfo.PayGateWay' method="POST">
+            <input v-show="false" type="text" name="MerchantID" v-model="tradeInfo.MerchantID">
+            <input v-show="false" type="text" name="TradeInfo" v-model="tradeInfo.TradeInfo">
+            <input v-show="false" type="text" name="TradeSha" v-model="tradeInfo.TradeSha">
+            <input v-show="false" type="text" name="Version" v-model="tradeInfo.Version">
+            <button class="spgateway-button" v-show="tradeInfo.PayGateWay" id="spgateway-button" type="submit">
+              <div class="button">前往付款頁面</div>
+            </button>
+            <div class="stop-pay-button" v-show="tradeInfo.PayGateWay" @click.prevent="$router.go(-1)">
+              <div class="button">回上一步</div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -99,7 +111,6 @@
 
 <script>
 
-import axios from 'axios'
 import { Toast } from '@/utils/helpers'
 import { mapState } from 'vuex'
 import cartsAPI from '@/apis/carts'
@@ -117,7 +128,8 @@ export default {
       userEmail: '',
       userPhone: '',
       userAddress: '',
-      userNote: ''
+      userNote: '',
+      tradeInfo: {}
     }
   },
   components: {
@@ -177,18 +189,7 @@ export default {
         if (data.status !== 'success') {
           throw new Error(data.message)
         }
-        const tradeInfo = data.tradeInfo
-        console.log(data)
-        axios({
-          method: 'post',
-          url: tradeInfo.PayGateWay,
-          data: {
-            MerchantID: tradeInfo.MerchantID,
-            TradeInfo: tradeInfo.TradeInfo,
-            TradeSha: tradeInfo.TradeSha,
-            Version: tradeInfo.Version
-          }
-        })
+        this.tradeInfo = data.tradeInfo
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -456,6 +457,51 @@ $darkred: #c13515;
               font-size: 16px;
               line-height: 20px;
             }
+          }
+        }
+        .spgateway-button {
+          cursor: pointer;
+          border: none;
+          appearance: none;
+          margin-bottom: 20px;
+          height: 48px;
+          width: 100%;
+          background: #000000;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &:focus {
+            outline: none;
+          }
+          .button {
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+          }
+        }
+        .stop-pay-button {
+          cursor: pointer;
+          border: 1px solid #222222;
+          margin-bottom: 12px;
+          height: 46px;
+          width: 100%;
+          background: #ffffff;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &:focus {
+            outline: none;
+          }
+          .button {
+            color: #222222;
+            cursor: pointer;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
           }
         }
       }
