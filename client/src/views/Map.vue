@@ -421,7 +421,6 @@ $primary-color: #222;
 $darkred: #c13515;
 @import '~vue2-datepicker/scss/index.scss';
 .map-page {
-  height: 100%;
   overflow: scroll;
   position: relative;
   width: 100%;
