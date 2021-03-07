@@ -299,7 +299,7 @@ $divider: #E6ECF0;
 }
 .modal.innerShow {
   transition: 0.3;
-  opacity: 100%;
+  opacity: 1;
 }
 .modal.show {
   transform: translateY(0);

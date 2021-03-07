@@ -669,7 +669,7 @@ $divider: #E6ECF0;
 }
 .modal.innerShow {
   transition: 0.3;
-  opacity: 100%;
+  opacity: 1;
 }
 .modal.show {
   transition: 0.1s;
