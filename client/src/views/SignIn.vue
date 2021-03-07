@@ -98,7 +98,7 @@ export default {
     },
     async signInByFacebook () {
       try {
-        window.location.href = 'http://localhost:3000/api/auth/facebook'
+        window.location.href = `${process.env.BASE_URL}/api/auth/facebook`
       } catch (error) {
         Toast.fire({
           icon: 'warning',
@@ -108,7 +108,7 @@ export default {
     },
     async signInByGoogle () {
       try {
-        window.location.href = 'http://localhost:3000/api/auth/google'
+        window.location.href = `${process.env.BASE_URL}/api/auth/google`
       } catch (error) {
         Toast.fire({
           icon: 'warning',
