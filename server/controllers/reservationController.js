@@ -86,25 +86,28 @@ const reservationController = {
         }
 
         const emailInfo = `
-          <body>
-            <div style="margin-left:auto;margin-right:auto;background-color:#F8F9FA;padding:10px">
-              <div style="width:60%;margin-left:auto;margin-right:auto;background-color:#FFFFFF;padding:20px 30px;border-radius:5px;text-align: center;">
-                <h3 style="margin-top:4px;font-weight:700;font-size:25px">${emailData.User_name}你好，<br>已為您安排 ${emailData.Restaurant_name} 訂位。</h3>
-                <div style="width:250px;border-color:#B5B5B5;padding:10px;margin-left:auto;margin-right: auto;">
-                <div style="border:1px #dddddd solid;padding:15px">
-                  <p style="font-weight:500;letter-spacing:4px;font-size:20px;margin-buttom:5px">${emailData.date}</p>
-                  <p style="font-weight:600;letter-spacing:5px;font-size:50px;margin-top:5px;margin:0px">${emailData.time}</p>
-                  <p style="font-weight:500;letter-spacing:7px;font-size:20px;">${emailData.partySize_adult}大${emailData.partySize_kids}小</p>
-                </div>
-                </div>
+        <body>
+          <div style="margin: auto; background-color:#F8F9FA;padding:10px">
+            <div style="width: 60%; min-width: 280px; margin: auto; background-color:#FFFFFF; padding: 15px; border-radius:5px;text-align: center;">
+              <div style="margin-top: 8px; font-size: 22px; font-weight: 700;">${emailData.User_name} 您好</div>
+              <div style="margin-top: 16px; font-size: 22px; font-weight: 700;">已為您安排</div>
+              <div style="margin-top: 16px; font-size: 36px; font-weight: 700;">${emailData.Restaurant_name}</div>
+              <div style="margin: 16px 0; font-size: 22px; font-weight: 700;">的訂位</div>
+              <div style="width: 60%; min-width: 250px; border-color:#B5B5B5;padding:12px; margin: auto;">
+              <div style="border:1px #dddddd solid;padding:15px">
+                <p style="font-weight:500;letter-spacing:4px;font-size:16px;margin-buttom:5px">${emailData.date}</p>
+                <p style="font-weight:600;letter-spacing:5px;font-size:50px;margin-top:5px;margin:0px">${emailData.time}</p>
+                <p style="font-weight:500;letter-spacing:7px;font-size:20px;">${emailData.partySize_adult + emailData.partySize_kids}位</p>
+              </div>
               </div>
             </div>
-          </body>
+          </div>
+        </body>
           `
 
-        let mailOptions = {
+        const mailOptions = {
           from: process.env.GMAIL_ACCOUNT,
-          to: '402070512@gapp.fju.edu.tw',
+          to: reservation.email,
           subject: `您在 ${reservation.Restaurant_name} 預定${moment(reservation.date).locale('zh-tw').format('MM[/]DD[(]dddd[)]')} ${reservation.time.slice(0, 5)} ${reservation.partySize_adult + reservation.partySize_kids}人。`,
           html: emailInfo,
           auth: {
