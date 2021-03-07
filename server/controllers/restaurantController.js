@@ -174,10 +174,10 @@ const restaurantController = {
         attributes: {
           include: [
             [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
         // order: sequelize.literal('distance ASC'),
         offset: offset,
         limit: pageLimit
@@ -195,10 +195,10 @@ const restaurantController = {
         attributes: {
           include: [
             [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
       })
     ]).then(([restaurants, allRestaurants]) => {
       const data = restaurants.map(restaurant => ({
@@ -232,10 +232,10 @@ const restaurantController = {
         attributes: {
           include: [
             [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
         // order: sequelize.literal('distance ASC'),
         offset: offset,
         limit: pageLimit
@@ -253,10 +253,10 @@ const restaurantController = {
         attributes: {
           include: [
             [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
       })
     ]).then(([restaurants, allRestaurants]) => {
       const data = restaurants.map(restaurant => ({
