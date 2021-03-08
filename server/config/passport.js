@@ -30,7 +30,7 @@ passport.use(strategy)
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: '/api/auth/facebook/callback',
+  callbackURL: process.env.FACEBOOK_CALLBACK,
   profileFields: ['id', 'displayName', 'email', 'photos', 'gender']
 }, (accessToken, refreshToken, profile, done) => {
   User.findOne({ where: { email: profile._json.email } })
