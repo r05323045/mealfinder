@@ -58,7 +58,7 @@ const cartController = {
   },
 
   addCartItem: (req, res) => {
-    CartItem.findByPk(req.params.id).then(cartItem => {
+    CartItem.findByPk(req.body.id).then(cartItem => {
       cartItem.update({
         quantity: cartItem.quantity + 1
       })
@@ -69,7 +69,7 @@ const cartController = {
   },
 
   reduceCartItem: (req, res) => {
-    CartItem.findByPk(req.params.id).then(cartItem => {
+    CartItem.findByPk(req.body.id).then(cartItem => {
       cartItem.update({
         quantity: cartItem.quantity - 1 >= 1 ? cartItem.quantity - 1 : 1
       })
@@ -180,6 +180,7 @@ const cartController = {
         ])
           .then((order) => {
             const orderitems = cart.map(data => {
+              console.log(data)
               const uniqueId = Math.floor(Math.random() * 1000000000000) + 1
               const id = data.Coupon.id
               const price = Number(data.Coupon.price)
@@ -222,7 +223,8 @@ const cartController = {
       include: [OrderItem]
     })
       .then((order) => {
-        return res.json({ order })
+        const data = order[1]
+        return res.json({ data })
       })
   },
 

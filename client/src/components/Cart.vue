@@ -177,7 +177,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: 'error',
-          title: '目前無法增加數量，請稍後'
+          title: '目前無法減少數量，請稍後'
         })
       }
     }

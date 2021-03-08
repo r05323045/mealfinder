@@ -18,12 +18,12 @@ export default {
     })
   },
   addCartItem (id) {
-    return apiHelper.post(`/user/cartItem/${id}/add`, {
+    return apiHelper.post('/user/cartItem//add', { id: id }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   reduceCartItem (id) {
-    return apiHelper.post(`/user/cartItem/${id}/reduce`, {
+    return apiHelper.post('/user/cartItem/reduce', { id: id }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

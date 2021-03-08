@@ -90,8 +90,8 @@ router.get('/user/:id/purchase/:orderId/:itemId', authenticated, userController.
 // cartController_Cart model
 router.get('/user/cart', authenticated, cartController.getCart)
 router.post('/user/cart', authenticated, cartController.postCart)
-router.post('/user/cartItem/:id/add', authenticated, cartController.addCartItem)
-router.post('/user/cartItem/:id/reduce', authenticated, cartController.reduceCartItem)
+router.post('/user/cartItem/add', authenticated, cartController.addCartItem)
+router.post('/user/cartItem/reduce', authenticated, cartController.reduceCartItem)
 router.delete('/user/cart/:id', authenticated, cartController.deleteCartItem)
 router.get('/user/order', authenticated, cartController.getOrders)
 router.get('/user/order/:id', authenticated, cartController.getOrder)
