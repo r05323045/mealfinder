@@ -83,9 +83,9 @@
         </div>
         <div class="description-wrapper">
           <div class="divider"></div>
-          <div class="title">餐廳簡介</div>
+          <div class="title">餐廳類型</div>
           <div class="description">
-            尚未提供
+            {{ restaurant.Category ? restaurant.Category.name : '尚未提供' }}
           </div>
         </div>
         <div class="rule-wrapper">
