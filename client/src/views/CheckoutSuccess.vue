@@ -62,6 +62,7 @@ import Footer from '@/components/Footer.vue'
 export default {
   data () {
     return {
+      order: {},
       totalPrice: 0,
       totalQuantity: 0,
       tradeInfo: {}
@@ -85,7 +86,8 @@ export default {
       })
       try {
         const { data } = await cartsAPI.getPaymentInfo(this.$route.query.sn)
-        console.log(data)
+        this.totalPrice = data.data.total_amount
+        this.calculateTotalPrice(data.data.orderItems)
         loader.hide()
       } catch (error) {
         loader.hide()
@@ -95,6 +97,12 @@ export default {
           title: '目前無法取得付款資訊，請稍候'
         })
       }
+    },
+    calculateTotalPrice (arr) {
+      this.totalQuantity = 0
+      arr.forEach(c => {
+        this.totalQuantity += Number(c.quantity)
+      })
     }
   }
 }

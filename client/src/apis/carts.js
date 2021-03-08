@@ -18,7 +18,7 @@ export default {
     })
   },
   addCartItem (id) {
-    return apiHelper.post('/user/cartItem//add', { id: id }, {
+    return apiHelper.post('/user/cartItem/add', { id: id }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

@@ -167,20 +167,17 @@ const cartController = {
       ]
     })
       .then(cart => {
-        Promise.all([
-          Order.create({
-            UserId,
-            total_amount: totalPrice,
-            phone,
-            address,
-            name,
-            email,
-            sn: String(tradeInfo.MerchantOrderNo)
-          })
-        ])
+        return Order.create({
+          UserId,
+          total_amount: totalPrice,
+          phone,
+          address,
+          name,
+          email,
+          sn: String(tradeInfo.MerchantOrderNo)
+        })
           .then((order) => {
             const orderitems = cart.map(data => {
-              console.log(data)
               const uniqueId = Math.floor(Math.random() * 1000000000000) + 1
               const id = data.Coupon.id
               const price = Number(data.Coupon.price)
@@ -223,7 +220,7 @@ const cartController = {
       include: [OrderItem]
     })
       .then((order) => {
-        const data = order[1]
+        const data = order[0]
         return res.json({ data })
       })
   },
