@@ -175,7 +175,7 @@ const cartController = {
             address,
             name,
             email,
-            sn: tradeInfo.MerchantOrderNo
+            sn: String(tradeInfo.MerchantOrderNo)
           })
         ])
           .then((order) => {
@@ -213,7 +213,17 @@ const cartController = {
           })
       })
   },
-  postOrder: (req, res) => {
+  getPaymentInfo: (req, res) => {
+    const MerchantOrderNo = req.params.no
+    return Order.findAll({
+      where: {
+        sn: MerchantOrderNo
+      },
+      include: [OrderItem]
+    })
+      .then((order) => {
+        return res.json({ order })
+      })
   },
 
   spgatewayCallback: (req, res) => {

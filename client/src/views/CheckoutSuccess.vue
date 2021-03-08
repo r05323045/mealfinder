@@ -13,22 +13,22 @@
             <div class="card-content">
               <div class="item-wrapper">
                 <div class="text">商品總計</div>
-                <div class="total-price">$1995</div>
+                <div class="total-price">{{ totalPrice | priceFormat }}</div>
               </div>
               <div class="item-wrapper">
                 <div class="text">數量總計</div>
-                <div class="total-price">5</div>
+                <div class="total-price">{{totalQuantity }}</div>
               </div>
               <div class="divider"></div>
               <div class="item-wrapper summary">
                 <div class="text">結帳總金額</div>
-                <div class="total-price">$1995</div>
+                <div class="total-price">{{ totalPrice | priceFormat }}</div>
               </div>
             </div>
           </div>
         </div>
         <div class="illustration-and-result">
-          <div class="title">訂位成功！</div>
+          <div class="title">付款成功！</div>
           <div class="illustration-wrapper">
             <div class="cover">
               <!--<div class="button">感謝你的使用！</div>-->
@@ -53,14 +53,18 @@
 
 <script>
 
+import { Toast } from '@/utils/helpers'
+import { mapState } from 'vuex'
+import cartsAPI from '@/apis/carts'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
   data () {
     return {
-      payby: ['信用卡', 'ATM轉帳'],
-      submitPayby: ''
+      totalPrice: 0,
+      totalQuantity: 0,
+      tradeInfo: {}
     }
   },
   components: {
@@ -68,11 +72,29 @@ export default {
     Footer
   },
   mounted () {
+    this.fetchPayment()
+  },
+  computed: {
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
-    rating (num) {
-      console.log(num)
-      this.rated = num
+    async fetchPayment () {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
+      try {
+        const { data } = await cartsAPI.getPaymentInfo(this.$route.query.sn)
+        console.log(data)
+        loader.hide()
+      } catch (error) {
+        loader.hide()
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得付款資訊，請稍候'
+        })
+      }
     }
   }
 }
@@ -216,6 +238,7 @@ $red: rgb(255, 56, 92);
           width: 100%;
           background: #ffffff;
           .submit-button {
+            cursor: pointer;
             border: none;
             appearance: none;
             margin-bottom: 20px;
@@ -238,6 +261,7 @@ $red: rgb(255, 56, 92);
             }
           }
           .back-button {
+            cursor: pointer;
             border: 1px solid #222222;
             margin-bottom: 12px;
             height: 46px;

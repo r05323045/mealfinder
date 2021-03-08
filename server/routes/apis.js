@@ -96,6 +96,7 @@ router.delete('/user/cart/:id', authenticated, cartController.deleteCartItem)
 router.get('/user/order', authenticated, cartController.getOrders)
 router.get('/user/order/:id', authenticated, cartController.getOrder)
 router.post('/user/order', authenticated, cartController.postTradeInfo)
+router.get('/user/payment/:no', authenticated, cartController.getPaymentInfo)
 router.post('/spgateway/callback', cartController.spgatewayCallback)
 
 // couponController_Coupon model

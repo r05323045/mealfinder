@@ -32,20 +32,18 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  /*
-  postOrder (data) {
-    return apiHelper.post('/order', data, {
+  getPaymentInfo (no) {
+    return apiHelper.get(`/user/payment/${no}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
-  */
   getOrders () {
-    return apiHelper.get('/order', {
+    return apiHelper.get('/user/order', {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   getOrder (id) {
-    return apiHelper.get(`/order/${id}`, {
+    return apiHelper.get(`/user/order/${id}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   }
