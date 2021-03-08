@@ -226,22 +226,22 @@ const cartController = {
     const data = JSON.parse(helpers.create_mpg_aes_decrypt(req.body.TradeInfo))
     console.log('===== spgatewayCallback: create_mpg_aes_decrypt、data =====')
     console.log(data)
-    Promise.all([
-      CartItem.destroy({
-        where: { UserId: req.user.id }
-      }),
-      Order.findAll({
-        where: {
-          sn: data.Result.MerchantOrderNo
-        }
-      })
-    ])
-      .then(([cart, orders]) => {
+    return Order.findAll({
+      where: {
+        sn: data.Result.MerchantOrderNo
+      }
+    })
+      .then((orders) => {
         orders[0].update({
           payment_status: 1
         })
           .then(order => {
-            return res.redirect(`${process.env.BASE_URL}/#/users/checkout/success?sn=${data.Result.MerchantOrderNo}`)
+            CartItem.destroy({
+              where: { UserId: order.UserId }
+            })
+              .then(() => {
+                return res.redirect(`${process.env.BASE_URL}/#/users/checkout/success?sn=${data.Result.MerchantOrderNo}`)
+              })
           })
       })
   }
