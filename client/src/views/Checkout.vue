@@ -191,7 +191,6 @@ export default {
           email: this.userEmail
         }
         const { data } = await cartsAPI.postTradeInfo(orderData)
-        console.log(data)
         if (data.status !== 'success') {
           loader.hide()
           throw new Error(data.message)

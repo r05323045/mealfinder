@@ -178,7 +178,7 @@ const cartController = {
             sn: tradeInfo.MerchantOrderNo
           })
         ])
-          .then(([itemInCart, order]) => {
+          .then((order) => {
             const orderitems = cart.map(data => {
               const uniqueId = Math.floor(Math.random() * 1000000000000) + 1
               const id = data.Coupon.id
@@ -208,7 +208,7 @@ const cartController = {
             // });
             return Promise.all(orderitems)
               .then(() => {
-                return res.json({ status: 'success', message: 'post a tradeinfo success' })
+                return res.json({ status: 'success', message: 'post a tradeinfo success', tradeInfo: tradeInfo })
               })
           })
       })
@@ -241,7 +241,7 @@ const cartController = {
           payment_status: 1
         })
           .then(order => {
-            return res.redirect('/users/checkout/success')
+            return res.redirect(`${process.env.BASE_URL}/#/users/checkout/success?sn=${data.Result.MerchantOrderNo}`)
           })
       })
   }
