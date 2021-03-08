@@ -147,10 +147,10 @@ const cartController = {
           })
       })
   },
-
-  postOrder: (req, res) => {
+  postTradeInfo: (req, res) => {
     const UserId = req.user.id
     const { totalPrice, address, phone, name, email } = req.body
+    const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', email)
     CartItem.findAll({
       raw: true,
       nest: true,
@@ -168,16 +168,14 @@ const cartController = {
     })
       .then(cart => {
         Promise.all([
-          CartItem.destroy({
-            where: { UserId: req.user.id }
-          }),
           Order.create({
             UserId,
             total_amount: totalPrice,
             phone,
             address,
             name,
-            email
+            email,
+            sn: tradeInfo.MerchantOrderNo
           })
         ])
           .then(([itemInCart, order]) => {
@@ -195,7 +193,6 @@ const cartController = {
                 isUsed: 0
               })
             })
-            const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', email)
             // var mailOptions = {
             //   from: '',
             //   to: '',
@@ -211,10 +208,12 @@ const cartController = {
             // });
             return Promise.all(orderitems)
               .then(() => {
-                return res.json({ status: 'success', message: 'post a order', tradeInfo })
+                return res.json({ status: 'success', message: 'post a tradeinfo success' })
               })
           })
       })
+  },
+  postOrder: (req, res) => {
   },
 
   spgatewayCallback: (req, res) => {
@@ -225,12 +224,27 @@ const cartController = {
     console.log('==========')
 
     const data = JSON.parse(helpers.create_mpg_aes_decrypt(req.body.TradeInfo))
-
     console.log('===== spgatewayCallback: create_mpg_aes_decrypt、data =====')
     console.log(data)
-    return res.json({ status: 'success', message: 'payment success' })
+    Promise.all([
+      CartItem.destroy({
+        where: { UserId: req.user.id }
+      }),
+      Order.findAll({
+        where: {
+          sn: data.Result.MerchantOrderNo
+        }
+      })
+    ])
+      .then(([cart, orders]) => {
+        orders[0].update({
+          payment_status: 1
+        })
+          .then(order => {
+            return res.redirect('/users/checkout/success')
+          })
+      })
   }
-
 }
 
 module.exports = cartController

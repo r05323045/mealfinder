@@ -30,41 +30,41 @@
         </div>
         <div class="contact-and-submit">
           <validation-observer ref="formvalidation" v-slot="{ handleSubmit, invalid }">
-            <form @submit.prevent="handleSubmit(postOrder)" >
+            <form @submit.prevent="handleSubmit(postTradeInfo)" >
               <div class="title">確認購買與選擇付款方式</div>
-              <div class="contact-card">
+              <div class="contact-card" ref="contact-card">
                 <div class="all-wrapper">
                   <validation-provider v-slot="{ errors, classes }" rules="required">
                     <label for="name" class="all-text">購買人姓名</label>
-                    <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
+                    <input id="name" type="text" class="all-input" v-model="userName" :class="classes" :disabled="tradeInfo.TradeInfo">
                     <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
                   </validation-provider>
                 </div>
                 <div class="all-wrapper">
                   <validation-provider v-slot="{ errors, classes }" rules="required|email">
                     <label for="email" class="all-text">購買人電子郵件</label>
-                    <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
+                    <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes" :disabled="tradeInfo.TradeInfo">
                     <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
                   </validation-provider>
                 </div>
                 <div class="all-wrapper">
                   <validation-provider v-slot="{ errors, classes }" rules="required">
                     <label for="phone" class="all-text">購買人手機號碼</label>
-                    <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
+                    <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes" :disabled="tradeInfo.TradeInfo">
                     <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
                   </validation-provider>
                 </div>
                 <div class="all-wrapper">
                   <validation-provider v-slot="{ errors, classes }" rules="required">
                     <label for="address" class="all-text">購買人地址</label>
-                    <input id="address" type="text" class="all-input" v-model="userAddress" :class="classes">
+                    <input id="address" type="text" class="all-input" v-model="userAddress" :class="classes" :disabled="tradeInfo.TradeInfo">
                     <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('address ', '地址') }}</span>
                   </validation-provider>
                 </div>
                 <div class="all-wrapper">
                   <label for="purpose" class="all-text">付款方式</label>
                   <div class="button-wrapper">
-                    <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" :class="{select: submitPayby === el}">
+                    <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" :class="{select: submitPayby === el}" :disabled="tradeInfo.TradeInfo">
                       <span class="text">{{ el }}</span>
                     </button>
                   </div>
@@ -72,7 +72,7 @@
                 <div class="all-wrapper">
                   <validation-provider v-slot="{ errors, classes }" rules="max:140">
                     <label for="note" class="all-text">其他備註</label>
-                    <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！" v-model="userNote" :class="classes"></textarea>
+                    <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！" v-model="userNote" :class="classes" :disabled="tradeInfo.TradeInfo"></textarea>
                     <div class="note-count">({{ userNote.length }}/140)</div>
                     <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
                   </validation-provider>
@@ -176,7 +176,12 @@ export default {
         this.totalQuantity += Number(c.quantity)
       })
     },
-    async postOrder () {
+    async postTradeInfo () {
+      const loader = this.$loading.show({
+        container: this.$refs['contact-card'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const orderData = {
           totalPrice: this.totalPrice,
@@ -185,12 +190,16 @@ export default {
           name: this.userName,
           email: this.userEmail
         }
-        const { data } = await cartsAPI.postOrder(orderData)
+        const { data } = await cartsAPI.postTradeInfo(orderData)
+        console.log(data)
         if (data.status !== 'success') {
+          loader.hide()
           throw new Error(data.message)
         }
         this.tradeInfo = data.tradeInfo
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
