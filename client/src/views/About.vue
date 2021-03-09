@@ -82,7 +82,6 @@ $primary-color: #222;
 .about {
   height: 100%;
   overflow: scroll;
-  position: relative;
   width: 100%;
   .about-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
@@ -145,17 +144,15 @@ $primary-color: #222;
       }
     }
   }
-
   .about-content {
     padding: 0px 24px 22px 24px;
     margin: 60px auto 0;
     max-width: 1040px;
     @media (min-width: 768px) {
-      margin-top: 0px;
+      margin-top: 81px;
       padding: 0px 40px 35px 40px;
     }
     @media (min-width: 992px) {
-      margin-top: 0px;
       padding: 48px 80px;
     }
     .content-container {

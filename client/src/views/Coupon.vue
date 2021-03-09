@@ -1,7 +1,7 @@
 <template>
   <div class="coupon" ref="coupon">
-    <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
-    <div class="coupon-searchbar-wrapper">
+    <Navbar class="restaurant-navbar"></Navbar>
+    <div class="coupon-searchbar-wrapper" v-show="scrollY < 60 || scrollUp">
       <div class="back-wrapper" @click="$router.push('/coupons')">
         <div class="icon back"></div>
       </div>
@@ -135,7 +135,7 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="filter-button-wrapper" v-show="couponInfoHeight >  scrollY + footerHeight">
+    <div class="filter-button-wrapper" v-show="!scrollUp">
       <div v-if="isAuthenticated" class="filter-button" @click="productNum > 0 ? postCart() : ''" :disabled="productNum < 1" :class="{ disabled: productNum < 1 }">
         <div class="button">{{ productNum > 0 ? '加入購物車' : '請選擇數量' }}</div>
       </div>
@@ -161,9 +161,6 @@ export default {
       showModal: false,
       scrollY: 0,
       scrollUp: true,
-      couponInfoHeight: 1,
-      footerHeight: 0,
-      scrollBarHeight: 0,
       productNum: 0,
       coupon: {},
       todayBusinessHours: '',
@@ -178,10 +175,7 @@ export default {
     this.fetchCoupon(this.$route.params.id)
   },
   mounted () {
-    this.$refs.coupon.addEventListener('scroll', this.onScroll, { passive: true })
-    this.footerHeight = this.$refs.footer.offsetHeight
-    this.couponInfoHeight = this.$refs.coupon.scrollHeight
-    this.scrollBarHeight = this.$refs.coupon.clientHeight
+    window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   watch: {
     productNum () {
@@ -199,8 +193,8 @@ export default {
   },
   methods: {
     onScroll (e) {
-      this.scrollUp = this.scrollY > this.$refs.coupon.scrollTop
-      this.scrollY = this.$refs.coupon.scrollTop
+      this.scrollUp = this.scrollY > window.scrollY
+      this.scrollY = window.scrollY
     },
     async fetchCoupon (id) {
       const loader = this.$loading.show({
@@ -277,15 +271,7 @@ $default-color: #000000;
 $primary-color: #222;
 .coupon {
   overflow: scroll;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  .restaurant-navbar {
-    display: none;
-    @media (min-width: 768px) {
-      display: block;
-    }
-  }
+  height: 100vh;
   .coupon-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -682,7 +668,7 @@ $primary-color: #222;
           width: 100%;
           padding-top: 66.7%;
           position: relative;
-          background: url(../assets/eatNow.svg) no-repeat center;
+          background: url(../assets/female-chatting.svg) no-repeat center;
           background-size: cover;
           @media (min-width: 768px) {
             padding-top: 33.3%;
@@ -717,6 +703,7 @@ $primary-color: #222;
     }
   }
   .filter-button-wrapper {
+    z-index: 1000;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
     border-top: 1px solid $divider;
     position: fixed;

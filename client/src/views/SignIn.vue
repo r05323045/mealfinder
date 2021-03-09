@@ -133,10 +133,9 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .signin {
-  height: 100%;
-  position: relative;
+  height: 100vh;
   width: 100%;
-  overflow: auto;
+  overflow: scroll;
   .signin-form {
     width: 100%;
     height: 100%;

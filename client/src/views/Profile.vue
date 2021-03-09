@@ -405,6 +405,7 @@ $darkred: #c13515;
     margin: auto;
     max-width: 1040px;
     @media (min-width: 768px) {
+      margin-top: 81px;
       padding: 0 40px;
     }
     @media (min-width: 992px) {

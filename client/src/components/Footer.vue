@@ -1,7 +1,8 @@
 <template>
   <div class="footer" :class="{ atMap: $route.path.includes('/map') }">
     <div class="logo" @click="$router.push('/').catch(() => {})">
-      <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
+      <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
+    </div>
     <div class="wrapper">
       <div class="item"><a href="#/about">關於 MealFinder</a></div>
       <div class="item"><a class="mailtoui" href="mailto:mealfinder2021@gmail.com">聯絡我們</a></div>

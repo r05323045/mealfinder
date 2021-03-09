@@ -30,11 +30,13 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper" v-show="windowWidth >= 992" @click="$router.push('/users/notification')">
+          <div class="link-card-wrapper" v-show="windowWidth >= 992" @click="$router.push('/about')">
             <div class="link-card">
               <div class="icon-wrapper">
-                <img src="../assets/flat_notification.svg" class="icon">
-                <div class="text">我的通知</div>
+                <div class="logo">
+                  <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
+                </div>
+                <div class="text">關於</div>
               </div>
             </div>
           </div>
@@ -62,11 +64,13 @@
           </div>
         </div>
         <div class="link-card-deck" v-show="windowWidth < 992">
-          <div class="link-card-wrapper" @click="$router.push('/users/notification')">
+          <div class="link-card-wrapper" @click="$router.push('/about')">
             <div class="link-card">
               <div class="icon-wrapper">
-                <img src="../assets/flat_notification.svg" class="icon">
-                <div class="text">我的通知</div>
+                <div class="logo">
+                  <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
+                </div>
+                <div class="text">關於</div>
               </div>
             </div>
           </div>
@@ -148,20 +152,21 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .member {
-  height: 100vh;
   overflow: scroll;
   .page-container {
     padding: 0 24px;
     margin: auto;
     max-width: 1040px;
     @media (min-width: 768px) {
+      margin-top: 81px;
       padding: 0 40px;
     }
     @media (min-width: 992px) {
+      margin-top: 81px;
       padding: 0 80px;
     }
     .info-container {
-      margin: 36px 0 36px 0;
+      padding: 36px 0 36px 0;
       text-align: left;
       .title {
         font-size: 32px;
@@ -245,6 +250,27 @@ $red: rgb(255, 56, 92);
                 }
                 @media (min-width: 992px) {
                   font-size: 18px;
+                }
+              }
+              .logo {
+                margin: 8px auto;
+                height: 32px;
+                font-size: 18px;
+                @media (min-width: 768px) {
+                  height: 40px;
+                  font-size: 24px;
+                }
+                @media (min-width: 992px) {
+                  height: 48px;
+                }
+                cursor: pointer;
+                display: inline-block;
+                color: $red;
+                font-weight: 800;
+                text-align: left;
+                .company-last-name {
+                  color: #000000;
+                  margin-left: 4px;
                 }
               }
             }

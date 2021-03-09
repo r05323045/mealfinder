@@ -117,9 +117,8 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .signup {
-  height: 100%;
-  overflow: auto;
-  position: relative;
+  height: 100vh;
+  overflow: scroll;
   width: 100%;
   .signup-form {
     width: 100%;

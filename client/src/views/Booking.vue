@@ -1,7 +1,7 @@
 <template>
   <div class="booking" ref="booking">
-    <Navbar class="restaurant-navbar" v-show="scrollY === 0"></Navbar>
-    <div class="booking-searchbar-wrapper">
+    <Navbar class="restaurant-navbar"></Navbar>
+    <div class="booking-searchbar-wrapper" v-show="scrollY < 60 || scrollUp">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
@@ -183,14 +183,15 @@ export default {
     }
   },
   mounted () {
-    this.$refs.booking.addEventListener('scroll', this.onScroll, { passive: true })
+    window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     onScroll (e) {
-      this.scrollY = this.$refs.booking.scrollTop
+      this.scrollUp = this.scrollY > window.scrollY
+      this.scrollY = window.scrollY
     },
     changePurpose (purpose) {
       this.submitPurpose = purpose
@@ -270,14 +271,7 @@ $darkred: #c13515;
 .booking {
   height: 100%;
   overflow: scroll;
-  position: relative;
   width: 100%;
-  .restaurant-navbar {
-    display: none;
-    @media (min-width: 768px) {
-      display: block;
-    }
-  }
   .booking-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;

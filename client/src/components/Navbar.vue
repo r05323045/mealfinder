@@ -31,8 +31,8 @@
     </div>
     <div class="navbar-desktop" :class="{ openSearch: openSearch, atMap: $route.path.includes('/map') }">
       <div class="navbar-desktop-inner">
-        <div class="logo-wrapper" @click="$router.push('/').catch(()=>{})">
-          <div class="logo"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
+        <div class="logo-wrapper">
+          <div class="logo" @click="$router.push('/').catch(()=>{})"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
         </div>
         <div class="tab-wrapper" v-show="openSearch">
           <div class="condition-wrapper">
@@ -170,15 +170,17 @@ export default {
   },
   mounted () {
     document.body.addEventListener('click', (e) => {
-      const parentIsSideNav = e.target.parentElement ? e.target.parentElement.classList.contains('side-nav-button') : false
-      const elementIsSideNav = e.target ? e.target.classList.contains('side-nav-button') : false
-      const clickButton = parentIsSideNav || elementIsSideNav
-      const clickOtherSide = !(e.target.classList.contains('menu-wrapper') || e.target.parentElement.classList.contains('menu'))
-      if (this.showMenu && clickOtherSide && !clickButton) {
+      const sideNavElement = e.target ? e.target.classList.contains('side-nav-element') : false
+      const searshInputElement = e.target ? e.target.classList.contains('search-input-element') : false
+      if (this.showMenu && !sideNavElement) {
         if (this.$refs['menu-wrapper']) {
           this.$refs['menu-wrapper'].style.display = 'none'
           this.showMenu = false
         }
+      } else if (!searshInputElement) {
+        this.showSelectorDistrict = false
+        this.showSelectorCategory = false
+        this.showSelectorPrice = false
       }
       e.stopPropagation()
     })
@@ -190,15 +192,15 @@ export default {
     },
     openSelector (target) {
       if (target === 'district') {
-        this.showSelectorDistrict = true
+        this.showSelectorDistrict = !this.showSelectorDistrict
         this.showSelectorCategory = false
         this.showSelectorPrice = false
       } else if (target === 'category') {
-        this.showSelectorCategory = true
+        this.showSelectorCategory = !this.showSelectorCategory
         this.showSelectorDistrict = false
         this.showSelectorPrice = false
       } else if (target === 'price') {
-        this.showSelectorPrice = true
+        this.showSelectorPrice = !this.showSelectorPrice
         this.showSelectorDistrict = false
         this.showSelectorCategory = false
       }
@@ -343,7 +345,8 @@ $red: rgb(255, 56, 92);
     }
   }
   @media (min-width: 768px) {
-    position: sticky;
+    width: 100%;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 999;
@@ -426,7 +429,6 @@ $red: rgb(255, 56, 92);
           }
         }
         .logo-wrapper {
-          cursor: pointer;
           height: 100%;
           display: flex;
           align-items: center;
@@ -435,6 +437,7 @@ $red: rgb(255, 56, 92);
             flex: 1;
           }
           .logo {
+            cursor: pointer;
             font-size: 24px;
             line-height: 24px;
             color: $red;

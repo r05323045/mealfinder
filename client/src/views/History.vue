@@ -63,9 +63,8 @@ export default {
   methods: {
     async fetchReservations () {
       const loader = this.$loading.show({
-        container: this.$refs['reservation-container'],
         opacity: 1,
-        isFullPage: false
+        isFullPage: true
       })
       try {
         const { data } = await reservationsAPI.getReservations()
@@ -102,6 +101,7 @@ $red: rgb(255, 56, 92);
     position: relative;
     @media (min-width: 768px) {
       padding: 36px 40px;
+      margin-top: 81px;
     }
     @media (min-width: 992px) {
       padding: 36px 80px;

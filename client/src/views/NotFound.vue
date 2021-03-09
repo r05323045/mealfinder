@@ -48,6 +48,7 @@ $red: rgb(255, 56, 92);
     font-weight: 800;
     line-height: 1.5;
     @media (min-width: 768px) {
+      margin-top: 81px;
       padding: 36px 40px 0px;
     }
     @media (min-width: 992px) {
@@ -80,7 +81,7 @@ $red: rgb(255, 56, 92);
       width: 100%;
       padding-top: 66.7%;
       position: relative;
-      background: url(../assets/eatNow.svg) no-repeat center;
+      background: url(../assets/drink-coffee.svg) no-repeat center;
       background-size: cover;
       @media (min-width: 768px) {
         padding-top: 33.3%;

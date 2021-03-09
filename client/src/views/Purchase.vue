@@ -66,9 +66,11 @@ $red: rgb(255, 56, 92);
     text-align: left;
     position: relative;
     @media (min-width: 768px) {
+      margin-top: 81px;
       padding: 36px 40px;
     }
     @media (min-width: 992px) {
+      margin-top: 81px;
       padding: 36px 80px;
     }
     .title {

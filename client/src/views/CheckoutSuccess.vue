@@ -122,11 +122,10 @@ $red: rgb(255, 56, 92);
     scroll-behavior: smooth;
     padding: 0px 24px 22px 24px;
     @media (min-width: 768px) {
-      margin-top: 0px;
       padding: 0px 40px 35px 40px;
+      margin-top: 81px;
     }
     @media (min-width: 992px) {
-      margin-top: 0px;
       padding: 48px 80px;
     }
     .checkout-container {

@@ -249,14 +249,14 @@ export default {
   },
   mounted () {
     this.fetchNearByRestaurants()
-    this.$refs['map-page'].addEventListener('scroll', this.onScroll, { passive: true })
+    window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     onScroll (e) {
-      this.scrollY = this.$refs['map-page'].scrollTop
+      this.scrollY = window.scrollY
     },
     closeFilter (isEditing, cateFilter, distFilter, pFilter) {
       this.showModal = false
@@ -341,7 +341,7 @@ export default {
         this.numOfPage += 1
         this.resultCount = data.count
         loader.hide()
-        this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
+        window.scrollTo({ top: 0, behavior: 'smooth' })
         this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
       } catch (error) {
         loader.hide()
@@ -421,10 +421,7 @@ $primary-color: #222;
 $darkred: #c13515;
 @import '~vue2-datepicker/scss/index.scss';
 .map-page {
-  overflow: scroll;
-  position: relative;
-  width: 100%;
-  height: 100%;
+  height: 100vh;
   .map-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -543,6 +540,7 @@ $darkred: #c13515;
     }
   }
   .map-container {
+    z-index: 1;
     height: 100%;
     width: 100%;
     scroll-behavior: smooth;
