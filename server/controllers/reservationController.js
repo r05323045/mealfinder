@@ -71,8 +71,8 @@ const reservationController = {
             user: process.env.GMAIL_ACCOUNT,
             clientId: process.env.GMAILAPI_CLIENT_ID,
             clientSecret: process.env.GMAILAPI_CLIENT_SECRET,
-            refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-            accessToken: process.env.OAUTH_ACCESS_TOKEN
+            refreshToken: process.env.GMAILAPI_REFRESH_TOKEN,
+            accessToken: process.env.GMAILAPI_ACCESS_TOKEN
           }
         })
 
