@@ -16,13 +16,16 @@
       <div class="content-container">
         <div class="about-content-title">關於 Meal Finder</div>
         <div class="logo-container">
+          <div class="food-image-wrapper image-up">
+            <img class="food-image" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1267&q=80)">
+          </div>
           <div class="logo-wrapper">
             <div class="logo">
               <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
             </div>
             <div class="slogan">Eazy to find the meal you want</div>
           </div>
-          <div class="food-image-wrapper">
+          <div class="food-image-wrapper image-down">
             <img class="food-image" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1267&q=80)">
           </div>
         </div>
@@ -184,7 +187,6 @@ $primary-color: #222;
         .food-image-wrapper {
           flex: 1;
           height: 100%;
-          display: none;
           @media (min-width: 768px) {
             margin-left: 24px;
             display: block;
@@ -195,15 +197,28 @@ $primary-color: #222;
             object-fit: cover;
           }
         }
+        .food-image-wrapper.image-down {
+          display: none;
+          @media (min-width: 768px) {
+            display: block;
+          }
+        }
+        .food-image-wrapper.image-up {
+          @media (min-width: 768px) {
+            display: none;
+          }
+        }
         .logo-wrapper {
           height: 100%;
-          width: 100%;
           flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          align-items: flex-start;
+          align-items: center;
           margin: 48px 0;
+          @media (min-width: 768px) {
+            align-items: flex-start;
+          }
           .logo {
             cursor: default;
             display: inline-block;

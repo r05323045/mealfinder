@@ -57,14 +57,11 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .purchase-page {
-  height: 100vh;
-  overflow: scroll;
   .purchase-container {
     margin: auto;
     max-width: 1040px;
     padding: 36px 24px;
     text-align: left;
-    position: relative;
     @media (min-width: 768px) {
       margin-top: 81px;
       padding: 36px 40px;

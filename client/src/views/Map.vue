@@ -81,7 +81,7 @@
             <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchNearByRestaurants(hasPage=true)">搜尋更多</div>
           </div>
         </div>
-        <div class="google-map" id="map">
+        <div class="google-map" id="map" ref="google-map">
           <div class="fix-button" @click="fetchNearByRestaurants()" v-if="!infoWindow.open">
             <div class="button-text">在此範圍搜尋</div>
           </div>
@@ -197,6 +197,7 @@ import PriceRange from '@/components/PriceRange.vue'
 export default {
   data () {
     return {
+      windowWidth: window.innerWidth,
       showModal: false,
       restaurants: [],
       showAddModal: false,
@@ -249,6 +250,8 @@ export default {
   },
   mounted () {
     this.fetchNearByRestaurants()
+    window.scrollTo({ top: 0 })
+    window.addEventListener('resize', this.onResize)
     window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   computed: {
@@ -257,6 +260,9 @@ export default {
   methods: {
     onScroll (e) {
       this.scrollY = window.scrollY
+    },
+    onResize () {
+      this.windowWidth = window.innerWidth
     },
     closeFilter (isEditing, cateFilter, distFilter, pFilter) {
       this.showModal = false
@@ -309,7 +315,7 @@ export default {
     },
     async fetchNearByRestaurants (hasPage) {
       const loader = this.$loading.show({
-        container: this.$refs['restaurant-list-card'],
+        container: this.windowWidth < 992 ? this.$refs['google-map'] : this.$refs['restaurant-list-card'],
         opacity: 1
       })
       try {
@@ -550,7 +556,8 @@ $darkred: #c13515;
       top: 0px;
     }
     .map-wrapper {
-      height: calc(100% - 80px);
+      min-height: calc(100vh - 114px);
+      height: calc(100vh - 80px);
       margin: auto;
       display: flex;
       @media (min-width: 768px) {
@@ -857,9 +864,10 @@ $darkred: #c13515;
       }
       .google-map {
         flex: 1;
-        height: calc(100vh - 80px);
+        height: calc(100vh - 114px);
         position: relative;
         @media (min-width: 992px) {
+          height: calc(100vh - 80px);
           height: 100%;
           flex: 0.5;
         }

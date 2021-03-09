@@ -91,14 +91,11 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .history-page {
-  height: 100vh;
-  overflow: scroll;
   .history-container {
     margin: auto;
     max-width: 1040px;
     padding: 36px 24px;
     text-align: left;
-    position: relative;
     @media (min-width: 768px) {
       padding: 36px 40px;
       margin-top: 81px;
