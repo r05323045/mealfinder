@@ -93,6 +93,7 @@ const cartController = {
       raw: true,
       nest: true,
       where: { UserId: req.user.id },
+      payment_status: '1',
       order: sequelize.literal('createdAt DESC')
     })
       .then(orders => {

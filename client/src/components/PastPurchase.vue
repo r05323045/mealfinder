@@ -63,7 +63,7 @@ export default {
       })
       try {
         const { data } = await cartsAPI.getOrders()
-        this.orders = data.orders
+        this.orders = data.orders.filter(o => o.OrderItem.length > 0 && o.payment_status && o.payment_status === '1')
         this.orders.forEach(order => {
           let totalPrice = 0
           order.OrderItem.forEach(item => {
