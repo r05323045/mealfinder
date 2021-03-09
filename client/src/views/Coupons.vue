@@ -8,7 +8,7 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">餐券列表</div>
+          <div class="text">返回</div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
@@ -22,8 +22,8 @@
           <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
           <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
         </div>
-        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="coupons.length === 0"></div>
-        <div v-if="coupons.length > 0" class="restaurant-card-deck-wrapper">
+        <div class="restaurant-card-deck-wrapper no-restaurant" ref="restaurant-card-deck-wrapper" v-if="coupons.length === 0"></div>
+        <div v-if="coupons.length > 0" class="restaurant-card-deck-wrapper" ref="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck"  v-for="deckNum in Math.ceil(coupons.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
               <div class="restaurant-card"
@@ -174,11 +174,18 @@ export default {
       }
     },
     async fetchCoupons (filter) {
+      const loader = this.$loading.show({
+        container: this.$refs['restaurant-card-deck-wrapper'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = await couponsAPI.getCoupons(this.numOfPage + 1, filter)
         this.coupons = [...this.coupons, ...data.data]
         this.numOfPage += 1
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -372,6 +379,7 @@ $red: rgb(255, 56, 92);
         .filter-button.filter-on {
           font-weight: 800;
           border: 1px solid #000000;
+          background: rgb(247, 247, 247);
         }
       }
       .restaurant-card-deck-wrapper {

@@ -27,7 +27,7 @@ const cartController = {
           model: Coupon,
           attributes: {
             include: [
-              [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+              [sequelize.literal('(SELECT picture FROM Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
             ]
           }
         }
@@ -58,7 +58,7 @@ const cartController = {
   },
 
   addCartItem: (req, res) => {
-    CartItem.findByPk(req.params.id).then(cartItem => {
+    CartItem.findByPk(req.body.id).then(cartItem => {
       cartItem.update({
         quantity: cartItem.quantity + 1
       })
@@ -69,7 +69,7 @@ const cartController = {
   },
 
   reduceCartItem: (req, res) => {
-    CartItem.findByPk(req.params.id).then(cartItem => {
+    CartItem.findByPk(req.body.id).then(cartItem => {
       cartItem.update({
         quantity: cartItem.quantity - 1 >= 1 ? cartItem.quantity - 1 : 1
       })
@@ -92,7 +92,7 @@ const cartController = {
     Order.findAll({
       raw: true,
       nest: true,
-      where: { UserId: req.user.id },
+      where: { UserId: req.user.id, payment_status: '1' },
       order: sequelize.literal('createdAt DESC')
     })
       .then(orders => {
@@ -106,7 +106,7 @@ const cartController = {
                 model: Coupon,
                 attributes: {
                   include: [
-                    [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+                    [sequelize.literal('(SELECT picture FROM Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
                   ]
                 }
               }
@@ -135,7 +135,7 @@ const cartController = {
               model: Coupon,
               attributes: {
                 include: [
-                  [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+                  [sequelize.literal('(SELECT picture FROM Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
                 ]
               }
             }
@@ -147,10 +147,10 @@ const cartController = {
           })
       })
   },
-
-  postOrder: (req, res) => {
+  postTradeInfo: (req, res) => {
     const UserId = req.user.id
     const { totalPrice, address, phone, name, email } = req.body
+    const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', email)
     CartItem.findAll({
       raw: true,
       nest: true,
@@ -160,27 +160,23 @@ const cartController = {
           model: Coupon,
           attributes: {
             include: [
-              [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
+              [sequelize.literal('(SELECT picture FROM Restaurants WHERE Restaurants.id = Coupon.RestaurantId)'), 'picture']
             ]
           }
         }
       ]
     })
       .then(cart => {
-        Promise.all([
-          CartItem.destroy({
-            where: { UserId: req.user.id }
-          }),
-          Order.create({
-            UserId,
-            total_amount: totalPrice,
-            phone,
-            address,
-            name,
-            email
-          })
-        ])
-          .then(([itemInCart, order]) => {
+        return Order.create({
+          UserId,
+          total_amount: totalPrice,
+          phone,
+          address,
+          name,
+          email,
+          sn: String(tradeInfo.MerchantOrderNo)
+        })
+          .then((order) => {
             const orderitems = cart.map(data => {
               const uniqueId = Math.floor(Math.random() * 1000000000000) + 1
               const id = data.Coupon.id
@@ -195,7 +191,6 @@ const cartController = {
                 isUsed: 0
               })
             })
-            const tradeInfo = helpers.getTradeInfo(totalPrice, 'coupons', email)
             // var mailOptions = {
             //   from: '',
             //   to: '',
@@ -211,9 +206,22 @@ const cartController = {
             // });
             return Promise.all(orderitems)
               .then(() => {
-                return res.json({ status: 'success', message: 'post a order', tradeInfo })
+                return res.json({ status: 'success', message: 'post a tradeinfo success', tradeInfo: tradeInfo })
               })
           })
+      })
+  },
+  getPaymentInfo: (req, res) => {
+    const MerchantOrderNo = req.params.no
+    return Order.findAll({
+      where: {
+        sn: MerchantOrderNo
+      },
+      include: [OrderItem]
+    })
+      .then((order) => {
+        const data = order[0]
+        return res.json({ data })
       })
   },
 
@@ -225,12 +233,27 @@ const cartController = {
     console.log('==========')
 
     const data = JSON.parse(helpers.create_mpg_aes_decrypt(req.body.TradeInfo))
-
     console.log('===== spgatewayCallback: create_mpg_aes_decrypt、data =====')
     console.log(data)
-    return res.json({ status: 'success', message: 'payment success' })
+    return Order.findAll({
+      where: {
+        sn: data.Result.MerchantOrderNo
+      }
+    })
+      .then((orders) => {
+        orders[0].update({
+          payment_status: 1
+        })
+          .then(order => {
+            CartItem.destroy({
+              where: { UserId: order.UserId }
+            })
+              .then(() => {
+                return res.redirect(`${process.env.BASE_URL}/#/users/checkout/success?sn=${data.Result.MerchantOrderNo}`)
+              })
+          })
+      })
   }
-
 }
 
 module.exports = cartController

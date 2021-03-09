@@ -1,17 +1,17 @@
 <template>
   <div class="home" ref="home">
-    <Navbar v-show="scrollY > 58 && scrollUp"></Navbar>
+    <Navbar v-show="scrollY > 58"></Navbar>
     <div class="page-container">
       <div class="banner">
-        <div class="searchbar-wrapper-outside" :class="{ toFront: scrollY > 50 && scrollUp }">
-        <div class="searchbar" @click="showModal = !showModal">
-          <input v-if="false" class="search-input" v-show="scrollY > 50 && scrollUp">
-          <div class="wrapper" v-show="scrollY > 50 && scrollUp">
-            <div class="icon search"></div>
-            <div class="text">想吃什麼？</div>
+        <div v-if="windowWidth < 768" class="searchbar-wrapper-outside" :class="{ toFront: scrollY > 50 && scrollUp }">
+          <div class="searchbar" @click="showModal = !showModal">
+            <input v-if="false" class="search-input" v-show="scrollY > 50 && scrollUp">
+            <div class="wrapper" v-show="scrollY > 50 && scrollUp">
+              <div class="icon search"></div>
+              <div class="text">想吃什麼？</div>
+            </div>
           </div>
         </div>
-      </div>
         <div class="searchbar-wrapper-inner">
           <div class="searchbar" @click="showModal = !showModal">
             <input v-if="false" class="search-input">
@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-        <NavbarHome v-show="scrollY <= 58"></NavbarHome>
+        <NavbarHome v-if="windowWidth >= 768" v-show="scrollY <= 58"></NavbarHome>
         <div class="background-image"></div>
         <div class="banner-container">
           <div class="wrapper">
@@ -35,7 +35,7 @@
       </div>
       <div class="area">
         <div class="title">前往熱門地區</div>
-        <div class="district-deck">
+        <div v-if="windowWidth < 768" class="district-deck">
           <div class="district" @click="$router.push('/map?district=大安區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1597413097376-a3fff34811f2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div class="district-deck">
+        <div v-if="windowWidth < 768" class="district-deck">
           <div class="district" @click="$router.push('/map?district=信義區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
@@ -71,7 +71,7 @@
             </div>
           </div>
         </div>
-        <div class="district-deck">
+        <div v-if="windowWidth < 768" class="district-deck">
           <div class="district" @click="$router.push('/map?district=松山區')">
             <div class="background">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1552993873-0dd1110e025f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
@@ -89,7 +89,7 @@
             </div>
           </div>
         </div>
-        <div class="district-deck-desktop">
+        <div v-if="windowWidth >= 768" class="district-deck-desktop">
           <div class="district" @click="$router.push('/map?district=大安區')">
             <div class="background top">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1597413097376-a3fff34811f2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
@@ -107,7 +107,7 @@
             </div>
           </div>
         </div>
-        <div class="district-deck-desktop">
+        <div v-if="windowWidth >= 768" class="district-deck-desktop">
           <div class="district" @click="$router.push('/map?district=信義區')">
             <div class="background bottom">
               <div class="image" style="background: url(https://images.unsplash.com/photo-1580281250542-2995bf0c15ae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80) no-repeat center / cover"></div>
@@ -268,10 +268,14 @@ export default {
       scrollUp: false,
       homeHeight: 0,
       scrollBarHeight: 0,
-      showModal: false
+      showModal: false,
+      windowWidth: window.innerWidth
     }
   },
   mounted () {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize)
+    })
     // eslint-disable-next-line no-unused-vars
     const swiper = new Swiper('.swiper-container', {
       navigation: {
@@ -302,6 +306,9 @@ export default {
     this.homeHeight = this.$refs.home.scrollHeight
     this.scrollBarHeight = this.$refs.home.clientHeight
   },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.onResize)
+  },
   methods: {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs.home.scrollTop
@@ -309,6 +316,9 @@ export default {
     },
     closeFilter (isEditing) {
       this.showModal = false
+    },
+    onResize () {
+      this.windowWidth = window.innerWidth
     }
   }
 }
@@ -876,6 +886,38 @@ $red: rgb(255, 56, 92);
           .swiper-button-next,
           .swiper-button-prev {
             display: none;
+            @media (min-width: 768px) {
+              display: block;
+              position: absolute;
+              right: 0rem;
+              top: calc(50% - 1.5rem);
+              background: #ffffff;
+              border-radius: 50%;
+              box-shadow: 1px 1px 2px 0 rgba(0,0,0,0.2);
+              width: 3rem;
+              height: 3rem;
+              &:hover {
+                transform: scale(1.05);
+                transition: ease-in-out 0.3s;
+              }
+              &:focus {
+                outline: none;
+              }
+              &::after {
+                width: 3rem;
+                height: 3rem;
+                line-height: 3rem;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: $ultimategray;
+              }
+            }
+            @media (min-width: 992px) {
+              display: none;
+            }
+          }
+          .swiper-button-prev {
+            left: 0;
           }
         }
       }

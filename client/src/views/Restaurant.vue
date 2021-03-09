@@ -8,12 +8,16 @@
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text"></div>
+          <div class="text">返回</div>
         </div>
       </div>
       <div class="icon-container">
         <div class="share-wrapper">
-          <div class="icon share"></div>
+          <div class="icon share"
+            v-clipboard:copy="copyPath"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError">
+          </div>
         </div>
         <div class="favorite-wrapper">
           <div
@@ -36,7 +40,11 @@
         <div class="title-wrapper">
           <div class="icon-container">
             <div class="share-wrapper">
-              <div class="icon share"></div>
+              <div class="icon share"
+                v-clipboard:copy="copyPath"
+                v-clipboard:success="onCopy"
+                v-clipboard:error="onError">
+              </div>
             </div>
             <div class="favorite-wrapper">
               <div
@@ -75,9 +83,9 @@
         </div>
         <div class="description-wrapper">
           <div class="divider"></div>
-          <div class="title">餐廳簡介</div>
+          <div class="title">餐廳類型</div>
           <div class="description">
-            {{ restaurant.description }}
+            {{ restaurant.Category ? restaurant.Category.name : '尚未提供' }}
           </div>
         </div>
         <div class="rule-wrapper">
@@ -173,7 +181,7 @@
           <div class="title">餐廳資訊</div>
           <div class="info-and-map">
             <div class="map-wrapper" v-if="restaurant.google_map_url">
-              <iframe :src="`${restaurant.google_map_url.split('&q=')[0].split('key=')[0]}key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=${restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
+              <iframe :src="`${restaurant.google_map_url.split('&q=')[0].split('key=')[0]}key=${GOOGLE_MAP_API_KEY}&q=${restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -215,7 +223,7 @@
             </div>
           </div>
         </div>
-        <div class="menu-wrapper">
+        <div class="menu-wrapper" v-if="false">
           <div class="divider"></div>
           <div class="title">菜單</div>
           <div class="img-wrapper">
@@ -329,13 +337,21 @@ export default {
     this.fetchRestaurant(this.$route.params.id)
   },
   mounted () {
-    this.$refs.restaurant.addEventListener('scroll', this.onScroll, { passive: true })
+    this.$nextTick(() => {
+      this.$refs.restaurant.addEventListener('scroll', this.onScroll, { passive: true })
+    })
     this.footerHeight = this.$refs.footer.offsetHeight
     this.restaurantInfoHeight = this.$refs.restaurant.scrollHeight
     this.scrollBarHeight = this.$refs.restaurant.clientHeight
   },
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    ...mapState(['currentUser', 'isAuthenticated']),
+    copyPath () {
+      return `${window.location}`
+    },
+    GOOGLE_MAP_API_KEY () {
+      return process.env.VUE_APP_GOOGLE_MAP_API_KEY
+    }
   },
   watch: {
     pickDate () {
@@ -364,9 +380,19 @@ export default {
       })
     },
     async fetchRestaurant (id) {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
         this.restaurant = data
+        this.restaurant.business_hours = JSON.parse(this.restaurant.business_hours)
+        this.restaurant.business_hours.forEach((b, idx) => {
+          if (b.split(' ')[1] === '24小時營業') {
+            this.restaurant.business_hours[idx] = b.split(' ')[0] + ' 0:00-23:59'
+          }
+        })
         this.findTodayBusinessHours()
         this.businessHoursProcessor()
         if (this.closeDate.includes(moment(this.pickDate).format('dddd'))) {
@@ -379,7 +405,9 @@ export default {
           }
           this.pickDateName = moment(this.pickDate).format('dddd')
         }
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -388,7 +416,13 @@ export default {
       }
     },
     checkBookingIsLate (time) {
-      return new Date(`${moment(this.pickDate).format('YYYY/MM/DD')} ${time}`) < new Date()
+      const momentToday = moment(this.pickDate).format('YYYY/MM/DD')
+      if (new Date(`${momentToday} ${time}`) < new Date(new Date(`${momentToday} 6:00`))) {
+        const tomorrow = new Date(`${moment(this.pickDate).format('YYYY/MM/DD')} ${time}`)
+        tomorrow.setDate(new Date(`${moment(this.pickDate).format('YYYY/MM/DD')} ${time}`).getDate() + 1)
+        return new Date(`${moment(tomorrow).format('YYYY/MM/DD')} ${time}`) < new Date()
+      }
+      return new Date(`${momentToday} ${time}`) < new Date()
     },
     findTodayBusinessHours () {
       this.restaurant.business_hours.forEach((b, idx) => {
@@ -501,7 +535,7 @@ export default {
         console.log(error)
         Toast.fire({
           icon: 'error',
-          title: '目前無法收藏餐廳，請稍後'
+          title: '目前無法按讚評論，請稍後'
         })
       }
     },
@@ -521,17 +555,28 @@ export default {
         console.log(error)
         Toast.fire({
           icon: 'error',
-          title: '目前無法收藏餐廳，請稍後'
+          title: '目前無法取消按讚評論，請稍後'
         })
       }
     },
     async addFavorite (id) {
       try {
-        const { data } = await usersAPI.addFavorite(id)
-        if (data.status !== 'success') {
-          throw new Error(data.message)
+        if (this.isAuthenticated) {
+          const { data } = await usersAPI.addFavorite(id)
+          if (data.status !== 'success') {
+            throw new Error(data.message)
+          }
+          this.restaurant.isFavorited = true
+          Toast.fire({
+            icon: 'success',
+            title: '已加入我的收藏'
+          })
+        } else {
+          Toast.fire({
+            icon: 'warning',
+            title: '請先登入'
+          })
         }
-        this.restaurant.isFavorited = true
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -547,6 +592,10 @@ export default {
           throw new Error(data.message)
         }
         this.restaurant.isFavorited = false
+        Toast.fire({
+          icon: 'success',
+          title: '已移除收藏'
+        })
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -554,6 +603,18 @@ export default {
           title: '目前無法取消收藏餐廳，請稍後'
         })
       }
+    },
+    onCopy: function (e) {
+      Toast.fire({
+        icon: 'success',
+        title: '複製到剪貼簿'
+      })
+    },
+    onError: function (e) {
+      Toast.fire({
+        icon: 'error',
+        title: '目前無法複製，請稍候'
+      })
     }
   }
 }
@@ -710,7 +771,7 @@ $primary-color: #222;
       }
     }
     .restaurant-info {
-      margin: auto;
+      margin: 0 auto 40px;
       max-width: 1040px;
       padding: 0 24px;
       @media (min-width: 768px) {

@@ -3,7 +3,7 @@
     <div class="navbar-desktop" :class="[{ openSearch: openSearch }, { clickSearch: clickSearch }, { defaultState: defaultState }]">
       <div class="navbar-desktop-inner">
         <div class="logo-wrapper">
-          <div class="logo"></div>
+        <div class="logo"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
         </div>
         <div class="tab-wrapper" v-show="openSearch">
           <div class="condition-wrapper">
@@ -322,11 +322,17 @@ $red: rgb(255, 56, 92);
             flex: 1;
           }
           .logo {
-            height: 32px;
-            width: 102px;
-            mask: url(../assets/fake-logo.svg) no-repeat center;
-            mask-size: cover;
-            background: #ffffff;
+            cursor: default;
+            font-size: 24px;
+            line-height: 24px;
+            color: #ffffff;
+            font-weight: 800;
+            text-align: left;
+            height: 24px;
+            margin-bottom: 48px;
+            .company-last-name {
+              margin-left: 4px;
+            }
           }
         }
         .searchbar-wrapper {

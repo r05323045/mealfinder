@@ -9,7 +9,7 @@ module.exports = {
         districts.push({
           CityId: i * 10 + 1,
           name: data[i].AreaList[a].AreaName,
-          picture: `https://loremflickr.com/320/240/restaurant,food/?lock=${Math.random() * 100}`
+          picture: data[i].AreaList[a].icon
         })
       }
     }

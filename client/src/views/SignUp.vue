@@ -2,12 +2,16 @@
   <div class="signup">
     <div class="signup-form">
       <div class="signup-container">
-        <div class="logo-wrapper">
-          <div class="logo"></div>
+        <div class="logo-container">
+          <div class="logo-wrapper">
+            <div class="logo" @click="$router.push('/').catch(() => {})">
+              <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
+            </div>
+          </div>
         </div>
         <div class="signup-card">
-          <validation-observer ref="formvalidation" v-slot="{ invalid }">
-            <form class="signup-content">
+          <validation-observer ref="formvalidation" v-slot="{ handleSubmit }">
+            <form class="signup-content" @submit.prevent="handleSubmit(signup)">
               <validation-provider v-slot="{ errors, classes }" rules="required">
                 <div class="all-wrapper">
                   <label for="name" class="all-text">名稱</label>
@@ -37,7 +41,7 @@
                 </div>
               </validation-provider>
               <div class="submit-button-wrapper">
-                <button class="submit-button" type="submit" @click.prevent="signup" :disabled="invalid">
+                <button class="submit-button" type="submit">
                   <div class="button">註冊</div>
                 </button>
               </div>
@@ -114,35 +118,49 @@ $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .signup {
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
   position: relative;
   width: 100%;
   .signup-form {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    scroll-behavior: smooth;
-    padding: 24px;
     .signup-container {
-      flex: 1;
+      overflow: auto;
+      padding: 48px 24px;
+      width: calc(100% - 48px);
       max-width: 500px;
-      .logo-wrapper {
-        padding-top: 25%;
+      .logo-container {
+        padding-top: 12.5%;
         position: relative;
         margin-bottom: 24px;
-        .logo {
+        .logo-wrapper {
           position: absolute;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background: url(../assets/people-eating-food.svg) no-repeat center;
-          background-size: cover;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .logo {
+            cursor: pointer;
+            display: inline-block;
+            font-size: 48px;
+            line-height: 48px;
+            color: $red;
+            font-weight: 800;
+            text-align: left;
+            .company-last-name {
+              color: #000000;
+              margin-left: 8px;
+            }
+          }
         }
       }
       .signup-card {
-        padding: 24px 24px 0 24px;
-        margin-bottom: 24px;
+        padding: 24px;
         border: 1px solid $divider;
         border-radius: 8px;
         text-align: left;

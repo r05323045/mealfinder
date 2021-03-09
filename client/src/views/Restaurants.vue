@@ -2,13 +2,19 @@
   <div class="restaurants" :class="{modalShow: showModal}">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="searchbar-wrapper-mobile">
-      <div class="back-wrapper" @click="$router.push('/map')">
-        <div class="icon back"></div>
-      </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">地圖搜尋</div>
+          <div class="tab-container">
+            <div class="tab active">
+              清單搜尋
+              <div class="active-line"></div>
+            </div>
+            <div class="tab" @click="$router.push('/map')">
+              地圖模式
+              <div class="active-line" v-show="false"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
@@ -26,8 +32,15 @@
           <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
           <div class="filter-button" :class="{ 'filter-on': priceFilter.length === 2 }" @click="showPriceModal = !showPriceModal">預算</div>
         </div>
-        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0"></div>
-        <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
+        <div class="sub-title">
+          <img class="sub-title-img" src="../assets/ramen.svg">
+          MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
+        </div>
+        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0">
+          <div class="no-result" v-if="resultCount === 0">沒有結果</div>
+          <div class="no-result-sub" v-if="resultCount === 0">請試著調整搜尋條件，如移除篩選條件或縮小地圖範圍</div>
+        </div>
+        <div v-if="restaurants.length > 0" ref="restaurant-card-deck-wrapper" class="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
               <div class="restaurant-card"
@@ -55,7 +68,6 @@
                   <span class="bullet">·</span>
                   <span v-if="item.District" class="district">{{ item.District.name }}</span>
                 </div>
-                <div class="description">{{ item.description }}</div>
                 <div class="expense" v-if="item.average_consumption">${{ item.average_consumption }} / 人</div>
               </div>
             </div>
@@ -212,13 +224,20 @@ export default {
       }
     },
     async fetchRestaurants (filter) {
+      const loader = this.$loading.show({
+        container: this.$refs['restaurant-card-deck-wrapper'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurants(this.numOfPage + 1, filter) : await restaurantsAPI.getRestaurants(this.numOfPage + 1, filter)
         this.noMoreData = data.data.length === 0
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
         this.resultCount = data.count
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -337,22 +356,8 @@ $red: rgb(255, 56, 92);
     @media (min-width: 768px) {
       display: none;
     }
-    .back-wrapper {
-      padding-left: 8px;
-      width: 40px;
-      height: 48px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .icon.back {
-        margin: auto;
-        height: 16px;
-        width: 16px;
-        background-color: #000000;
-        mask: url(../assets/back.svg) no-repeat center;
-      }
-    }
     .searchbar {
+      padding-left: 8px;
       background: #ffffff;
       width: 100%;
       border-radius: 100px;
@@ -360,31 +365,49 @@ $red: rgb(255, 56, 92);
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      .search-input {
-        border: none;
-        &:focus {
-          outline: none;
-        }
-      }
       .wrapper {
         border-right: 1px solid $divider;
         width: 100%;
         display: flex;
         flex-direction: row;
         line-height: 18px;
-        .icon {
-          margin: auto 0;
-          padding-right: 8px;
-          background-color: $ultimategray;
-          height: 16px;
-          width: 16px;
-        }
-        .icon.search {
-          mask: url(../assets/search.svg) no-repeat center;
-        }
-        .text {
-          font-size: 14px;
-          font-weight: 600;
+        margin-left: 12px;
+        .tab-container {
+          position: relative;
+          margin: 12px -12px;
+          display: flex;
+          flex-direction: row;
+          .divider {
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            top: 100%;
+            height: 1px;
+            background: $divider;
+          }
+          .tab {
+            color: #666;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 600;
+            position: relative;
+          }
+          .tab.active {
+            color: #222222;
+            position: relative;
+            .active-line {
+              z-index: 2;
+              position: absolute;
+              bottom: -1px;
+              left: 16px;
+              right: 16px;
+              height: 3px;
+              background: #222222;
+            }
+          }
         }
       }
     }
@@ -485,8 +508,35 @@ $red: rgb(255, 56, 92);
           background: rgb(247, 247, 247);
         }
       }
+      .sub-title {
+        display: flex;
+        align-items: center;
+        margin: 12px 0;
+        text-align: left;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+        .sub-title-img {
+          margin-right: 16px;
+          height: 40px;
+          width: 40px;
+        }
+      }
       .restaurant-card-deck-wrapper {
         min-height: 600px;
+        .no-result {
+          margin-top: 32px;
+          text-align: left;
+          font-size: 22px;
+          line-height: 26px;
+          font-weight: 600;
+        }
+        .no-result-sub {
+          text-align: left;
+          margin: 4 0 32px;
+          font-size: 16px;
+          line-height: 24px;
+        }
         .restaurant-card-deck {
           width: 100%;
           @media (min-width: 768px) {

@@ -1,78 +1,97 @@
 [
   {
     "name_EN":"Chinese Restaurant",
-    "name_TW":"中式料理"
+    "name_TW":"中式料理",
+    "icon": "077-rice"
   },
   {
     "name_EN": "Western Restaurant",
-    "name_TW": "西式料理"
+    "name_TW": "義式料理",
+    "icon": "071-pizza"
   },
   {
     "name_EN": "Japanese Restaurant",
-    "name_TW": "日式料理"
+    "name_TW": "日式料理",
+    "icon": "093-sushi-1"
   },
   {
-    "name_EN": "Middle Eastern Restaurant",
-    "name_TW": "中東料理"
+    "name_EN": "Thai Restaurant",
+    "name_TW": "泰式料理",
+    "icon": "096-tomato"
   },
   {
     "name_EN": "Indian Restaurant",
-    "name_TW": "印度料理"
+    "name_TW": "印度料理",
+    "icon": "100-yogurt"
   },
   {
     "name_EN": "Korea Restaurant",
-    "name_TW": "韓式料理"
+    "name_TW": "韓式料理",
+    "icon": "092-sushi"
   },
   {
     "name_EN": "American Restaurant",
-    "name_TW": "美式料理"
+    "name_TW": "美式料理",
+    "icon": "034-fast-food"
   },
   {
     "name_EN": "Bistro",
-    "name_TW": "餐酒館"
+    "name_TW": "餐酒館",
+    "icon": "099-wine"
   },
   {
     "name_EN": "Seafood Restaurant",
-    "name_TW": "海鮮"
+    "name_TW": "海鮮",
+    "icon": "084-shrimp"
   },
   {
     "name_EN": "Vegan Restaurant",
-    "name_TW": "素食料理"
+    "name_TW": "素食料理",
+    "icon": "052-vegetable"
   },
   {
     "name_EN": "Pizza",
-    "name_TW": "比薩餐廳"
+    "name_TW": "比薩餐廳",
+    "icon": "070-pizza-slice"
   },
   {
     "name_EN": "Italian Restaurant",
-    "name_TW": "義大利料理"
+    "name_TW": "義大利料理",
+    "icon": "071-pizza"
   },
   {
     "name_EN": "Mexican Restaurant",
-    "name_TW": "墨西哥料理"
+    "name_TW": "墨西哥料理",
+    "icon": "078-salad"
   },
   {
     "name_EN": "Hongkong Restaurant",
-    "name_TW": "港式料理"
+    "name_TW": "港式料理",
+    "icon": "091-sushi-roll"
   },
   {
     "name_EN": "Yakiniku Restaurant",
-    "name_TW": "日式燒肉"
+    "name_TW": "日式燒肉",
+    "icon": "004-bacon"
   },
   {
     "name_EN": "Barbecue Restaurant",
-    "name_TW": "燒烤料理"
+    "name_TW": "燒烤料理",
+    "icon": "006-bbq"
   },
   {
     "name_EN": "Brunch Restaurant",
-    "name_TW": "早午餐"
+    "name_TW": "早午餐",
+    "icon": "033-eggs"
   },
   {
     "name_EN": "Buffet Restaurant",
-    "name_TW": "自助餐"
+    "name_TW": "自助餐",
+    "icon": "037-tray"
   },
   {
     "name_EN": "Spanish Restaurant",
-    "name_TW": "西班牙料理"
+    "name_TW": "西班牙料理",
+    "icon": "086-soup"
   }
 ]

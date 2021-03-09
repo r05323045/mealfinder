@@ -6,62 +6,74 @@
       {
         "ZipCode": "100",
         "AreaName": "中正區",
-        "AreaEngName": "Zhongzheng Dist."
+        "AreaEngName": "Zhongzheng Dist.",
+        "icon": "town"
       },
       {
         "ZipCode": "103",
         "AreaName": "大同區",
-        "AreaEngName": "Datong Dist."
+        "AreaEngName": "Datong Dist.",
+        "icon": "crater"
       },
       {
         "ZipCode": "104",
         "AreaName": "中山區",
-        "AreaEngName": "Zhongshan Dist."
+        "AreaEngName": "Zhongshan Dist.",
+        "icon": "amusement-park"
       },
       {
         "ZipCode": "105",
         "AreaName": "松山區",
-        "AreaEngName": "Songshan Dist."
+        "AreaEngName": "Songshan Dist.",
+        "icon": "townhouse"
       },
       {
         "ZipCode": "106",
         "AreaName": "大安區",
-        "AreaEngName": "Da’an Dist."
+        "AreaEngName": "Da’an Dist.",
+        "icon": "bridge"
       },
       {
         "ZipCode": "108",
         "AreaName": "萬華區",
-        "AreaEngName": "Wanhua Dist."
+        "AreaEngName": "Wanhua Dist.",
+        "icon": "pagoda"
       },
       {
         "ZipCode": "110",
         "AreaName": "信義區",
-        "AreaEngName": "Xinyi Dist."
+        "AreaEngName": "Xinyi Dist.",
+        "icon": "farm"
       },
       {
         "ZipCode": "111",
         "AreaName": "士林區",
-        "AreaEngName": "Shilin Dist."
+        "AreaEngName": "Shilin Dist.",
+        "icon": "castle"
       },
       {
         "ZipCode": "112",
         "AreaName": "北投區",
-        "AreaEngName": "Beitou Dist."
+        "AreaEngName": "Beitou Dist.",
+        "icon": "road"
       },
       {
         "ZipCode": "114",
         "AreaName": "內湖區",
-        "AreaEngName": "Neihu Dist."
+        "AreaEngName": "Neihu Dist.",
+        "icon": "beach"
       },
       {
         "ZipCode": "115",
         "AreaName": "南港區",
-        "AreaEngName": "Nangang Dist."
+        "AreaEngName": "Nangang Dist.",
+        "icon": "beach-castle"
       },
       {
         "ZipCode": "116",
         "AreaName": "文山區",
-        "AreaEngName": "Wenshan Dist."
+        "AreaEngName": "Wenshan Dist.",
+        "icon": "agriculture"
       }
     ]
   },

@@ -15,7 +15,7 @@
           </div>
           <div class="divider"></div>
         </div>
-        <div class="reservation-container">
+        <div class="reservation-container" ref="reservation-container">
           <FutureReservation v-if="tabFuture" :reservations="futureReservation"></FutureReservation>
           <PastReservation v-if="!tabFuture" :reservations="pastReservation"></PastReservation>
         </div>
@@ -53,21 +53,28 @@ export default {
     PastReservation
   },
   created () {
-    this.fetchReservations()
   },
   mounted () {
+    this.fetchReservations()
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     async fetchReservations () {
+      const loader = this.$loading.show({
+        container: this.$refs['reservation-container'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = await reservationsAPI.getReservations()
         this.reservations = data.reservations
         this.futureReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) > Date.now())
         this.pastReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) <= Date.now())
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -113,6 +120,7 @@ $red: rgb(255, 56, 92);
     .history-wrapper {
       .reservation-container {
         padding-top: 8px;
+        min-height: 600px;
       }
     }
     .tab-container {

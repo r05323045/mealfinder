@@ -29,63 +29,77 @@
           </div>
         </div>
         <div class="contact-and-submit">
-          <validation-observer ref="formvalidation" v-slot="{ invalid }">
-            <div class="title">確認購買與選擇付款方式</div>
-            <div class="contact-card">
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="name" class="all-text">購買人姓名</label>
-                  <input id="name" type="text" class="all-input" v-model="userName" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required|email">
-                  <label for="email" class="all-text">購買人電子郵件</label>
-                  <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="phone" class="all-text">購買人手機號碼</label>
-                  <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="required">
-                  <label for="address" class="all-text">購買人地址</label>
-                  <input id="address" type="text" class="all-input" v-model="userAddress" :class="classes">
-                  <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('address ', '地址') }}</span>
-                </validation-provider>
-              </div>
-              <div class="all-wrapper">
-                <label for="purpose" class="all-text">付款方式</label>
-                <div class="button-wrapper">
-                  <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" :class="{select: submitPayby === el}">
-                    <span class="text">{{ el }}</span>
-                  </button>
+          <validation-observer ref="formvalidation" v-slot="{ handleSubmit, invalid }">
+            <form @submit.prevent="handleSubmit(postTradeInfo)" >
+              <div class="title">確認購買與選擇付款方式</div>
+              <div class="contact-card" ref="contact-card">
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="name" class="all-text">購買人姓名</label>
+                    <input id="name" type="text" class="all-input" v-model="userName" :class="classes" :disabled="tradeInfo.TradeInfo">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('name ', '姓名') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required|email">
+                    <label for="email" class="all-text">購買人電子郵件</label>
+                    <input id="email" type="email" class="all-input" v-model="userEmail" :class="classes" :disabled="tradeInfo.TradeInfo">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('email ', '電子郵件') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="phone" class="all-text">購買人手機號碼</label>
+                    <input id="phone" type="text" class="all-input" v-model="userPhone" :class="classes" :disabled="tradeInfo.TradeInfo">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('phone ', '手機號碼') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="required">
+                    <label for="address" class="all-text">購買人地址</label>
+                    <input id="address" type="text" class="all-input" v-model="userAddress" :class="classes" :disabled="tradeInfo.TradeInfo">
+                    <span v-if="errors[0]" class="invalid-text">{{ errors[0].replace('address ', '地址') }}</span>
+                  </validation-provider>
+                </div>
+                <div class="all-wrapper">
+                  <label for="purpose" class="all-text">付款方式</label>
+                  <div class="button-wrapper">
+                    <button class="button" v-for="(el, idx) in payby" :key="`payby-${idx}`" :class="{select: submitPayby === el}" :disabled="tradeInfo.TradeInfo">
+                      <span class="text">{{ el }}</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="all-wrapper">
+                  <validation-provider v-slot="{ errors, classes }" rules="max:140">
+                    <label for="note" class="all-text">其他備註</label>
+                    <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！" v-model="userNote" :class="classes" :disabled="tradeInfo.TradeInfo"></textarea>
+                    <div class="note-count">({{ userNote.length }}/140)</div>
+                    <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
+                  </validation-provider>
                 </div>
               </div>
-              <div class="all-wrapper">
-                <validation-provider v-slot="{ errors, classes }" rules="max:140">
-                  <label for="note" class="all-text">其他備註</label>
-                  <textarea id="note" class="all-input text-area" placeholder="有任何特殊需求嗎？可以先寫在這裡喔！" v-model="userNote" :class="classes"></textarea>
-                  <div class="note-count">({{ userNote.length }}/140)</div>
-                  <span v-if="errors[0]" class="invalid-text note-error">{{ errors[0].replace('note ', '其他備註') }}</span>
-                </validation-provider>
+              <div class="submit-button-wrapper" v-if="!tradeInfo.PayGateWay">
+                <button class="submit-button" type="submit" :class="{ disabled: invalid }">
+                  <div class="button">確認購買</div>
+                </button>
+                <div class="back-button" @click.prevent="$router.go(-1)">
+                  <div class="button">回上一步</div>
+                </div>
               </div>
-            </div>
-            <div class="submit-button-wrapper">
-              <button class="submit-button" type="submit" @click.prevent="postOrder" :disabled="invalid" :class="{ disabled: invalid }">
-                <div class="button">確認購買</div>
-              </button>
-              <div class="back-button" @click.prevent="$router.go(-1)">
-                <div class="button">回上一步</div>
-              </div>
-            </div>
+            </form>
           </validation-observer>
+          <form name='Spgateway' :action='tradeInfo.PayGateWay' method="POST">
+            <input v-show="false" type="text" name="MerchantID" v-model="tradeInfo.MerchantID">
+            <input v-show="false" type="text" name="TradeInfo" v-model="tradeInfo.TradeInfo">
+            <input v-show="false" type="text" name="TradeSha" v-model="tradeInfo.TradeSha">
+            <input v-show="false" type="text" name="Version" v-model="tradeInfo.Version">
+            <button class="spgateway-button" v-show="tradeInfo.PayGateWay" id="spgateway-button" type="submit">
+              <div class="button">前往付款頁面</div>
+            </button>
+            <div class="stop-pay-button" v-show="tradeInfo.PayGateWay" @click.prevent="$router.go(-1)">
+              <div class="button">回上一步</div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -114,7 +128,8 @@ export default {
       userEmail: '',
       userPhone: '',
       userAddress: '',
-      userNote: ''
+      userNote: '',
+      tradeInfo: {}
     }
   },
   components: {
@@ -134,11 +149,17 @@ export default {
   },
   methods: {
     async fetchCart () {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = await cartsAPI.getCart()
         this.cart = data.data
         this.calculateTotalPrice()
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -155,7 +176,12 @@ export default {
         this.totalQuantity += Number(c.quantity)
       })
     },
-    async postOrder () {
+    async postTradeInfo () {
+      const loader = this.$loading.show({
+        container: this.$refs['contact-card'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const orderData = {
           totalPrice: this.totalPrice,
@@ -164,16 +190,15 @@ export default {
           name: this.userName,
           email: this.userEmail
         }
-        const { data } = await cartsAPI.postOrder(orderData)
+        const { data } = await cartsAPI.postTradeInfo(orderData)
         if (data.status !== 'success') {
+          loader.hide()
           throw new Error(data.message)
         }
-        window.location.assign(data.tradeInfo.PayGateWay)
-        Toast.fire({
-          icon: 'success',
-          title: '訂單已成立'
-        })
+        this.tradeInfo = data.tradeInfo
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -415,6 +440,9 @@ $darkred: #c13515;
           .submit-button.disabled {
             background-color: $ultimategray;
             cursor: not-allowed;
+            .button {
+              cursor: not-allowed;
+            }
           }
           .back-button {
             cursor: pointer;
@@ -437,6 +465,51 @@ $darkred: #c13515;
               font-size: 16px;
               line-height: 20px;
             }
+          }
+        }
+        .spgateway-button {
+          cursor: pointer;
+          border: none;
+          appearance: none;
+          margin-bottom: 20px;
+          height: 48px;
+          width: 100%;
+          background: #000000;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &:focus {
+            outline: none;
+          }
+          .button {
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+          }
+        }
+        .stop-pay-button {
+          cursor: pointer;
+          border: 1px solid #222222;
+          margin-bottom: 12px;
+          height: 46px;
+          width: 100%;
+          background: #ffffff;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &:focus {
+            outline: none;
+          }
+          .button {
+            color: #222222;
+            cursor: pointer;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
           }
         }
       }

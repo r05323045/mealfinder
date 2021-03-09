@@ -53,7 +53,7 @@ export default {
     if (filter && filter.length > 1) {
       queryString += filter.join('&')
     }
-    return apiHelper.get(`/nearby${queryString}`, {
+    return apiHelper.get(`/users/nearby${queryString}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   }

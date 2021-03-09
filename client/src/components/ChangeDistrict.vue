@@ -148,7 +148,7 @@ export default {
 <style lang="scss" scoped>
 $ultimategray: #939597;
 $divider: #E6ECF0;
-.modal.show {
+.modal {
   overflow: hidden;
   z-index: 999;
   position: fixed;
@@ -159,129 +159,127 @@ $divider: #E6ECF0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  transform: translateY(0);
-  transition: 0.1s;
-}
-.modal-background {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: #666;
-  opacity: 0.5;
-}
-.modal-content.show {
-  height: 100%;
-  width: 100%;
-  transform: translateY(0);
-  transition: 0.5s;
-  margin: auto;
-  max-width: 600px;
-  .modal-container {
+  transform: translateY(100%);
+  .modal-background {
+    position: absolute;
+    top: 0;
     width: 100%;
     height: 100%;
-    .top-wrapper {
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-      margin-top: 8px;
-      padding: 12px 16px 10px;
-      background: #ffffff;
-      height: 32px;
-      width: calc(100% - 32px);
-      position: relative;
-      border-bottom: 1px solid $divider;
-      .close-wrapper {
-        z-index: 1;
-        cursor: pointer;
-        position: absolute;
-        left: 10;
+    background: #666;
+    opacity: 0.5;
+  }
+  .modal-content {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    max-width: 600px;
+    transform: translateY(100%);
+    .modal-container {
+      width: 100%;
+      height: 100%;
+      .top-wrapper {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        margin-top: 8px;
+        padding: 12px 16px 10px;
+        background: #ffffff;
         height: 32px;
-        width: 32px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .icon.close {
-          cursor: pointer;
-          height: 16px;
-          width: 16px;
-          background-color: #222222;
-          mask: url(../assets/close.svg) no-repeat center;
-        }
-      }
-      .title {
-        line-height: 32px;
-        flex: 1;
-        font-size: 16px;
-        font-weight: 600;
+        width: calc(100% - 32px);
         position: relative;
-        .clear-all {
+        border-bottom: 1px solid $divider;
+        .close-wrapper {
+          z-index: 1;
           cursor: pointer;
           position: absolute;
-          top: 0;
-          right: 10px;
+          left: 10;
+          height: 32px;
+          width: 32px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .icon.close {
+            cursor: pointer;
+            height: 16px;
+            width: 16px;
+            background-color: #222222;
+            mask: url(../assets/close.svg) no-repeat center;
+          }
+        }
+        .title {
           line-height: 32px;
+          flex: 1;
           font-size: 16px;
           font-weight: 600;
-          text-decoration: underline;
+          position: relative;
+          .clear-all {
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            right: 10px;
+            line-height: 32px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: underline;
+          }
         }
       }
-    }
-    .filter-container {
-      overflow-y: scroll;
-      background: #ffffff;
-      height: calc(100% - 168px);
-      width: calc(100% - 48px);
-      padding: 12px 24px;
-      .category {
-        padding: 8px 0 24px 0;
-        .title {
-          text-align: left;
-          line-height: 22px;
-          padding: 16px 0;
-          font-size: 18px;
-          font-weight: 600;
-        }
-        .item-group {
-          .item {
-            padding: 12px 4px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            .text-wrapper {
-              font-size: 16px;
-              font-weight: 400;
-            }
-            .input-container {
-              height: 24px;
-              width: 24px;
-              .input-wrapper {
-                width: 100%;
-                height: 100%;
-                cursor: pointer;
-                input[type=checkbox] {
-                  display: none;
-                }
-                input[type=checkbox]+span {
-                  border-radius: 4px;
-                  display: inline-block;
-                  border: 1px solid #000000;
-                  user-select: none;
-                }
-                span {
+      .filter-container {
+        overflow-y: scroll;
+        background: #ffffff;
+        height: calc(100% - 168px);
+        width: calc(100% - 48px);
+        padding: 12px 24px;
+        .category {
+          padding: 8px 0 24px 0;
+          .title {
+            text-align: left;
+            line-height: 22px;
+            padding: 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+          }
+          .item-group {
+            .item {
+              padding: 12px 4px;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              .text-wrapper {
+                font-size: 16px;
+                font-weight: 400;
+              }
+              .input-container {
+                height: 24px;
+                width: 24px;
+                .input-wrapper {
                   width: 100%;
                   height: 100%;
-                }
-                input[type=checkbox]:checked+span {
-                  background-color:#000000;
-                  position: relative;
-                  .icon.check {
-                    position: absolute;
-                    top: 4px;
-                    left: 4px;
-                    width: 16px;
-                    height: 16px;
-                    mask: url(../assets/check.svg) no-repeat center;
-                    background: #ffffff;
+                  cursor: pointer;
+                  input[type=checkbox] {
+                    display: none;
+                  }
+                  input[type=checkbox]+span {
+                    border-radius: 4px;
+                    display: inline-block;
+                    border: 1px solid #000000;
+                    user-select: none;
+                  }
+                  span {
+                    width: 100%;
+                    height: 100%;
+                  }
+                  input[type=checkbox]:checked+span {
+                    background-color:#000000;
+                    position: relative;
+                    .icon.check {
+                      position: absolute;
+                      top: 4px;
+                      left: 4px;
+                      width: 16px;
+                      height: 16px;
+                      mask: url(../assets/check.svg) no-repeat center;
+                      background: #ffffff;
+                    }
                   }
                 }
               }
@@ -289,43 +287,45 @@ $divider: #E6ECF0;
           }
         }
       }
-    }
-    .filter-button-wrapper {
-      border-top: 1px solid $divider;
-      position: fixed;
-      bottom: 0;
-      width: calc(100% - 48px);
-      height: 48px;
-      padding: 16px 24px;
-      background: #ffffff;
-      .filter-button {
-        cursor: pointer;
-        height: 100%;
-        width: calc(100%);
-        background: #222222;
-        border-radius: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .button {
+      .filter-button-wrapper {
+        border-top: 1px solid $divider;
+        position: fixed;
+        bottom: 0;
+        width: calc(100% - 48px);
+        height: 48px;
+        padding: 16px 24px;
+        background: #ffffff;
+        .filter-button {
           cursor: pointer;
-          font-weight: 700;
-          font-size: 16px;
-          color: #ffffff;
-          line-height: 20px;
+          height: 100%;
+          width: calc(100%);
+          background: #222222;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .button {
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            color: #ffffff;
+            line-height: 20px;
+          }
         }
       }
     }
   }
+  .modal-content.show {
+    transform: translateY(0);
+    transition: 0.5s;
+  }
 }
 .modal.innerShow {
   transition: 0.3;
-  opacity: 100%;
+  opacity: 1;
 }
-.modal{
-  transform: translateY(100%);
-}
-.modal-content {
-  transform: translateY(100%);
+.modal.show {
+  transform: translateY(0);
+  transition: 0.1s;
 }
 </style>

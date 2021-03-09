@@ -2,18 +2,22 @@
   <div class="coupon" ref="coupon">
     <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
     <div class="coupon-searchbar-wrapper">
-      <div class="back-wrapper" @click="$router.go(-1)">
+      <div class="back-wrapper" @click="$router.push('/coupons')">
         <div class="icon back"></div>
       </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text"></div>
+          <div class="text">餐券列表</div>
         </div>
       </div>
       <div class="icon-container">
         <div class="share-wrapper">
-          <div class="icon share"></div>
+          <div class="icon share"
+            v-clipboard:copy="copyPath"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError">
+          </div>
         </div>
       </div>
     </div>
@@ -33,7 +37,11 @@
             <div class="price-wrapper">
               <div class="icon-container">
                 <div class="share-wrapper">
-                  <div class="icon share"></div>
+                  <div class="icon share"
+                    v-clipboard:copy="copyPath"
+                    v-clipboard:success="onCopy"
+                    v-clipboard:error="onError">
+                  </div>
                 </div>
               </div>
               <div class="price">{{ coupon.price | priceFormat }}</div>
@@ -71,7 +79,7 @@
           <div class="title">餐廳資訊</div>
           <div class="info-and-map" v-if="coupon.Restaurant">
             <div class="map-wrapper">
-              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyCUFAw8OHDSgUFUvBetDdPGUJI8xMGLAGk&q=place_id:${coupon.Restaurant.place_id}`" class="google-map"></iframe>
+              <iframe :src="`https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAP_API_KEY}&q=${coupon.Restaurant.google_map_url.split('&q=')[1]}`" class="google-map"></iframe>
             </div>
             <div class="information-body">
               <div class="item-wrapper">
@@ -181,7 +189,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    ...mapState(['currentUser', 'isAuthenticated']),
+    copyPath () {
+      return `${window.location}`
+    },
+    GOOGLE_MAP_API_KEY () {
+      return process.env.VUE_APP_GOOGLE_MAP_API_KEY
+    }
   },
   methods: {
     onScroll (e) {
@@ -189,11 +203,18 @@ export default {
       this.scrollY = this.$refs.coupon.scrollTop
     },
     async fetchCoupon (id) {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = await couponsAPI.getCoupon(id)
         this.coupon = data
+        this.coupon.Restaurant.business_hours = JSON.parse(this.coupon.Restaurant.business_hours)
         this.findTodayBusinessHours()
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -230,6 +251,18 @@ export default {
           title: '目前無法新增至購物車'
         })
       }
+    },
+    onCopy: function (e) {
+      Toast.fire({
+        icon: 'success',
+        title: '複製到剪貼簿'
+      })
+    },
+    onError: function (e) {
+      Toast.fire({
+        icon: 'error',
+        title: '目前無法複製，請稍候'
+      })
     }
   }
 }

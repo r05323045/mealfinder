@@ -20,12 +20,6 @@
             <div class="text">訂位</div>
           </div>
         </div>
-        <div class="nav-item" v-if="isAuthenticated" @click="$router.push('/users/notification').catch(()=>{})" :class="{ active: $route.path === '/users/notification' }">
-          <div class="wrapper">
-            <div class="icon noti"></div>
-            <div class="text">通知</div>
-          </div>
-        </div>
         <div class="nav-item" @click="isAuthenticated ? $router.push('/users/center').catch(()=>{}) : $router.push('/signin').catch(()=>{})" :class="{ active: $route.path.includes === '/sign' || ($route.path.includes('/users') && !$route.path.includes('/users/notification') && !$route.path.includes('/users/history')) }">
           <div class="wrapper">
             <div class="icon user"></div>
@@ -38,7 +32,7 @@
     <div class="navbar-desktop" :class="{ openSearch: openSearch, atMap: $route.path.includes('/map') }">
       <div class="navbar-desktop-inner">
         <div class="logo-wrapper" @click="$router.push('/').catch(()=>{})">
-          <div class="logo"></div>
+          <div class="logo"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
         </div>
         <div class="tab-wrapper" v-show="openSearch">
           <div class="condition-wrapper">
@@ -213,6 +207,8 @@ export default {
       this.$store.commit('revokeAuthentication')
       this.showMenu = false
       if (this.$route.path.includes('/users')) {
+        this.$router.push('/signin').catch(() => {})
+      } else {
         this.$router.push('/').catch(() => {})
       }
       window.scrollTo({
@@ -431,7 +427,6 @@ $red: rgb(255, 56, 92);
         }
         .logo-wrapper {
           cursor: pointer;
-          width: 30px;
           height: 100%;
           display: flex;
           align-items: center;
@@ -440,11 +435,16 @@ $red: rgb(255, 56, 92);
             flex: 1;
           }
           .logo {
-            height: 32px;
-            width: 30px;
-            mask: url(../assets/logo.svg) no-repeat center;
-            mask-size: cover;
-            background: $red;
+            font-size: 24px;
+            line-height: 24px;
+            color: $red;
+            font-weight: 800;
+            text-align: left;
+            height: 24px;
+            .company-last-name {
+              color: #000000;
+              margin-left: 4px;
+            }
           }
         }
         .searchbar-wrapper {

@@ -2,14 +2,18 @@
   <div class="map-page" ref="map-page">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="map-searchbar-wrapper">
-      <div class="back-wrapper" @click="$router.push('/restaurants')">
-        <div class="icon back"></div>
-      </div>
       <div class="searchbar">
         <input v-if="false" class="search-input">
         <div class="wrapper">
-          <div class="text">
-            清單搜尋
+          <div class="tab-container">
+            <div class="tab" @click="$router.push('/restaurants')">
+              清單搜尋
+              <div class="active-line" v-show="false"></div>
+            </div>
+            <div class="tab active">
+              地圖模式
+              <div class="active-line"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -30,10 +34,10 @@
             <div class="filter-button" :class="{ 'filter-on': priceFilter.length === 2 }" @click="showPriceModal = !showPriceModal">預算</div>
           </div>
           <div class="sub-title">
-            <img class="sub-title-img" src="../assets/diet.svg">
+            <img class="sub-title-img" src="../assets/ramen.svg">
             MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
           </div>
-          <div class="restaurant-list-card">
+          <div class="restaurant-list-card" ref="restaurant-list-card">
             <div class="card-content">
               <div class="no-result" v-if="resultCount === 0">沒有結果</div>
               <div class="no-result-sub" v-if="resultCount === 0">請試著調整搜尋條件，如移除篩選條件或縮小地圖範圍</div>
@@ -58,7 +62,7 @@
                     </div>
                     <div class="card-divider"></div>
                     <div class="card-text">{{ r.Category.name }}</div>
-                    <div class="card-text">{{ r.description }}</div>
+                    <div class="card-text">{{ r.address }}</div>
                     <div class="rating-wrapper">
                       <svg class="icon star"></svg>
                       <div class="rating" v-if="r.rating">
@@ -136,7 +140,7 @@
                     <span class="bullet">·</span>
                     <span v-if="infoWindow.restaurant.District" class="district">{{ infoWindow.restaurant.District.name }}</span>
                   </div>
-                  <div class="description">{{ infoWindow.restaurant.description }}</div>
+                  <div class="description">{{ infoWindow.restaurant.address }}</div>
                   <div class="expense" v-if="infoWindow.restaurant.average_consumption">{{ infoWindow.restaurant.average_consumption | priceFormat }} / 人</div>
                 </div>
               </div>
@@ -304,6 +308,10 @@ export default {
       this.openInfoWindow(restaurant)
     },
     async fetchNearByRestaurants (hasPage) {
+      const loader = this.$loading.show({
+        container: this.$refs['restaurant-list-card'],
+        opacity: 1
+      })
       try {
         if (this.priceFilter.length === 2) {
           this.priceQueryString[0] = `min=${this.priceFilter[0]}`
@@ -328,13 +336,15 @@ export default {
         this.noMoreData = data.data.length === 0
         this.restaurants = data.data
         this.restaurants.forEach(r => {
-          r.position = { lat: r.coordinates[0], lng: r.coordinates[1] }
+          r.position = { lat: Number(r.latitude), lng: Number(r.longitude) }
         })
         this.numOfPage += 1
         this.resultCount = data.count
+        loader.hide()
         this.$refs['map-page'].scrollTo({ top: 0, behavior: 'smooth' })
         this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -411,7 +421,6 @@ $primary-color: #222;
 $darkred: #c13515;
 @import '~vue2-datepicker/scss/index.scss';
 .map-page {
-  height: 100%;
   overflow: scroll;
   position: relative;
   width: 100%;
@@ -447,6 +456,7 @@ $darkred: #c13515;
       }
     }
     .searchbar {
+      padding-left: 8px;
       background: #ffffff;
       width: 100%;
       border-radius: 100px;
@@ -465,14 +475,43 @@ $darkred: #c13515;
         display: flex;
         flex-direction: row;
         line-height: 18px;
-        .text {
-          margin-right: 20%;
-          font-size: 14px;
-          font-weight: 600;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
+        margin-left: 12px;
+        .tab-container {
+          position: relative;
+          margin: 12px -12px;
+          display: flex;
+          flex-direction: row;
+          .divider {
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            top: 100%;
+            height: 1px;
+            background: $divider;
+          }
+          .tab {
+            color: #666;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 600;
+            position: relative;
+          }
+          .tab.active {
+            color: #222222;
+            position: relative;
+            .active-line {
+              z-index: 2;
+              position: absolute;
+              bottom: -1px;
+              left: 16px;
+              right: 16px;
+              height: 3px;
+              background: #222222;
+            }
+          }
         }
       }
     }
@@ -665,6 +704,15 @@ $darkred: #c13515;
                       font-size: 18px;
                       font-weight: 600;
                       line-height: 24px;
+                      max-width: 250px;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      display: -webkit-box !important;
+                      -webkit-line-clamp: 1 !important;
+                      -webkit-box-orient: vertical !important;
+                      @media (min-width: 1440px) {
+                        max-width: 250px;
+                      }
                     }
                     .heart-wrapper {
                       z-index: 1;

@@ -5,23 +5,26 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "start": "node dist/app.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
-    "default-passive-events": "^2.0.0",
     "dotenv": "^8.2.0",
     "highcharts": "^9.0.1",
     "htmlparser2": "^6.0.0",
     "loadsh": "0.0.4",
+    "mailtoui": "^1.0.3",
     "moment": "^2.29.1",
     "standard": "^16.0.3",
     "sweetalert2": "^10.14.0",
     "swiper": "^6.4.5",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
+    "vue-clipboard2": "^0.3.1",
+    "vue-loading-overlay": "^3.4.2",
     "vue-router": "^3.2.0",
     "vue-slider-component": "^3.2.11",
     "vue2-datepicker": "^3.8.2",

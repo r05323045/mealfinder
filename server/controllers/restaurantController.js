@@ -7,6 +7,7 @@ const District = db.District
 const Coupon = db.Coupon
 const Comment = db.Comment
 const User = db.User
+const Favorite = db.Favorite
 
 const restaurantController = {
   getRestaurants: (req, res) => {
@@ -29,7 +30,7 @@ const restaurantController = {
       ],
       attributes: {
         include: [
-          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
+          [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
         ]
       },
       offset: offset,
@@ -63,12 +64,13 @@ const restaurantController = {
       ],
       attributes: {
         include: [
-          [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
+          [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount']
         ]
       },
       offset: offset,
       limit: pageLimit
     }).then(restaurants => {
+      console.log(restaurants.rows[0])
       const data = restaurants.rows.map(restaurant => ({
         ...restaurant.dataValues,
         description: restaurant.dataValues.description.substring(0, 50),
@@ -82,7 +84,7 @@ const restaurantController = {
     return Restaurant.findByPk(req.params.restaurantId, {
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
+          [sequelize.literal(`(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
         ]
       },
       include: [
@@ -95,9 +97,9 @@ const restaurantController = {
           model: Comment,
           attributes: {
             include: [
-              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
-              [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'name'],
-              [sequelize.literal('(SELECT avatar FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'avatar']
+              [sequelize.literal('(SELECT COUNT(*) FROM Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Comments.UserId)'), 'avatar']
             ]
           }
         }
@@ -112,7 +114,7 @@ const restaurantController = {
     return Restaurant.findByPk(req.params.restaurantId, {
       attributes: {
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
+          [sequelize.literal(`(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = ${req.params.restaurantId})`), 'CommentsCount']
         ]
       },
       include: [
@@ -125,10 +127,10 @@ const restaurantController = {
           model: Comment,
           attributes: {
             include: [
-              [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
-              [sequelize.literal(`(SELECT COUNT(*) FROM restaurant_reservation.Likes WHERE Likes.UserId = ${req.user.id})`), 'isLiked'],
-              [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'name'],
-              [sequelize.literal('(SELECT avatar FROM restaurant_reservation.Users WHERE Users.id = Comments.UserId)'), 'avatar']
+              [sequelize.literal('(SELECT COUNT(*) FROM Likes WHERE Likes.CommentId = Comments.id)'), 'LikesCount'],
+              [sequelize.literal(`(SELECT COUNT(*) FROM Likes WHERE Likes.UserId = ${req.user.id})`), 'isLiked'],
+              [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Comments.UserId)'), 'name'],
+              [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Comments.UserId)'), 'avatar']
             ]
           }
         }
@@ -173,11 +175,11 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
         // order: sequelize.literal('distance ASC'),
         offset: offset,
         limit: pageLimit
@@ -194,11 +196,11 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
       })
     ]).then(([restaurants, allRestaurants]) => {
       const data = restaurants.map(restaurant => ({
@@ -231,11 +233,12 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.literal(`(SELECT COUNT(*) FROM Favorites WHERE Favorites.RestaurantId = Restaurant.id AND Userid = ${req.user.id})`), 'isFavorited'],
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))],
         // order: sequelize.literal('distance ASC'),
         offset: offset,
         limit: pageLimit
@@ -252,17 +255,16 @@ const restaurantController = {
         ],
         attributes: {
           include: [
-            [sequelize.literal('(SELECT COUNT(*) FROM restaurant_reservation.Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
-            [sequelize.fn('ST_Distance_Sphere', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
+            [sequelize.literal('(SELECT COUNT(*) FROM Comments WHERE Comments.RestaurantId = Restaurant.id)'), 'CommentsCount'],
+            [sequelize.fn('ST_Distance', sequelize.literal("ST_GeomFromText(CONCAT('POINT(',Restaurant.latitude, ' ', Restaurant.longitude,')'), 4326)"), center), 'distance']
           ]
         },
-        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance_Sphere', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
+        having: [sequelize.where(sequelize.col('distance'), '<=', sequelize.fn('ST_Distance', sequelize.literal(`ST_GeomFromText('POINT(${req.query.blat} ${req.query.blng})', 4326)`), center))]
       })
     ]).then(([restaurants, allRestaurants]) => {
       const data = restaurants.map(restaurant => ({
         ...restaurant,
-        description: restaurant.description.substring(0, 50),
-        isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+        description: restaurant.description.substring(0, 50)
       }))
       const count = allRestaurants.length
       return res.json({ data, count })

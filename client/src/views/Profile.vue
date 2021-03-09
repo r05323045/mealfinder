@@ -279,6 +279,10 @@ export default {
       }
     },
     async fetchProfile (id) {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = await usersAPI.getProfile(id)
         this.user = data
@@ -289,7 +293,9 @@ export default {
         this.tempDistrictId = this.user.DistrictId
         this.tempDistrictName = this.user.DistrictName
         this.tempCategory = this.user.preferedCategory
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

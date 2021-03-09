@@ -8,7 +8,7 @@ module.exports = {
       categories.push({
         id: i * 10 + 1,
         name: data[i].name_TW,
-        picture: `https://loremflickr.com/320/240/restaurant,food/?lock=${Math.random() * 100}`,
+        picture: data[i].icon,
         createdAt: new Date(),
         updatedAt: new Date()
       })

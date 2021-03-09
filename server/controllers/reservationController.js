@@ -11,8 +11,8 @@ const reservationController = {
       where: { UserId: req.user.id },
       attributes: {
         include: [
-          [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
-          [sequelize.literal('(SELECT picture FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_picture']
+          [sequelize.literal('(SELECT name FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+          [sequelize.literal('(SELECT picture FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_picture']
         ]
       },
       raw: true,
@@ -25,10 +25,10 @@ const reservationController = {
     Reservation.findByPk(req.params.reservationId, {
       attributes: {
         include: [
-          [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
-          [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
-          [sequelize.literal('(SELECT email FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_email'],
-          [sequelize.literal('(SELECT phone_number FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_phone_number']
+          [sequelize.literal('(SELECT name FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+          [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
+          [sequelize.literal('(SELECT email FROM Users WHERE Users.id = Reservation.UserId)'), 'User_email'],
+          [sequelize.literal('(SELECT phone_number FROM Users WHERE Users.id = Reservation.UserId)'), 'User_phone_number']
         ]
       }
     }).then(reservation => {
@@ -55,8 +55,9 @@ const reservationController = {
         nest: true,
         attributes: {
           include: [
-            [sequelize.literal('(SELECT name FROM restaurant_reservation.Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
-            [sequelize.literal('(SELECT name FROM restaurant_reservation.Users WHERE Users.id = Reservation.UserId)'), 'User_name']
+            [sequelize.literal('(SELECT name FROM Restaurants WHERE Restaurants.id = Reservation.RestaurantId)'), 'Restaurant_name'],
+            [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Reservation.UserId)'), 'User_name'],
+            [sequelize.literal('(SELECT email FROM Users WHERE Users.id = Reservation.UserId)'), 'User_email']
           ]
         }
       }).then(reservation => {
@@ -68,8 +69,8 @@ const reservationController = {
           auth: {
             type: 'OAuth2',
             user: process.env.GMAIL_ACCOUNT,
-            clientId: process.env.OAUTH_CLIENT_ID,
-            clientSecret: process.env.OAUTH_CLIENT_SECRET,
+            clientId: process.env.GMAILAPI_CLIENT_ID,
+            clientSecret: process.env.GMAILAPI_CLIENT_SECRET,
             refreshToken: process.env.OAUTH_REFRESH_TOKEN,
             accessToken: process.env.OAUTH_ACCESS_TOKEN
           }
@@ -78,6 +79,7 @@ const reservationController = {
         // Step 2: 撰寫信件內容
         const emailData = {
           User_name: reservation.User_name,
+          User_email: reservation.User_email,
           Restaurant_name: reservation.Restaurant_name,
           date: moment(reservation.date).locale('zh-tw').format('MMMDo[(]dddd[)]'),
           time: reservation.time.slice(0, 5),
@@ -86,25 +88,28 @@ const reservationController = {
         }
 
         const emailInfo = `
-          <body>
-            <div style="margin-left:auto;margin-right:auto;background-color:#F8F9FA;padding:10px">
-              <div style="width:60%;margin-left:auto;margin-right:auto;background-color:#FFFFFF;padding:20px 30px;border-radius:5px;text-align: center;">
-                <h3 style="margin-top:4px;font-weight:700;font-size:25px">${emailData.User_name}你好，<br>已為您安排 ${emailData.Restaurant_name} 訂位。</h3>
-                <div style="width:250px;border-color:#B5B5B5;padding:10px;margin-left:auto;margin-right: auto;">
-                <div style="border:1px #dddddd solid;padding:15px">
-                  <p style="font-weight:500;letter-spacing:4px;font-size:20px;margin-buttom:5px">${emailData.date}</p>
-                  <p style="font-weight:600;letter-spacing:5px;font-size:50px;margin-top:5px;margin:0px">${emailData.time}</p>
-                  <p style="font-weight:500;letter-spacing:7px;font-size:20px;">${emailData.partySize_adult}大${emailData.partySize_kids}小</p>
-                </div>
-                </div>
+        <body>
+          <div style="margin: auto; background-color:#F8F9FA;padding:10px">
+            <div style="width: 60%; min-width: 280px; margin: auto; background-color:#FFFFFF; padding: 15px; border-radius:5px;text-align: center;">
+              <div style="margin-top: 8px; font-size: 22px; font-weight: 700;">${emailData.User_name} 您好</div>
+              <div style="margin-top: 16px; font-size: 22px; font-weight: 700;">已為您安排</div>
+              <div style="margin-top: 16px; font-size: 36px; font-weight: 700;">${emailData.Restaurant_name}</div>
+              <div style="margin: 16px 0; font-size: 22px; font-weight: 700;">的訂位</div>
+              <div style="width: 60%; min-width: 250px; border-color:#B5B5B5;padding:12px; margin: auto;">
+              <div style="border:1px #dddddd solid;padding:15px">
+                <p style="font-weight:500;letter-spacing:4px;font-size:16px;margin-buttom:5px">${emailData.date}</p>
+                <p style="font-weight:600;letter-spacing:5px;font-size:50px;margin-top:5px;margin:0px">${emailData.time}</p>
+                <p style="font-weight:500;letter-spacing:7px;font-size:20px;">${emailData.partySize_adult + emailData.partySize_kids}位</p>
+              </div>
               </div>
             </div>
-          </body>
+          </div>
+        </body>
           `
 
-        let mailOptions = {
+        const mailOptions = {
           from: process.env.GMAIL_ACCOUNT,
-          to: '402070512@gapp.fju.edu.tw',
+          to: emailData.User_email,
           subject: `您在 ${reservation.Restaurant_name} 預定${moment(reservation.date).locale('zh-tw').format('MM[/]DD[(]dddd[)]')} ${reservation.time.slice(0, 5)} ${reservation.partySize_adult + reservation.partySize_kids}人。`,
           html: emailInfo,
           auth: {

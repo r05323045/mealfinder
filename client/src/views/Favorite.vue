@@ -11,20 +11,19 @@
           <div class="text">我收藏的餐廳</div>
         </div>
       </div>
-      <div class="filter-wrapper" :class="{ 'filter-on': filter.length > 1 }" @click="showModal = !showModal">
-        <div class="icon filter"></div>
-      </div>
     </div>
     <div class="list-container" ref="list-container">
       <div class="restaurant-list" ref="restaurant-list">
         <div class="title">我收藏的餐廳</div>
-        <div class="filter-button-wrapper">
-          <div class="filter-button" :class="{ 'filter-on': districtsFilter.length > 0 }" @click="showChangeModal = !showChangeModal">地區</div>
-          <div class="filter-button" :class="{ 'filter-on': categoriesFilter.length > 0 }" @click="showAddModal = !showAddModal">類型</div>
-          <div class="filter-button">預算</div>
+        <div class="sub-title">
+          <img class="sub-title-img" src="../assets/diet.svg">
+          MealFinder 收錄台北市數千家餐廳，探索你週邊的美食
         </div>
-        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0"></div>
-        <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper">
+        <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0" ref="restaurant-card-deck-wrapper">
+          <div class="no-result">沒有任何收藏的餐廳</div>
+          <div class="no-result-sub">使用 <a href="#/map">地圖模式</a> 或 <a href="#/restaurants">清單搜尋</a> 探索喜歡的餐廳</div>
+        </div>
+        <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper" ref="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">
             <div class="restaurant-card-deck" v-for="deckNum in Math.ceil(restaurants.slice((pageNum - 1) * 24, pageNum * 24).length/cardPerDeck)" :key="`deck-num-${deckNum}`">
               <div class="restaurant-card"
@@ -173,11 +172,18 @@ export default {
       }
     },
     async fetchFavorites (filter) {
+      const loader = this.$loading.show({
+        container: this.$refs['restaurant-card-deck-wrapper'],
+        opacity: 1,
+        isFullPage: false
+      })
       try {
         const { data } = await usersAPI.getFavorites(this.numOfPage + 1, filter)
         this.restaurants = [...this.restaurants, ...data.data]
         this.numOfPage += 1
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -368,48 +374,54 @@ $red: rgb(255, 56, 92);
         max-width: 1440px;
       }
       .title {
-        margin-bottom: 24px;
         font-size: 22px;
         font-weight: 700;
         text-align: left;
         line-height: 22px;
+        margin-bottom: 24px;
         @media (min-width: 768px) {
+          padding-top: 36px;
           font-size: 26px;
           line-height: 30px;
         }
         @media (min-width: 992px) {
+          padding-top: 50px;
           font-size: 32px;
           line-height: 36px;
         }
       }
-      .filter-button-wrapper {
-        display: none;
-        @media (min-width: 768px) {
-          display: flex;
-          flex-direction: row;
-          margin: 24px 0;
-        }
-        .filter-button {
-          cursor: pointer;
+      .sub-title {
+        display: flex;
+        align-items: center;
+        margin: 12px 0;
+        text-align: left;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+        .sub-title-img {
           margin-right: 16px;
-          border: 1px solid $divider;
-          font-size: 14px;
-          font-weight: 400;
-          padding: 8px 16px;
-          border-radius: 30px;
-          &:hover {
-            font-weight: 800;
-            border: 1px solid #000000;
-            transition: ease-in-out 0.3s;
-          }
-        }
-        .filter-button.filter-on {
-          font-weight: 800;
-          border: 1px solid #000000;
+          height: 40px;
+          width: 40px;
         }
       }
       .restaurant-card-deck-wrapper {
         min-height: 600px;
+        .no-result {
+          margin-top: 32px;
+          text-align: left;
+          font-size: 22px;
+          line-height: 26px;
+          font-weight: 600;
+        }
+        .no-result-sub {
+          text-align: left;
+          margin: 4 0 32px;
+          font-size: 16px;
+          line-height: 24px;
+          a {
+            color: #222222;
+          }
+        }
         .restaurant-card-deck {
           width: 100%;
           @media (min-width: 768px) {

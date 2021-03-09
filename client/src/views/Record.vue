@@ -100,6 +100,10 @@ export default {
   },
   methods: {
     async fetchOrder () {
+      const loader = this.$loading.show({
+        isFullPage: true,
+        opacity: 1
+      })
       try {
         const { data } = await cartsAPI.getOrder(this.$route.params.id)
         this.order = data.order
@@ -107,7 +111,9 @@ export default {
         const month = new Date(this.order.createdAt).getMonth()
         const day = new Date(this.order.createdAt).getDate()
         this.expireData = new Date(year + 1, month, day)
+        loader.hide()
       } catch (error) {
+        loader.hide()
         console.log(error)
         Toast.fire({
           icon: 'error',

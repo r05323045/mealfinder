@@ -8,7 +8,7 @@ const cors = require('cors')
 const path = require('path')
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -40,16 +40,22 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin: [
-    'http://localhost:8080'
+    'http://localhost:8080',
+    'https://mealfinder2021.herokuapp.com'
   ],
   credentials: true,
   exposedHeaders: ['set-cookie']
 }))
 
+require('./routes')(app)
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/public/')))
+  app.get(/.*/, (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')))
+}
+
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`)
 })
-
-require('./routes')(app)
 
 module.exports = app
