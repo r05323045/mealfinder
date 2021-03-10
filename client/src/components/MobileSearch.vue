@@ -344,6 +344,8 @@ $divider: #E6ECF0;
   align-items: flex-start;
   transform: translateY(100%);
   .modal-background {
+    z-index: 998;
+    overflow: hidden;
     position: absolute;
     top: 0;
     width: 100%;
@@ -352,7 +354,7 @@ $divider: #E6ECF0;
     opacity: 0.5;
   }
   .modal-content {
-    overflow: hidden;
+    z-index: 999;
     height: 100%;
     transform: translateY(100%);
     .top-wrapper {
@@ -428,7 +430,7 @@ $divider: #E6ECF0;
         background: $divider;
       }
       .selector-wrapper {
-        position: relative;
+        padding-bottom: 90px;
         @media (min-width: 1200px) {
           max-height: 300px;
           height: 300px;

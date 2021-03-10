@@ -344,14 +344,12 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .reservation-page {
-  height: 100vh;
   overflow: scroll;
   .reservation-container {
     margin: auto;
     max-width: 1040px;
     padding: 36px 24px 60px 24px;
     text-align: left;
-    position: relative;
     @media (min-width: 768px) {
       margin-top: 81px;
       padding: 36px 40px 60px;

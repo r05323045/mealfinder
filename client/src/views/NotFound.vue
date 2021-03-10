@@ -37,7 +37,6 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .not-found {
-  height: 100vh;
   overflow: scroll;
   .main-title {
     margin: auto;

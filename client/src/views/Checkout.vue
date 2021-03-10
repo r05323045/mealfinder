@@ -216,7 +216,6 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .checkout-page {
-  height: 100vh;
   overflow: scroll;
   .checkout-container {
     padding: 36px 24px 60px 24px;

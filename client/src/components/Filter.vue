@@ -493,7 +493,7 @@ $divider: #E6ECF0;
         }
       }
       .price {
-        padding: 8px 0 24px 0;
+        padding: 8px 0 105px 0;
         .title {
           text-align: left;
           line-height: 22px;

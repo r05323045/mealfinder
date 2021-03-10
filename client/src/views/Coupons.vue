@@ -144,6 +144,13 @@ export default {
       this.coupons = []
       this.numOfPage = 0
       this.fetchCoupons(this.filter)
+    },
+    showModal () {
+      if (this.showModal) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = 'auto'
+      }
     }
   },
   computed: {

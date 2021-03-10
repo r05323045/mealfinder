@@ -397,7 +397,6 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .profile-page {
-  height: 100vh;
   overflow-y: scroll;
   overflow-x: hidden;
   .page-container {

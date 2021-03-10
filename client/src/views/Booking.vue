@@ -269,7 +269,6 @@ $primary-color: #222;
 $darkred: #c13515;
 @import '~vue2-datepicker/scss/index.scss';
 .booking {
-  height: 100%;
   overflow: scroll;
   width: 100%;
   .booking-searchbar-wrapper {

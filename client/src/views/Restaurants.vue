@@ -184,6 +184,13 @@ export default {
   watch: {
     windowWidth () {
       this.defineCardDeck()
+    },
+    showModal () {
+      if (this.showModal) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = 'auto'
+      }
     }
   },
   computed: {

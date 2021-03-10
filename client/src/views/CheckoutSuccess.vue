@@ -114,7 +114,6 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .checkout-page {
-  height: 100vh;
   overflow: scroll;
   .checkout-result {
     margin: auto;

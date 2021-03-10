@@ -83,7 +83,6 @@ $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .about {
-  height: 100%;
   overflow: scroll;
   width: 100%;
   .about-searchbar-wrapper {

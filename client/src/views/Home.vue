@@ -1,7 +1,7 @@
 <template>
   <div class="home" ref="home">
     <Navbar v-show="scrollY > 58"></Navbar>
-    <div class="page-container">
+    <div class="page-container" ref="page-container">
       <div class="banner">
         <div v-if="windowWidth < 768" class="searchbar-wrapper-outside" :class="{ toFront: scrollY > 50 && scrollUp }">
           <div class="searchbar" @click="showModal = !showModal">
@@ -305,6 +305,19 @@ export default {
   beforeDestroy () {
     window.removeEventListener('resize', this.onResize)
   },
+  watch: {
+    showModal () {
+      if (this.showModal) {
+        this.$refs['page-container'].style.overflow = 'hidden'
+        this.$refs.home.style.overflow = 'hidden'
+        document.body.style.overflow = 'hidden'
+      } else {
+        this.$refs['page-container'].style.overflow = 'auto'
+        this.$refs.home.style.overflow = 'scroll'
+        document.body.style.overflow = 'auto'
+      }
+    }
+  },
   methods: {
     onScroll (e) {
       this.scrollUp = this.scrollY > window.scrollY
@@ -329,7 +342,9 @@ $red: rgb(255, 56, 92);
   height: auto;
   overflow-y: scroll;
   overflow-x: hidden;
+  overflow: hidden;
   .page-container {
+    overflow: hidden;
     .searchbar-wrapper-outside {
       z-index: -999;
       width: calc(100% - 48px);

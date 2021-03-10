@@ -1,5 +1,5 @@
 <template>
-  <div class="map-page" ref="map-page">
+  <div class="map-page" ref="map-page" :style="`overflow: ${windowWidth >= 992 ? 'scroll' : 'hidden'}`">
     <Navbar class="restaurant-navbar"></Navbar>
     <div class="map-searchbar-wrapper">
       <div class="searchbar">
@@ -21,8 +21,8 @@
         <div class="icon filter"></div>
       </div>
     </div>
-    <div class="map-container">
-      <div class="map-wrapper">
+    <div class="map-container" :style="`overflow: ${windowWidth >= 992 ? 'scroll' : 'hidden'}`">
+      <div class="map-wrapper" :style="`overflow: ${windowWidth >= 992 ? 'scroll' : 'hidden'}`">
         <div class="restaurants-list" ref="restaurants-list" :class="{ leaveTop: this.scrollY > 0}">
           <div class="title">
             <div class="result-count">{{ resultCount > 1000 ? '超過1,000' : resultCount }}間餐廳</div>
@@ -81,15 +81,16 @@
             <div class="load-more-button" v-if="!noMoreData && restaurants.length > 0 && restaurants.length % 24 === 0" @click="fetchNearByRestaurants(hasPage=true)">搜尋更多</div>
           </div>
         </div>
-        <div class="google-map" id="map" ref="google-map">
+        <div class="google-map" id="map" ref="google-map" :style="`overflow: ${windowWidth >= 992 ? 'scroll' : 'hidden'}`">
           <div class="fix-button" @click="fetchNearByRestaurants()" v-if="!infoWindow.open">
             <div class="button-text">在此範圍搜尋</div>
           </div>
           <GmapMap
+            disableDefaultUI="true"
             :center="mapCenter"
             :zoom="13"
             map-type-id="terrain"
-            style="width: 100%; height: 100%; display: block"
+            style="width: 100%; height: 100%; display: block; overflow: hidden"
             ref="gmap"
             @click="closeInfoWindow($event)"
             :options="options"
@@ -148,7 +149,7 @@
           </GmapMap>
         </div>
       </div>
-      <div ref="footer">
+      <div ref="footer" v-show="windowWidth >= 992">
         <Footer></Footer>
       </div>
     </div>
@@ -427,15 +428,14 @@ $primary-color: #222;
 $darkred: #c13515;
 @import '~vue2-datepicker/scss/index.scss';
 .map-page {
-  height: 100vh;
+  height: calc(100% - 55px);
+    @media (min-width: 992px) {
+      height: 100%;
+    }
   .map-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
-    z-index: 998;
-    background: none;
-    position: fixed;
     height: 60px;
     width: 100%;
-    top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -547,20 +547,16 @@ $darkred: #c13515;
   }
   .map-container {
     z-index: 1;
-    height: 100%;
-    width: 100%;
-    scroll-behavior: smooth;
-    position: absolute;
-    top: 60px;
-    @media (min-width: 768px) {
-      top: 0px;
+    height: calc(100% - 55px);
+    @media (min-width: 992px) {
+      height: 100%;
     }
     .map-wrapper {
-      min-height: calc(100vh - 114px);
-      height: calc(100vh - 80px);
+      height: 100%;
       margin: auto;
       display: flex;
       @media (min-width: 768px) {
+        height: calc(100vh - 80px);
         padding-top: 80px;
       }
       .restaurants-list {
@@ -864,11 +860,10 @@ $darkred: #c13515;
       }
       .google-map {
         flex: 1;
-        height: calc(100vh - 114px);
+        height: 100%;
         position: relative;
+        overflow: hidden;
         @media (min-width: 992px) {
-          height: calc(100vh - 80px);
-          height: 100%;
           flex: 0.5;
         }
         @media (min-width: 1441px) {
@@ -941,6 +936,9 @@ $darkred: #c13515;
             }
           }
 
+        }
+        .gm-style {
+          overflow: hidden;
         }
         .gmnoprint,
         .gm-fullscreen-control {

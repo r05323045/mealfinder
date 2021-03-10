@@ -146,7 +146,6 @@ $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .booking-success {
-  height: 100%;
   overflow: scroll;
   width: 100%;
   .booking-success-searchbar-wrapper {
