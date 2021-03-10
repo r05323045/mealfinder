@@ -344,7 +344,6 @@ $red: rgb(255, 56, 92);
   overflow-x: hidden;
   overflow: hidden;
   .page-container {
-    overflow: hidden;
     .searchbar-wrapper-outside {
       z-index: -999;
       width: calc(100% - 48px);

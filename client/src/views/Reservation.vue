@@ -11,7 +11,7 @@
                 <img class="icon restaurant" src="../assets/restaurant.svg">
                 <div class="title">餐廳名稱</div>
               </div>
-              <div class="content">{{ reservation.Restaurant_name }}</div>
+              <div class="content restaurant-name" @click.prevent="$router.push(`/restaurants/${reservation.RestaurantId}`)">{{ reservation.Restaurant_name }}</div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
@@ -432,6 +432,12 @@ $darkred: #c13515;
                 right: 0;
                 color: #ffffff;
                 background: #000000;
+              }
+            }
+            .content.restaurant-name {
+              cursor: pointer;
+              &:hover {
+                text-decoration: underline;
               }
             }
           }

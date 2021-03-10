@@ -241,7 +241,7 @@
             <div class="comment-container-deck" v-for="deckNum in Math.ceil(restaurant.CommentsCount/2)" :key="`comment-deck-${deckNum}`">
               <div class="comment-container"  v-for="(item, idx) in restaurant.Comments.slice((deckNum - 1) * 2, deckNum * 2)" :key="`comment-${idx}`" :class="{ 'last-comment-container': idx === 2 }">
                 <div class="comment-user">
-                  <div class="avatar"></div>
+                  <div class="avatar" :style="`background: url(${item.avatar}) no-repeat center / cover`"></div>
                   <div class="name-wrapper">
                     <div class="name">{{ item.name }}</div>
                     <div class="time">{{ item.createdAt| fromNow }}</div>
@@ -382,6 +382,7 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
         this.restaurant = data
+        console.log(this.restaurant)
         this.restaurant.business_hours = JSON.parse(this.restaurant.business_hours)
         this.restaurant.business_hours.forEach((b, idx) => {
           if (b.split(' ')[1] === '24小時營業') {
@@ -1359,12 +1360,12 @@ $primary-color: #222;
             padding: 0px;
             flex: 1;
             margin-bottom: 40px;
+            padding: 16px;
+            border: 1px solid $divider;
+            border-radius: 32px;
             @media (min-width: 768px) {
               flex: 0.5;
-              padding: 16px;
               margin-right: 16px;
-              border: 1px solid $divider;
-              border-radius: 32px;
             }
 
             @media (min-width: 992px) {
@@ -1416,7 +1417,7 @@ $primary-color: #222;
                 background-color: #222222;
                 height: 14px;
                 width: 14px;
-                mask: url(../assets/black-heart.svg) no-repeat center;
+                mask: url(../assets/empty-heart.svg) no-repeat center;
               }
               .icon.like.isAuthenticated {
                 cursor: pointer;
@@ -1427,9 +1428,9 @@ $primary-color: #222;
               .icon.like.isAuthenticated.isLiked {
                 cursor: pointer;
                 background-color: $red;
-                mask: url(../assets/isLiked.svg) no-repeat center;
+                mask: url(../assets/red-heart.svg) no-repeat center;
                 &:hover {
-                  mask: url(../assets/black-heart.svg) no-repeat center;
+                  mask: url(../assets/empty-heart.svg) no-repeat center;
                 }
               }
               .count {
