@@ -2,7 +2,7 @@
   <div class="navbar" :class="{ openSearch: openSearch }">
     <div class="navbar-mobile">
       <div class="item-wrapper" :class="{ signIn: isAuthenticated }">
-        <div class="nav-item" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' || $route.path.includes('/restaurants') || $route.path.includes('/map')}">
+        <div class="nav-item" @click="$router.push('/map').catch(()=>{})" :class="{ active: $route.path.includes('/restaurants') || $route.path.includes('/map')}">
           <div class="wrapper">
             <div class="icon search"></div>
             <div class="text">探索</div>
@@ -12,6 +12,12 @@
           <div class="wrapper">
             <div class="icon gift"></div>
             <div class="text">優惠</div>
+          </div>
+        </div>
+        <div class="nav-item" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' }">
+          <div class="wrapper">
+            <div class="icon home-icon"></div>
+            <div class="text">首頁</div>
           </div>
         </div>
         <div class="nav-item" v-if="isAuthenticated" @click="$router.push('/users/history').catch(()=>{})" :class="{ active: $route.path.includes('/history') }">
@@ -311,6 +317,9 @@ $red: rgb(255, 56, 92);
           }
           .icon.noti {
             mask: url(../assets/notification.svg) no-repeat center;
+          }
+          .icon.home-icon {
+            mask: url(../assets/home.svg) no-repeat center;
           }
           .icon-restaurant {
             margin: 0 auto;
