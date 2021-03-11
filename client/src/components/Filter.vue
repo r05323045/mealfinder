@@ -37,7 +37,7 @@
               </label>
             </div>
           </div>
-          <div class="category">
+          <div class="category" :style="`padding-bottom: ${$route.path === '/coupons' ? '80px' : '0px'}`">
             <div class="title">餐廳類型</div>
             <div class="item-group">
               <label class="item" v-for="(item, idx) in categories" :key="`category-${idx}`">
