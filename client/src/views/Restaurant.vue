@@ -382,7 +382,6 @@ export default {
       try {
         const { data } = this.isAuthenticated ? await restaurantsAPI.getUsersRestaurant(id) : await restaurantsAPI.getRestaurant(id)
         this.restaurant = data
-        console.log(this.restaurant)
         this.restaurant.business_hours = JSON.parse(this.restaurant.business_hours)
         this.restaurant.business_hours.forEach((b, idx) => {
           if (b.split(' ')[1] === '24小時營業') {
