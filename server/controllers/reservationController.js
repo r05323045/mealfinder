@@ -36,9 +36,8 @@ const reservationController = {
     })
   },
   addReservation: (req, res) => {
-    console.log(new Date(req.body.date).toLocaleString())
     Reservation.create({
-      date: req.body.date,
+      date: new Date(req.body.date).toLocaleString(),
       time: req.body.time,
       partySize_adult: req.body.partySize_adult,
       partySize_kids: req.body.partySize_kids,
