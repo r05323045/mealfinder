@@ -28,7 +28,7 @@ temp/
 upload/
 
 # built files
-# public/
+public/
 deploy.sh
 
 # real data
