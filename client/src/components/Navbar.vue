@@ -2,7 +2,7 @@
   <div class="navbar" :class="{ openSearch: openSearch }">
     <div class="navbar-mobile">
       <div class="item-wrapper" :class="{ signIn: isAuthenticated }">
-        <div class="nav-item" @click="$router.push('/map').catch(()=>{})" :class="{ active: $route.path.includes('/restaurants') || $route.path.includes('/map')}">
+        <div class="nav-item" @click="$router.push('/map').catch(()=>{})" :class="{ active: ($route.path === '/' && !isAuthenticated) || $route.path.includes('/restaurants') || $route.path.includes('/map')}">
           <div class="wrapper">
             <div class="icon search"></div>
             <div class="text">探索</div>
