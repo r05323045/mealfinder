@@ -14,7 +14,7 @@
             <div class="text">優惠</div>
           </div>
         </div>
-        <div class="nav-item" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' }">
+        <div class="nav-item" v-if="isAuthenticated" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' }">
           <div class="wrapper">
             <div class="icon home-icon"></div>
             <div class="text">首頁</div>
@@ -286,7 +286,7 @@ $red: rgb(255, 56, 92);
     }
     .item-wrapper {
       margin: 0 auto;
-      width: 300px;
+      width: 225px;
       height: 100%;
       display: flex;
       flex-direction: row;
