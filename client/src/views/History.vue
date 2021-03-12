@@ -69,8 +69,16 @@ export default {
       try {
         const { data } = await reservationsAPI.getReservations()
         this.reservations = data.reservations
-        this.futureReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) > Date.now())
-        this.pastReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) <= Date.now())
+        this.futureReservation = this.reservations.filter(r => {
+          const date = new Date(r.date)
+          date.setHours(date.getHours() + 8)
+          return date > Date.now()
+        })
+        this.pastReservation = this.reservations.filter(r => {
+          const date = new Date(r.date)
+          date.setHours(date.getHours() + 8)
+          return date <= Date.now()
+        })
         loader.hide()
       } catch (error) {
         loader.hide()
