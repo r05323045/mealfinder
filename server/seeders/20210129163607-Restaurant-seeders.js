@@ -1,5 +1,5 @@
 'use strict'
-const data = require('../test-restaurant-data.json')
+const data = require('../data/simple-restaurant-data.json')
 const faker = require('faker')
 
 module.exports = {

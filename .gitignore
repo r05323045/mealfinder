@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 
-
 # local env files
 .env
 .env.local
@@ -24,8 +23,14 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-
+# temp upload files
 temp/
 upload/
 
+# built files
+public/
+deploy.sh
+
+# real data
+restaurant-data.json
 
