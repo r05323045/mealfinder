@@ -22,7 +22,7 @@
         </div>
         <div class="nav-item" v-if="isAuthenticated" @click="$router.push('/users/history').catch(()=>{})" :class="{ active: $route.path.includes('/history') }">
           <div class="wrapper">
-            <div class="icon-restaurant"></div>
+            <div class="icon icon-restaurant"></div>
             <div class="text">訂位</div>
           </div>
         </div>
@@ -286,7 +286,7 @@ $red: rgb(255, 56, 92);
     }
     .item-wrapper {
       margin: 0 auto;
-      width: 225px;
+      width: 300px;
       height: 100%;
       display: flex;
       flex-direction: row;

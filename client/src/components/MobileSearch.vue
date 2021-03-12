@@ -459,7 +459,6 @@ $divider: #E6ECF0;
               margin-right: 24px;
               height: 36px;
               width: 36px;
-              background: url(../assets/fast-food.svg) no-repeat center / cover;
             }
             .item-icon.near.district {
               background: url(../assets/city-night.svg) no-repeat center / cover;
