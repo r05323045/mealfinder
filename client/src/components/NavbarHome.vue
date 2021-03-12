@@ -94,7 +94,7 @@
             <div class="search-input search-input-element">
               <div class="title search-input-element">預算</div>
               <div class="text search-input-element" v-if="selectPrice.length !== 2">價格不限</div>
-              <div class="text search-input-element" v-if="selectPrice.length === 2">{{ selectPrice[0] | priceFormat }} - {{ selectPrice[1] === 9999 ? 1500 : selectPrice[1] | priceFormat }}<span v-if="selectPrice[1] === 9999"> +</span></div>
+              <div class="text search-input-element" v-if="selectPrice.length === 2">{{ selectPrice[0] | priceFormat }} - {{ selectPrice[1] === 9999 ? maxPrice : selectPrice[1] | priceFormat }}<span v-if="selectPrice[1] === 9999"> +</span></div>
             </div>
             <SelectPrices
               :showSelector="showSelectorPrice"
@@ -130,6 +130,7 @@ export default {
       showSelectorCategory: false,
       showSelectorPrice: false,
       selectPrice: [],
+      maxPrice: 9999,
       selectCategory: '',
       selectDistrict: ''
     }
@@ -202,8 +203,9 @@ export default {
       this.selectDistrict = district
       this.showSelectorDistrict = false
     },
-    getPrice (price) {
-      this.selectPrice = price
+    getPrice (data) {
+      this.selectPrice = data.price
+      this.maxPrice = data.max
       this.showSelectorPrice = false
     },
     startSearching () {

@@ -1,12 +1,13 @@
 <template>
-  <div class="selector-container" v-show="showSelector">
-    <div class="selector-wrapper">
-      <div class="selector">
-        <div class="price">
-          <div class="title">平均價格為 {{ averagePrice | priceFormat }} / 人</div>
-          <canvas class="chart-canvas" ref="myChart"></canvas>
-          <div class="slider-bar-container" ref="slider">
+  <div class="selector-container search-input-element" v-show="showSelector">
+    <div class="selector-wrapper search-input-element">
+      <div class="selector search-input-element">
+        <div class="price search-input-element">
+          <div class="title search-input-element">平均價格為 {{ averagePrice | priceFormat }} / 人</div>
+          <canvas class="chart-canvas search-input-element" ref="myChart"></canvas>
+          <div class="slider-bar-container search-input-element" ref="slider">
               <vue-slider
+              class="search-input-element"
               v-model="sliderValue"
               :interval="intervalNum"
               :process="false"
@@ -16,35 +17,35 @@
             >
             </vue-slider>
           </div>
-          <div class="slider-input-container">
-            <div class="input-wrapper">
-              <div class="input-content">
-                <div class="input-title">最低價格</div>
-                <div class="input-text-wrapper">
-                  <div class="money-symbol">$</div>
-                  <input class="input-text" v-model="sliderValue[0]">
+          <div class="slider-input-container search-input-element">
+            <div class="input-wrapper search-input-element">
+              <div class="input-content search-input-element">
+                <div class="input-title search-input-element">最低價格</div>
+                <div class="input-text-wrapper search-input-element">
+                  <div class="money-symbol search-input-element">$</div>
+                  <input class="input-text search-input-element" v-model="sliderValue[0]">
                 </div>
               </div>
             </div>
-            <div class="input-divider-wrapper">
-              <div class="input-divider"></div>
+            <div class="input-divider-wrapper search-input-element">
+              <div class="input-divider search-input-element"></div>
             </div>
-            <div class="input-wrapper">
-              <div class="input-content">
-                <div class="input-title">最高價格</div>
-                <div class="input-text-wrapper">
-                  <div class="money-symbol">$</div>
-                  <input class="input-text" v-model="sliderValue[1]">
-                  <div class="plus-symbol" v-if="sliderValue[1] === sliderMax">+</div>
+            <div class="input-wrapper search-input-element">
+              <div class="input-content search-input-element">
+                <div class="input-title search-input-element">最高價格</div>
+                <div class="input-text-wrapper search-input-element">
+                  <div class="money-symbol search-input-element">$</div>
+                  <input class="input-text search-input-element" v-model="sliderValue[1]">
+                  <div class="plus-symbol search-input-element" v-if="sliderValue[1] === sliderMax">+</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="button-wrapper">
-        <div class="clear-button inside-button" @click.stop="sliderValue = [sliderMin, sliderMax]">清除</div>
-        <div class="filter-button inside-button" @click.stop="completeSelect">完成</div>
+      <div class="button-wrapper search-input-element">
+        <div class="clear-button inside-button search-input-element" @click.stop="sliderValue = [sliderMin, sliderMax]">清除</div>
+        <div class="filter-button inside-button search-input-element" @click.stop="completeSelect">完成</div>
       </div>
     </div>
   </div>
@@ -198,7 +199,10 @@ export default {
       if (returnValue[0] === this.sliderMin && returnValue[1] === 9999) {
         returnValue = []
       }
-      this.$emit('selectPrice', returnValue)
+      this.$emit('selectPrice', {
+        price: returnValue,
+        max: this.sliderMax
+      })
     }
   }
 }
