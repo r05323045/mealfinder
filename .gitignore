@@ -28,6 +28,7 @@ temp/
 upload/
 
 # built files
+dist/
 public/
 deploy.sh
 
