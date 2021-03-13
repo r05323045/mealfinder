@@ -29,7 +29,7 @@ upload/
 
 # built files
 dist/
-#public/
+public/
 deploy.sh
 
 # real data
