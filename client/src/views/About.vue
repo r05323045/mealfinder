@@ -23,7 +23,7 @@
             <div class="logo">
               <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
             </div>
-            <div class="slogan">Eazy to find the meal you want</div>
+            <div class="slogan">Easy to find the meal you want</div>
           </div>
           <div class="food-image-wrapper image-down">
             <img class="food-image" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1267&q=80)">
