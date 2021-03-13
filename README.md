@@ -1,7 +1,7 @@
 # MealFinder
 
 <div align="center">
-  <img width="80%" align="center" src="https://imgur.com/Xf3HjgU.png">
+  <img width="80%" align="center" src="https://i.imgur.com/XSoj2g0.png">
 </div>
 
 <br>
