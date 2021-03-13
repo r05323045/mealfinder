@@ -19,7 +19,7 @@
 - [RESTful APIs](#RESTful-APIs)
 - [Run the server locally](#Run-the-server-locally)
 - [Run the app locally](#Run-the-app-locally)
-- [Upcoming features](#upcoming-features)
+- [Upcoming features](#Upcoming-features)
 - [Team members](#Team-Members)
 ## User Interface
 
@@ -310,7 +310,7 @@ npm run build
 > In this step, you have to check your vue.config.js file and finish [production deployment](https://vuejs.org/v2/guide/deployment.html) setting first
 * * *
 
-## Upcoming feature
+## Upcoming features
 - The platform for restaurant owners using, help them to manage the booking status
 - Crypt and transform the reservation result into QRcode, so that restaurant owners can scan it for verifying reservation, and also, MealFinder can handle the no-show situation
 - The electric coupons that can be saved in the member's account
