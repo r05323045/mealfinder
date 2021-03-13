@@ -1,5 +1,5 @@
 'use strict'
-const data = require('../category-data.json')
+const data = require('../data/category-data.json')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

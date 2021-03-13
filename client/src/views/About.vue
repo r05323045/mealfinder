@@ -16,13 +16,16 @@
       <div class="content-container">
         <div class="about-content-title">關於 Meal Finder</div>
         <div class="logo-container">
+          <div class="food-image-wrapper image-up">
+            <img class="food-image" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1267&q=80)">
+          </div>
           <div class="logo-wrapper">
             <div class="logo">
               <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
             </div>
             <div class="slogan">Eazy to find the meal you want</div>
           </div>
-          <div class="food-image-wrapper">
+          <div class="food-image-wrapper image-down">
             <img class="food-image" src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1267&q=80)">
           </div>
         </div>
@@ -80,9 +83,7 @@ $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .about {
-  height: 100%;
   overflow: scroll;
-  position: relative;
   width: 100%;
   .about-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
@@ -145,17 +146,15 @@ $primary-color: #222;
       }
     }
   }
-
   .about-content {
     padding: 0px 24px 22px 24px;
     margin: 60px auto 0;
     max-width: 1040px;
     @media (min-width: 768px) {
-      margin-top: 0px;
+      margin-top: 81px;
       padding: 0px 40px 35px 40px;
     }
     @media (min-width: 992px) {
-      margin-top: 0px;
       padding: 48px 80px;
     }
     .content-container {
@@ -187,7 +186,6 @@ $primary-color: #222;
         .food-image-wrapper {
           flex: 1;
           height: 100%;
-          display: none;
           @media (min-width: 768px) {
             margin-left: 24px;
             display: block;
@@ -198,15 +196,28 @@ $primary-color: #222;
             object-fit: cover;
           }
         }
+        .food-image-wrapper.image-down {
+          display: none;
+          @media (min-width: 768px) {
+            display: block;
+          }
+        }
+        .food-image-wrapper.image-up {
+          @media (min-width: 768px) {
+            display: none;
+          }
+        }
         .logo-wrapper {
           height: 100%;
-          width: 100%;
           flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          align-items: flex-start;
+          align-items: center;
           margin: 48px 0;
+          @media (min-width: 768px) {
+            align-items: flex-start;
+          }
           .logo {
             cursor: default;
             display: inline-block;

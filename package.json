@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/app.js",
-    "dev": "nodemon server/app.js",
+    "start": "node --icu-data-dir=node_modules/full-icu server/app.js",
+    "dev": "nodemon --icu-data-dir=node_modules/full-icu server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "express-session": "^1.17.1",
     "faker": "^5.3.1",
     "fs": "0.0.1-security",
+    "full-icu": "^1.3.1",
     "googleapis": "^39.2.0",
     "handlebars": "^4.7.7",
     "imgur-node-api": "^0.1.0",

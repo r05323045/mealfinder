@@ -121,7 +121,6 @@ $red: rgb(255, 56, 92);
           margin-right: 24px;
           height: 36px;
           width: 36px;
-          background: url(../assets/city-day.svg) no-repeat center / cover;
         }
         .item-icon.near{
           background: url(../assets/city-night.svg) no-repeat center / cover;

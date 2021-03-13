@@ -11,7 +11,7 @@
                 <img class="icon restaurant" src="../assets/restaurant.svg">
                 <div class="title">餐廳名稱</div>
               </div>
-              <div class="content">{{ reservation.Restaurant_name }}</div>
+              <div class="content restaurant-name" @click.prevent="$router.push(`/restaurants/${reservation.RestaurantId}`)">{{ reservation.Restaurant_name }}</div>
             </div>
             <div class="item-wrapper">
               <div class="top-wrapper">
@@ -344,15 +344,14 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .reservation-page {
-  height: 100vh;
   overflow: scroll;
   .reservation-container {
     margin: auto;
     max-width: 1040px;
     padding: 36px 24px 60px 24px;
     text-align: left;
-    position: relative;
     @media (min-width: 768px) {
+      margin-top: 81px;
       padding: 36px 40px 60px;
     }
     @media (min-width: 992px) {
@@ -433,6 +432,12 @@ $darkred: #c13515;
                 right: 0;
                 color: #ffffff;
                 background: #000000;
+              }
+            }
+            .content.restaurant-name {
+              cursor: pointer;
+              &:hover {
+                text-decoration: underline;
               }
             }
           }

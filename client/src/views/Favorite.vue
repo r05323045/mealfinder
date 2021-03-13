@@ -258,12 +258,12 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .restaurants {
   width: 100%;
-  position: relative;
+  height: 100vh;
   .searchbar-wrapper-mobile {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
     background: none;
-    position: sticky;
+    display: flex;
     height: 60px;
     width: 100%;
     top: 0;
@@ -357,7 +357,6 @@ $red: rgb(255, 56, 92);
     top: 60px;
     width: 100%;
     height: calc(100vh - 60px);
-    overflow: scroll;
     @media (min-width: 768px) {
       top: 81px;
       height: calc(100vh - 81px);

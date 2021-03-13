@@ -1,7 +1,7 @@
 <template>
   <div ref="restaurant" class="restaurant">
-    <Navbar class="restaurant-navbar" v-show="scrollUp"></Navbar>
-    <div class="restaurant-searchbar-wrapper">
+    <Navbar class="restaurant-navbar"></Navbar>
+    <div class="restaurant-searchbar-wrapper" v-show="scrollY < 60 || scrollUp">
       <div class="back-wrapper" @click="$router.go(-1)">
         <div class="icon back"></div>
       </div>
@@ -241,7 +241,7 @@
             <div class="comment-container-deck" v-for="deckNum in Math.ceil(restaurant.CommentsCount/2)" :key="`comment-deck-${deckNum}`">
               <div class="comment-container"  v-for="(item, idx) in restaurant.Comments.slice((deckNum - 1) * 2, deckNum * 2)" :key="`comment-${idx}`" :class="{ 'last-comment-container': idx === 2 }">
                 <div class="comment-user">
-                  <div class="avatar"></div>
+                  <div class="avatar" :style="`background: url(${item.avatar}) no-repeat center / cover`"></div>
                   <div class="name-wrapper">
                     <div class="name">{{ item.name }}</div>
                     <div class="time">{{ item.createdAt| fromNow }}</div>
@@ -264,7 +264,7 @@
         <Footer></Footer>
       </div>
     </div>
-    <div class="booking-button-wrapper" v-show="restaurantInfoHeight >  scrollY + footerHeight">
+    <div class="booking-button-wrapper" v-show="!scrollUp">
       <div class="booking-info-wrapper">
         <div class="booking-info">{{ pickDate | pickDateFormat }}</div>
         <div class="booking-info">
@@ -302,8 +302,6 @@ export default {
       showModal: false,
       scrollY: 0,
       scrollUp: true,
-      restaurantInfoHeight: 1,
-      footerHeight: 0,
       today: `${moment().format('M/DD')} ${moment().format('ddd')} (今日)`,
       chooseDate: false,
       pickDate: Date.now(),
@@ -338,11 +336,8 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.$refs.restaurant.addEventListener('scroll', this.onScroll, { passive: true })
+      window.addEventListener('scroll', this.onScroll, { passive: true })
     })
-    this.footerHeight = this.$refs.footer.offsetHeight
-    this.restaurantInfoHeight = this.$refs.restaurant.scrollHeight
-    this.scrollBarHeight = this.$refs.restaurant.clientHeight
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated']),
@@ -360,8 +355,8 @@ export default {
   },
   methods: {
     onScroll (e) {
-      this.scrollUp = this.scrollY > this.$refs.restaurant.scrollTop
-      this.scrollY = this.$refs.restaurant.scrollTop
+      this.scrollUp = this.scrollY > window.scrollY
+      this.scrollY = window.scrollY
     },
     closeFilter () {
       this.showModal = false
@@ -374,8 +369,8 @@ export default {
     },
     scrollToMap () {
       this.$refs['information-wrapper'].scrollIntoView({
-        behavior: 'auto',
-        block: 'center',
+        behavior: 'smooth',
+        block: 'start',
         inline: 'center'
       })
     },
@@ -630,15 +625,7 @@ $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .restaurant {
   overflow: scroll;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  .restaurant-navbar {
-    display: none;
-    @media (min-width: 768px) {
-      display: block;
-    }
-  }
+  height: 100vh;
   .restaurant-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -1372,12 +1359,12 @@ $primary-color: #222;
             padding: 0px;
             flex: 1;
             margin-bottom: 40px;
+            padding: 16px;
+            border: 1px solid $divider;
+            border-radius: 32px;
             @media (min-width: 768px) {
               flex: 0.5;
-              padding: 16px;
               margin-right: 16px;
-              border: 1px solid $divider;
-              border-radius: 32px;
             }
 
             @media (min-width: 992px) {
@@ -1429,7 +1416,7 @@ $primary-color: #222;
                 background-color: #222222;
                 height: 14px;
                 width: 14px;
-                mask: url(../assets/black-heart.svg) no-repeat center;
+                mask: url(../assets/empty-heart.svg) no-repeat center;
               }
               .icon.like.isAuthenticated {
                 cursor: pointer;
@@ -1440,9 +1427,9 @@ $primary-color: #222;
               .icon.like.isAuthenticated.isLiked {
                 cursor: pointer;
                 background-color: $red;
-                mask: url(../assets/isLiked.svg) no-repeat center;
+                mask: url(../assets/red-heart.svg) no-repeat center;
                 &:hover {
-                  mask: url(../assets/black-heart.svg) no-repeat center;
+                  mask: url(../assets/empty-heart.svg) no-repeat center;
                 }
               }
               .count {
@@ -1477,6 +1464,7 @@ $primary-color: #222;
     }
   }
   .booking-button-wrapper {
+    z-index: 1000;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
     border-top: 1px solid $divider;
     position: fixed;

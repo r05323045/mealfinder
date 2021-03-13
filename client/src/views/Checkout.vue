@@ -178,9 +178,8 @@ export default {
     },
     async postTradeInfo () {
       const loader = this.$loading.show({
-        container: this.$refs['contact-card'],
         opacity: 1,
-        isFullPage: false
+        isFullPage: true
       })
       try {
         const orderData = {
@@ -217,7 +216,6 @@ $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 $darkred: #c13515;
 .checkout-page {
-  height: 100vh;
   overflow: scroll;
   .checkout-container {
     padding: 36px 24px 60px 24px;
@@ -226,6 +224,7 @@ $darkred: #c13515;
     margin: auto;
     max-width: 1040px;
     @media (min-width: 768px) {
+      margin-top: 81px;
       padding: 36px 40px 60px;
     }
     @media (min-width: 992px) {

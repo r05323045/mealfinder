@@ -63,15 +63,22 @@ export default {
   methods: {
     async fetchReservations () {
       const loader = this.$loading.show({
-        container: this.$refs['reservation-container'],
         opacity: 1,
-        isFullPage: false
+        isFullPage: true
       })
       try {
         const { data } = await reservationsAPI.getReservations()
         this.reservations = data.reservations
-        this.futureReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) > Date.now())
-        this.pastReservation = this.reservations.filter(r => new Date(new Date(r.date.slice(0, 10)).toDateString()) <= Date.now())
+        this.futureReservation = this.reservations.filter(r => {
+          const date = new Date(r.date)
+          date.setHours(date.getHours() + 8)
+          return date > Date.now()
+        })
+        this.pastReservation = this.reservations.filter(r => {
+          const date = new Date(r.date)
+          date.setHours(date.getHours() + 8)
+          return date <= Date.now()
+        })
         loader.hide()
       } catch (error) {
         loader.hide()
@@ -92,16 +99,14 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .history-page {
-  height: 100vh;
-  overflow: scroll;
   .history-container {
     margin: auto;
     max-width: 1040px;
     padding: 36px 24px;
     text-align: left;
-    position: relative;
     @media (min-width: 768px) {
       padding: 36px 40px;
+      margin-top: 81px;
     }
     @media (min-width: 992px) {
       padding: 36px 80px;

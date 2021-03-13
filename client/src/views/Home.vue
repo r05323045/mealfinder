@@ -1,7 +1,7 @@
 <template>
   <div class="home" ref="home">
     <Navbar v-show="scrollY > 58"></Navbar>
-    <div class="page-container">
+    <div class="page-container" ref="page-container">
       <div class="banner">
         <div v-if="windowWidth < 768" class="searchbar-wrapper-outside" :class="{ toFront: scrollY > 50 && scrollUp }">
           <div class="searchbar" @click="showModal = !showModal">
@@ -266,8 +266,6 @@ export default {
     return {
       scrollY: 0,
       scrollUp: false,
-      homeHeight: 0,
-      scrollBarHeight: 0,
       showModal: false,
       windowWidth: window.innerWidth
     }
@@ -302,17 +300,28 @@ export default {
         }
       }
     })
-    this.$refs.home.addEventListener('scroll', this.onScroll, { passive: true })
-    this.homeHeight = this.$refs.home.scrollHeight
-    this.scrollBarHeight = this.$refs.home.clientHeight
+    window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.onResize)
   },
+  watch: {
+    showModal () {
+      if (this.showModal) {
+        this.$refs['page-container'].style.overflow = 'hidden'
+        this.$refs.home.style.overflow = 'hidden'
+        document.body.style.overflow = 'hidden'
+      } else {
+        this.$refs['page-container'].style.overflow = 'auto'
+        this.$refs.home.style.overflow = 'scroll'
+        document.body.style.overflow = 'auto'
+      }
+    }
+  },
   methods: {
     onScroll (e) {
-      this.scrollUp = this.scrollY > this.$refs.home.scrollTop
-      this.scrollY = this.$refs.home.scrollTop
+      this.scrollUp = this.scrollY > window.scrollY
+      this.scrollY = window.scrollY
     },
     closeFilter (isEditing) {
       this.showModal = false
@@ -330,11 +339,10 @@ $ultimategray: #939597;
 $divider: #E6ECF0;
 $red: rgb(255, 56, 92);
 .home {
-  width: 100vw;
-  height: 100%;
+  height: auto;
   overflow-y: scroll;
   overflow-x: hidden;
-  position: relative;
+  overflow: hidden;
   .page-container {
     .searchbar-wrapper-outside {
       z-index: -999;
@@ -402,7 +410,7 @@ $red: rgb(255, 56, 92);
       height: 538px;
       width: 100%;
       position: relative;
-      background: url(../assets/mobile-home-background.png) no-repeat center;
+      background: url(https://images.unsplash.com/photo-1581781870027-04212e231e96?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=634&q=80) no-repeat center;
       background-size: cover;
       @media (min-width: 768px) {
         background: none;
@@ -589,7 +597,6 @@ $red: rgb(255, 56, 92);
               background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
               background-size: cover;
               border-radius: 8px;
-              filter: brightness(.6);
               position: absolute;
               top: 0;
               bottom: 0;
@@ -643,7 +650,7 @@ $red: rgb(255, 56, 92);
               background: url(https://images.unsplash.com/photo-1589251204996-3367cc27f084?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=779&q=80) no-repeat center;
               background-size: cover;
               border-radius: 8px;
-              filter: brightness(.4);
+              filter: brightness(.6);
               position: absolute;
               top: 0;
               bottom: 0;

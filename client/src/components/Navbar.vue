@@ -2,7 +2,7 @@
   <div class="navbar" :class="{ openSearch: openSearch }">
     <div class="navbar-mobile">
       <div class="item-wrapper" :class="{ signIn: isAuthenticated }">
-        <div class="nav-item" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' || $route.path.includes('/restaurants') || $route.path.includes('/map')}">
+        <div class="nav-item" @click="$router.push('/map').catch(()=>{})" :class="{ active: ($route.path === '/' && !isAuthenticated) || $route.path.includes('/restaurants') || $route.path.includes('/map')}">
           <div class="wrapper">
             <div class="icon search"></div>
             <div class="text">探索</div>
@@ -14,9 +14,15 @@
             <div class="text">優惠</div>
           </div>
         </div>
+        <div class="nav-item" v-if="isAuthenticated" @click="$router.push('/').catch(()=>{})" :class="{ active: $route.path === '/' }">
+          <div class="wrapper">
+            <div class="icon home-icon"></div>
+            <div class="text">首頁</div>
+          </div>
+        </div>
         <div class="nav-item" v-if="isAuthenticated" @click="$router.push('/users/history').catch(()=>{})" :class="{ active: $route.path.includes('/history') }">
           <div class="wrapper">
-            <div class="icon-restaurant"></div>
+            <div class="icon icon-restaurant"></div>
             <div class="text">訂位</div>
           </div>
         </div>
@@ -31,8 +37,8 @@
     </div>
     <div class="navbar-desktop" :class="{ openSearch: openSearch, atMap: $route.path.includes('/map') }">
       <div class="navbar-desktop-inner">
-        <div class="logo-wrapper" @click="$router.push('/').catch(()=>{})">
-          <div class="logo"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
+        <div class="logo-wrapper">
+          <div class="logo" @click="$router.push('/').catch(()=>{})"><span class="company-first-name">Meal</span><span class="company-last-name">Finder</span></div>
         </div>
         <div class="tab-wrapper" v-show="openSearch">
           <div class="condition-wrapper">
@@ -123,9 +129,10 @@
             <div class="search-input search-input-element">
               <div class="title search-input-element">預算</div>
               <div class="text search-input-element" v-if="selectPrice.length !== 2">價格不限</div>
-              <div class="text search-input-element" v-if="selectPrice.length === 2">{{ selectPrice[0] | priceFormat }} - {{ selectPrice[1] === 9999 ? 1500 : selectPrice[1] | priceFormat }}<span v-if="selectPrice[1] === 9999"> +</span></div>
+              <div class="text search-input-element" v-if="selectPrice.length === 2">{{ selectPrice[0] | priceFormat }} - {{ selectPrice[1] === 9999 ? maxPrice : selectPrice[1] | priceFormat }}<span v-if="selectPrice[1] === 9999"> +</span></div>
             </div>
             <SelectPrices
+              class="search-input-element"
               :showSelector="showSelectorPrice"
               @selectPrice="getPrice">
             </SelectPrices>
@@ -156,6 +163,7 @@ export default {
       showSelectorCategory: false,
       showSelectorPrice: false,
       selectPrice: [],
+      maxPrice: 9999,
       selectCategory: '',
       selectDistrict: ''
     }
@@ -170,15 +178,17 @@ export default {
   },
   mounted () {
     document.body.addEventListener('click', (e) => {
-      const parentIsSideNav = e.target.parentElement ? e.target.parentElement.classList.contains('side-nav-button') : false
-      const elementIsSideNav = e.target ? e.target.classList.contains('side-nav-button') : false
-      const clickButton = parentIsSideNav || elementIsSideNav
-      const clickOtherSide = !(e.target.classList.contains('menu-wrapper') || e.target.parentElement.classList.contains('menu'))
-      if (this.showMenu && clickOtherSide && !clickButton) {
+      const sideNavElement = e.target ? e.target.classList.contains('side-nav-element') : false
+      const searshInputElement = e.target ? e.target.classList.contains('search-input-element') : false
+      if (this.showMenu && !sideNavElement) {
         if (this.$refs['menu-wrapper']) {
           this.$refs['menu-wrapper'].style.display = 'none'
           this.showMenu = false
         }
+      } else if (!searshInputElement) {
+        this.showSelectorDistrict = false
+        this.showSelectorCategory = false
+        this.showSelectorPrice = false
       }
       e.stopPropagation()
     })
@@ -228,8 +238,9 @@ export default {
       this.selectDistrict = district
       this.showSelectorDistrict = false
     },
-    getPrice (price) {
-      this.selectPrice = price
+    getPrice (data) {
+      this.selectPrice = data.price
+      this.maxPrice = data.max
       this.showSelectorPrice = false
     },
     startSearching () {
@@ -310,6 +321,9 @@ $red: rgb(255, 56, 92);
           .icon.noti {
             mask: url(../assets/notification.svg) no-repeat center;
           }
+          .icon.home-icon {
+            mask: url(../assets/home.svg) no-repeat center;
+          }
           .icon-restaurant {
             margin: 0 auto;
             background-color: $ultimategray;
@@ -343,7 +357,8 @@ $red: rgb(255, 56, 92);
     }
   }
   @media (min-width: 768px) {
-    position: sticky;
+    width: 100%;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 999;
@@ -426,7 +441,6 @@ $red: rgb(255, 56, 92);
           }
         }
         .logo-wrapper {
-          cursor: pointer;
           height: 100%;
           display: flex;
           align-items: center;
@@ -435,6 +449,7 @@ $red: rgb(255, 56, 92);
             flex: 1;
           }
           .logo {
+            cursor: pointer;
             font-size: 24px;
             line-height: 24px;
             color: $red;

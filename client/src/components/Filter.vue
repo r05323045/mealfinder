@@ -37,7 +37,7 @@
               </label>
             </div>
           </div>
-          <div class="category">
+          <div class="category" :style="`padding-bottom: ${$route.path === '/coupons' ? '80px' : '0px'}`">
             <div class="title">餐廳類型</div>
             <div class="item-group">
               <label class="item" v-for="(item, idx) in categories" :key="`category-${idx}`">
@@ -493,7 +493,7 @@ $divider: #E6ECF0;
         }
       }
       .price {
-        padding: 8px 0 24px 0;
+        padding: 8px 0 105px 0;
         .title {
           text-align: left;
           line-height: 22px;

@@ -1,5 +1,5 @@
 'use strict'
-const data = require('../city-and-district-data.json')
+const data = require('../data/city-and-district-data.json')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

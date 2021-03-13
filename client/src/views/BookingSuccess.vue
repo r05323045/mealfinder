@@ -1,7 +1,7 @@
 <template>
   <div class="booking-success">
     <Navbar class="restaurant-navbar"></Navbar>
-    <div class="booking-success-searchbar-wrapper">
+    <div class="booking-success-searchbar-wrapper" v-show="scrollY < 60 || scrollUp">
       <div class="back-wrapper" @click="$router.push(`/restaurants/${restaurantId}`)">
         <div class="icon back"></div>
       </div>
@@ -77,6 +77,8 @@ export default {
     return {
       restaurant: {},
       restaurantId: 0,
+      scrollY: 0,
+      scrollUp: true,
       bookingTime: '',
       bookingDate: new Date(),
       adultNum: 0,
@@ -96,11 +98,16 @@ export default {
     this.fetchRestaurant(this.restaurantId)
   },
   mounted () {
+    window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
+    onScroll (e) {
+      this.scrollUp = this.scrollY > window.scrollY
+      this.scrollY = window.scrollY
+    },
     async fetchRestaurant (id) {
       const loader = this.$loading.show({
         isFullPage: true,
@@ -139,16 +146,8 @@ $default-color: #000000;
 $primary-color: #222;
 @import '~vue2-datepicker/scss/index.scss';
 .booking-success {
-  height: 100%;
   overflow: scroll;
-  position: relative;
   width: 100%;
-  .restaurant-navbar {
-    display: none;
-    @media (min-width: 768px) {
-      display: block;
-    }
-  }
   .booking-success-searchbar-wrapper {
     box-shadow: rgba(0, 0, 0, 0.16) 0px -2px 8px;
     z-index: 998;
@@ -216,11 +215,11 @@ $primary-color: #222;
     margin: 60px auto 0;
     max-width: 1040px;
     @media (min-width: 768px) {
-      margin-top: 0px;
+      margin-top: 81px;
       padding: 0px 40px 35px 40px;
     }
     @media (min-width: 992px) {
-      margin-top: 0px;
+      margin-top: 81px;
       padding: 48px 80px;
     }
     .result-container {
@@ -231,7 +230,6 @@ $primary-color: #222;
       }
       .booking-result-title {
         margin: 24px 0;
-        height: 40px;
         font-size: 22px;
         font-weight: 700;
         text-align: left;

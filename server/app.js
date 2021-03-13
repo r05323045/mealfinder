@@ -41,7 +41,8 @@ app.use((req, res, next) => {
 app.use(cors({
   origin: [
     'http://localhost:8080',
-    'https://mealfinder2021.herokuapp.com'
+    'https://mealfinder2021.herokuapp.com',
+    'https://r05323045.github.io'
   ],
   credentials: true,
   exposedHeaders: ['set-cookie']

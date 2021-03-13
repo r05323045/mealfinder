@@ -36,8 +36,10 @@ const reservationController = {
     })
   },
   addReservation: (req, res) => {
+    const date = new Date(req.body.date)
+    date.setHours(date.getHours() + 8)
     Reservation.create({
-      date: req.body.date,
+      date: date,
       time: req.body.time,
       partySize_adult: req.body.partySize_adult,
       partySize_kids: req.body.partySize_kids,
@@ -71,8 +73,8 @@ const reservationController = {
             user: process.env.GMAIL_ACCOUNT,
             clientId: process.env.GMAILAPI_CLIENT_ID,
             clientSecret: process.env.GMAILAPI_CLIENT_SECRET,
-            refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-            accessToken: process.env.OAUTH_ACCESS_TOKEN
+            refreshToken: process.env.GMAILAPI_REFRESH_TOKEN,
+            accessToken: process.env.GMAILAPI_ACCESS_TOKEN
           }
         })
 
@@ -90,18 +92,25 @@ const reservationController = {
         const emailInfo = `
         <body>
           <div style="margin: auto; background-color:#F8F9FA;padding:10px">
-            <div style="width: 60%; min-width: 280px; margin: auto; background-color:#FFFFFF; padding: 15px; border-radius:5px;text-align: center;">
-              <div style="margin-top: 8px; font-size: 22px; font-weight: 700;">${emailData.User_name} 您好</div>
-              <div style="margin-top: 16px; font-size: 22px; font-weight: 700;">已為您安排</div>
-              <div style="margin-top: 16px; font-size: 36px; font-weight: 700;">${emailData.Restaurant_name}</div>
-              <div style="margin: 16px 0; font-size: 22px; font-weight: 700;">的訂位</div>
-              <div style="width: 60%; min-width: 250px; border-color:#B5B5B5;padding:12px; margin: auto;">
-              <div style="border:1px #dddddd solid;padding:15px">
-                <p style="font-weight:500;letter-spacing:4px;font-size:16px;margin-buttom:5px">${emailData.date}</p>
-                <p style="font-weight:600;letter-spacing:5px;font-size:50px;margin-top:5px;margin:0px">${emailData.time}</p>
-                <p style="font-weight:500;letter-spacing:7px;font-size:20px;">${emailData.partySize_adult + emailData.partySize_kids}位</p>
+            <div style="width: 60%; min-width: 280px; margin: auto; background-color:#FFFFFF; padding: 15px; border-radius:5px; text-align: center;">
+              <div style="margin-top: 8px; font-size: 16px; font-weight: 400;"><span style="font-weight: 600;">${emailData.User_name}</span> 您好</div>
+              <div style="margin-top: 16px; font-size: 16px; font-weight: 400;">已為您安排</div>
+              <div style="margin-top: 16px; font-size: 28px; font-weight: 700;">${emailData.Restaurant_name}</div>
+              <div style="margin: 16px 0; font-size: 16px; font-weight: 400;">的訂位</div>
+              <div style="width: 60%; min-width: 250px; margin: auto;">
+                <div style="border: 1px solid #B5B5B5; margin: 12px; padding: 24px 12px;">
+                  <p style="font-weight:500; letter-spacing:4px; font-size: 18px; margin: 0 0 8px 0">${emailData.date}</p>
+                  <p style="font-weight:600; letter-spacing:5px; font-size: 28px; margin: 8px 0;">${emailData.time}</p>
+                  <p style="font-weight:500; letter-spacing:7px; font-size: 18px; margin: 8px 0;">${emailData.partySize_adult}大${emailData.partySize_kids}小</p>
+                  <a href="https://mealfinder2021.herokuapp.com/#/users/history" style="margin: 12px 0; color: rgb(255, 255, 255); padding: 8px 16px; background: rgb(255, 56, 92); font-size: 14px; font-weight: 400; border-radius: 8px; text-decoration: none;">查看更多</a>
+                </div>
               </div>
-              </div>
+            </div>
+            <div style=" width: 100%; margin: 12px 0; font-size: 12px; color: #919191; text-align: center">
+              power by
+              <a href="https://mealfinder2021.herokuapp.com" style="text-decoration: none;">
+                <span style="color: rgb(255, 56, 92); font-weight: 800;">Meal</span><span style="font-weight: 800; color: rgb(0, 0, 0); margin-left: 2px;">Finder</span>
+              </a>
             </div>
           </div>
         </body>

@@ -1,0 +1,67 @@
+[
+  {
+    "name_EN":"Chinese Restaurant",
+    "name_TW":"中式料理",
+    "icon": "077-rice"
+  },
+  {
+    "name_EN": "Western Restaurant",
+    "name_TW": "義式料理",
+    "icon": "071-pizza"
+  },
+  {
+    "name_EN": "Japanese Restaurant",
+    "name_TW": "日式料理",
+    "icon": "093-sushi-1"
+  },
+  {
+    "name_EN": "Thai Restaurant",
+    "name_TW": "泰式料理",
+    "icon": "096-tomato"
+  },
+  {
+    "name_EN": "caffee",
+    "name_TW": "咖啡廳",
+    "icon": "022-coffee"
+  },
+  {
+    "name_EN": "Korea Restaurant",
+    "name_TW": "韓式料理",
+    "icon": "092-sushi"
+  },
+  {
+    "name_EN": "American Restaurant",
+    "name_TW": "美式料理",
+    "icon": "034-fast-food"
+  },
+  {
+    "name_EN": "Bistro",
+    "name_TW": "餐酒館",
+    "icon": "099-wine"
+  },
+  {
+    "name_EN": "dessert",
+    "name_TW": "甜點",
+    "icon": "013-cake"
+  },
+  {
+    "name_EN": "Vegan Restaurant",
+    "name_TW": "素食料理",
+    "icon": "052-vegetable"
+  },
+  {
+    "name_EN": "Brunch Restaurant",
+    "name_TW": "早午餐",
+    "icon": "033-eggs"
+  },
+  {
+    "name_EN": "Hongkong Restaurant",
+    "name_TW": "港式料理",
+    "icon": "091-sushi-roll"
+  },
+  {
+    "name_EN": "Barbecue Restaurant",
+    "name_TW": "燒烤料理",
+    "icon": "006-bbq"
+  }
+]

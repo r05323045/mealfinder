@@ -1,11 +1,11 @@
 'use strict'
-const restaurantData = require('../test-restaurant-data.json')
+const restaurantData = require('../data/simple-restaurant-data.json')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const coupons = []
     const mealTitle = ['一人獨享餐', '雙人套餐', '買三送一分享餐', '四人派對餐']
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 30; i++) {
       if (restaurantData.data[i].average_consumption) {
         const mealNumber = Math.floor(Math.random() * 4)
         coupons.push({
