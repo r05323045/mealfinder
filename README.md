@@ -7,7 +7,7 @@
 <br>
 <br>
 <p align="center">
-  <a href="https://mealfinder2021.herokuapp.com/#/users/history" style="margin: 48px 0; color: rgb(255, 255, 255); padding: 12px 16px; background: rgb(255, 56, 92); font-size: 14px; font-weight: 400; border-radius: 8px; text-decoration: none;">Get Started</a>
+  <a href="https://mealfinder2021.herokuapp.com">Start the journey of foodie</a>
 </p>
 
 <br>
