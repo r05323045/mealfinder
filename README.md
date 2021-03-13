@@ -326,7 +326,7 @@ npm run build
 ### [Jim Lin](https://github.com/r05323045)
 - Front-end development
     - All features development (e.g. Google Map display and search, different kinds of filters for restaurants, ...)
-    - All pages design and
+    - All pages design
 - Back-end development
     - Build up RESTful CRUD API - restaurants, carts, orders, users, and coupons
     - Refine all RESTful CRUD API for front-end usage
