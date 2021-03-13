@@ -1,14 +1,37 @@
-# OS X
-.DS_Store*
-Icon?
-._*
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# npm
+.DS_Store
 node_modules
-*.log
-*.gz
+
+# local env files
+.env
+.env.local
+.env.*.local
+./server/.env
+./client/.env
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# temp upload files
+temp/
+upload/
+
+# built files
+dist/
+public/
+deploy.sh
+
+# real data
+restaurant-data.json
+
