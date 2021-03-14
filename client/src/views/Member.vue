@@ -58,7 +58,7 @@
               </div>
             </div>
           </div>
-          <div class="link-card-wrapper" v-show="windowWidth >= 992">
+          <div class="link-card-wrapper no-use" v-show="windowWidth >= 992">
             <div class="link-card">
             </div>
           </div>
@@ -215,6 +215,7 @@ $red: rgb(255, 56, 92);
         display: flex;
         flex-direction: row;
         .link-card-wrapper {
+          border-radius: 8px;
           background: #ffffff;
           cursor: pointer;
           width: 100%;
@@ -253,7 +254,7 @@ $red: rgb(255, 56, 92);
                 }
               }
               .logo {
-                margin: 8px auto;
+                margin: 11px auto;
                 height: 32px;
                 font-size: 18px;
                 @media (min-width: 768px) {
@@ -277,7 +278,9 @@ $red: rgb(255, 56, 92);
           }
         }
         .link-card-wrapper.no-use {
+          cursor: default;
           background: none;
+          pointer-events: none;
         }
       }
     }
