@@ -332,7 +332,9 @@ export default {
           }
           const latKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[0]
           const lngKey = Object.keys(this.$refs.gmap.$mapObject.getBounds())[1]
-          this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds()[`${latKey}`].i}`, `blng=${this.$refs.gmap.$mapObject.getBounds()[`${lngKey}`].i}`]
+          const deeplatKey = Object.keys(this.$refs.gmap.$mapObject.getBounds()[latKey])[0]
+          const deeplngKey = Object.keys(this.$refs.gmap.$mapObject.getBounds()[lngKey])[0]
+          this.filter = ['', ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item), `clat=${this.mapCenter.lat}`, `clng=${this.mapCenter.lng}`, `blat=${this.$refs.gmap.$mapObject.getBounds()[latKey][deeplatKey]}`, `blng=${this.$refs.gmap.$mapObject.getBounds()[lngKey][deeplngKey]}`]
         } else {
           this.filter = [...this.filter, ...this.priceQueryString, ...this.categoriesFilter.map(item => 'category=' + item), ...this.districtsFilter.map(item => 'district=' + item)]
         }
