@@ -102,13 +102,13 @@ const reservationController = {
                   <p style="font-weight:500; letter-spacing:4px; font-size: 18px; margin: 0 0 8px 0">${emailData.date}</p>
                   <p style="font-weight:600; letter-spacing:5px; font-size: 28px; margin: 8px 0;">${emailData.time}</p>
                   <p style="font-weight:500; letter-spacing:7px; font-size: 18px; margin: 8px 0;">${emailData.partySize_adult}大${emailData.partySize_kids}小</p>
-                  <a href="https://mealfinder2021.herokuapp.com/#/users/history" style="margin: 12px 0; color: rgb(255, 255, 255); padding: 8px 16px; background: rgb(255, 56, 92); font-size: 14px; font-weight: 400; border-radius: 8px; text-decoration: none;">查看更多</a>
+                  <a href="https://mealfinder2021.vercel.app/users/history" style="margin: 12px 0; color: rgb(255, 255, 255); padding: 8px 16px; background: rgb(255, 56, 92); font-size: 14px; font-weight: 400; border-radius: 8px; text-decoration: none;">查看更多</a>
                 </div>
               </div>
             </div>
             <div style=" width: 100%; margin: 12px 0; font-size: 12px; color: #919191; text-align: center">
               power by
-              <a href="https://mealfinder2021.herokuapp.com" style="text-decoration: none;">
+              <a href="https://mealfinder2021.vercel.app" style="text-decoration: none;">
                 <span style="color: rgb(255, 56, 92); font-weight: 800;">Meal</span><span style="font-weight: 800; color: rgb(0, 0, 0); margin-left: 2px;">Finder</span>
               </a>
             </div>

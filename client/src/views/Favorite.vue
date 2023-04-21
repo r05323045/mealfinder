@@ -21,7 +21,7 @@
         </div>
         <div class="restaurant-card-deck-wrapper no-restaurant" v-if="restaurants.length === 0" ref="restaurant-card-deck-wrapper">
           <div class="no-result">沒有任何收藏的餐廳</div>
-          <div class="no-result-sub">使用 <a href="#/map">地圖模式</a> 或 <a href="#/restaurants">清單搜尋</a> 探索喜歡的餐廳</div>
+          <div class="no-result-sub">使用 <a href="/map">地圖模式</a> 或 <a href="/restaurants">清單搜尋</a> 探索喜歡的餐廳</div>
         </div>
         <div v-if="restaurants.length > 0" class="restaurant-card-deck-wrapper" ref="restaurant-card-deck-wrapper">
           <div v-for="pageNum in numOfPage" :key="`page-num-${pageNum}`">

@@ -4,7 +4,7 @@
       <span class="company-first-name">Meal</span><span class="company-last-name">Finder</span>
     </div>
     <div class="wrapper">
-      <div class="item"><a href="#/about">關於 MealFinder</a></div>
+      <div class="item"><a href="/about">關於 MealFinder</a></div>
       <div class="item"><a class="mailtoui" href="mailto:mealfinder2021@gmail.com">聯絡我們</a></div>
       <div class="item"><a href="https://github.com/r05323045/mealfinder">技術文件</a></div>
     </div>

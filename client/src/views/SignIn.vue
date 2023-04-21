@@ -102,7 +102,7 @@ export default {
     },
     async signInByFacebook () {
       try {
-        window.location.href = 'https://mealfinder2021.herokuapp.com/api/auth/facebook'
+        window.location.href = 'https://mealfinder2021.vercel.app/api/auth/facebook'
       } catch (error) {
         Toast.fire({
           icon: 'warning',
@@ -112,7 +112,7 @@ export default {
     },
     async signInByGoogle () {
       try {
-        window.location.href = 'https://mealfinder2021.herokuapp.com/api/auth/google'
+        window.location.href = 'https://mealfinder2021.vercel.app/api/auth/google'
       } catch (error) {
         Toast.fire({
           icon: 'warning',

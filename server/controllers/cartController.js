@@ -249,7 +249,7 @@ const cartController = {
               where: { UserId: order.UserId }
             })
               .then(() => {
-                return res.redirect(`${process.env.BASE_URL}/#/users/checkout/success?sn=${data.Result.MerchantOrderNo}`)
+                return res.redirect(`${process.env.BASE_URL}/users/checkout/success?sn=${data.Result.MerchantOrderNo}`)
               })
           })
       })

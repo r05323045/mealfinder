@@ -6,7 +6,7 @@ module.exports = {
     headers: { 'Access-Control-Allow-Origin': '*' },
     proxy: {
       '/api': {
-        target: 'https://mealfinder2021.herokuapp.com'
+        target: 'https://mealfinder-server.vercel.app'
       }
     }
   }
