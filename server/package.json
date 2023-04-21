@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --icu-data-dir=node_modules/full-icu server/app.js",
-    "dev": "nodemon --icu-data-dir=node_modules/full-icu server/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --icu-data-dir=node_modules/full-icu app.js",
+    "dev": "nodemon --icu-data-dir=node_modules/full-icu app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "./node_modules/.bin/sequelize db:migrate",
+    "seed": "./node_modules/.bin/sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
