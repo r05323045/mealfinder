@@ -192,7 +192,7 @@ api/
 The following instruction will walk you through the installation and settings needed to run for backend-server on your local device.
 ### Prerequisites
 - [npm](https://www.npmjs.com/get-npm)
-- [Node.js v10.16.0](https://nodejs.org/en/download/)
+- [Node.js v14.17.3](https://nodejs.org/en/download/)
 - [MySQL v8.0.16](https://dev.mysql.com/downloads/mysql/)
 - [MySQL Workbench v8.0.16](https://dev.mysql.com/downloads/workbench/)
 ### Setup Application
