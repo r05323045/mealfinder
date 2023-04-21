@@ -7,7 +7,7 @@
 <br>
 <br>
 <p align="center">
-  <a href="https://mealfinder2021.herokuapp.com">Start the journey of foodie</a>
+  <a href="https://mealfinder2021.vercel.app">Start the journey of foodie</a>
 </p>
 
 <br>

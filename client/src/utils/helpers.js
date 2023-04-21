@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Swal from 'sweetalert2'
-const baseURL = 'https://mealfinder2021.herokuapp.com/api'
+const baseURL = process.env.API_URL
 // const baseURL = 'http://localhost:3000/api'
 
 export const apiHelper = axios.create({
