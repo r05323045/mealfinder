@@ -23,10 +23,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# temp upload files
-temp/
-upload/
-
 # built files
 dist/
 #public/
