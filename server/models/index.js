@@ -9,8 +9,8 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
-if (options.dialect === 'mysql') {
-  options.dialectModule = mysql2;
+if (config.dialect === 'mysql') {
+  config.dialectModule = mysql2;
 }
 
 let sequelize;
