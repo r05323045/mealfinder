@@ -5,9 +5,9 @@ const URL = process.env.API_URL
 const MerchantID = 'MS318595991'
 const HashKey = 'UTkH5cZt6nQb99Jqo8Xfcp9isYHfBCOA'
 const HashIV = 'CS54PvL1tbZnptrP'
-const PayGateWay = "https://ccore.spgateway.com/MPG/mpg_gateway"
-const ReturnURL = URL + "/spgateway/callback?from=ReturnURL"
-const NotifyURL = URL + "/spgateway/callback?from=NotifyURL"
+const PayGateWay = "https://ccore.newebpay.com/MPG/mpg_gateway"
+const ReturnURL = URL + "/newebpay/callback?from=ReturnURL"
+const NotifyURL = URL + "/newebpay/callback?from=NotifyURL"
 const ClientBackURL = URL + "/users/purchase"
 
 function genDataChain (TradeInfo) {

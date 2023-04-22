@@ -97,7 +97,7 @@ router.get('/user/order', authenticated, cartController.getOrders)
 router.get('/user/order/:id', authenticated, cartController.getOrder)
 router.post('/user/order', authenticated, cartController.postTradeInfo)
 router.get('/user/payment/:no', authenticated, cartController.getPaymentInfo)
-router.post('/spgateway/callback', cartController.spgatewayCallback)
+router.post('/newebpay/callback', cartController.newebpayCallback)
 
 // couponController_Coupon model
 router.get('/coupons/:couponId', couponController.getCoupon)

@@ -225,15 +225,15 @@ const cartController = {
       })
   },
 
-  spgatewayCallback: (req, res) => {
-    console.log('===== spgatewayCallback =====')
+  newebpayCallback: (req, res) => {
+    console.log('===== newebpayCallback =====')
     console.log(req.method)
     console.log(req.query)
     console.log(req.body)
     console.log('==========')
 
     const data = JSON.parse(helpers.create_mpg_aes_decrypt(req.body.TradeInfo))
-    console.log('===== spgatewayCallback: create_mpg_aes_decrypt、data =====')
+    console.log('===== newebpayCallback: create_mpg_aes_decrypt、data =====')
     console.log(data)
     return Order.findAll({
       where: {
