@@ -225,29 +225,43 @@ $ touch client/.env
 - [Gmail Account](https://www.google.com/gmail/)：confirmation emaill will be sent through this account.
 - [Imgur API](https://apidocs.imgur.com/): create an new project in order to get the client id.
 
-**6. Store API Key in .env file and save**
+**6. Store environment variables in both server/.env and client/.env then save**
 ```
+#===server===
+
 JWT_SECRET=SKIP
 IMGUR_CLIENT_ID=SKIP
 Google_Map_API_KEY=SKIP
 
-//login with Facebook feature
+#login with Facebook feature
 FACEBOOK_APP_ID=SKIP
 FACEBOOK_APP_SECRET=SKIP
+FACEBOOK_CALLBACK=SKIP
 
-//login with Google feature
+#login with Google feature
 GOOGLE_CLIENT_ID=SKIP  
-GOOGLE_CLIENT_SECRET=SKIP 
+GOOGLE_CLIENT_SECRET=SKIP
+GOOGLE_CALLBACK_URL=SKIP
 
-//nodemailer feature
-GMAIL_ACCOUNT=SKIP 
+#nodemailer feature
 GMAILAPI_CLIENT_ID=SKIP 
 GMAILAPI_CLIENT_SECRET=SKIP 
+OAUTH_CLIENT_ID=SKIP
+OAUTH_CLIENT_SECRET=SKIP
 OAUTH_REFRESH_TOKEN=SKIP 
-OAUTH_ACCESS_TOKEN=SKIP 
+OAUTH_ACCESS_TOKEN=SKIP
+GMAIL_ACCOUNT=SKIP
+GMAIL_PASSWARD=SKIP
 
-// default URL will be http:localhost:3000
+#default URL and server setting
 BASE_URL=SKIP
+API_URL=SKIP
+DATABASE_URL=SKIP
+
+#===client===
+
+VUE_APP_GOOGLE_MAP_API_KEY=SKIP
+VUE_APP_API_URL=SKIP
 ```
 **7. Edit password in config.json file**
 > /server/config/config.json
