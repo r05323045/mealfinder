@@ -130,9 +130,7 @@ export default {
     this.$refs['list-container'].addEventListener('scroll', this.onScroll, { passive: true })
     this.divHeight = this.$refs['list-container'].scrollHeight
     this.scrollBarHeight = this.$refs['list-container'].clientHeight
-    window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth
-    })
+    window.addEventListener('resize', this.onResize)
     this.defineCardDeck()
     this.fetchCoupons()
   },
@@ -156,6 +154,11 @@ export default {
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
+  beforeDestroy () {
+    this.$refs['list-container'].removeEventListener('scroll', this.onScroll)
+    window.removeEventListener('resize', this.onResize)
+    document.body.style.overflow = 'auto'
+  },
   methods: {
     closeFilter (isEditing, cateFilter, distFilter) {
       this.showModal = false
@@ -168,6 +171,9 @@ export default {
     onScroll (e) {
       this.scrollUp = this.scrollY > this.$refs['list-container'].scrollTop
       this.scrollY = this.$refs['list-container'].scrollTop
+    },
+    onResize () {
+      this.windowWidth = window.innerWidth
     },
     defineCardDeck () {
       if (this.windowWidth < 768) {

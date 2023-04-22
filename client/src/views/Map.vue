@@ -258,6 +258,10 @@ export default {
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.onResize)
+    window.removeEventListener('scroll', this.onScroll)
+  },
   methods: {
     onScroll (e) {
       this.scrollY = window.scrollY

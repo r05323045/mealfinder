@@ -271,9 +271,7 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.onResize)
-    })
+    window.addEventListener('resize', this.onResize)
     // eslint-disable-next-line no-unused-vars
     const swiper = new Swiper('.swiper-container', {
       navigation: {
@@ -303,7 +301,9 @@ export default {
     window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   beforeDestroy () {
+    window.removeEventListener('scroll', this.onScroll)
     window.removeEventListener('resize', this.onResize)
+    document.body.style.overflow = 'auto'
   },
   watch: {
     showModal () {
