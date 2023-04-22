@@ -35,8 +35,8 @@ deploy.sh
 # real data
 restaurant-data.json
 
-# env config
-env.config.json
+# server config
+server/config/config.json
 
 # vercel
 .vercel
