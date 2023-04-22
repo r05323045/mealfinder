@@ -214,9 +214,10 @@ $ cd mealfinder
 $ npm install
 ```
 
-**4. Create .env file at root**
+**4. Create .env file at ./server and ./client**
 ```
-$ touch .env
+$ touch server/.env
+$ touch client/.env
 ```
 **5. Sign up for the following services**
 - [Google Cloud Platform](https://console.developers.google.com/?hl=zh-tw)：create  two sets of OAuth 2.0 credentials for web applications in order to authorize requests from nodemailer and log-in-with-google feature. 
