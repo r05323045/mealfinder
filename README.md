@@ -161,7 +161,7 @@ api/
 │   ├── getOrders
 │   ├── postTradeInfo
 │   ├── getPaymentInfo
-│   ├── spgatewayCallback
+│   ├── newebpayCallback
 └── coupon/
 │   ├── getCoupon
 │   ├── getCoupons

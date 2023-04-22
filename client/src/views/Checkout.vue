@@ -93,7 +93,7 @@
             <input v-show="false" type="text" name="TradeInfo" v-model="tradeInfo.TradeInfo">
             <input v-show="false" type="text" name="TradeSha" v-model="tradeInfo.TradeSha">
             <input v-show="false" type="text" name="Version" v-model="tradeInfo.Version">
-            <button class="spgateway-button" v-show="tradeInfo.PayGateWay" id="spgateway-button" type="submit">
+            <button class="newebpay-button" v-show="tradeInfo.PayGateWay" id="newebpay-button" type="submit">
               <div class="button">前往付款頁面</div>
             </button>
             <div class="stop-pay-button" v-show="tradeInfo.PayGateWay" @click.prevent="$router.go(-1)">
@@ -466,7 +466,7 @@ $darkred: #c13515;
             }
           }
         }
-        .spgateway-button {
+        .newebpay-button {
           cursor: pointer;
           border: none;
           appearance: none;
