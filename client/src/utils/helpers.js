@@ -8,8 +8,6 @@ export const apiHelper = axios.create({
   withCredentials: true
 })
 
-console.log(process.env, 'baseURL')
-
 export const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
