@@ -10,17 +10,11 @@ module.exports = {
       },
       UserId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'id'
-        }
+        allowNull: false,
       },
       CategoryId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Categories',
-          key: 'id'
-        }
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

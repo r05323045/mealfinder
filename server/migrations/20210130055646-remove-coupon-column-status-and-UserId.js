@@ -1,11 +1,9 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return Promise.all([
-      queryInterface.removeColumn('Coupons','status'),
-      queryInterface.removeColumn('Coupons', 'UserId')
-    ])
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.removeColumn('Coupons', 'status')
+    await queryInterface.removeColumn('Coupons', 'UserId')
   },
 
   down: async (queryInterface, Sequelize) => {

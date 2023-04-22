@@ -1,19 +1,19 @@
 {
   "development": {
-    "username": "nitbnm8177uf7dvmbdbx",
-    "password": "pscale_pw_cZLs1XvPvM8xn8Rk7FxLycK0wmK0fZoD9X1WMwfLV3o",
-    "database": "mealfinder",
-    "host": "aws.connect.psdb.cloud",
+    "username": "root",
+    "password": "password",
+    "database": "database_dev",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
+    "password": "password",
     "database": "database_test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
-    "use_env_variable": "CLEARDB_DATABASE_URL"
+    "database_url": "DATABASE_URL"
   }
 }
