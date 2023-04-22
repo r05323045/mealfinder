@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "s4d2zvw23ela0r34uchc",
-    "password": "pscale_pw_ho4T1bvW60jmyzBuref9qxbnQeGO9XorJLSTIMfkozu",
-    "database": "mealfinder",
-    "host": "aws.connect.psdb.cloud",
+    "username": "********",
+    "password": "********",
+    "database": "********",
+    "host": "********",
     "dialect": "mysql",
     "dialectOptions": {
       "ssl": {
