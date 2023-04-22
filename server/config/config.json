@@ -1,10 +1,15 @@
 {
   "development": {
-    "username": "root",
-    "password": "password",
-    "database": "database_dev",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "s4d2zvw23ela0r34uchc",
+    "password": "pscale_pw_ho4T1bvW60jmyzBuref9qxbnQeGO9XorJLSTIMfkozu",
+    "database": "mealfinder",
+    "host": "aws.connect.psdb.cloud",
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": {
+        "rejectUnauthorized": true
+      }
+    }
   },
   "test": {
     "username": "root",
