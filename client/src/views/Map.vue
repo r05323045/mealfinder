@@ -251,7 +251,6 @@ export default {
   },
   mounted () {
     this.fetchNearByRestaurants()
-    window.scrollTo({ top: 0 })
     window.addEventListener('resize', this.onResize)
     window.addEventListener('scroll', this.onScroll, { passive: true })
   },
@@ -354,7 +353,6 @@ export default {
         this.numOfPage += 1
         this.resultCount = data.count
         loader.hide()
-        window.scrollTo({ top: 0, behavior: 'smooth' })
         this.$refs['restaurants-list'].scrollTo({ top: 0, behavior: 'smooth' })
       } catch (error) {
         loader.hide()
