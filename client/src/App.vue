@@ -4,6 +4,21 @@
   </div>
 </template>
 
+<script>
+export default {
+  watch: {
+    '$route.path' () {
+      this.$nextTick(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+      })
+    }
+  }
+}
+</script>
+
 <style lang="scss">
 html, body {
   height: 100%;
